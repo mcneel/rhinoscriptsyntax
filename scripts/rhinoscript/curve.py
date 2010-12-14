@@ -2117,7 +2117,8 @@ def IsCurvePlanar( curve_id, segment_index=-1 ):
       True or False indicating success or failure
     """
     curve = rhutil.coercecurve(curve_id, segment_index)
-    return curve and curve.IsPlanar()
+    tol = scriptcontext.doc.ModelAbsoluteTolerance
+    return curve and curve.IsPlanar(tol)
 
 
 def IsCurveRational( curve_id, segment_index=-1 ):
