@@ -6,13 +6,15 @@ import System.Windows.Forms.Clipboard
 import scriptcontext
 import math
 
-def Angle(point1, point2, world_coordinates=True):
+def Angle(point1, point2, plane=True):
     """
     Measures the angle between two points
     Parameters:
       point1, point2: the input points
-      world_coordinates[opt] = If True, the angle calculation is based on the world coordinate system.
-        If False, the angle calculation is based on the active construction plane
+      plane[opt] = Boolean or Plane
+        If True, angle calculation is based on the world coordinate system.
+        If False, angle calculation is based on the active construction plane
+        If a plane is provided, angle calculation is with respect to this plane
     Returns:
       tuple containing the following elements if successful
         element 0 = the X,Y angle in degrees
@@ -24,31 +26,31 @@ def Angle(point1, point2, world_coordinates=True):
     """
     point1 = coerce3dpoint(point1)
     point2 = coerce3dpoint(point2)
-    if( point1==None or point2==None ): return scriptcontext.errorhandler()
+    if point1 is None or point2 is None: return scriptcontext.errorhandler()
     vector = point2 - point1
     x = vector.X
     y = vector.Y
     z = vector.Z
-    if( not world_coordinates ):
-        cplane = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
-        vfrom = point1 - cplane.Origin
-        vto = point2 - cplane.Origin
-        x = vto * cplane.XAxis - vfrom * cplane.XAxis
-        y = vto * cplane.YAxis - vfrom * cplane.YAaxis
-        z = vto * cplane.ZAxis - vfrom * cplane.ZAxis
+    if plane!=True:
+        plane = rhutil.coerceplane(plane)
+        if plane is None:
+            plane = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
+        vfrom = point1 - plane.Origin
+        vto = point2 - plane.Origin
+        x = vto * plane.XAxis - vfrom * plane.XAxis
+        y = vto * plane.YAxis - vfrom * plane.YAaxis
+        z = vto * plane.ZAxis - vfrom * plane.ZAxis
     h = math.sqrt( x * x + y * y)
     angle_xy = math.degrees( math.atan2( y, x ) )
     elevation = math.degrees( math.atan2( z, h ) )
-
     return angle_xy, elevation, x, y, z
 
+
 def Angle2(line1, line2):
-    """
-    Measures the angle between two lines
-    """
+    """Measures the angle between two lines"""
     line1 = coerceline(line1)
     line2 = coerceline(line2)
-    if( line1==None or line2==None ): return scriptcontext.errorhandler()
+    if line1 is None or line2 is None: return scriptcontext.errorhandler()
     vec0 = line1.To - line1.From
     vec1 = line2.To - line2.From
     if( not vec0.Unitize() or not vec1.Unitize() ): return scriptcontext.errorhandler()
@@ -59,6 +61,7 @@ def Angle2(line1, line2):
     angle = math.degrees(angle)
     reflex_angle = math.degrees(reflex_angle)
     return angle, reflex_angle
+
 
 def ClipboardText(text=None):
     """
@@ -77,14 +80,15 @@ def ClipboardText(text=None):
         System.Windows.Forms.Clipboard.SetText(str(text))
     return rc
 
+
 def ColorAdjustLuma( rgb, luma, scale=False ):
     """
     Changes the luminance of a red-green-blue value. Hue and saturation are not
     affected
     Parameters:
       rgb = initial rgb value
-      luma = The luminance in units of 0.1 percent of the total range. For example,
-          a value of luma = 50 corresponds to 5 percent of the maximum luminance
+      luma = The luminance in units of 0.1 percent of the total range. A
+          value of luma = 50 corresponds to 5 percent of the maximum luminance
       scale[opt] = if True, luma specifies how much to increment or decrement the
           current luminance. If False, luma specified the absolute luminance.
     Returns:
@@ -92,57 +96,52 @@ def ColorAdjustLuma( rgb, luma, scale=False ):
       None on error
     """
     rgb = coercecolor(rgb)
-    if( rgb==None ): return scriptcontext.errorhandler()
+    if rgb is None: return scriptcontext.errorhandler()
     hsl = Rhino.Display.ColorHSL(rgb)
     luma = luma / 1000.0
-    if( scale==True ): luma = hsl.L + luma
+    if scale==True: luma = hsl.L + luma
     hsl.L = luma
     rgb = hsl.ToArgbColor()
     return rgb.ToArgb()
 
+
 def ColorBlueValue(rgb):
-    """
-    Retrieves an intensity value for the blue component of an RGB color
-    """
+    """Retrieves intensity value for the blue component of an RGB color"""
     rgb = coercecolor(rgb)
-    if( rgb==None ): return scriptcontext.errorhandler()
+    if rgb is None: return scriptcontext.errorhandler()
     return rgb.B
 
+
 def ColorGreenValue(rgb):
-    """
-    Retrieves an intensity value for the green component of an RGB color
-    """
+    """Retrieves intensity value for the green component of an RGB color"""
     rgb = coercecolor(rgb)
-    if( rgb==None ): return scriptcontext.errorhandler()
+    if rgb is None: return scriptcontext.errorhandler()
     return rgb.G
 
+
 def ColorHLSToRGB(hls):
-    """
-    Converts colors from hue-lumanence-saturation to RGB
-    """
-    if( len(hls)==3 ):
+    """Converts colors from hue-lumanence-saturation to RGB"""
+    if len(hls)==3:
         hls = Rhino.Display.ColorHSL(hls[0]/240.0, hls[2]/240.0, hls[1]/240.0)
-    elif( len(hls)==4 ):
+    elif len(hls)==4:
         hls = Rhino.Display.ColorHSL(hls[3]/240.0, hls[0]/240.0, hls[2]/240.0, hls[1]/240.0)
     else:
         return scriptcontext.errorhandler()
     rgb = hls.ToArgbColor()
     return rgb.ToArgb()
 
+
 def ColorRedValue(rgb):
-    """
-    Retrieves an intensity value for the red component of an RGB color
-    """
+    """Retrieves intensity value for the red component of an RGB color"""
     rgb = coercecolor(rgb)
-    if( rgb==None ): return scriptcontext.errorhandler()
+    if rgb is None: return scriptcontext.errorhandler()
     return rgb.R
 
+
 def ColorRGBToHLS(rgb):
-    """
-    Converts colors from RGB to HLS
-    """
+    """Converts colors from RGB to HLS"""
     rgb = coercecolor(rgb)
-    if( rgb==None ): return scriptcontext.errorhandler()
+    if rgb is None: return scriptcontext.errorhandler()
     hls = Rhino.Display.ColorHSL(rgb)
     return (hls.H, hls.S, hls.L, hls.A)
 
@@ -159,10 +158,11 @@ def CullDuplicatePoints(points, tolerance=-1):
       None if not successful or on error.
     """
     points = coerce3dpointlist(points)
-    if (points == None): return scriptcontext.errorhandler()
-    if (tolerance == None or tolerance < 0):
+    if points is None: return scriptcontext.errorhandler()
+    if tolerance is None or tolerance < 0:
         tolerance = Rhino.RhinoMath.ZeroTolerance
     return Rhino.Geometry.Point3d.CullDuplicates(points, tolerance)
+
 
 def Distance(point1, point2):
     """
@@ -178,7 +178,7 @@ def Distance(point1, point2):
     """
     from_pt = coerce3dpoint(point1)
     to_pt = coerce3dpoint(point2)
-    if (to_pt != None):
+    if from_pt and to_pt:
         vec = to_pt - from_pt
         return vec.Length
 
@@ -189,7 +189,7 @@ def Distance(point1, point2):
     for point in to_pt:
         vec = point - from_pt
         distances.append(vec.Length)
-    if (len(distances) == 0): return scriptcontext.errorhandler()
+    if len(distances)==0: return scriptcontext.errorhandler()
     return distances
 
 
@@ -198,22 +198,21 @@ def SortPointList(points, tolerance=None):
     Sorts a list of points so they will be connected in a "reasonable" polyline order
     Parameters:
       points = the points to sort
-      tolerance[opt] = the minimum distance between points. Points that fall within this tolerance
+      tolerance[opt] = minimum distance between points. Points that fall within this tolerance
         will be discarded. If omitted, Rhino's internal zero tolerance is used.
     Returns:
       a list of sorted 3-D points if successful
       None on error
     """
     points = coerce3dpointlist(points)
-    if( points == None ): return scriptcontext.errorhandler()
-    if( tolerance == None ): tolerance = Rhino.RhinoMath.ZeroTolerance
+    if points is None: return scriptcontext.errorhandler()
+    if tolerance is None: tolerance = Rhino.RhinoMath.ZeroTolerance
     rc = Rhino.Geometry.Point3d.SortAndCullPointList(points, tolerance)
     return rc
 
+
 def SortPoints(points, ascending=True, order=0):
-    """
-    Sorts an array of 3D points
-    """
+    """Sorts an array of 3D points"""
     def __cmpXYZ( a, b ):
         rc = cmp(a.X, b.X)
         if( rc==0 ): rc = cmp(a.Y, b.Y)
@@ -255,17 +254,18 @@ def SortPoints(points, ascending=True, order=0):
     rc = sorted(points, sortfunc, None, reverse)
     return rc
 
+
 def Str2Pt(point):
-    """
-    converts a formatted string value into a 3-D point value
-    """
+    """converts a formatted string value into a 3-D point value"""
     return coerce3dpoint(point)
 
+
 def clamp(lowvalue, highvalue, value):
-    if( lowvalue>=highvalue ): raise Exception("lowvalue must be less than highvalue")
-    if( value<lowvalue ): return lowvalue
-    if( value>highvalue ): return highvalue
+    if lowvalue>=highvalue: raise Exception("lowvalue must be less than highvalue")
+    if value<lowvalue: return lowvalue
+    if value>highvalue: return highvalue
     return value
+
 
 def coerce3dpoint(point):
   """

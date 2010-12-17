@@ -1753,12 +1753,12 @@ def EllipseQuadPoints(curve_id):
     if curve is None: return scriptcontext.errorhandler()
     rc, ellipse = curve.TryGetEllipse()
     if not rc: return scriptcontext.errorhandler()
-    
     origin = ellipse.Plane.Origin;
     xaxis = ellipse.Radius1 * ellipse.Plane.XAxis;
     yaxis = ellipse.Radius2 * ellipse.Plane.YAxis;
     return (origin-xaxis, origin+xaxis, origin-yaxis, origin+yaxis)
   
+
 def EvaluateCurve(curve_id, t, segment_index=-1):
     """
     Evaluates a curve at a parameter.

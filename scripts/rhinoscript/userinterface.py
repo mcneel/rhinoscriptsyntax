@@ -465,6 +465,7 @@ def PropertyListBox(items, values, message=None, title=None):
       a list of new values on success
       None on error
     """
+    values = [str(v) for v in values]
     rc = Rhino.UI.Dialogs.ShowPropertyListBox(title, message, items, values)
     return rc
 
