@@ -319,6 +319,8 @@ def VectorAngle(vector1, vector2):
     vector1 = rhutil.coerce3dvector(vector1)
     vector2 = rhutil.coerce3dvector(vector2)
     if vector1 is None or vector2 is None: return scriptcontext.errorhandler()
+    vector1 = Rhino.Geometry.Vector3d(vector1.X, vector1.Y, vector1.Z)
+    vector2 = Rhino.Geometry.Vector3d(vector2.X, vector2.Y, vector2.Z)
     if not vector1.Unitize() or not vector2.Unitize():
         return scriptcontext.errorhandler()
     dot = vector1 * vector2

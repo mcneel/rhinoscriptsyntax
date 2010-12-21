@@ -1757,7 +1757,7 @@ def EllipseQuadPoints(curve_id):
     xaxis = ellipse.Radius1 * ellipse.Plane.XAxis;
     yaxis = ellipse.Radius2 * ellipse.Plane.YAxis;
     return (origin-xaxis, origin+xaxis, origin-yaxis, origin+yaxis)
-  
+
 
 def EvaluateCurve(curve_id, t, segment_index=-1):
     """

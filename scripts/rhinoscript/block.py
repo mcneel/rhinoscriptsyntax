@@ -6,7 +6,7 @@ import System.Guid
 
 def __InstanceObjectFromId( id ):
     id = rhutil.coerceguid(id)
-    if( id==None ): return scriptcontext.errorhandler()
+    if id is None: return scriptcontext.errorhandler()
     objref = Rhino.DocObjects.ObjRef(id)
     instance = objref.Object()
     objref.Dispose()
@@ -21,9 +21,9 @@ def BlockContainerCount(block_name):
       block_name = the name of an existing block definition
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
-    if( idef==None ): return 0
+    if idef is None: return 0
     containers = idef.GetContainers()
-    if( containers==None ): return 0
+    if not containers: return 0
     return len(containers)
 
 
@@ -37,12 +37,12 @@ def BlockContainers(block_name):
       None on error
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
-    if( idef==None ): return scriptcontext.errorhandler()
+    if idef is None: return scriptcontext.errorhandler()
     containers = idef.GetContainers()
-    if( containers==None ): return scriptcontext.errorhandler()
+    if containers is None: return scriptcontext.errorhandler()
     rc = []
     for item in containers:
-        if( not item.IsDeleted ): rc.append(item.Name)
+        if not item.IsDeleted: rc.append(item.Name)
     return rc
 
 
@@ -53,7 +53,7 @@ def BlockCount():
     rc = 0
     for i in xrange(count):
         idef = table[i]
-        if( idef!=None and not idef.IsDeleted ): rc+=1
+        if idef and not idef.IsDeleted: rc+=1
     return rc
 
 
@@ -69,7 +69,7 @@ def BlockDescription(block_name, description=None):
       None on error
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
-    if( idef==None ): return scriptcontext.errorhandler()
+    if idef is None: return scriptcontext.errorhandler()
     rc = idef.Description
     if description: table.Modify( idef, idef.Name, description )
     return rc
@@ -83,9 +83,9 @@ def BlockInstanceCount(block_name):
       block_name = the name of an existing block definition
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
-    if( idef==None ): return 0
+    if idef is None: return 0
     refs = idef.GetReferences()
-    if( refs==None): return 0
+    if not refs: return 0
     return len(refs)
 
 
@@ -174,7 +174,7 @@ def BlockObjectCount( block_name ):
       block_name = name of an existing block definition
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
-    if( idef==None ): return 0
+    if idef is None: return 0
     return idef.ObjectCount
 
 
@@ -186,8 +186,11 @@ def BlockObjects( block_name ):
     Returns:
       list of identifiers on success
     """
-    ideflist = scriptcontext.doc.InstanceDefinitions.GetList(True)
-    return list(ideflist)
+    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
+    if idef is None: return scriptcontext.errorhandler()
+    rhobjs = idef.GetObjects()
+    if not rhobjs: return scriptcontext.errorhandler()
+    return [obj.Id for obj in rhobjs]
 
 
 def BlockPath( block_name ):

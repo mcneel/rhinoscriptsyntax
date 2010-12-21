@@ -88,8 +88,8 @@ def PlaneClosestPoint(plane, point, return_point=True):
         return plane.ClosestPoint(point)
         if rc.IsValid: return rc
     else:
-      rc, s, t = plane.ClosestParameter(point)
-      if rc: return s, t
+        rc, s, t = plane.ClosestParameter(point)
+        if rc: return s, t
     return scriptcontext.errorhandler()
 
 

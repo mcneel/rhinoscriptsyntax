@@ -378,13 +378,10 @@ def coerce2dpointlist(points):
 
 
 def coerceplane(plane):
-  """
-  Convert input into a Rhino.Geometry.Plane if possible.
-  If not possible, return None
-  """
+  "Convert input into a Rhino.Geometry.Plane if possible."
   if type(plane) is Rhino.Geometry.Plane: return plane
-  if( plane == None ): return None
-  if( type(plane) is list or type(plane) is tuple ):
+  if plane is None: return None
+  if type(plane) is list or type(plane) is tuple:
     length = len(plane)
     if( length==3 and type(plane[0]) is not list ):
       rc = Rhino.Geometry.Plane.WorldXY
@@ -406,117 +403,114 @@ def coerceplane(plane):
 
 
 def coercexform(xform):
-  """
-  Convert input into a Rhino.Transform if possible.
-  In not possible, return None
-  """
-  t = type(xform)
-  if( t is Rhino.Geometry.Transform ): return xform
-  if( (t is list or t is tuple) and len(xform)==4 and len(xform[0])==4):
-    xf = Rhino.Geometry.Transform()
-    for i in range(4):
-      for j in range(4):
-        xf[i,j] = xform[i][j]
-    return xf
-  return None
+    "Convert input into a Rhino.Transform if possible."
+    t = type(xform)
+    if t is Rhino.Geometry.Transform: return xform
+    if( (t is list or t is tuple) and len(xform)==4 and len(xform[0])==4):
+        xf = Rhino.Geometry.Transform()
+        for i in range(4):
+            for j in range(4):
+                xf[i,j] = xform[i][j]
+        return xf
+    return None
 
 
 def coerceguid(id):
-    if( type(id) is System.Guid ): return id
-    if( type(id) is str and len(id)>30 ):
+    if type(id) is System.Guid: return id
+    if type(id) is str and len(id)>30:
         try:
             id = System.Guid(id)
             return id
         except:
             pass
-    if( (type(id) is list or type(id) is tuple) and len(id)==1 ):
+    if (type(id) is list or type(id) is tuple) and len(id)==1:
         return coerceguid(id[0])
     return None
 
+
 def coerceguidlist(ids):
-    if( ids==None ): return None
+    if ids is None: return None
     rc = []
-    if( type(ids) is list or type(ids) is tuple ):
-        pass
-    else:
-        ids = [ids]
+    if( type(ids) is list or type(ids) is tuple ): pass
+    else: ids = [ids]
     for id in ids:
         id = coerceguid(id)
-        if( id!=None ): rc.append(id)
-    if( len(rc)==0 ): return None
+        if id: rc.append(id)
+    if len(rc)==0: return None
     return rc
 
+
 def coerceboundingbox(bbox):
-  if( bbox==None or type(bbox) is Rhino.Geometry.BoundingBox ): return bbox
-  if( type(bbox) is list or type(bbox) is tuple ):
+    if bbox is None or type(bbox) is Rhino.Geometry.BoundingBox: return bbox
     points = coerce3dpointlist(bbox)
-    if( points!=None ):
-      return Rhino.Geometry.BoundingBox(points)
-  return None
+    if points: return Rhino.Geometry.BoundingBox(points)
+    return None
 
 
 def coercecolor(c):
-  if( c==None or type(c) is System.Drawing.Color ): return c
-  if( type(c) is list or type(c) is tuple ):
-    if( len(c)==3 ):
-      return System.Drawing.Color.FromArgb(c[0], c[1], c[2])
-    elif( len(c)==4 ):
-      return System.Drawing.Color.FromArgb(c[0], c[1], c[2], c[3])
-  if( type(c)==type(1) ):
-    return System.Drawing.Color.FromArgb(c)
-  return None
+    if c is None or type(c) is System.Drawing.Color: return c
+    if type(c) is list or type(c) is tuple:
+        if len(c)==3: return System.Drawing.Color.FromArgb(c[0], c[1], c[2])
+        elif len(c)==4: return System.Drawing.Color.FromArgb(c[0], c[1], c[2], c[3])
+    if type(c)==type(1): return System.Drawing.Color.FromArgb(c)
+    return None
+
 
 def coerceline(line):
-    if( line==None or type(line) is Rhino.Geometry.Line ): return line
-    if( type(line) is list or type(line) is tuple ):
-        points = coerce3dpointlist(line)
-        if( len(points)==2 ): return Rhino.Geometry.Line(points[0], points[1])
+    if line is None or type(line) is Rhino.Geometry.Line: return line
+    points = coerce3dpointlist(line)
+    if points and len(points)>1: return Rhino.Geometry.Line(points[0], points[1])
     return None
+
 
 def coercebrep( id ):
     "attempt to get polysurface geometry from the document with a given id"
     id = coerceguid(id)
-    if( id==None ): return None
+    if id is None: return None
     objref = Rhino.DocObjects.ObjRef(id)
     brep = objref.Brep()
     objref.Dispose()
     return brep
 
+
 def coercecurve( id, segment_index=-1 ):
     "attempt to get curve geometry from the document with a given id"
-    if( isinstance(id, Rhino.Geometry.Curve) ): return id
-    if( type(id) is Rhino.DocObjects.ObjRef ): return id.Curve()
+    if isinstance(id, Rhino.Geometry.Curve): return id
+    if type(id) is Rhino.DocObjects.ObjRef: return id.Curve()
     id = coerceguid(id)
-    if( id==None ): return None
+    if id is None: return None
     objref = Rhino.DocObjects.ObjRef(id)
     curve = objref.Curve()
-    if( curve!=None and segment_index>=0 and type(curve) is Rhino.Geometry.PolyCurve ):
+    if curve and segment_index>=0 and type(curve) is Rhino.Geometry.PolyCurve:
         curve = curve.SegmentCurve(segment_index)
     objref.Dispose()
     return curve
 
+
 def coercesurface(object_id):
     "attempt to get surface geometry from the document with a given id"
-    if( isinstance(object_id, Rhino.Geometry.Surface) ): return object_id
-    if( type(object_id) is Rhino.DocObjects.ObjRef ): return object_id.Face()
+    if isinstance(object_id, Rhino.Geometry.Surface): return object_id
+    if type(object_id) is Rhino.DocObjects.ObjRef: return object_id.Face()
     object_id = coerceguid(object_id)
-    if( object_id==None ): return None
+    if object_id is None: return None
     objref = Rhino.DocObjects.ObjRef(object_id)
     srf = objref.Surface()
     objref.Dispose()
     return srf
 
+
 def coercemesh( object_id ):
     "attempt to get mesh geometry from the document with a given id"
     object_id = coerceguid(object_id)
-    if( object_id==None ): return None
+    if object_id is None: return None
     objref = Rhino.DocObjects.ObjRef(object_id)
     mesh = objref.Mesh()
     objref.Dispose()
     return mesh
 
+
 def coercerhinoobject(object_id):
-    "attemp to get RhinoObject from the document with a given id"
+    "attempt to get RhinoObject from the document with a given id"
     object_id = coerceguid(object_id)
     if object_id is None: return None
     return scriptcontext.doc.Objects.Find(object_id)
