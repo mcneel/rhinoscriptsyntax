@@ -32,13 +32,13 @@ def Angle(point1, point2, plane=True):
     y = vector.Y
     z = vector.Z
     if plane!=True:
-        plane = rhutil.coerceplane(plane)
+        plane = coerceplane(plane)
         if plane is None:
             plane = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
         vfrom = point1 - plane.Origin
         vto = point2 - plane.Origin
         x = vto * plane.XAxis - vfrom * plane.XAxis
-        y = vto * plane.YAxis - vfrom * plane.YAaxis
+        y = vto * plane.YAxis - vfrom * plane.YAxis
         z = vto * plane.ZAxis - vfrom * plane.ZAxis
     h = math.sqrt( x * x + y * y)
     angle_xy = math.degrees( math.atan2( y, x ) )
