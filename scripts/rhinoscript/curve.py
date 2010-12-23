@@ -2,9 +2,7 @@ import scriptcontext
 import utility as rhutil
 import Rhino
 import math
-import System.Guid
-import System.Array
-import System.Enum
+import System.Guid, System.Array, System.Enum
 
 def AddArc(plane, radius, angle_degrees):
     """
@@ -20,11 +18,11 @@ def AddArc(plane, radius, angle_degrees):
       None on error  
     """
     plane = rhutil.coerceplane(plane)
-    if( plane==None ): return scriptcontext.errorhandler()
+    if plane is None: return scriptcontext.errorhandler()
     radians = math.radians(angle_degrees)
     arc = Rhino.Geometry.Arc(plane, radius, radians)
     rc = scriptcontext.doc.Objects.AddArc(arc)
-    if( rc == System.Guid.Empty ): return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -42,11 +40,11 @@ def AddArc3Pt(start, end, point_on_arc):
     start = rhutil.coerce3dpoint(start)
     end = rhutil.coerce3dpoint(end)
     pton = rhutil.coerce3dpoint(point_on_arc)
-    if( start==None or end==None or pton==None ):
+    if start is None or end is None or pton is None:
         return scriptcontext.errorhandler()
     arc = Rhino.Geometry.Arc(start, end, pton)
     rc = scriptcontext.doc.Objects.AddArc(arc)
-    if( rc == System.Guid.Empty ): return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -62,11 +60,11 @@ def AddArcPtTanPt(start, direction, end):
     start = rhutil.coerce3dpoint(start)
     direction = rhutil.coerce3dvector(direction)
     end = rhutil.coerce3dpoint(end)
-    if( start==None or direction==None or end==None ):
+    if start is None or direction is None or end is None:
         return scriptcontext.errorhandler()
     arc = Rhino.Geometry.Arc(start, direction, end)
     rc = scriptcontext.doc.Objects.AddArc(arc)
-    if( rc == System.Guid.Empty ): return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -88,7 +86,7 @@ def AddCircle( plane_or_center, radius ):
     if plane:
         circle = Rhino.Geometry.Circle(plane, radius)
         rc = scriptcontext.doc.Objects.AddCircle(circle)
-        if( rc == System.Guid.Empty ): rc = None
+        if rc==System.Guid.Empty: rc = None
     else:
         center = rhutil.coerce3dpoint(plane_or_center)
         if center:
@@ -98,7 +96,7 @@ def AddCircle( plane_or_center, radius ):
             circle = Rhino.Geometry.Circle(plane, radius)
             rc = scriptcontext.doc.Objects.AddCircle(circle)
             if( rc == System.Guid.Empty ): rc = None
-    if( rc==None ): return scriptcontext.errorhandler()
+    if rc is None: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -115,11 +113,11 @@ def AddCircle3Pt(first, second, third):
     start = rhutil.coerce3dpoint(first)
     end = rhutil.coerce3dpoint(second)
     third = rhutil.coerce3dpoint(third)
-    if( start==None or end==None or third==None ):
+    if start is None or end is None or third is None:
         return scriptcontext.errorhandler()
     circle = Rhino.Geometry.Circle(start, end, third)
     rc = scriptcontext.doc.Objects.AddCircle(circle)
-    if( rc == System.Guid.Empty ): return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -135,11 +133,11 @@ def AddCurve( points, degree=3 ):
       None on error
     """
     points = rhutil.coerce3dpointlist(points)
-    if( points==None ): return scriptcontext.errorhandler()
+    if points is None: return scriptcontext.errorhandler()
     curve = Rhino.Geometry.Curve.CreateControlPointCurve(points, degree)
-    if( curve==None ): return scriptcontext.errorhandler()
+    if curve is None: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddCurve(curve)
-    if( rc == System.Guid.Empty ): return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -156,10 +154,10 @@ def AddEllipse( plane, radiusX, radiusY ):
       None on error
     """
     plane = rhutil.coerceplane(plane)
-    if( plane==None ): return scriptcontext.errorhandler()
+    if plane is None: return scriptcontext.errorhandler()
     ellipse = Rhino.Geometry.Ellipse(plane, radiusX, radiusY)
     rc = scriptcontext.doc.Objects.AddEllipse(ellipse)
-    if( rc == System.Guid.Empty ): return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -178,11 +176,11 @@ def AddEllipse3Pt( center, second, third ):
     center = rhutil.coerce3dpoint(center)
     second = rhutil.coerce3dpoint(second)
     third = rhutil.coerce3dpoint(third)
-    if( center==None or second==None or third==None ):
+    if center is None or second is None or third is None:
         return scriptcontext.errorhandler()
     ellipse = Rhino.Geometry.Ellipse(center, second, third)
     rc = scriptcontext.doc.Objects.AddEllipse(ellipse)
-    if( rc == System.Guid.Empty ): return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -203,32 +201,29 @@ def AddFilletCurve( curve0id, curve1id, radius=1.0, base_point0=None, base_point
       None on error
     """
     base0 = rhutil.coerce3dpoint(base_point0)
-    if (base0==None): base0 = Rhino.Geometry.Point3d.Unset
+    if base0 is None: base0 = Rhino.Geometry.Point3d.Unset
     base1 = rhutil.coerce3dpoint(base_point1)
-    if (base1==None ): base1 = Rhino.Geometry.Point3d.Unset
-
+    if base1 is None: base1 = Rhino.Geometry.Point3d.Unset
     curve0 = rhutil.coercecurve(curve0id)
     curve1 = rhutil.coercecurve(curve1id)
-    if( curve0==None or curve1==None ): return scriptcontext.errorhandler()
-    
+    if curve0 is None or curve1 is None: return scriptcontext.errorhandler()
     crv0_t = 0.0
-    if(base0==Rhino.Geometry.Point3d.Unset):
+    if base0==Rhino.Geometry.Point3d.Unset:
         crv0_t = curve0.Domain.Min
     else:
         rc, t = curve0.ClosestPoint(base0, 0.0)
         if not rc: return scriptcontext.errorhandler()
         crv0_t = t
     crv1_t = 0.0
-    if(base1==Rhino.Geometry.Point3d.Unset):
+    if base1==Rhino.Geometry.Point3d.Unset:
         crv1_t = curve1.Domain.Min
     else:
         rc, t = curve1.ClosestPoint(base1, 0.0)
         if not rc: return None
         crv1_t = t
-
     arc = Rhino.Geometry.Curve.CreateFillet(curve0, curve1, radius, crv0_t, crv1_t)
     rc = scriptcontext.doc.Objects.AddArc(arc)
-    if( rc == System.Guid.Empty ): return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
 

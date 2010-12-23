@@ -22,6 +22,7 @@ def ComboListBox(items, message=None, title=None):
     """
     return Rhino.UI.Dialogs.ShowComboListBox(title, message, items)
 
+
 def EditBox(default_string=None, message=None, title=None):
     """
     Displays a dialog box prompting the user to enter a string value. The
@@ -30,13 +31,14 @@ def EditBox(default_string=None, message=None, title=None):
     rc, text = Rhino.UI.Dialogs.ShowEditBox(title, message, default_string, True)
     return text
 
+
 def GetBoolean(message, items, defaults):
     """
-    Pauses for user input of one or more boolean values. Boolean values are displayed as click-able
-    command line option toggles
+    Pauses for user input of one or more boolean values. Boolean values are
+    displayed as click-able command line option toggles
     Parameters:
       message = a prompt
-      items = list or tuple of options. Each option is a tuple of three strings defining
+      items = list or tuple of options. Each option is a tuple of three strings
         element 1 = description of the boolean value
         element 2 = string identifying the false value
         element 3 = string identifying the true value
@@ -48,12 +50,10 @@ def GetBoolean(message, items, defaults):
     go = Rhino.Input.Custom.GetOption()
     go.AcceptNothing(True)
     go.SetCommandPrompt( message )
-    if( type(defaults) is list or type(defaults) is tuple ):
-        pass
-    else:
-        defaults = [defaults]
+    if type(defaults) is list or type(defaults) is tuple: pass
+    else: defaults = [defaults]
     count = len(items)
-    if( count<1 or count!=len(defaults) ): return scriptcontext.errorhandler()
+    if count<1 or count!=len(defaults): return scriptcontext.errorhandler()
     toggles = []
     for i in range(count):
         initial = defaults[i]
@@ -62,18 +62,19 @@ def GetBoolean(message, items, defaults):
         t = Rhino.Input.Custom.OptionToggle( initial, item[1], item[2] )
         toggles.append(t)
         go.AddOptionToggle(item[0], t)
-    while( True ):
+    while True:
         getrc = go.Get()
-        if( getrc == Rhino.Input.GetResult.Option ): continue
-        if( getrc != Rhino.Input.GetResult.Nothing ): return None
+        if getrc==Rhino.Input.GetResult.Option: continue
+        if getrc!=Rhino.Input.GetResult.Nothing: return None
         break
     return [t.CurrentValue for t in toggles]
+
 
 def GetBox(mode=0, base_point=None, prompt1=None, prompt2=None, prompt3=None):
     """
     Pauses for user input of a box
     Parameters:
-      mode[opt] = The box selection mode. In not specified, all modes (0) are available
+      mode[opt] = The box selection mode.
          0 = All modes
          1 = Corner. The base rectangle is created by picking two corner points
          2 = 3-Point. The base rectangle is created by picking three points
@@ -86,9 +87,9 @@ def GetBox(mode=0, base_point=None, prompt1=None, prompt2=None, prompt3=None):
       None is not successful, or on error
     """
     base_point = rhutil.coerce3dpoint(base_point)
-    if( base_point==None ): base_point = Rhino.Geometry.Point3d.Unset
+    if base_point is None: base_point = Rhino.Geometry.Point3d.Unset
     rc, box = Rhino.Input.RhinoGet.GetBox(mode, base_point, prompt1, prompt2, prompt3)
-    if( rc == Rhino.Commands.Result.Success ): return tuple(box.GetCorners())
+    if rc==Rhino.Commands.Result.Success: return tuple(box.GetCorners())
     return None
 
 
@@ -102,10 +103,9 @@ def GetColor(color=[0,0,0]):
       None on error
     """
     color = rhutil.coercecolor(color)
-    if( color == None ): color = System.Drawing.Color.Black
+    if color is None: color = System.Drawing.Color.Black
     rc, color = Rhino.Input.RhinoGet.GetColor("Select color", True, color)
-    if( rc == Rhino.Commands.Result.Success ):
-        return color.R, color.G, color.B
+    if rc==Rhino.Commands.Result.Success: return color.R, color.G, color.B
     return scriptcontext.errorhandler()
 
 
@@ -126,11 +126,11 @@ def GetInteger(message=None, number=None, minimum=None, maximum=None):
     if number: gi.SetDefaultInteger(number)
     if minimum: gi.SetLowerLimit(minimum, False)
     if maximum: gi.SetUpperLimit(maximum, False)
-    if( gi.Get() != Rhino.Input.GetResult.Number ):
-        return scriptcontext.errorhandler()
+    if gi.Get()!=Rhino.Input.GetResult.Number: return scriptcontext.errorhandler()
     rc = gi.Number()
     gi.Dispose()
     return rc
+
 
 def GetLayer(title="Select Layer", layer=None, show_new_button=False, show_set_current=False):
     """
@@ -146,11 +146,12 @@ def GetLayer(title="Select Layer", layer=None, show_new_button=False, show_set_c
     layer_index = scriptcontext.doc.Layers.CurrentLayerIndex
     if layer:
         index = scriptcontext.doc.Layers.Find(layer, True)
-        if( index!=-1 ): layer_index = index
+        if index!=-1: layer_index = index
     rc = Rhino.UI.Dialogs.ShowSelectLayerDialog(layer_index, title, show_new_button, show_set_current, True)
-    if( rc[0]!=System.Windows.Forms.DialogResult.OK ): return None
+    if rc[0]!=System.Windows.Forms.DialogResult.OK: return None
     layer = scriptcontext.doc.Layers[rc[1]]
     return layer.Name
+
 
 def GetPoint(message=None, base_point=None, distance=None, in_plane=False):
     """
@@ -174,11 +175,12 @@ def GetPoint(message=None, base_point=None, distance=None, in_plane=False):
         if distance: gp.ConstrainDistanceFromBasePoint(distance)
     if in_plane: gp.ConstrainToConstructionPlane(True)
     gp.Get()
-    if( gp.CommandResult() != Rhino.Commands.Result.Success ):
+    if gp.CommandResult()!=Rhino.Commands.Result.Success:
         return scriptcontext.errorhandler()
     pt = gp.Point()
     gp.Dispose()
     return pt
+
 
 def GetPointOnCurve( curve_id, message=None ):
     """
@@ -191,19 +193,20 @@ def GetPointOnCurve( curve_id, message=None ):
       None on error
     """
     curve_id = rhutil.coerceguid(curve_id)
-    if( curve_id==None ): return scriptcontext.errorhandler()
+    if curve_id is None: return scriptcontext.errorhandler()
     objref = Rhino.DocObjects.ObjRef(curve_id)
     curve = objref.Curve()
-    if( curve==None ): return scriptcontext.errorhandler()
+    if curve is None: return scriptcontext.errorhandler()
     gp = Rhino.Input.Custom.GetPoint()
     if message: gp.SetCommandPrompt(message)
     gp.Constrain(curve, False)
     gp.Get()
-    if( gp.CommandResult() != Rhino.Commands.Result.Success ):
+    if gp.CommandResult()!=Rhino.Commands.Result.Success:
         return scriptcontext.errorhandler()
     pt = gp.Point()
     gp.Dispose()
     return pt
+
 
 def GetPointOnMesh( mesh_id, message=None ):
     """
@@ -216,11 +219,12 @@ def GetPointOnMesh( mesh_id, message=None ):
       None on error
     """
     mesh_id = rhutil.coerceguid(mesh_id)
-    if( mesh_id==None ): return scriptcontext.errorhandler()
-    if( message==None ): message = "Point"
+    if mesh_id is None: return scriptcontext.errorhandler()
+    if not message: message = "Point"
     cmdrc, point = Rhino.Input.RhinoGet.GetPointOnMesh(mesh_id, message, False)
-    if( cmdrc == Rhino.Commands.Result.Success ): return point
+    if cmdrc==Rhino.Commands.Result.Success: return point
     return None
+
 
 def GetPointOnSurface( surface_id, message=None ):
     """

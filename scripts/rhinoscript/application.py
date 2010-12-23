@@ -1,11 +1,7 @@
 import scriptcontext
 import Rhino
-import Rhino.ApplicationSettings.CommandAliasList as aliaslist
-import Rhino.ApplicationSettings.FileSettings as filesettings
-import Rhino.ApplicationSettings.EdgeAnalysisSettings as edgesettings
 import Rhino.ApplicationSettings.ModelAidSettings as modelaid
 import Rhino.Commands.Command as rhcommand
-import Rhino.Runtime
 import System.TimeSpan
 import System.Windows.Forms.Screen
 import datetime
@@ -58,7 +54,7 @@ def AliasMacro( alias, macro=None ):
     rc = Rhino.ApplicationSettings.CommandAliasList.GetMacro(alias)
     if macro:
         Rhino.ApplicationSettings.CommandAliasList.SetMacro(alias, macro)
-    if( rc==None ): return scriptcontext.errorhandler()
+    if rc is None: return scriptcontext.errorhandler()
     return rc
 
 
@@ -138,7 +134,7 @@ def AppearanceColor( item, color=None ):
     elif item==13:
         rc = appearance.CommandPromptHypertextColor
         if color: appearance.CommandPromptHypertextColor = color
-    if( rc==None ): return scriptcontext.errorhandler()
+    if rc is None: return scriptcontext.errorhandler()
     return rc
 
 
@@ -152,9 +148,9 @@ def AutosaveFile( filename=None ):
       if filename is specified, the name of the previous autosave file
       None on error
     """
-    rc = filesettings.AutosaveFile
-    if filename: filesettings.AutosaveFile = filename
-    if( rc==None ): return scriptcontext.errorhandler()
+    rc = Rhino.ApplicationSettings.FileSettings.AutosaveFile
+    if filename: Rhino.ApplicationSettings.FileSettings.AutosaveFile = filename
+    if rc is None: return scriptcontext.errorhandler()
     return rc
 
 
@@ -169,10 +165,11 @@ def AutosaveInterval( minutes=None ):
       if minutes is specified, the previous interval in minutes
       None on error
     """
-    rc = filesettings.AutosaveInterval.TotalMinutes
+    rc = Rhino.ApplicationSettings.FileSettings.AutosaveInterval.TotalMinutes
     if minutes:
-        filesettings.AutosaveInterval = System.TimeSpan.FromMinutes(minutes)
-    if( rc==None ): return scriptcontext.errorhandler()
+        timespan = System.TimeSpan.FromMinutes(minutes)
+        Rhino.ApplicationSettings.FileSettings.AutosaveInterval = timespan
+    if rc is None: return scriptcontext.errorhandler()
     return rc
 
 
@@ -231,8 +228,7 @@ def Command(commandString, echo=True):
     end = Rhino.DocObjects.RhinoObject.NextRuntimeSerialNumber
     global __command_serial_numbers
     __command_serial_numbers = None
-    if( start!=end ):
-        __command_serial_numbers = (start,end)
+    if start!=end: __command_serial_numbers = (start,end)
     return rc
 
 
@@ -262,7 +258,7 @@ def DeleteSearchPath( folder ):
     Returns:
       True or False indicating success
     """
-    return filesettings.DeleteSearchPath(folder)
+    return Rhino.ApplicationSettings.FileSettings.DeleteSearchPath(folder)
 
 
 def DisplayOleAlerts( enable ):
@@ -280,9 +276,11 @@ def EdgeAnalysisColor( color=None ):
       if color is specified, the previous edge analysis color
       None on error
     """
-    rc = edgesettings.ShowEdgeColor
-    if color: edgesettings.ShowEdgeColor = color
-    if( rc==None ): return scriptcontext.errorhandler()
+    rc = Rhino.ApplicationSettings.EdgeAnalysisSettings.ShowEdgeColor
+    color = rhutil.coercecolor(color)
+    if color:
+        Rhino.ApplicationSettings.EdgeAnalysisSettings.ShowEdgeColor = color
+    if rc is None: return scriptcontext.errorhandler()
     return rc
 
 
@@ -298,9 +296,10 @@ def EdgeAnalysisMode( mode=None ):
       if mode is specified, the previous edge analysis mode
       None on error
     """
-    rc = edgesettings.ShowEdges
-    if( mode==1 or mode==2 ): edgesettings.ShowEdges = mode
-    if( rc==None ): return scriptcontext.errorhandler()
+    rc = Rhino.ApplicationSettings.EdgeAnalysisSettings.ShowEdges
+    if mode==1 or mode==2:
+        Rhino.ApplicationSettings.EdgeAnalysisSettings.ShowEdges = mode
+    if rc is None: return scriptcontext.errorhandler()
     return rc
 
 
@@ -312,14 +311,15 @@ def EnableAutosave( enable=True ):
     Returns:
       the previous autosave state
     """
-    rc = filesettings.AutosaveEnabled
-    if (rc != enable): filesettings.AutosaveEnabled = enable
+    rc = Rhino.ApplicationSettings.FileSettings.AutosaveEnabled
+    if rc!=enable:
+        Rhino.ApplicationSettings.FileSettings.AutosaveEnabled = enable
     return rc
 
 
 def ExeFolder():
     "Returns the full path to Rhino's executable folder."
-    return filesettings.ExecutableFolder.FullName
+    return Rhino.ApplicationSettings.FileSettings.ExecutableFolder.FullName
 
 
 def Exit():
@@ -340,8 +340,8 @@ def FindFile(filename):
       full path on success
       None on error
     """
-    rc = filesettings.FindFile(filename)
-    if( rc==None ): return scriptcontext.errorhandler()
+    rc = Rhino.ApplicationSettings.FileSettings.FindFile(filename)
+    if rc is None: return scriptcontext.errorhandler()
     return rc
 
 
@@ -358,7 +358,7 @@ def GetPlugInObject( plug_in ):
       None on error
     """
     rc = Rhino.RhinoApp.GetPlugInObject(plug_in)
-    if( rc==None ): return scriptcontext.errorhandler()
+    if rc is None: return scriptcontext.errorhandler()
     return rc
   
 
@@ -388,7 +388,7 @@ def IsAlias(alias):
     Parameters:
       the name of an existing command alias
     """
-    return aliaslist.IsAlias(alias)
+    return Rhino.ApplicationSettings.CommandAliasList.IsAlias(alias)
 
 
 def IsCommand(command_name):
@@ -451,7 +451,7 @@ def Ortho(enable=None):
       if enable is secified, then the previous ortho status
     """
     rc = modelaid.Ortho
-    if (enable != None): modelaid.Ortho = enable
+    if enable!=None: modelaid.Ortho = enable
     return rc
 
 
@@ -466,7 +466,7 @@ def Osnap(enable=None):
       if enable is secified, then the previous osnap status
     """
     rc = modelaid.Osnap
-    if( enable!=None ): modelaid.Osnap = enable
+    if enable!=None: modelaid.Osnap = enable
     return rc
 
 
@@ -480,7 +480,7 @@ def OsnapDialog(visible=None):
       if visible is secified, then the previous visible state
     """
     rc = modelaid.UseHorizontalDialog
-    if( visible!=None ): modelaid.UseHorizontalDialog = visible
+    if visible is not None: modelaid.UseHorizontalDialog = visible
     return rc
 
 
@@ -508,7 +508,7 @@ def OsnapMode(mode=None):
       if mode is specified, then the previous object snap mode(s) 
     """
     rc = modelaid.OSnapModes
-    if( mode!=None): modelaid.OSnapModes = mode
+    if mode is not None: modelaid.OSnapModes = mode
     return rc
 
 
@@ -522,7 +522,7 @@ def Planar(enable=None):
       if enable is secified, then the previous planar status
     """
     rc = modelaid.Planar
-    if( enable!=None ): modelaid.Planar = enable
+    if enable is not None: modelaid.Planar = enable
     return rc
 
 
@@ -536,7 +536,7 @@ def ProjectOsnaps(enable=None):
       if enable is specified, the previous object snap projection status
     """
     rc = modelaid.ProjectSnapToCPlane
-    if( enable!=None ): modelaid.ProjectSnapToCPlane = enable
+    if enable is not None: modelaid.ProjectSnapToCPlane = enable
     return rc
 
 
@@ -546,7 +546,7 @@ def Prompt(message=None):
     Parameters:
       message [opt] = the new prompt
     """
-    if( type!=None and type(message) is not str ):
+    if message and type(message) is not str:
         strList = [str(item) for item in message]
         message = "".join(strList)
     Rhino.RhinoApp.SetCommandPrompt(message)
@@ -575,7 +575,7 @@ def SearchPathCount():
     Returns the number of path items in Rhino's search path list.
     See "Options Files settings" in the Rhino help file for more details.
     """
-    return filesettings.SearchPathCount
+    return Rhino.ApplicationSettings.FileSettings.SearchPathCount
 
 
 def SearchPathList():
@@ -583,7 +583,7 @@ def SearchPathList():
     Returns all of the path items in Rhino's search path list.
     See "Options Files settings" in the Rhino help file for more details.
     """
-    return filesettings.GetSearchPaths()
+    return Rhino.ApplicationSettings.FileSettings.GetSearchPaths()
 
 
 def SendKeystrokes(keys=None, add_return=True):
@@ -606,7 +606,7 @@ def Snap(enable=None):
       if enable is specified, the previous grid snap status  
     """
     rc = modelaid.GridSnap
-    if( enable!=None ): modelaid.GridSnap = rc
+    if enable is not None: modelaid.GridSnap = rc
     return rc
 
 
@@ -620,8 +620,8 @@ def TemplateFile(filename=None):
       if filename is not specified, then the current default template file
       if filename is specified, then the previous default template file
     """
-    rc = filesettings.TemplateFile
-    if filename: filesettings.TemplateFile = filename
+    rc = Rhino.ApplicationSettings.FileSettings.TemplateFile
+    if filename: Rhino.ApplicationSettings.FileSettings.TemplateFile = filename
     return rc
 
 
@@ -634,8 +634,8 @@ def TemplateFolder(folder=None):
       if folder is not specified, then the current template file folder
       if folder is specified, then the previous template file folder
     """
-    rc = filesettings.TemplateFolder
-    if folder: filesettings.TemplateFolder = folder
+    rc = Rhino.ApplicationSettings.FileSettings.TemplateFolder
+    if folder: Rhino.ApplicationSettings.FileSettings.TemplateFolder = folder
     return rc
 
 
@@ -654,6 +654,6 @@ def WorkingFolder(folder=None):
       if folder is not specified, then the current working folder
       if folder is specified, then the previous working folder
     """
-    rc = filesettings.WorkingFolder
-    if folder: filesettings.WorkingFolder = folder
+    rc = Rhino.ApplicationSettings.FileSettings.WorkingFolder
+    if folder: Rhino.ApplicationSettings.FileSettings.WorkingFolder = folder
     return rc

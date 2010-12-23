@@ -99,7 +99,7 @@ def BlockInstanceInsertPoint(object_id):
       None on error
     """
     instance = __InstanceObjectFromId(object_id)
-    if( instance==None ): return scriptcontext.errorhandler()
+    if instance is None: return scriptcontext.errorhandler()
     xf = instance.InstanceXform
     pt = Rhino.Geometry.Point3d.Origin
     pt.Transform(xf)
@@ -113,9 +113,9 @@ def BlockInstanceName(object_id):
       object_id = The identifier of an existing block insertion object
     """
     instance = __InstanceObjectFromId(object_id)
-    if( instance==None ): return scriptcontext.errorhandler()
+    if instance is None: return scriptcontext.errorhandler()
     idef = instance.InstanceDefinition
-    if( idef==None ): return scriptcontext.errorhandler()
+    if idef is None: return scriptcontext.errorhandler()
     return idef.Name
 
 
@@ -129,11 +129,10 @@ def BlockInstances(block_name):
       None on error  
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
-    if( idef==None ): return scriptcontext.errorhandler()
+    if idef is None: return scriptcontext.errorhandler()
     instances = idef.GetReferences(0)
-    if( instances==None ): return scriptcontext.errorhandler()
-    rc = [item.Id for item in instances]
-    return rc
+    if instances is None: return scriptcontext.errorhandler()
+    return [item.Id for item in instances]
 
 
 def BlockInstanceXform(object_id):
@@ -145,12 +144,12 @@ def BlockInstanceXform(object_id):
       object_id = The identifier of an existing block insertion object  
     """
     instance = __InstanceObjectFromId(object_id)
-    if( instance==None ): return scriptcontext.errorhandler()
+    if instance is None: return scriptcontext.errorhandler()
     xf = instance.InstanceXform
-    matrix = [(xf.M00, xf.M01, xf.M02, xf.M03),
+    matrix = ((xf.M00, xf.M01, xf.M02, xf.M03),
               (xf.M10, xf.M11, xf.M12, xf.M13),
               (xf.M20, xf.M21, xf.M22, xf.M23),
-              (xf.M30, xf.M31, xf.M32, xf.M33)]
+              (xf.M30, xf.M31, xf.M32, xf.M33))
     return matrix
 
 
@@ -161,7 +160,7 @@ def BlockNames( sort=False ):
       sort = return a sorted list
     """
     ideflist = scriptcontext.doc.InstanceDefinitions.GetList(True)
-    if( ideflist==None ): return None
+    if ideflist is None: return None
     rc = [item.Name for item in ideflist]
     if(sort): rc.sort()
     return rc
@@ -205,7 +204,7 @@ def BlockPath( block_name ):
       None on error
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
-    if( idef==None ): return scriptcontext.errorhandler()
+    if idef is None: return scriptcontext.errorhandler()
     return idef.SourceArchive
 
 
@@ -231,20 +230,20 @@ def ExplodeBlockInstance( object_id ):
     None on failure
   """
   instance = __InstanceObjectFromId(object_id)
-  if( instance==None ): return scriptcontext.errorhandler()
+  if instance is None: return scriptcontext.errorhandler()
   subobjects = instance.GetSubObjects()
-  if( subobjects==None ): return scriptcontext.errorhandler()
+  if subobjects is None: return scriptcontext.errorhandler()
   persistSelect = (instance.IsSelected(False)>=2)
   instance.Select(False, True)
-  rc = list()
+  rc = []
   for item in subobjects:
       id = scriptcontext.doc.Objects.AddObject(item)
-      if( id!=System.Guid.Empty ):
+      if id!=System.Guid.Empty:
           rc.append(id)
-          if( persistSelect ):
+          if persistSelect:
               rhobj = scriptcontext.doc.Objects.Find(id)
               rhobj.Select(True, True)
-  if( len(rc)>0 ):
+  if len(rc)>0:
       scriptcontext.doc.Objects.Delete( Rhino.DocObjects.ObjRef(instance) )
       scriptcontext.doc.Views.Redraw()
       return rc
@@ -266,10 +265,9 @@ def InsertBlock( block_name, insertion_point, scale=(1,1,1), angle_degrees=0, ro
     """
     insertion_point = rhutil.coerce3dpoint(insertion_point)
     rotation_normal = rhutil.coerce3dvector(rotation_normal)
-    if( insertion_point==None or rotation_normal==None ):
+    if insertion_point is None or rotation_normal is None:
         return scriptcontext.errorhandler()
     angle_radians = math.radians(angle_degrees)
-    
     trans = Rhino.Geometry.Transform
     move = trans.Translation(insertion_point[0],insertion_point[1],insertion_point[2])
     scale = trans.Scale(Rhino.Geometry.Plane.WorldXY, scale[0], scale[1], scale[2])
@@ -289,12 +287,12 @@ def InsertBlock2( block_name, xform ):
       None on failure
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
-    if( idef==None ): return scriptcontext.errorhandler()
+    if idef is None: return scriptcontext.errorhandler()
     xform = rhutil.coercexform(xform)
-    if( xform==None ): return scriptcontext.errorhandler()
-    if( xform.IsValid ):
+    if xform is None: return scriptcontext.errorhandler()
+    if xform.IsValid:
         id = scriptcontext.doc.Objects.AddInstanceObject(idef.Index, xform )
-        if( id != System.Guid.Empty ):
+        if id!=System.Guid.Empty:
             scriptcontext.doc.Views.Redraw()
             return id
     return scriptcontext.errorhandler()
@@ -309,7 +307,7 @@ def IsBlock( block_name ):
       True or False
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
-    return (idef!=None)
+    return (idef is not None)
 
 
 def IsBlockEmbedded( block_name ):
@@ -321,7 +319,7 @@ def IsBlockEmbedded( block_name ):
       True or False
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
-    if( idef==None or idef.IsDeleted ): return False
+    if idef is None or idef.IsDeleted: return False
     ut = Rhino.DocObjects.InstanceDefinitionUpdateType
     return (idef.UpdateType==ut.Embedded or idef.UpdateType==ut.LinkedAndEmbedded)
 
@@ -334,8 +332,7 @@ def IsBlockInstance( object_id ):
     Returns:
       True or False
     """
-    instance = __InstanceObjectFromId(object_id)
-    return (instance!=None)
+    return  __InstanceObjectFromId(object_id) is not None
 
 
 def IsBlockInUse( block_name, where_to_look=0 ):
@@ -351,7 +348,7 @@ def IsBlockInUse( block_name, where_to_look=0 ):
       True or False
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
-    if( idef==None or idef.IsDeleted ): return False
+    if idef is None or idef.IsDeleted: return False
     return idef.InUse(where_to_look)
 
 
@@ -364,7 +361,7 @@ def IsBlockReference( block_name ):
       True or False
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
-    if( idef==None or idef.IsDeleted ): return False
+    if idef is None or idef.IsDeleted: return False
     return idef.IsReference
 
 
@@ -378,7 +375,7 @@ def RenameBlock( block_name, new_name ):
       True or False indicating success or failure
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
-    if( idef==None or idef.IsDeleted ): return False
+    if idef is None or idef.IsDeleted: return False
     description = idef.Description
     rc = scriptcontext.doc.InstanceDefinitions.Modify(idef, new_name, description, False)
     return rc

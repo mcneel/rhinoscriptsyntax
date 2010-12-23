@@ -106,21 +106,21 @@ def ColorAdjustLuma( rgb, luma, scale=False ):
 
 
 def ColorBlueValue(rgb):
-    """Retrieves intensity value for the blue component of an RGB color"""
+    "Retrieves intensity value for the blue component of an RGB color"
     rgb = coercecolor(rgb)
     if rgb is None: return scriptcontext.errorhandler()
     return rgb.B
 
 
 def ColorGreenValue(rgb):
-    """Retrieves intensity value for the green component of an RGB color"""
+    "Retrieves intensity value for the green component of an RGB color"
     rgb = coercecolor(rgb)
     if rgb is None: return scriptcontext.errorhandler()
     return rgb.G
 
 
 def ColorHLSToRGB(hls):
-    """Converts colors from hue-lumanence-saturation to RGB"""
+    "Converts colors from hue-lumanence-saturation to RGB"
     if len(hls)==3:
         hls = Rhino.Display.ColorHSL(hls[0]/240.0, hls[2]/240.0, hls[1]/240.0)
     elif len(hls)==4:
@@ -132,18 +132,19 @@ def ColorHLSToRGB(hls):
 
 
 def ColorRedValue(rgb):
-    """Retrieves intensity value for the red component of an RGB color"""
+    "Retrieves intensity value for the red component of an RGB color"
     rgb = coercecolor(rgb)
     if rgb is None: return scriptcontext.errorhandler()
     return rgb.R
 
 
 def ColorRGBToHLS(rgb):
-    """Converts colors from RGB to HLS"""
+    "Converts colors from RGB to HLS"
     rgb = coercecolor(rgb)
     if rgb is None: return scriptcontext.errorhandler()
     hls = Rhino.Display.ColorHSL(rgb)
     return (hls.H, hls.S, hls.L, hls.A)
+
 
 def CullDuplicatePoints(points, tolerance=-1):
     """
@@ -181,11 +182,10 @@ def Distance(point1, point2):
     if from_pt and to_pt:
         vec = to_pt - from_pt
         return vec.Length
-
     # check if we have a list of points
     to_pt = coerce3dpointlist(point2)
-    if (to_pt == None): return scriptcontext.errorhandler()
-    distances = list()
+    if to_pt is None: return scriptcontext.errorhandler()
+    distances = []
     for point in to_pt:
         vec = point - from_pt
         distances.append(vec.Length)
@@ -207,56 +207,54 @@ def SortPointList(points, tolerance=None):
     points = coerce3dpointlist(points)
     if points is None: return scriptcontext.errorhandler()
     if tolerance is None: tolerance = Rhino.RhinoMath.ZeroTolerance
-    rc = Rhino.Geometry.Point3d.SortAndCullPointList(points, tolerance)
-    return rc
+    return Rhino.Geometry.Point3d.SortAndCullPointList(points, tolerance)
 
 
 def SortPoints(points, ascending=True, order=0):
-    """Sorts an array of 3D points"""
+    "Sorts an array of 3D points"
     def __cmpXYZ( a, b ):
         rc = cmp(a.X, b.X)
-        if( rc==0 ): rc = cmp(a.Y, b.Y)
-        if( rc==0 ): rc = cmp(a.Z, b.Z)
+        if rc==0: rc = cmp(a.Y, b.Y)
+        if rc==0: rc = cmp(a.Z, b.Z)
         return rc
     def __cmpXZY( a, b ):
         rc = cmp(a.X, b.X)
-        if( rc==0 ): rc = cmp(a.Z, b.Z)
-        if( rc==0 ): rc = cmp(a.Y, b.Y)
+        if rc==0: rc = cmp(a.Z, b.Z)
+        if rc==0: rc = cmp(a.Y, b.Y)
         return rc
     def __cmpYXZ( a, b ):
         rc = cmp(a.Y, b.Y)
-        if( rc==0 ): rc = cmp(a.X, b.X)
-        if( rc==0 ): rc = cmp(a.Z, b.Z)
+        if rc==0: rc = cmp(a.X, b.X)
+        if rc==0: rc = cmp(a.Z, b.Z)
         return rc
     def __cmpYZX( a, b ):
         rc = cmp(a.Y, b.Y)
-        if( rc==0 ): rc = cmp(a.Z, b.Z)
-        if( rc==0 ): rc = cmp(a.X, b.X)
+        if rc==0: rc = cmp(a.Z, b.Z)
+        if rc==0: rc = cmp(a.X, b.X)
         return rc
     def __cmpZXY( a, b ):
         rc = cmp(a.Z, b.Z)
-        if( rc==0 ): rc = cmp(a.X, b.X)
-        if( rc==0 ): rc = cmp(a.Y, b.Y)
+        if rc==0: rc = cmp(a.X, b.X)
+        if rc==0: rc = cmp(a.Y, b.Y)
         return rc
     def __cmpZYX( a, b ):
         rc = cmp(a.Z, b.Z)
-        if( rc==0 ): rc = cmp(a.Y, b.Y)
-        if( rc==0 ): rc = cmp(a.X, b.X)
+        if rc==0: rc = cmp(a.Y, b.Y)
+        if rc==0: rc = cmp(a.X, b.X)
         return rc
     
     sortfunc = __cmpXYZ
-    if( order==1 ): sortfunc = __cmpXZY
-    elif( order==2 ): sortfunc = __cmpYXZ
-    elif( order==3 ): sortfunc = __cmpYZX
-    elif( order==4 ): sortfunc = __cmpZXY
-    elif( order==5 ): sortfunc = __cmpZYX
+    if order==1: sortfunc = __cmpXZY
+    elif order==2: sortfunc = __cmpYXZ
+    elif order==3: sortfunc = __cmpYZX
+    elif order==4: sortfunc = __cmpZXY
+    elif order==5: sortfunc = __cmpZYX
     reverse = not ascending
-    rc = sorted(points, sortfunc, None, reverse)
-    return rc
+    return sorted(points, sortfunc, None, reverse)
 
 
 def Str2Pt(point):
-    """converts a formatted string value into a 3-D point value"""
+    "converts a formatted string value into a 3-D point value"
     return coerce3dpoint(point)
 
 
@@ -268,138 +266,118 @@ def clamp(lowvalue, highvalue, value):
 
 
 def coerce3dpoint(point):
-  """
-  Convert input into a Rhino.Geometry.Point3d if possible.
-  If not possible, return None
-  """
-  if( type(point) is Rhino.Geometry.Point3d): return point
-  if( type(point) is list or type(point) is tuple ):
-    length = len(point)
-    if( length == 3 and type(point[0]) is not list and type(point[0]) is not Rhino.Geometry.Point3d ):
-      rc = Rhino.Geometry.Point3d(point[0], point[1], point[2])
-      return rc
+    "Convert input into a Rhino.Geometry.Point3d if possible."
+    if point is None or type(point) is Rhino.Geometry.Point3d: return point
+    if type(point) is list or type(point) is tuple:
+        length = len(point)
+        if length==3 and type(point[0]) is not list and type(point[0]) is not Rhino.Geometry.Point3d:
+            return Rhino.Geometry.Point3d(point[0], point[1], point[2])
+        return None
+    if type(point) is Rhino.Geometry.Vector3d or type(point) is Rhino.Geometry.Point3f:
+        return Rhino.Geometry.Point3d(point.X, point.Y, point.Z)
+    if type(point) is str:
+        point = point.split(',')
+        return Rhino.Geometry.Point3d( float(point[0]), float(point[1]), float(point[2]) )
     return None
-  if( (type(point) is Rhino.Geometry.Vector3d) or (type(point) is Rhino.Geometry.Point3f) ):
-    rc = Rhino.Geometry.Point3d(point.X, point.Y, point.Z)
-    return rc
-  if( type(point) is str ):
-    point = point.split(',')
-    rc = Rhino.Geometry.Point3d( float(point[0]), float(point[1]), float(point[2]) )
-    return rc
-  return None
+
 
 def coerce2dpoint(point):
-  """
-  Convert input into a Rhino.Geometry.Point2d if possible.
-  If not possible, return None
-  """
-  if( type(point) is Rhino.Geometry.Point2d): return point
-  if( type(point) is list or type(point) is tuple ):
-    length = len(point)
-    if( length == 2 and type(point[0]) is not list and type(point[0]) is not Rhino.Geometry.Point2d ):
-      rc = Rhino.Geometry.Point2d(point[0], point[1])
-      return rc
+    "Convert input into a Rhino.Geometry.Point2d if possible."
+    if point is None or type(point) is Rhino.Geometry.Point2d: return point
+    if type(point) is list or type(point) is tuple:
+        length = len(point)
+        if length==2 and type(point[0]) is not list and type(point[0]) is not Rhino.Geometry.Point2d:
+            return Rhino.Geometry.Point2d(point[0], point[1])
+        return None
+    if type(point) is Rhino.Geometry.Vector3d or type(point) is Rhino.Geometry.Point3d:
+        return Rhino.Geometry.Point2d(point.X, point.Y)
+    if type(point) is str:
+        point = point.split(',')
+        return Rhino.Geometry.Point2d( float(point[0]), float(point[1]) )
     return None
-  if( (type(point) is Rhino.Geometry.Vector3d) or (type(point) is Rhino.Geometry.Point3d) ):
-    rc = Rhino.Geometry.Point2d(point.X, point.Y)
-    return rc
-  if( type(point) is str ):
-    point = point.split(',')
-    rc = Rhino.Geometry.Point2d( float(point[0]), float(point[1]) )
-    return rc
-  return None
+
 
 def coerce3dvector(vector):
-  """
-  Convert input into a Rhino.Geometry.Vector3d if possible.
-  If not possible, return None
-  """
-  if( type(vector) is Rhino.Geometry.Vector3d): return vector
-  if( type(vector) is list or type(vector) is tuple ):
-    length = len(vector)
-    if( length == 3 and type(vector[0]) is not list ):
-      rc = Rhino.Geometry.Vector3d(vector[0], vector[1], vector[2])
-      return rc
+    "Convert input into a Rhino.Geometry.Vector3d if possible."
+    if vector is None or type(vector) is Rhino.Geometry.Vector3d: return vector
+    if type(vector) is list or type(vector) is tuple:
+        length = len(vector)
+        if length==3 and type(vector[0]) is not list:
+            return Rhino.Geometry.Vector3d(vector[0], vector[1], vector[2])
+        return None
+    if type(vector) is Rhino.Geometry.Point3d or type(vector) is Rhino.Geometry.Point3f:
+        return Rhino.Geometry.Vector3d(vector.X, vector.Y, vector.Z)
     return None
-  if( (type(vector) is Rhino.Geometry.Point3d) or (type(vector) is Rhino.Geometry.Point3f) ):
-    rc = Rhino.Geometry.Vector3d(vector.X, vector.Y, vector.Z)
-    return rc
-  return None
 
 
 def coerce3dpointlist(points):
-    if( points == None ): return None
-    if( isinstance(points, System.Array[Rhino.Geometry.Point3d]) ):
+    if points is None: return None
+    if isinstance(points, System.Array[Rhino.Geometry.Point3d]):
         return list(points)
-    if( isinstance(points, Rhino.Collections.Point3dList) ):
-        return list(points)
-    if( type(points) is list or type(points) is tuple ):
+    if isinstance(points, Rhino.Collections.Point3dList): return list(points)
+    if type(points) is list or type(points) is tuple:
         count = len(points)
-        if( count > 0 and type(points[0]) is Rhino.Geometry.Point3d or type(points[0]) is list or type(points[0]) is tuple ):
-            rc = [coerce3dpoint(points[i]) for i in xrange(count)]
-            return rc
-        elif( count > 2 and type(points[0]) is not list ):
+        if count>0 and type(points[0]) is Rhino.Geometry.Point3d or type(points[0]) is list or type(points[0]) is tuple:
+            return [coerce3dpoint(points[i]) for i in xrange(count)]
+        elif count>2 and type(points[0]) is not list:
             point_count = count/3
             rc = []
             for i in xrange(point_count):
                 pt = Rhino.Geometry.Point3d(points[i*3], points[i*3+1], points[i*3+2])
                 rc.append(pt)
             return rc
-        return None
     return None
 
 
 def coerce2dpointlist(points):
-  if( points == None ): return None
-  if( isinstance(points, System.Array[Rhino.Geometry.Point2d]) ):
-    return points
-  if( type(points) is list or type(points) is tuple ):
-    count = len(points)
-    if( count > 0 and type(points[0]) is Rhino.Geometry.Point2d ):
-      rc = System.Array.CreateInstance(Rhino.Geometry.Point2d, count)
-      for i in xrange(count):
-        rc[i] = points[i]
-      return rc
-    elif( count > 1 and type(points[0]) is not list ):
-      point_count = count/2
-      rc = System.Array.CreateInstance(Rhino.Geometry.Point2d,point_count)
-      for i in xrange(point_count):
-        rc[i] = Rhino.Geometry.Point2d(points[i*2], points[i*2+1])
-      return rc
-    elif( count > 0 and type(points[0]) is list ):
-      point_count = count
-      rc = System.Array.CreateInstance(Rhino.Geometry.Point2d,point_count)
-      for i in xrange(point_count):
-        pt = points[i]
-        rc[i] = Rhino.Geometry.Point2d(pt[0],pt[1])
-      return rc
+    if points is None or isinstance(points, System.Array[Rhino.Geometry.Point2d]):
+        return points
+    if type(points) is list or type(points) is tuple:
+        count = len(points)
+        if count>0 and type(points[0]) is Rhino.Geometry.Point2d:
+            rc = System.Array.CreateInstance(Rhino.Geometry.Point2d, count)
+            for i in xrange(count): rc[i] = points[i]
+            return rc
+        elif count>1 and type(points[0]) is not list:
+            point_count = count/2
+            rc = System.Array.CreateInstance(Rhino.Geometry.Point2d,point_count)
+            for i in xrange(point_count):
+                rc[i] = Rhino.Geometry.Point2d(points[i*2], points[i*2+1])
+            return rc
+        elif count>0 and type(points[0]) is list:
+            point_count = count
+            rc = System.Array.CreateInstance(Rhino.Geometry.Point2d,point_count)
+            for i in xrange(point_count):
+                pt = points[i]
+                rc[i] = Rhino.Geometry.Point2d(pt[0],pt[1])
+            return rc
+        return None
     return None
-  return None
 
 
 def coerceplane(plane):
-  "Convert input into a Rhino.Geometry.Plane if possible."
-  if type(plane) is Rhino.Geometry.Plane: return plane
-  if plane is None: return None
-  if type(plane) is list or type(plane) is tuple:
-    length = len(plane)
-    if( length==3 and type(plane[0]) is not list ):
-      rc = Rhino.Geometry.Plane.WorldXY
-      rc.Origin = Rhino.Geometry.Point3d(plane[0],plane[1],plane[2])
-      return rc
-    if( length==9 and type(plane[0]) is not list ):
-      origin = Rhino.Geometry.Point3d(plane[0],plane[1],plane[2])
-      xpoint = Rhino.Geometry.Point3d(plane[3],plane[4],plane[5])
-      ypoint = Rhino.Geometry.Point3d(plane[6],plane[7],plane[8])
-      rc     = Rhino.Geometry.Plane(origin, xpoint, ypoint)
-      return rc
-    if( length==3 and (type(plane[0]) is list or type(plane[0]) is tuple) ):
-      origin = Rhino.Geometry.Point3d(plane[0][0],plane[0][1],plane[0][2])
-      xpoint = Rhino.Geometry.Point3d(plane[1][0],plane[1][1],plane[1][2])
-      ypoint = Rhino.Geometry.Point3d(plane[2][0],plane[2][1],plane[2][2])
-      rc     = Rhino.Geometry.Plane(origin, xpoint, ypoint)
-      return rc
-  return None
+    "Convert input into a Rhino.Geometry.Plane if possible."
+    if type(plane) is Rhino.Geometry.Plane: return plane
+    if plane is None: return None
+    if type(plane) is list or type(plane) is tuple:
+        length = len(plane)
+        if length==3 and type(plane[0]) is not list:
+            rc = Rhino.Geometry.Plane.WorldXY
+            rc.Origin = Rhino.Geometry.Point3d(plane[0],plane[1],plane[2])
+            return rc
+        if length==9 and type(plane[0]) is not list:
+            origin = Rhino.Geometry.Point3d(plane[0],plane[1],plane[2])
+            xpoint = Rhino.Geometry.Point3d(plane[3],plane[4],plane[5])
+            ypoint = Rhino.Geometry.Point3d(plane[6],plane[7],plane[8])
+            rc     = Rhino.Geometry.Plane(origin, xpoint, ypoint)
+            return rc
+        if length==3 and (type(plane[0]) is list or type(plane[0]) is tuple):
+            origin = Rhino.Geometry.Point3d(plane[0][0],plane[0][1],plane[0][2])
+            xpoint = Rhino.Geometry.Point3d(plane[1][0],plane[1][1],plane[1][2])
+            ypoint = Rhino.Geometry.Point3d(plane[2][0],plane[2][1],plane[2][2])
+            rc     = Rhino.Geometry.Plane(origin, xpoint, ypoint)
+            return rc
+    return None
 
 
 def coercexform(xform):
