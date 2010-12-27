@@ -24,8 +24,18 @@ def Angle(point1, point2, plane=True):
         element 4 = delta in the Z direction
       None if not successful
     """
-    point1 = coerce3dpoint(point1)
-    point2 = coerce3dpoint(point2)
+    pt1 = coerce3dpoint(point1)
+    if pt1 is None:
+        pt1 = coercerhinoobject(point1)
+        if isinstance(pt1, Rhino.DocObjects.PointObject): pt1 = pt1.Geometry.Location
+        else: pt1=None
+    pt2 = coerce3dpoint(point2)
+    if pt2 is None:
+        pt2 = coercerhinoobject(point2)
+        if isinstance(pt2, Rhino.DocObjects.PointObject): pt2 = pt2.Geometry.Location
+        else: pt2=None
+    point1 = pt1
+    point2 = pt2
     if point1 is None or point2 is None: return scriptcontext.errorhandler()
     vector = point2 - point1
     x = vector.X
