@@ -1356,27 +1356,28 @@ def ShrinkTrimmedSurface(object_id, create_copy=False):
 
 def __GetMassProperties(object_id, area):
     surface = rhutil.coercesurface(object_id)
-    if( surface==None ):
+    if surface is None:
         surface = rhutil.coercebrep(object_id)
-        if( surface==None ): return None
-    if( area==True ):
-        return Rhino.Geometry.AreaMassProperties.Compute(surface)
-    if( not surface.IsSolid ): return None
+        if surface is None: return None
+    if area==True: return Rhino.Geometry.AreaMassProperties.Compute(surface)
+    if not surface.IsSolid: return None
     return Rhino.Geometry.VolumeMassProperties.Compute(surface)
+
 
 def SurfaceArea(object_id):
     """
-    Calculates the area of a surface or polysurface object. The results are based on
-    the current drawing units
+    Calculates the area of a surface or polysurface object. The results are
+    based on the current drawing units
     Parameters:
-        object_id = the surface's identifier
+      object_id = the surface's identifier
     Returns:
-        list of area inforation on success (area, absolute error bound)
-        None on error
+      list of area inforation on success (area, absolute error bound)
+      None on error
     """
     amp = __GetMassProperties(object_id, True)
-    if( amp==None ): return scriptcontext.errorhandler()
+    if amp is None: return scriptcontext.errorhandler()
     return amp.Area, amp.AreaError
+
 
 def SurfaceAreaCentroid(object_id):
     """
@@ -1388,12 +1389,13 @@ def SurfaceAreaCentroid(object_id):
         None on error
     """
     amp = __GetMassProperties(object_id, True)
-    if( amp==None ): return scriptcontext.errorhandler()
+    if amp is None: return scriptcontext.errorhandler()
     return amp.Centroid, amp.CentroidError
+
 
 def __AreaMomentsHelper( surface_id, area ):
     mp = __GetMassProperties(surface_id, area)
-    if( mp==None ): return scriptcontext.errorhandler()
+    if mp is None: return scriptcontext.errorhandler()
     a = (mp.WorldCoordinatesFirstMoments.X, mp.WorldCoordinatesFirstMoments.Y, mp.WorldCoordinatesFirstMoments.Z)
     b = (mp.WorldCoordinatesFirstMomentsError.X, mp.WorldCoordinatesFirstMomentsError.Y, mp.WorldCoordinatesFirstMomentsError.Z)
     c = (mp.WorldCoordinatesSecondMoments.X, mp.WorldCoordinatesSecondMoments.Y, mp.WorldCoordinatesSecondMoments.Z)
@@ -1410,10 +1412,11 @@ def __AreaMomentsHelper( surface_id, area ):
     n = (0,0,0) #need to add error calc to RhinoCommon
     return (a,b,c,d,e,f,g,h,i,j,k,l,m,n)
 
+
 def SurfaceAreaMoments(surface_id):
     """
-    Calculates the area moments of inertia of a surface or polysurface object. For
-    more information, see the Rhino help file for "Mass Properties calculation details"
+    Calculates area moments of inertia of a surface or polysurface object.
+    See the Rhino help for "Mass Properties calculation details"
     Parameters:
         surface_id = the surface's identifier
     Returns:
@@ -1422,9 +1425,10 @@ def SurfaceAreaMoments(surface_id):
     """
     return __AreaMomentsHelper(surface_id, True)
 
+
 def SurfaceClosestPoint(surface_id, test_point):
   """
-  Returns the U, V parameters of the point on a surface that is closest to a test point.
+  Returns U,V parameters of point on a surface that is closest to a test point
   Parameters:
     surface_id = identifier of a surface object
     test_point = sampling point
@@ -1434,10 +1438,11 @@ def SurfaceClosestPoint(surface_id, test_point):
   """
   surface = rhutil.coercesurface(surface_id)
   point = rhutil.coerce3dpoint(test_point)
-  if( surface==None or point==None): return scriptcontext.errorhandler()
-  rc = surface.ClosestPoint(point)
-  if (rc[0] != True): return None
-  return rc[1], rc[2]
+  if surface is None or point is None: return scriptcontext.errorhandler()
+  rc, u, v = surface.ClosestPoint(point)
+  if not rc: return None
+  return u,v
+
 
 def SurfaceCone(surface_id):
     """
@@ -1446,26 +1451,28 @@ def SurfaceCone(surface_id):
       surface_id = the surface's identifier
     Returns:
       tuple containing the definition of the cone if successful
-        element 0 = the plane of the cone. The apex of the cone is at the plane's
-                    origin and the axis of the cone is the plane's z-axis
+        element 0 = the plane of the cone. The apex of the cone is at the
+            plane's origin and the axis of the cone is the plane's z-axis
         element 1 = the height of the cone
         element 2 = the radius of the cone
       None on error
     """
     surface = rhutil.coercesurface(surface_id)
-    if( surface==None ): return scriptcontext.errorhandler()
+    if surface is None: return scriptcontext.errorhandler()
     rc, cone = surface.TryGetCone()
-    if( rc==False ): return None
+    if not rc: return scriptcontext.errorhandler()
     return cone.Plane, cone.Height, cone.Radius
+
 
 def SurfaceCurvature(surface_id, parameter):
     """
-    Returns the curvature of a surface at a U,V parameter. See the Rhino help file for details of surface curvature
+    Returns the curvature of a surface at a U,V parameter. See Rhino help
+    for details of surface curvature
     Parameters:
       surface_id = the surface's identifier
       parameter = u,v parameter
     Returns:
-      tuple of curvature information if successul
+      tuple of curvature information
         element 0 = point at specified U,V parameter
         element 1 = normal direction
         element 2 = maximum principal curvature
@@ -1477,10 +1484,12 @@ def SurfaceCurvature(surface_id, parameter):
       None if not successful, or on error
     """
     surface = rhutil.coercesurface(surface_id)
-    if( surface==None or parameter==None or len(parameter)<2 ): return scriptcontext.errorhandler()
+    if surface is None or parameter is None or len(parameter)<2:
+        return scriptcontext.errorhandler()
     c = surface.CurvatureAt( parameter[0], parameter[1] )
-    if( c==None ): return scriptcontext.errorhandler()
+    if c is None: return scriptcontext.errorhandler()
     return c.Point, c.Normal, c.Kappa(0), c.Direction(0), c.Kappa(1), c.Direction(1), c.Gaussian, c.Mean
+
 
 def SurfaceDegree( surface_id, direction=2 ):
     """
@@ -1495,12 +1504,11 @@ def SurfaceDegree( surface_id, direction=2 ):
       None on error
     """
     surface = rhutil.coercesurface(surface_id)
-    if( surface==None ): return scriptcontext.errorhandler()
-    if( direction==0 or direction==1):
-      return surface.Degree(direction)
-    if( direction==2 ):
-      return surface.Degree(0), surface.Degree(1)
+    if surface is None: return scriptcontext.errorhandler()
+    if direction==0 or direction==1: return surface.Degree(direction)
+    if direction==2: return surface.Degree(0), surface.Degree(1)
     return scriptcontext.errorhandler()
+
 
 def SurfaceDomain( surface_id, direction ):
     """
@@ -1509,14 +1517,15 @@ def SurfaceDomain( surface_id, direction ):
       surface_id = the surface's identifier
       direction = either 0 = U, or 1 = V
     Returns:
-      list containing the domain interval in the specified direction if successful
+      list containing the domain interval in the specified direction
       None if not successful, or on error
     """
-    if( direction != 0 and direction != 1 ): return scriptcontext.errorhandler()
+    if direction!=0 and direction!=1: return scriptcontext.errorhandler()
     surface = rhutil.coercesurface(surface_id)
-    if( surface==None ): return scriptcontext.errorhandler()
+    if surface is None: return scriptcontext.errorhandler()
     domain = surface.Domain(direction)
     return domain.T0, domain.T1
+
 
 def SurfaceEvaluate( surface_id, parameter, derivative ):
     """
@@ -1530,24 +1539,27 @@ def SurfaceEvaluate( surface_id, parameter, derivative ):
       None on error
     """
     surface = rhutil.coercesurface(surface_id)
-    if( surface==None ): return scriptcontext.errorhandler()
+    if surface is None: return scriptcontext.errorhandler()
     success, point, der = surface.Evaluate(parameter[0], parameter[1], derivative)
-    if( success==False ): return scriptcontext.errorhandler()
+    if not success: return scriptcontext.errorhandler()
     rc = [point]
     for d in der: rc.append(d)
     return rc
+
 
 def SurfaceIsocurveDensity( surface_id, density=None ):
     """
     Returns or sets the isocurve density of a surface or polysurface object.
     An isoparametric curve is a curve of constant U or V value on a surface.
-    Rhino uses isocurves and surface edge curves to visualize the shape of a NURBS surface
+    Rhino uses isocurves and surface edge curves to visualize the shape of a
+    NURBS surface
     Parameters:
       surface_id = the surface's identifier
       density[opt] = the isocurve wireframe density. The possible values are
           -1: Hides the surface isocurves
            0: Display boundary and knot wires
-           1: Display boundary and knot wires and one interior wire if there are no interior knots
+           1: Display boundary and knot wires and one interior wire if there
+              are no interior knots
          >=2: Display boundary and knot wires and (N+1) interior wires
     Returns:
       If density is not specified, then the current isocurve density if successful
@@ -1555,17 +1567,18 @@ def SurfaceIsocurveDensity( surface_id, density=None ):
       None on error
     """
     surface_id = rhutil.coerceguid(surface_id)
-    if( surface_id==None ): return scriptcontext.errorhandler()
+    if surface_id is None: return scriptcontext.errorhandler()
     rhino_object = scriptcontext.doc.Objects.Find(surface_id)
-    if( not isinstance(rhino_object, Rhino.DocObjects.BrepObject) ):
+    if not isinstance(rhino_object, Rhino.DocObjects.BrepObject):
         return scriptcontext.errorhandler()
     rc = rhino_object.Attributes.WireDensity
-    if( density!=None ):
-        if( density<0 ): density = -1
+    if density is not None:
+        if density<0: density = -1
         rhino_object.Attributes.WireDensity = density
         rhino_object.CommitChanges()
         scriptcontext.doc.Views.Redraw()
     return rc
+
 
 def SurfaceKnotCount( surface_id ):
     """
@@ -1576,50 +1589,49 @@ def SurfaceKnotCount( surface_id ):
       None on error
     """
     surface = rhutil.coercesurface(surface_id)
-    if( surface==None ): return scriptcontext.errorhandler()
+    if surface is None: return scriptcontext.errorhandler()
     ns = surface.ToNurbsSurface()
-    if( ns==None ): return scriptcontext.errorhandler()
+    if ns is None: return scriptcontext.errorhandler()
     return ns.KnotsU.Count, ns.KnotsV.Count
 
+
 def SurfaceKnots(surface_id):
-  """
-  Returns the knots, or knot vector, of a surface object.
-  Parameters:
-    surface_id = the surface's identifier
-  Returns:
-    The list of knot values of the surface if successful. The list will
-    contain the following information:
-    Element     Description
-      0         Knot vector in U direction
-      1         Knot vector in V direction
-    None if not successful, or on error.
-  """
-  surface = rhutil.coercesurface(surface_id)
-  if(surface == None): return scriptcontext.errorhandler()
-  nurb_surf = surface.ToNurbsSurface()
-  if (nurb_surf == None): return scriptcontext.errorhandler()
-  s_knots = list()
-  for knot in nurb_surf.KnotsU:
-    s_knots.append(knot)
-  t_knots = list()
-  for knot in nurb_surf.KnotsV:
-    t_knots.append(knot)
-  if (len(s_knots) == 0 or len(t_knots) == 0): return None
-  return s_knots, t_knots
+    """
+    Returns the knots, or knot vector, of a surface object.
+    Parameters:
+      surface_id = the surface's identifier
+    Returns:
+      The list of knot values of the surface if successful. The list will
+      contain the following information:
+      Element     Description
+        0         Knot vector in U direction
+        1         Knot vector in V direction
+      None if not successful, or on error.
+    """
+    surface = rhutil.coercesurface(surface_id)
+    if surface is None: return scriptcontext.errorhandler()
+    nurb_surf = surface.ToNurbsSurface()
+    if nurb_surf is None: return scriptcontext.errorhandler()
+    s_knots = [knot for knot in nurb_surf.KnotsU]
+    t_knots = [knot for knot in nurb_surf.KnotsV]
+    if not s_knots or not t_knots: return scriptcontext.errorhandler()
+    return s_knots, t_knots
+
 
 def SurfaceNormal(surface_id, uv_parameter):
     """
     Returns a 3D vector that is the normal to a surface at a parameter
     Parameters:
-        surface_id = the surface's identifier
-        uv_parameter = the uv parameter to evaluate
+      surface_id = the surface's identifier
+      uv_parameter = the uv parameter to evaluate
     Returns:
-        Normal vector on success
-        None on error
+      Normal vector on success
+      None on error
     """
     surface = rhutil.coercesurface(surface_id)
-    if( surface==None ): return scriptcontext.errorhandler()
-    return surface.NormalAt( uv_parameter[0], uv_parameter[1] )
+    if surface is None: return scriptcontext.errorhandler()
+    return surface.NormalAt(uv_parameter[0], uv_parameter[1])
+
 
 def SurfaceNormalizedParameter(surface_id, parameter):
     """
@@ -1633,33 +1645,35 @@ def SurfaceNormalizedParameter(surface_id, parameter):
       None on error
     """
     surface = rhutil.coercesurface(surface_id)
-    if( surface==None ): return scriptcontext.errorhandler()
+    if surface is None: return scriptcontext.errorhandler()
     u_domain = surface.Domain(0)
     v_domain = surface.Domain(1)
-    if( parameter[0]<u_domain.Min or parameter[0]>u_domain.Max ):
+    if parameter[0]<u_domain.Min or parameter[0]>u_domain.Max:
         return scriptcontext.errorhandler()
-    if( parameter[1]<v_domain.Min or parameter[1]>v_domain.Max ):
+    if parameter[1]<v_domain.Min or parameter[1]>v_domain.Max:
         return scriptcontext.errorhandler()
     u = u_domain.NormalizedParameterAt(parameter[0])
     v = v_domain.NormalizedParameterAt(parameter[1])
     return u,v
+
 
 def SurfaceParameter(surface_id, parameter):
     """
     Converts a normalized surface parameter to a surface parameter; on within
     the surface's domain
     Parameters:
-        surface_id = the surface's identifier
-        parameter = the normalized parameter to convert
+      surface_id = the surface's identifier
+      parameter = the normalized parameter to convert
     Returns:
-        surface parameter as tuple on success
-        None on error
+      surface parameter as tuple on success
+      None on error
     """
     surface = rhutil.coercesurface(surface_id)
-    if( surface==None ): return scriptcontext.errorhandler()
+    if surface is None: return scriptcontext.errorhandler()
     x = surface.Domain(0).ParameterAt(parameter[0])
     y = surface.Domain(1).ParameterAt(parameter[1])
     return x, y
+
 
 def SurfacePointCount(surface_id):
     """
@@ -1670,10 +1684,11 @@ def SurfacePointCount(surface_id):
       None on error
     """
     surface = rhutil.coercesurface(surface_id)
-    if( surface==None ): return scriptcontext.errorhandler()
+    if surface is None: return scriptcontext.errorhandler()
     ns = surface.ToNurbsSurface()
-    if( ns==None ): return scriptcontext.errorhandler()
+    if ns is None: return scriptcontext.errorhandler()
     return ns.Points.CountU, ns.Points.CountV
+
 
 def SurfacePoints(surface_id, return_all=True):
     """
@@ -1681,16 +1696,16 @@ def SurfacePoints(surface_id, return_all=True):
     Parameters:
       surface_id = the surface's identifier
       return_all[opt] = If True all surface edit points are returned. If False,
-        the function will return surface edit points based on whether or not the
-        surface is closed or periodic
+        the function will return surface edit points based on whether or not
+        the surface is closed or periodic
     Returns:
       the control points if successful
       None on error
     """
     surface = rhutil.coercesurface(surface_id)
-    if( surface==None ): return scriptcontext.errorhandler()
+    if surface is None: return scriptcontext.errorhandler()
     ns = surface.ToNurbsSurface()
-    if( ns==None ): return scriptcontext.errorhandler()
+    if ns is None: return scriptcontext.errorhandler()
     ucount = ns.Points.CountU
     vcount = ns.Points.CountV
     rc = []
@@ -1699,6 +1714,7 @@ def SurfacePoints(surface_id, return_all=True):
             pt = ns.Points.GetControlPoint(u,v)
             rc.append(pt.Location)
     return rc
+
 
 def SurfaceTorus(surface_id):
     """
@@ -1713,10 +1729,11 @@ def SurfaceTorus(surface_id):
       None on error
     """
     surface = rhutil.coercesurface(surface_id)
-    if( surface==None ): return scriptcontext.errorhandler()
+    if surface is None: return scriptcontext.errorhandler()
     rc, torus = surface.TryGetTorus()
-    if( rc==False ): return None
+    if not rc: return scriptcontext.errorhandler()
     return torus.Plane, torus.MajorRadius, torus.MinorRadius
+
 
 def SurfaceVolume(object_id):
     """
@@ -1728,49 +1745,52 @@ def SurfaceVolume(object_id):
         None on error
     """
     vmp = __GetMassProperties(object_id, False)
-    if( vmp==None ): return scriptcontext.errorhandler()
+    if vmp is None: return scriptcontext.errorhandler()
     return vmp.Volume, vmp.VolumeError
+
 
 def SurfaceVolumeCentroid(object_id):
     """
     Calculates the volume centroid of a closed surface or polysurface
     Parameters:
-        object_id = the surface's identifier
+      object_id = the surface's identifier
     Returns:
-        (Volume Centriod, Error bound) on success
-        None on error
+      (Volume Centriod, Error bound) on success
+      None on error
     """
     vmp = __GetMassProperties(object_id, False)
-    if( vmp==None ): return scriptcontext.errorhandler()
+    if vmp is None: return scriptcontext.errorhandler()
     return vmp.Centroid, vmp.CentroidError
+
 
 def SurfaceVolumeMoments(surface_id):
     """
-    Calculates the volume moments of inertia of a surface or polysurface object. For
-    more information, see the Rhino help file for "Mass Properties calculation details"
+    Calculates the volume moments of inertia of a surface or polysurface object.
+    For more information, see Rhino help for "Mass Properties calculation details"
     Parameters:
-        surface_id = the surface's identifier
+      surface_id = the surface's identifier
     Returns:
-        list of moments and error bounds - see help topic
-        None on error
+      list of moments and error bounds - see help topic
+      None on error
     """
     return __AreaMomentsHelper(surface_id, False)
 
+
 def SurfaceWeights(object_id):
     """
-    Returns a list of weight values that are assigned to the control points of a surface. The
-    number of weights returned will be equal to the number of control points in the U and V
-    directions.
+    Returns list of weight values that are assigned to the control points of a
+    surface. The number of weights returned will be equal to the number of
+    control points in the U and V directions.
     Parameters:
-        object_id = the surface's identifier
+      object_id = the surface's identifier
     Returns:
-        list of weights
-        None on error
+      list of weights
+      None on error
     """
     surface = rhutil.coercesurface(object_id)
-    if( surface==None ): return scriptcontext.errorhandler()
+    if surface is None: return scriptcontext.errorhandler()
     ns = surface.ToNurbsSurface()
-    if( ns==None ): return scriptcontext.errorhandler()
+    if ns is None: return scriptcontext.errorhandler()
     ucount = ns.Points.CountU
     vcount = ns.Points.CountV
     rc = []
@@ -1779,4 +1799,3 @@ def SurfaceWeights(object_id):
             pt = ns.Points.GetControlPoint(u,v)
             rc.append(pt.Weight)
     return rc
-    
