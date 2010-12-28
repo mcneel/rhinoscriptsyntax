@@ -175,16 +175,19 @@ def AddNurbsSurface( point_count, points, knots_u, knots_v, degree, weights=None
     Parameters:
       point_count = number of control points in the u and v direction
       points = list of 3D points
-      knots_u = knot values for the surface in the u direction. Must contain point_count[0]+degree[0]-1 elements
-      knots_v = knot values for the surface in the v direction. Must contain point_count[1]+degree[1]-1 elements
+      knots_u = knot values for the surface in the u direction.
+                Must contain point_count[0]+degree[0]-1 elements
+      knots_v = knot values for the surface in the v direction.
+                Must contain point_count[1]+degree[1]-1 elements
       degree = degree of the surface in the u and v directions.
-      weights[opt] = weight values for the surface. The number of elements in weights must equal the number of
-        elements in points. Values must be greater than zero.
+      weights[opt] = weight values for the surface. The number of elements in
+        weights must equal the number of elements in points. Values must be
+        greater than zero.
     Returns:
       identifier of new object if successful
       None on error
     """
-    if len(points) < (point_count[0]*point_count[1]):
+    if len(points)<(point_count[0]*point_count[1]):
         return scriptcontext.errorhandler()
     ns = Rhino.Geometry.NurbsSurface.Create(3, weights!=None, degree[0]+1, degree[1]+1, point_count[0], point_count[1])
     #add the points and weights
@@ -233,7 +236,7 @@ def AddPlanarSrf( object_ids ):
     for brep in breps:
         id = scriptcontext.doc.Objects.AddBrep(brep)
         if id!=System.Guid.Empty: rc.append(id)
-    if len(rc)==0: return scriptcontext.errorhandler()
+    if not rc: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -1244,7 +1247,7 @@ def RebuildSurface(object_id, degree=(3,3), pointcount=(10,10)):
     see the Rhino help file for the Rebuild command
     Parameters:
       object_id = the surface's identifier
-      degree[opt] = two numbers that identify the surface degree in both the U and V directions
+      degree[opt] = two numbers that identify surface degree in both U and V directions
       pointcount[opt] = two numbers that identify the surface point count in both the U and V directions
     Returns:
       True of False indicating success or failure
@@ -1256,8 +1259,9 @@ def RebuildSurface(object_id, degree=(3,3), pointcount=(10,10)):
     objref = Rhino.DocObjects.ObjRef(rhutil.coerceguid(object_id))
     rc = scriptcontext.doc.Objects.Replace(objref, newsurf)
     objref.Dispose()
-    if( rc ): scriptcontext.doc.Views.Redraw()
+    if rc: scriptcontext.doc.Views.Redraw()
     return rc
+
 
 def ShootRay(surface_ids, start_point, direction, reflections=10):
     """
@@ -1280,20 +1284,18 @@ def ShootRay(surface_ids, start_point, direction, reflections=10):
     breps = []
     for id in surface_ids:
         brep = rhutil.coercebrep(id)
-        if( brep!=None ):
-            breps.append(brep)
+        if brep: breps.append(brep)
         else:
             surface = rhutil.coercesurface(id)
-            if( surface!=None ): breps.append(surface)
-        
-    if len(breps)<1: return scriptcontext.errorhandler()
+            if surface: breps.append(surface)
+    if not breps: return scriptcontext.errorhandler()
     points = Rhino.Geometry.Intersect.Intersection.RayShoot(ray, breps, reflections)
-    if points is not None:
+    if points:
         rc = []
         rc.append(start_point)
         rc = rc + list(points)
         return rc
-    return points
+    return scriptcontext.errorhandler()
 
 
 def ShortPath(surface_id, start_point, end_point):
@@ -1328,8 +1330,8 @@ def ShortPath(surface_id, start_point, end_point):
 
 def ShrinkTrimmedSurface(object_id, create_copy=False):
     """
-    Shrinks the underlying untrimmed surfaces near to the trimming boundaries. For more details,
-    see the ShrinkTrimmedSrf command in the Rhino help file.
+    Shrinks the underlying untrimmed surfaces near to the trimming boundaries.
+    See the ShrinkTrimmedSrf command in the Rhino help.
     Parameters:
       object_id = the surface's identifier
       create_copy[opt] = If Ture, the original surface is not deleted
@@ -1339,11 +1341,11 @@ def ShrinkTrimmedSurface(object_id, create_copy=False):
       None on error
     """
     brep = rhutil.coercebrep(object_id)
-    if( brep==None ): return scriptcontext.errorhandler()
-    if( brep.Faces.ShrinkFaces()==False ): return False
+    if brep is None: return scriptcontext.errorhandler()
+    if not brep.Faces.ShrinkFaces(): return scriptcontext.errorhandler()
     rc = None
     object_id = rhutil.coerceguid(object_id)
-    if( create_copy ):
+    if create_copy:
         oldobj = scriptcontext.doc.Objects.Find(object_id)
         attr = oldobj.Attributes
         rc = scriptcontext.doc.Objects.AddBrep(brep, attr)
@@ -1353,6 +1355,7 @@ def ShrinkTrimmedSurface(object_id, create_copy=False):
         objref.Dispose()
     scriptcontext.doc.Views.Redraw()
     return rc
+
 
 def __GetMassProperties(object_id, area):
     surface = rhutil.coercesurface(object_id)

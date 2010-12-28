@@ -2,7 +2,7 @@ import scriptcontext
 import Rhino
 import Rhino.ApplicationSettings.ModelAidSettings as modelaid
 import Rhino.Commands.Command as rhcommand
-import System.TimeSpan
+import System.TimeSpan, System.Enum
 import System.Windows.Forms.Screen
 import datetime
 import utility as rhutil
@@ -507,8 +507,9 @@ def OsnapMode(mode=None):
       if mode is not specified, then the current object snap mode(s)
       if mode is specified, then the previous object snap mode(s) 
     """
-    rc = modelaid.OSnapModes
-    if mode is not None: modelaid.OSnapModes = mode
+    rc = modelaid.OsnapModes
+    if mode:
+        modelaid.OsnapModes = System.Enum.ToObject(Rhino.ApplicationSettings.OsnapModes, mode)
     return rc
 
 

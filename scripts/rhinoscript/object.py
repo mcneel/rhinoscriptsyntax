@@ -1008,7 +1008,7 @@ def SelectObjects( object_ids):
     if rhutil.coerceguid(object_ids): object_ids = [object_ids]
     rc = 0
     for id in object_ids:
-        if( SelectObject(id)==True ): rc += 1
+        if SelectObject(id)==True: rc += 1
     return rc
 
 

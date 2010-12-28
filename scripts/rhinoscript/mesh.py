@@ -690,15 +690,13 @@ def MeshVertexColors(mesh_id, colors=0):
     """
     mesh = rhutil.coercemesh(mesh_id)
     if mesh is None: return scriptcontext.errorhandler()
-    rc = []
-    for i in range(mesh.VertexColors.Count):
-        rc.append(mesh.VertexColors[i])
+    rc = [mesh.VertexColors[i] for i in range(mesh.VertexColors.Count)]
     if colors==0: return rc
     if colors is None:
         mesh.VertexColors.Clear()
     else:
         color_count = len(colors)
-        if( color_count!=mesh.Vertices.Count ):
+        if color_count!=mesh.Vertices.Count:
             return scriptcontext.errorhandler()
         colors = [rhutil.coercecolor(c) for c in colors]
         mesh.VertexColors.Clear()
@@ -748,8 +746,7 @@ def MeshVertexNormals(mesh_id):
     if mesh is None: return scriptcontext.errorhandler()
     count = mesh.Normals.Count
     if count<1: return None
-    rc = [mesh.Normals[i] for i in xrange(count)]
-    return rc
+    return [mesh.Normals[i] for i in xrange(count)]
 
 
 def MeshVertices(object_id):
@@ -795,7 +792,7 @@ def MeshVolume(object_ids):
                 meshes_used += 1
                 total_volume += mp.Volume
                 error_estimate += mp.VolumeError
-    if( meshes_used==0 ): return scriptcontext.errorhandler()
+    if meshes_used==0: return scriptcontext.errorhandler()
     return meshes_used, total_volume, error_estimate
 
 
