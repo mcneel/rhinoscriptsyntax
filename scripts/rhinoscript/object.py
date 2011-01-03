@@ -743,7 +743,7 @@ def ObjectMaterialSource(object_ids, source=None):
         if rhino_object is None: return scriptcontext.errorhandler()
         rc = int(rhino_object.Attributes.MaterialSource)
         if source is not None:
-            rhino_object.Attributes.MaterialSource = source
+            rhino_object.Attributes.MaterialSource = System.Enum.ToObject(Rhino.DocObjects.ObjectMaterialSource, source)
             rhino_object.CommitChanges()
         return rc
     # else working with multiple objects
