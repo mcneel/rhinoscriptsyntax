@@ -9,7 +9,7 @@ def AddMaterialToLayer(layer):
     layer already has a material, then the layer's current material index
     is returned
     Parameters:
-      layer =  The name of an existing layer.
+      layer = name of an existing layer.
     Returns:
       Material index of the layer if successful
       None if not successful or on error
@@ -19,9 +19,8 @@ def AddMaterialToLayer(layer):
     if layer.RenderMaterialIndex>-1:
         return layer.RenderMaterialIndex
     material_index = scriptcontext.doc.Materials.AddMaterial()
-    layerinfo = layer.ToLayerInfo()
-    layerinfo.RenderMaterialIndex = material_index
-    if scriptcontext.doc.Layers.Modify( layerinfo, layer.LayerIndex, True):
+    layer.RenderMaterialIndex = material_index
+    if scriptcontext.doc.Layers.Modify( layer, layer.LayerIndex, True):
         scriptcontext.doc.Views.Redraw()
         return material_index
     return scriptcontext.errorhandler()
