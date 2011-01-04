@@ -214,7 +214,7 @@ def IsObjectInBox(object_id, box, test_mode=True):
     if test_mode:
         return box.Contains(objbox)
     else:
-        union = Rhino.Geometry.BoundingBox.Union(box, objbox)
+        union = Rhino.Geometry.BoundingBox.Intersection(box, objbox)
         return union.IsValid
 
 
