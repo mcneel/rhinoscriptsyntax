@@ -256,17 +256,18 @@ def GetPointOnSurface( surface_id, message=None ):
     gp.Dispose()
     return pt
 
+
 def GetPoints(draw_lines=False, in_plane=False, message1=None, message2=None, max_points=None, base_point=None):
     """
     Pauses for user input of one or more points
     Parameters:
       draw_lines [opt] = Draw lines between points
-      in_plane [opt] = Constrain the point selection to the active construction plane
-      message1 [opt] = A prompt or message for the first point
-      message2 [opt] = A prompt or message for the next points
-      max_points [opt] = maximum number of points to pick. If not specified, an unlimited
-                         number of points can be picked.
-      base_point [opt] = a starting or base point
+      in_plane[opt] = Constrain point selection to the active construction plane
+      message1[opt] = A prompt or message for the first point
+      message2[opt] = A prompt or message for the next points
+      max_points[opt] = maximum number of points to pick. If not specified, an
+                        unlimited number of points can be picked.
+      base_point[opt] = a starting or base point
     Returns:
       list of 3d points if successful
       None if not successful or on error
@@ -275,26 +276,29 @@ def GetPoints(draw_lines=False, in_plane=False, message1=None, message2=None, ma
     if message1: gp.SetCommandPrompt(message1)
     gp.EnableDrawLineFromPoint( draw_lines )
     if in_plane: gp.ConstrainToConstructionPlane(True)
-    rc = []
     getres = gp.Get()
-    if( gp.CommandResult() != Rhino.Commands.Result.Success ):
-        return None
+    if gp.CommandResult()!=Rhino.Commands.Result.Success: return None
     prevPoint = gp.Point()
-    rc.append(prevPoint)
-    if( max_points==None or max_points>1 ):
+    rc = [prevPoint]
+    if max_points is None or max_points>1:
         current_point = 1
         if message2: gp.SetCommandPrompt(message2)
-        while( True ):
-          if( max_points!=None and current_point>=max_points ): break
-          if draw_lines: gp.DrawLineFromPoint(prevPoint, False)
-          current_point += 1
-          getres = gp.Get()
-          if( getres == Rhino.Input.GetResult.Cancel ): break
-          if( gp.CommandResult() != Rhino.Commands.Result.Success ):
-              return None
-          prevPoint = gp.Point()
-          rc.append(prevPoint)
+        def GetPointDynamicDrawFunc( sender, args ):
+            if len(rc)>1:
+                c = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
+                args.Display.DrawPolyline(rc, c)
+        if draw_lines: gp.DynamicDraw += GetPointDynamicDrawFunc
+        while True:
+            if max_points and current_point>=max_points: break
+            if draw_lines: gp.DrawLineFromPoint(prevPoint, True)
+            current_point += 1
+            getres = gp.Get()
+            if getres==Rhino.Input.GetResult.Cancel: break
+            if gp.CommandResult()!=Rhino.Commands.Result.Success: return None
+            prevPoint = gp.Point()
+            rc.append(prevPoint)
     return rc
+
 
 def GetReal(message="Number", number=None, minimum=None, maximum=None):
     """
@@ -313,10 +317,11 @@ def GetReal(message="Number", number=None, minimum=None, maximum=None):
     if number: gn.SetDefaultNumber(number)
     if minimum: gn.SetLowerLimit(minimum, False)
     if maximum: gn.SetUpperLimit(maximum, False)
-    if( gn.Get() != Rhino.Input.GetResult.Number ): return None
+    if gn.Get()!=Rhino.Input.GetResult.Number: return None
     rc = gn.Number()
     gn.Dispose()
     return rc
+
 
 def GetRectangle(mode=0, base_point=None, prompt1=None, prompt2=None, prompt3=None):
     """
@@ -342,8 +347,9 @@ def GetRectangle(mode=0, base_point=None, prompt1=None, prompt2=None, prompt3=No
     if prompt2: prompts[1] = prompt2
     if prompt3: prompts[2] = prompt3
     rc, corners = Rhino.Input.RhinoGet.GetRectangle(mode, base_point, prompts)
-    if( rc==Rhino.Commands.Result.Success ): return corners
+    if rc==Rhino.Commands.Result.Success: return corners
     return None
+
 
 def GetString(message=None, defaultString=None, strings=None):
     """
