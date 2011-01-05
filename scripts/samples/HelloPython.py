@@ -1,6 +1,4 @@
-################################################################
 # Basic syntax for writing python scripts
-################################################################
 print "Hello Python!"
 
 # <- any line that begins with the pound symbol is a comment
@@ -18,19 +16,19 @@ print "x is a", type(x), " and has a value of", x
 # notice that there is a colon at the end of the first line and
 # and what is executed has some spaces in front of it
 for i in range(1,10):
-  print "i=",i
+    print "i=",i
 
 #conditionals
 x = 8
 for i in xrange(1,x+1):
-  if i%2==0:
-    print i," is even"
-  else:
-    print i," is odd"
+    if i%2==0:
+        print i," is even"
+    else:
+        print i," is odd"
 
 #functions
 def MyFunc(a):
-  x = a+2
-  print a,"+2=",x
-  
+    x = a+2
+    print a,"+2=",x
+
 MyFunc(10)
