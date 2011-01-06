@@ -1,7 +1,5 @@
-################################################################
 # The following sample shows how to creates a custom windows form
 # with a textbox that can be used to define the text in a new text dot
-################################################################
 from System.Windows.Forms import Form, DialogResult, Label, Button, TextBox
 from System.Drawing import Point, Size
 import rhinoscript.selection
