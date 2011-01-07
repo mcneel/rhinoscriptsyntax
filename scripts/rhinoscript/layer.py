@@ -218,7 +218,7 @@ def LayerChildren(layer):
     layer = __getlayer(layer)
     if layer is None: return scriptcontext.errorhandler()
     children = layer.GetChildren()
-    if children: return list(children)
+    if children: return [child.Name for child in children]
     return scriptcontext.errorhandler()
 
 
