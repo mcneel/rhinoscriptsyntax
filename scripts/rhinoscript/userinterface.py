@@ -8,6 +8,26 @@ import System.Windows.Forms.DialogResult
 import System.Windows.Forms.MessageBoxButtons
 import System.Windows.Forms.MessageBoxIcon
 import System.Windows.Forms.MessageBoxDefaultButton
+import System.Windows.Forms.FolderBrowserDialog
+
+
+def BrowseForFolder(folder=None, message=None, title=None):
+    """
+    Displays the browse-for-folder dialog allowing the user to select a folder
+    Parameters:
+      folder[opt] = a default folder
+      message[opt] = a prompt or message
+      title[opt] = a dialog box title
+    Returns:
+      selected folder
+      None on error
+    """
+    dlg = System.Windows.Forms.FolderBrowserDialog()
+    if folder: dlg.SelectedPath = str(folder)
+    if message: dlg.Description = str(message)
+    if dlg.ShowDialog()==System.Windows.Forms.DialogResult.OK:
+        return dlg.SelectedPath
+    return None
 
 
 def CheckListBox(items, message=None, title=None):
@@ -15,7 +35,7 @@ def CheckListBox(items, message=None, title=None):
     Displays a list of items in a checkable-style list dialog box
     Parameters:
       items = a list of tuples containing a string and a boolean check state
-      message[opt] = a prompt of message
+      message[opt] = a prompt or message
       title[opt] = a dialog box title
     Returns:
       A list of tuples containing the input string in items along with their
