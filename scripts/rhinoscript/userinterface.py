@@ -9,13 +9,35 @@ import System.Windows.Forms.MessageBoxButtons
 import System.Windows.Forms.MessageBoxIcon
 import System.Windows.Forms.MessageBoxDefaultButton
 
+
+def CheckListBox(items, message=None, title=None):
+    """
+    Displays a list of items in a checkable-style list dialog box
+    Parameters:
+      items = a list of tuples containing a string and a boolean check state
+      message[opt] = a prompt of message
+      title[opt] = a dialog box title
+    Returns:
+      A list of tuples containing the input string in items along with their
+      new boolean check value
+      None on error      
+    """
+    checkstates = [item[1] for item in items]
+    itemstrs = [str(item[0]) for item in items]
+    newcheckstates = Rhino.UI.Dialogs.ShowCheckListBox(title, message, itemstrs, checkstates)
+    if newcheckstates:
+        rc = zip(itemstrs, newcheckstates)
+        return rc
+    return scriptcontext.errorhandler()
+
+
 def ComboListBox(items, message=None, title=None):
     """
     Displays a list of items in a combo-style list box dialog.
     Parameters:
       items = a list of string
-      message [optional] = a prompt of message
-      title [optional] = a dialog box title
+      message[opt] = a prompt of message
+      title[opt] = a dialog box title
     Returns:
       The selected item if successful
       None if not successful or on error
@@ -372,6 +394,7 @@ def GetString(message=None, defaultString=None, strings=None):
         return gs.StringResult()
     return None
 
+
 def ListBox(items, message=None, title=None):
     """
     Displays a list of items in a list box dialog.
@@ -385,88 +408,79 @@ def ListBox(items, message=None, title=None):
     """
     return Rhino.UI.Dialogs.ShowListBox(title, message, items)
 
+
 def MessageBox(message, buttons=0, title=""):
-  """
-  Displays a message box. A message box contains an application-defined message
-  and title, plus any combination of predefined icons and push buttons.
-  Parameters:
-    message = A prompt or message.
-    buttons [opt] = buttons and icon to display. Can be a combination of the
-                    following flags. If omitted, as OK button and no icon is displayed
-      VALUE  DESCRIPTION
-      0      Display OK button only.
-      1      Display OK and Cancel buttons.
-      2      Display Abort, Retry, and Ignore buttons.
-      3      Display Yes, No, and Cancel buttons.
-      4      Display Yes and No buttons.
-      5      Display Retry and Cancel buttons.
-      16     Display Critical Message icon.
-      32     Display Warning Query icon.
-      48     Display Warning Message icon.
-      64     Display Information Message icon.
-      0      First button is the default.
-      256    Second button is the default.
-      512    Third button is the default.
-      768    Fourth button is the default.
-      0      Application modal. The user must respond to the message box before continuing work
-             in the current application.
-      4096   System modal. The user must respond to the message box before continuing work in
-             any application.
-    title [optional] = the dialog box title
-  Returns:
-    A number indicating which button was clicked:
-      VALUE  DESCRIPTION
-      1      OK button was clicked.
-      2      Cancel button was clicked.
-      3      Abort button was clicked.
-      4      Retry button was clicked.
-      5      Ignore button was clicked.
-      6      Yes button was clicked.
-      7      No button was clicked.
-  """
-  buttontype = buttons & 0x00000007 #111 in binary
-  btn = System.Windows.Forms.MessageBoxButtons.OK
-  if( buttontype == 1 ):
-    btn = System.Windows.Forms.MessageBoxButtons.OKCancel
-  elif( buttontype == 2 ):
-    btn = System.Windows.Forms.MessageBoxButtons.AbortRetryIgnore
-  elif( buttontype == 3 ):
-    btn = System.Windows.Forms.MessageBoxButtons.YesNoCancel
-  elif( buttontype == 4 ):
-    btn = System.Windows.Forms.MessageBoxButtons.YesNo
-  elif( buttontype == 5 ):
-    btn = System.Windows.Forms.MessageBoxButtons.RetryCancel
-  
-  icontype = buttons & 0x000000e0 #11100000 in binary
-  icon = System.Windows.Forms.MessageBoxIcon.None
-  if( icontype==16 ):
-    icon = System.Windows.Forms.MessageBoxIcon.Exclamation
-  elif( icontype==32 ):
-    icon = System.Windows.Forms.MessageBoxIcon.Question
-  elif( icontype==48 ):
-    icon = System.Windows.Forms.MessageBoxIcon.Warning
-  elif( icontype==64 ):
-    icon = System.Windows.Forms.MessageBoxIcon.Information
-  
-  defbtntype = buttons & 0x00000300
-  defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button1
-  if( defbtntype == 256 ):
-    defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button2
-  elif( defbtntype == 512 ):
-    defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button3
-  message = str(message)
-  dlg_result = Rhino.UI.Dialogs.ShowMessageBox(message, title, btn, icon, defbtn)
-  if( dlg_result==System.Windows.Forms.DialogResult.OK ):     return 1
-  if( dlg_result==System.Windows.Forms.DialogResult.Cancel ): return 2
-  if( dlg_result==System.Windows.Forms.DialogResult.Abort ):  return 3
-  if( dlg_result==System.Windows.Forms.DialogResult.Retry ):  return 4
-  if( dlg_result==System.Windows.Forms.DialogResult.Ignore ): return 5
-  if( dlg_result==System.Windows.Forms.DialogResult.Yes ):    return 6
-  if( dlg_result==System.Windows.Forms.DialogResult.No ):     return 7
+    """
+    Displays a message box. A message box contains a message and
+    title, plus any combination of predefined icons and push buttons.
+    Parameters:
+      message = A prompt or message.
+      buttons[opt] = buttons and icon to display. Can be a combination of the
+        following flags. If omitted, an OK button and no icon is displayed
+        0      Display OK button only.
+        1      Display OK and Cancel buttons.
+        2      Display Abort, Retry, and Ignore buttons.
+        3      Display Yes, No, and Cancel buttons.
+        4      Display Yes and No buttons.
+        5      Display Retry and Cancel buttons.
+        16     Display Critical Message icon.
+        32     Display Warning Query icon.
+        48     Display Warning Message icon.
+        64     Display Information Message icon.
+        0      First button is the default.
+        256    Second button is the default.
+        512    Third button is the default.
+        768    Fourth button is the default.
+        0      Application modal. The user must respond to the message box
+               before continuing work in the current application.
+        4096   System modal. The user must respond to the message box
+               before continuing work in any application.
+      title[opt] = the dialog box title
+    Returns:
+      A number indicating which button was clicked:
+        1      OK button was clicked.
+        2      Cancel button was clicked.
+        3      Abort button was clicked.
+        4      Retry button was clicked.
+        5      Ignore button was clicked.
+        6      Yes button was clicked.
+        7      No button was clicked.
+    """
+    buttontype = buttons & 0x00000007 #111 in binary
+    btn = System.Windows.Forms.MessageBoxButtons.OK
+    if buttontype==1: btn = System.Windows.Forms.MessageBoxButtons.OKCancel
+    elif buttontype==2: btn = System.Windows.Forms.MessageBoxButtons.AbortRetryIgnore
+    elif buttontype==3: btn = System.Windows.Forms.MessageBoxButtons.YesNoCancel
+    elif buttontype==4: btn = System.Windows.Forms.MessageBoxButtons.YesNo
+    elif buttontype==5: btn = System.Windows.Forms.MessageBoxButtons.RetryCancel
+    
+    icontype = buttons & 0x000000e0 #11100000 in binary
+    icon = System.Windows.Forms.MessageBoxIcon.None
+    if icontype==16: icon = System.Windows.Forms.MessageBoxIcon.Exclamation
+    elif icontype==32: icon = System.Windows.Forms.MessageBoxIcon.Question
+    elif icontype==48: icon = System.Windows.Forms.MessageBoxIcon.Warning
+    elif icontype==64: icon = System.Windows.Forms.MessageBoxIcon.Information
+    
+    defbtntype = buttons & 0x00000300
+    defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button1
+    if defbtntype==256:
+        defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button2
+    elif defbtntype==512:
+        defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button3
+    message = str(message)
+    dlg_result = Rhino.UI.Dialogs.ShowMessageBox(message, title, btn, icon, defbtn)
+    if dlg_result==System.Windows.Forms.DialogResult.OK:     return 1
+    if dlg_result==System.Windows.Forms.DialogResult.Cancel: return 2
+    if dlg_result==System.Windows.Forms.DialogResult.Abort:  return 3
+    if dlg_result==System.Windows.Forms.DialogResult.Retry:  return 4
+    if dlg_result==System.Windows.Forms.DialogResult.Ignore: return 5
+    if dlg_result==System.Windows.Forms.DialogResult.Yes:    return 6
+    if dlg_result==System.Windows.Forms.DialogResult.No:     return 7
+
 
 def PropertyListBox(items, values, message=None, title=None):
     """
-    Displays a list of items and their values in a property-style list box dialog
+    Displays list of items and their values in a property-style list box dialog
     Parameters:
       items, values = list of string items and their corresponding values
       message [opt] = a prompt or message
@@ -479,17 +493,19 @@ def PropertyListBox(items, values, message=None, title=None):
     rc = Rhino.UI.Dialogs.ShowPropertyListBox(title, message, items, values)
     return rc
 
+
 def OpenFileName(title=None, filter=None, folder=None, filename=None, extension=None):
     """
-    Displays a Windows file open dialog box allowing the user to enter a file name. Note, this function does not open the file.
+    Displays file open dialog box allowing the user to enter a file name.
+    Note, this function does not open the file.
     Parameters:
-      title  [optional] = A dialog box title.
-      filter [optional] = A filter string. The filter string must be in the following form:
-                          "Description1|Filter1|Description2|Filter2||", where "||" terminates filter string.
-                          If omitted, the filter (*.*) is used.
-      folder [optional] = A default folder.
-      filename [optional] = a default file name
-      extension[optional[ = a default file extension
+      title[opt] = A dialog box title.
+      filter[opt] = A filter string. The filter must be in the following form:
+        "Description1|Filter1|Description2|Filter2||", where "||" terminates filter string.
+        If omitted, the filter (*.*) is used.
+      folder[opt] = A default folder.
+      filename[opt] = a default file name
+      extension[opt] = a default file extension
     Returns:
       the file name is successful
       None if not successful, or on error
@@ -500,9 +516,9 @@ def OpenFileName(title=None, filter=None, folder=None, filename=None, extension=
     if folder: fd.InitialDirectory = folder
     if filename: fd.FileName = filename
     if extension: fd.DefaultExt = extension
-    if( fd.ShowDialog() == System.Windows.Forms.DialogResult.OK ):
-        return fd.FileName
+    if fd.ShowDialog()==System.Windows.Forms.DialogResult.OK: return fd.FileName
     return None
+
 
 def RealBox(message="", default_number=None, title=""):
     """
@@ -511,24 +527,24 @@ def RealBox(message="", default_number=None, title=""):
       number on success
       None on error
     """
-    if( default_number==None ):
-        default_number = Rhino.RhinoMath.UnsetValue
+    if default_number is None: default_number = Rhino.RhinoMath.UnsetValue
     rc, number = Rhino.UI.Dialogs.ShowNumberBox(title, message, default_number)
-    if( rc==System.Windows.Forms.DialogResult.OK ):
-        return number
+    if rc==System.Windows.Forms.DialogResult.OK: return number
     return None
+
 
 def SaveFileName(title=None, filter=None, folder=None, filename=None, extension=None):
     """
-    Displays a Windows file save dialog box allowing the user to enter a file name. Note, this function does not save the file.
+    Displays a save dialog box allowing the user to enter a file name.
+    Note, this function does not save the file.
     Parameters:
-      title  [optional] = A dialog box title.
-      filter [optional] = A filter string. The filter string must be in the following form:
-                          "Description1|Filter1|Description2|Filter2||", where "||" terminates filter string.
-                          If omitted, the filter (*.*) is used.
-      folder [optional] = A default folder.
-      filename [optional] = a default file name
-      extension[optional[ = a default file extension
+      title[opt] = A dialog box title.
+      filter[opt] = A filter string. The filter must be in the following form:
+        "Description1|Filter1|Description2|Filter2||", where "||" terminates filter string.
+        If omitted, the filter (*.*) is used.
+      folder[opt] = A default folder.
+      filename[opt] = a default file name
+      extension[opt] = a default file extension
     Returns:
       the file name is successful
       None if not successful, or on error
@@ -539,9 +555,9 @@ def SaveFileName(title=None, filter=None, folder=None, filename=None, extension=
     if folder: fd.InitialDirectory = folder
     if filename: fd.FileName = filename
     if extension: fd.DefaultExt = extension
-    if( fd.ShowDialog() == System.Windows.Forms.DialogResult.OK ):
-        return fd.FileName
+    if fd.ShowDialog()==System.Windows.Forms.DialogResult.OK: return fd.FileName
     return None
+
 
 def StringBox(default_string=None, message=None, title=None):
     "Displays a dialog box prompting the user to enter a string value."

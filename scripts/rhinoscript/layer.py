@@ -2,6 +2,15 @@ import Rhino.DocObjects.Layer
 import scriptcontext
 import utility as rhutil
 
+
+def __getlayer(name_or_id):
+    if not name_or_id: return None
+    id = rhutil.coerceguid(name_or_id)
+    if id: name_or_id = id
+    layer = scriptcontext.doc.Layers.Find(name_or_id, True)
+    if layer>=0: return scriptcontext.doc.Layers[layer]
+
+
 def AddLayer(name=None, color=None, visible=True, locked=False, parent=None):
     """
     Add a new layer to the document
@@ -19,7 +28,7 @@ def AddLayer(name=None, color=None, visible=True, locked=False, parent=None):
       None if not successful or on error
     """
     layer = Rhino.DocObjects.Layer.GetDefaultLayerProperties()
-    if name is not None: layer.Name = name
+    if name: layer.Name = str(name)
     color = rhutil.coercecolor(color)
     if color: layer.Color = color
     layer.IsVisible = visible
@@ -31,14 +40,6 @@ def AddLayer(name=None, color=None, visible=True, locked=False, parent=None):
             layer.ParentLayerId = parentId
     index = scriptcontext.doc.Layers.Add(layer)
     return scriptcontext.doc.Layers[index].Name
-
-
-def __getlayer(name_or_id):
-    if not name_or_id: return None
-    id = rhutil.coerceguid(name_or_id)
-    if id: name_or_id = id
-    layer = scriptcontext.doc.Layers.Find(name_or_id, True)
-    if layer>=0: return scriptcontext.doc.Layers[layer]
 
 
 def CurrentLayer(layer=None):
@@ -204,6 +205,7 @@ def LayerChildCount(layer):
     if children is None: return 0
     return children.Length
 
+
 def LayerChildren(layer):
     """
     Returns the immediate child layers of a layer
@@ -247,6 +249,64 @@ def LayerCount():
     return scriptcontext.doc.Layers.ActiveCount
 
 
+def LayerLinetype(layer, linetype=None):
+    """
+    Returns or changes the linetype of a layer
+    Parameters:
+      layer = name of an existing layer
+      linetype[opt] = name of a linetype
+    Returns:
+      If linetype is not specified, name of the current linetype
+      If linetype is specified, name of the previous linetype
+      None on error
+    """
+    layer = __getlayer(layer)
+    if layer is None: return scriptcontext.errorhandler()
+    index = layer.LinetypeIndex
+    rc = scriptcontext.doc.Linetypes[index].Name
+    if linetype:
+        index = scriptcontext.doc.Linetypes.Find(str(linetype), True)
+        if index==-1: return scriptcontext.errorhandler()
+        layer.LinetypeIndex = index
+        layer.CommitChanges()
+        scriptcontext.doc.Views.Redraw()
+    return rc
+
+
+def LayerLocked(layer, locked=None):
+    """
+    Returns or changes the locked mode of a layer
+    Parameters:
+      layer = name of an existing layer
+      locked[opt] = new layer locked mode
+    Returns:
+      If locked is not specified, the current layer locked mode
+      If locked is specified, the previous layer locked mode
+      None on error
+    """
+    layer = __getlayer(layer)
+    if layer is None: return scriptcontext.errorhandler()
+    rc = layer.IsLocked
+    if locked and locked!=rc:
+        layer.IsLocked = locked
+        layer.CommitChanges()
+        scriptcontext.doc.Views.Redraw()
+    return rc
+
+
+def LayerMaterialIndex( layer ):
+    """
+    Returns the material index of a layer. A material index of -1 indeicates
+    that no material has been assigned to the layer. Thus, the layer will use
+    Rhino's default layer material
+    Parameters:
+      layer = name of existing layer
+    """
+    layer = __getlayer(layer)
+    if layer is None: return scriptcontext.errorhandler()
+    return layer.RenderMaterialIndex
+
+
 def LayerNames(sort=False):
     """
     Returns the names of all layers in the document.
@@ -266,15 +326,84 @@ def LayerNames(sort=False):
     if sort: rc.sort()
     return rc
 
-
-def LayerMaterialIndex( layer ):
+def LayerOrder(layer):
     """
-    Returns the material index of a layer. A material index of -1 indeicates
-    that no material has been assigned to the layer. Thus, the layer will use
-    Rhino's default layer material
+    Returns the current display order index of a layer as displayed in Rhino's
+    layer dialog box. A display order index of -1 indicates that the current
+    layer dialog filter does not allow the layer to appear in the layer list
     Parameters:
       layer = name of existing layer
+    Returns:
+      0 based index
+      None on error    
     """
     layer = __getlayer(layer)
     if layer is None: return scriptcontext.errorhandler()
-    return layer.RenderMaterialIndex
+    return layer.SortIndex
+
+
+def LayerPrintColor(layer, color=None):
+    """
+    Returns or changes the print color of a layer. Layer print colors are
+    represented as RGB colors.
+    Parameters:
+      layer = name of existing layer
+      color[opt] = new print color
+    Returns:
+      if color is not specified, the current layer print color
+      if color is specified, the previous layer print color
+      None on error
+    """
+    layer = __getlayer(layer)
+    if layer is None: return scriptcontext.errorhandler()
+    rc = layer.PlotColor
+    color = rhutil.coercecolor(color)
+    if color:
+        layer.PlotColor = color
+        layer.CommitChanges()
+        scriptcontext.doc.Views.Redraw()
+    return rc
+
+
+def LayerPrintWidth(layer, width=None):
+    """
+    Returns or changes the print width of a layer. Print width is specified in
+    millimeters. A print width of 0.0 denotes the "default" print width.
+    Parameters:
+      layer = name of existing layer
+      width[opt] = new print width
+    Returns:
+      if width is not specified, the current layer print width
+      if width is specified, the previous layer print width
+      None on error
+    """
+    layer = __getlayer(layer)
+    if layer is None: return scriptcontext.errorhandler()
+    rc = layer.PlotWeight
+    if width is not None and width!=rc:
+        layer.PlotWeight = width
+        layer.CommitChanges()
+        scriptcontext.doc.Views.Redraw()
+    return rc
+
+
+def LayerVisible(layer, visible=False):
+    """
+    Returns or changes the visible property of a layer.
+    Parameters:
+      layer = name of existing layer
+      visible[opt] = new visible state
+    Returns:
+      if visible is not specified, the current layer visibility
+      if visible is specified, the previous layer visibility
+      None on error
+    """
+    layer = __getlayer(layer)
+    if layer is None: return scriptcontext.errorhandler()
+    rc = layer.IsVisible
+    if visible is not None and visible!=rc:
+        layer.IsVisible = visible
+        layer.CommitChanges()
+        scriptcontext.doc.Views.Redraw()
+    return rc
+
