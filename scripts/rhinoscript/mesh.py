@@ -471,7 +471,8 @@ def MeshFaceNormals(mesh_id):
         mesh.FaceNormals.ComputeFaceNormals()
     rc = []
     for i in xrange(mesh.FaceNormals.Count):
-        rc.append(mesh.FaceNormals[i])
+        normal = mesh.FaceNormals[i]
+        rc.append(Rhino.Geometry.Vector3d(normal))
     return rc
 
 
@@ -751,7 +752,7 @@ def MeshVertexNormals(mesh_id):
     if mesh is None: return scriptcontext.errorhandler()
     count = mesh.Normals.Count
     if count<1: return None
-    return [mesh.Normals[i] for i in xrange(count)]
+    return [Rhino.Geometry.Vector3d(mesh.Normals[i]) for i in xrange(count)]
 
 
 def MeshVertices(object_id):

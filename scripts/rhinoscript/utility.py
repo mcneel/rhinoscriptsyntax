@@ -317,6 +317,8 @@ def coerce3dvector(vector):
         return None
     if type(vector) is Rhino.Geometry.Point3d or type(vector) is Rhino.Geometry.Point3f:
         return Rhino.Geometry.Vector3d(vector.X, vector.Y, vector.Z)
+    if type(vector) is Rhino.Geometry.Vector3f:
+        return Rhino.Geometry.Vector3d(vector.X, vector.Y, vector.Z)
     return None
 
 
