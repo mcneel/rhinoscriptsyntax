@@ -98,6 +98,7 @@ def CurveMeshIntersection(curve_id, mesh_id, return_faces=False):
     tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     polylinecurve = curve.ToPolyline(0,0,0,0,0.0,tolerance,0.0,0.0,True)
     pts, faceids = Rhino.Geometry.Intersect.Intersection.MeshPolyline(mesh, polylinecurve)
+    if not pts: return scriptcontext.errorhandler()
     pts = list(pts)
     if return_faces:
         faceids = list(faceids)
