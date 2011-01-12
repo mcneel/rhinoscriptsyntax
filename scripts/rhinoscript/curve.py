@@ -657,9 +657,9 @@ def CurveArea( curve_id ):
       None on error.
     """
     curve = rhutil.coercecurve(curve_id)
-    if(curve == None): return scriptcontext.errorhandler()
-    mp = Rhino.Geometry.AreaMassProperties.Compute(curve)
-    if mp: return mp.Area, mp.AreaError
+    if curve:
+        mp = Rhino.Geometry.AreaMassProperties.Compute(curve)
+        if mp: return mp.Area, mp.AreaError
     return scriptcontext.errorhandler()
 
 
@@ -682,9 +682,9 @@ def CurveAreaCentroid( curve_id ):
       None on error.    
     """
     curve = rhutil.coercecurve(curve_id)
-    if(curve == None): return scriptcontext.errorhandler()
-    mp = Rhino.Geometry.AreaMassProperties.Compute(curve)
-    if mp: return mp.Centroid, mp.CentroidError
+    if curve:
+        mp = Rhino.Geometry.AreaMassProperties.Compute(curve)
+        if mp: return mp.Centroid, mp.CentroidError
     return scriptcontext.errorhandler()
 
 def CurveArrows(curve_id, arrow_style=None):
@@ -703,29 +703,29 @@ def CurveArrows(curve_id, arrow_style=None):
         None on error
     """
     id = rhutil.coerceguid(curve_id)
-    if( id==None ): return None
+    if id is None: return scriptcontext.errorhandler()
     objref = Rhino.DocObjects.ObjRef(id)
     curve = objref.Curve()
     rc = None
-    if( curve!=None ):
+    if curve:
         attr = objref.Object().Attributes
         rc = attr.ObjectDecoration
-        if( arrow_style!=None ):
-            if( arrow_style==0 ):
+        if arrow_style:
+            if arrow_style==0:
                 attr.ObjectDecoration = Rhino.DocObjects.ObjectDecoration.None
-            elif( arrow_style==1 ):
+            elif arrow_style==1:
                 attr.ObjectDecoration = Rhino.DocObjects.ObjectDecoration.StartArrowhead
-            elif( arrow_style==2 ):
+            elif arrow_style==2:
                 attr.ObjectDecoration = Rhino.DocObjects.ObjectDecoration.EndArrowhead
-            elif( arrow_style==3 ):
+            elif arrow_style==3:
                 attr.ObjectDecoration = Rhino.DocObjects.ObjectDecoration.BothArrowhead
             scriptcontext.doc.Objects.ModifyAttributes(objref, attr, True)
             scriptcontext.doc.Views.Redraw()
     objref.Dispose()
-    if( rc == Rhino.DocObjects.ObjectDecoration.None ): return 0
-    if( rc == Rhino.DocObjects.ObjectDecoration.StartArrowhead ): return 1
-    if( rc == Rhino.DocObjects.ObjectDecoration.EndArrowhead ): return 2
-    if( rc == Rhino.DocObjects.ObjectDecoration.BothArrowhead ): return 3
+    if rc==Rhino.DocObjects.ObjectDecoration.None: return 0
+    if rc==Rhino.DocObjects.ObjectDecoration.StartArrowhead: return 1
+    if rc==Rhino.DocObjects.ObjectDecoration.EndArrowhead: return 2
+    if rc==Rhino.DocObjects.ObjectDecoration.BothArrowhead: return 3
 
 
 def CurveBooleanDifference(curve_id_0, curve_id_1):
@@ -777,7 +777,8 @@ def CurveBooleanIntersection(curve_id_0, curve_id_1):
             curves.append(rc)
     scriptcontext.doc.Views.Redraw()
     return curves
-  
+
+
 def CurveBooleanUnion(curve_id):
     """
     Calculates the union of two or more closed, planar curves and
@@ -792,7 +793,7 @@ def CurveBooleanUnion(curve_id):
         curve = rhutil.coercecurve(id)
         if curve: in_curves.append(curve)
     
-    if (len(in_curves) < 2): return scriptcontext.errorhandler()
+    if len(in_curves)<2: return scriptcontext.errorhandler()
     out_curves = Rhino.Geometry.Curve.CreateBooleanUnion(in_curves)
     curves = []
     for curve in out_curves:
@@ -1834,7 +1835,7 @@ def ExtendCurve(curve_id, extension_type, side, boundary_object_ids):
     newcurve = curve.Extend(side, extension_type, geometry)
     if( newcurve and newcurve.IsValid ):
         objref = Rhino.DocObjects.ObjRef(curve_id)
-        if( scriptcontext.doc.Objects.Replace( objref, newcurve ) ):
+        if scriptcontext.doc.Objects.Replace(objref, newcurve):
             scriptcontext.doc.Views.Redraw()
             return curve_id
     return scriptcontext.errorhandler()
@@ -1855,14 +1856,14 @@ def ExtendCurveLength(curve_id, extension_type, side, length):
     """
     curve = rhutil.coercecurve(curve_id)
     if curve is None: return scriptcontext.errorhandler()
-    if( extension_type==0 ): extension_type = Rhino.Geometry.CurveExtensionStyle.Line
-    elif( extension_type==1 ): extension_type = Rhino.Geometry.CurveExtensionStyle.Arc
-    elif( extension_type==2 ): extension_type = Rhino.Geometry.CurveExtensionStyle.Smooth
+    if extension_type==0: extension_type = Rhino.Geometry.CurveExtensionStyle.Line
+    elif extension_type==1: extension_type = Rhino.Geometry.CurveExtensionStyle.Arc
+    elif extension_type==2: extension_type = Rhino.Geometry.CurveExtensionStyle.Smooth
     else: return scriptcontext.errorhandler()
     
-    if( side==0 ): side = Rhino.Geometry.CurveEnd.Start
-    elif( side==1 ): side = Rhino.Geometry.CurveEnd.End
-    elif( side==2 ): side = Rhino.Geometry.CurveEnd.Both
+    if side==0: side = Rhino.Geometry.CurveEnd.Start
+    elif side==1: side = Rhino.Geometry.CurveEnd.End
+    elif side==2: side = Rhino.Geometry.CurveEnd.Both
     else: return scriptcontext.errorhandler()
     
     newcurve = curve.Extend(side, length, extension_type)
@@ -1889,16 +1890,16 @@ def ExtendCurvePoint(curve_id, side, point):
     point = rhutil.coerce3dpoint(point)
     if curve is None or point is None: return scriptcontext.errorhandler()
     
-    if( side==0 ): side = Rhino.Geometry.CurveEnd.Start
-    elif( side==1 ): side = Rhino.Geometry.CurveEnd.End
-    elif( side==2 ): side = Rhino.Geometry.CurveEnd.Both
+    if side==0: side = Rhino.Geometry.CurveEnd.Start
+    elif side==1: side = Rhino.Geometry.CurveEnd.End
+    elif side==2: side = Rhino.Geometry.CurveEnd.Both
     else: return scriptcontext.errorhandler()
     
     extension_type = Rhino.Geometry.CurveExtensionStyle.Smooth
     newcurve = curve.Extend(side, extension_type, point)
     if( newcurve and newcurve.IsValid ):
         objref = Rhino.DocObjects.ObjRef(curve_id)
-        if( scriptcontext.doc.Objects.Replace( objref, newcurve ) ):
+        if scriptcontext.doc.Objects.Replace( objref, newcurve ):
             scriptcontext.doc.Views.Redraw()
             return curve_id
     return scriptcontext.errorhandler()
@@ -1921,14 +1922,14 @@ def FairCurve(curve_id, tolerance=1.0):
     if curve is None: return scriptcontext.errorhandler()
     angle_tol = 0.0
     clamp = 0
-    if( curve.IsPeriodic ):
+    if curve.IsPeriodic:
         curve = curve.ToNurbsCurve()
         clamp = 1
     newcurve = curve.Fair(tolerance, angle_tol, clamp, clamp, 100)
     if newcurve is None: return scriptcontext.errorhandler()
     curve_id = rhutil.coerceguid(curve_id)
     objref = Rhino.DocObjects.ObjRef(curve_id)
-    if( scriptcontext.doc.Objects.Replace(objref, newcurve) ):
+    if scriptcontext.doc.Objects.Replace(objref, newcurve):
         scriptcontext.doc.Views.Redraw()
         return True
     return False
@@ -1964,7 +1965,7 @@ def FitCurve(curve_id, degree=3, distance_tolerance=-1, angle_tolerance=-1):
     if nc:
         attributes = Rhino.DocObjects.ObjectAttributes(id)
         rc = scriptcontext.doc.Objects.AddCurve(curve, attributes)
-        if( rc!=System.Guid.Empty ): return rc
+        if rc!=System.Guid.Empty: return rc
     return scriptcontext.errorhandler()
 
 
@@ -2058,35 +2059,35 @@ def IsCurveClosed( object_id ):
 
 
 def IsCurveInPlane( object_id, plane=None ):
-  """
-  Test a curve to see if it lies in a specific plane
-  Parameters:
-    object_id = the object's identifier
-    plane[opt] = plane to test. If omitted, the active construction plane is used
-  Returns:
-    True or False indicating success or failure
-  """
-  curve = rhutil.coercecurve(object_id)
-  if curve is None: return False
-  if plane is None:
-      plane = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
-  else:
-      plane = rhutil.coerceplane(plane)
-      if plane is None: return False
-  return curve.IsInPlane(plane, scriptcontext.doc.ModelAbsoluteTolerance)
+    """
+    Test a curve to see if it lies in a specific plane
+    Parameters:
+      object_id = the object's identifier
+      plane[opt] = plane to test. If omitted, the active construction plane is used
+    Returns:
+      True or False indicating success or failure
+    """
+    curve = rhutil.coercecurve(object_id)
+    if curve is None: return False
+    if plane is None:
+        plane = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
+    else:
+        plane = rhutil.coerceplane(plane)
+        if plane is None: return False
+    return curve.IsInPlane(plane, scriptcontext.doc.ModelAbsoluteTolerance)
 
 
 def IsCurveLinear( object_id, segment_index=-1 ):
-  """
-  Verifies an object is a linear curve
-  Parameters:
-    curve_id = identifier of the curve object
-    segment_index [opt] = the curve segment if curve_id identifies a polycurve
-  Returns:
-    True or False indicating success or failure
-  """
-  curve = rhutil.coercecurve(object_id, segment_index)
-  return curve and curve.IsLinear()
+    """
+    Verifies an object is a linear curve
+    Parameters:
+      curve_id = identifier of the curve object
+      segment_index [opt] = the curve segment if curve_id identifies a polycurve
+    Returns:
+      True or False indicating success or failure
+    """
+    curve = rhutil.coercecurve(object_id, segment_index)
+    return curve and curve.IsLinear()
 
 
 def IsCurvePeriodic( curve_id, segment_index=-1 ):
@@ -2241,9 +2242,9 @@ def LineFitFromPoints(points):
       None on error
     """
     points = rhutil.coerce3dpointlist(points)
-    if( points==None ): return scriptcontext.errorhandler()
-    rc, line = Rhino.Geometry.Line.TryFitLineToPoints(points)
-    if rc: return line
+    if points:
+        rc, line = Rhino.Geometry.Line.TryFitLineToPoints(points)
+        if rc: return line
     return scriptcontext.errorhandler()
 
 
@@ -2420,9 +2421,9 @@ def PointInPlanarClosedCurve( point, curve, plane=None, tolerance=None ):
     if plane is None:
         plane = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
     rc = curve.Contains(point, plane, tolerance)
-    if( rc==Rhino.Geometry.PointContainment.Unset ): return scriptcontext.errorhandler()
-    if( rc==Rhino.Geometry.PointContainment.Outside ): return 0
-    if( rc==Rhino.Geometry.PointContainment.Inside ): return 1
+    if rc==Rhino.Geometry.PointContainment.Unset: return scriptcontext.errorhandler()
+    if rc==Rhino.Geometry.PointContainment.Outside: return 0
+    if rc==Rhino.Geometry.PointContainment.Inside: return 1
     return 2
 
 
@@ -2512,6 +2513,7 @@ def ProjectCurveToSurface( curve_ids, surface_ids, direction ):
     scriptcontext.doc.Views.Redraw()
     return ids
 
+
 def RebuildCurve( curve_id, degree=3, point_count=10 ):
     """
     Rebuilds a curve to a given degree and control point count. For more
@@ -2544,11 +2546,11 @@ def ReverseCurve( curve_id ):
     """
     curve = rhutil.coercecurve(curve_id)
     if curve and curve.Reverse():
-      curve_id = rhutil.coerceguid(curve_id)
-      objref = Rhino.DocObjects.ObjRef(curve_id)
-      scriptcontext.doc.Objects.Replace(objref, curve)
-      objref.Dispose()
-      return True
+        curve_id = rhutil.coerceguid(curve_id)
+        objref = Rhino.DocObjects.ObjRef(curve_id)
+        scriptcontext.doc.Objects.Replace(objref, curve)
+        objref.Dispose()
+        return True
     return False
 
 
@@ -2574,6 +2576,7 @@ def SimplifyCurve( curve_id, flags=0 ):
         scriptcontext.doc.Views.Redraw()
         return True
     return False
+
 
 def SplitCurve( curve_id, parameter, delete_input=True ):
     """
@@ -2622,6 +2625,6 @@ def TrimCurve( curve_id, interval, delete_input=True ):
     objref = Rhino.DocObjects.ObjRef(rhutil.coerceguid(curve_id))
     att = objref.Object().Attributes
     rc = scriptcontext.doc.Objects.AddCurve(newcurve, att)
-    if( delete_input ): scriptcontext.doc.Objects.Delete(objref, True)
+    if delete_input: scriptcontext.doc.Objects.Delete(objref, True)
     scriptcontext.doc.Views.Redraw()
     return rc

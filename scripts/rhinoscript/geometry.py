@@ -4,6 +4,7 @@ import Rhino
 import System.Guid
 import System.Array
 
+
 def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
     """
     Creates a clipping plane. A clipping plane is a plane for visibly
@@ -49,6 +50,7 @@ def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
     if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
+
 
 def AddPoint(point):
     """

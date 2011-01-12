@@ -494,6 +494,10 @@ def MeshFaces(object_id, face_type=True):
     rc = []
     for i in xrange(mesh.Faces.Count):
         getrc, p0, p1, p2, p3 = mesh.Faces.GetFaceVertices(i)
+        p0 = Rhino.Geometry.Point3d(p0)
+        p1 = Rhino.Geometry.Point3d(p1)
+        p2 = Rhino.Geometry.Point3d(p2)
+        p3 = Rhino.Geometry.Point3d(p3)
         rc.append( p0 )
         rc.append( p1 )
         rc.append( p2 )
@@ -806,9 +810,10 @@ def MeshVolumeCentroid(object_id):
       None on error
     """
     mesh = rhutil.coercemesh(object_id)
-    if mesh is None: return scriptcontext.errorhandler()
-    mp = Rhino.Geometry.VolumeMassProperties.Compute(mesh)
-    if mp: return mp.Centroid
+    if mesh:
+        mp = Rhino.Geometry.VolumeMassProperties.Compute(mesh)
+        if mp: return mp.Centroid
+    return scriptcontext.errorhandler()
 
 
 def PullCurveToMesh(mesh_id, curve_id):
