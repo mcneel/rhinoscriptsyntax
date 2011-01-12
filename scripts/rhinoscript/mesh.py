@@ -493,7 +493,7 @@ def MeshFaces(object_id, face_type=True):
     if mesh is None: return scriptcontext.errorhandler()
     rc = []
     for i in xrange(mesh.Faces.Count):
-        rc, p0, p1, p2, p3 = mesh.Faces.GetFaceVertices(i)
+        getrc, p0, p1, p2, p3 = mesh.Faces.GetFaceVertices(i)
         rc.append( p0 )
         rc.append( p1 )
         rc.append( p2 )
