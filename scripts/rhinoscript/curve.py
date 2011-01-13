@@ -2526,7 +2526,7 @@ def RebuildCurve( curve_id, degree=3, point_count=10 ):
       True of False indicating success or failure
     """
     curve = rhutil.coercecurve(curve_id)
-    if curve is None or degree<=1: return False
+    if curve is None or degree<1: return False
     newcurve = curve.Rebuild(point_count, degree, False)
     if newcurve is None: return False
     objref = Rhino.DocObjects.ObjRef(curve_id)
