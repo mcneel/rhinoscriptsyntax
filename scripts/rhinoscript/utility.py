@@ -329,7 +329,7 @@ def coerce3dpointlist(points):
     if isinstance(points, Rhino.Collections.Point3dList): return list(points)
     if type(points) is list or type(points) is tuple:
         count = len(points)
-        if count>0 and type(points[0]) is Rhino.Geometry.Point3d or type(points[0]) is list or type(points[0]) is tuple:
+        if count>0 and (coerce3dpoint(points[0]) is not None):
             return [coerce3dpoint(points[i]) for i in xrange(count)]
         elif count>2 and type(points[0]) is not list:
             point_count = count/3

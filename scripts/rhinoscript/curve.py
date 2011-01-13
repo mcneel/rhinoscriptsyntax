@@ -388,9 +388,9 @@ def AddPolyline( points ):
       None on error
     """
     points = rhutil.coerce3dpointlist(points)
-    if( points==None ): return scriptcontext.errorhandler()
+    if not points: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddPolyline(points)
-    if( rc==System.Guid.Empty ): return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
 
