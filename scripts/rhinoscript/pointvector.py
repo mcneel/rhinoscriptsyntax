@@ -191,7 +191,8 @@ def PointSubtract(point1, point2):
     point1 = rhutil.coerce3dpoint(point1)
     point2 = rhutil.coerce3dpoint(point2)
     if point1 is None or point2 is None: return scriptcontext.errorhandler()
-    return point1-point2
+    v = point1-point2
+    return Rhino.Geometry.Point3d(v)
 
   
 def PointTransform(point, xform):
