@@ -203,6 +203,32 @@ def Distance(point1, point2):
     return distances
 
 
+def Polar(point, angle_degrees, distance, plane=None):
+    """
+    Returns the 3D point that is a specified angle and distance
+    from a 3D point
+    Parameters:
+      point = the point to transform
+      plane[opt] = plane to base the transformation. If omitted, the world
+        x-y plane is used
+    Returns:
+      resulting point is successful
+      None on error
+    """
+    point = coerce3dpoint(point)
+    if point is None: return scriptcontext.errorhandler()
+    plane = coerceplane(plane)
+    angle = math.radians(angle_degrees)
+    if plane is None: plane = Rhino.Geometry.Plane.WorldXY
+    offset = plane.XAxis
+    offset.Unitize()
+    offset *= distance
+    rc = point+offset
+    xform = Rhino.Geometry.Transform.Rotation(angle, plane.ZAxis, point)
+    rc.Transform(xform)
+    return rc
+
+
 def SortPointList(points, tolerance=None):
     """
     Sorts a list of points so they will be connected in a "reasonable" polyline order
