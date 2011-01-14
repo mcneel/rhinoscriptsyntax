@@ -1317,7 +1317,7 @@ def CurveLength(curve_id, segment_index=-1, sub_domain=None):
     curve = rhutil.coercecurve(curve_id, segment_index)
     if curve is None: return scriptcontext.errorhandler()
     if sub_domain:
-        if(len(sub_domain) == 2):
+        if len(sub_domain)==2:
             dom = Rhino.Geometry.Interval(sub_domain[0], sub_domain[1])
             return curve.GetLength(dom)
         return scriptcontext.errorhandler()
@@ -1406,10 +1406,10 @@ def CurvePerpFrame(curve_id, parameter):
     parameter = float(parameter)
     if curve is None: return scriptcontext.errorhandler()
     params = (parameter, parameter+0.05)
-    if( parameter>0.9 ): params = (parameter-0.05, parameter)
+    if parameter>0.9: params = (parameter-0.05, parameter)
     planes = curve.GetPerpendicularFrames(params)
-    if( planes is None or len(planes)<2 ): return scriptcontext.errorhandler()
-    if( parameter>0.9 ): return planes[1]
+    if planes is None or len(planes)<2: return scriptcontext.errorhandler()
+    if parameter>0.9: return planes[1]
     return planes[0]
 
 
@@ -1447,6 +1447,7 @@ def CurvePointCount(curve_id, segment_index=-1):
     nc = curve.ToNurbsCurve()
     if nc: return nc.Points.Count
     return scriptcontext.errorhandler()
+
 
 def CurvePoints( curve_id, segment_index=-1 ):
     """
@@ -1669,8 +1670,9 @@ def DivideCurveEquidistant(curve_id, distance, create_points=False, return_point
     Parameters:
       curve_id = the object's identifier
       distance = linear distance between division points
-      create_points [opt] = create the division points
-      return_points [opt] = if True, return a list of points. If False, return a list of curve parameters
+      create_points[opt] = create the division points
+      return_points[opt] = If True, return a list of points.
+          If False, return a list of curve parameters
     Returns:
       A list of points or curve parameters based on the value of return_points
       None on error
@@ -1679,10 +1681,10 @@ def DivideCurveEquidistant(curve_id, distance, create_points=False, return_point
     if curve is None: return scriptcontext.errorhandler()
     points = curve.DivideEquidistant(distance)
     if not points: return scriptcontext.errorhandler()
-    if( create_points ):
-        [scriptcontext.doc.Objects.AddPoint(point) for point in points]
+    if create_points:
+        for point in points: scriptcontext.doc.Objects.AddPoint(point)
         scriptcontext.doc.Views.Redraw()
-    if( return_points ): return points
+    if return_points: return points
     tvals = []
     for point in points:
         rc, t = curve.ClosestPoint(point)
@@ -1809,22 +1811,22 @@ def ExtendCurve(curve_id, extension_type, side, boundary_object_ids):
       curve_id: identifier of curve to extend
       extension_type: 0 = line, 1 = arc, 2 = smooth
       side: 0=extend from the start of the curve, 1=extend from the end of the curve
-      boundary_object_ids: curve, surfacem and polysurface objects to extend to
+      boundary_object_ids: curve, surface, and polysurface objects to extend to
     Returns:
       The identifier of the new object if successful.
       None if not successful, or on error.
     """
     curve = rhutil.coercecurve(curve_id)
     boundary_object_ids = rhutil.coerceguidlist(boundary_object_ids)
-    if curve is None or boundary_object_id is None: return scriptcontext.errorhandler()
-    if( extension_type==0 ): extension_type = Rhino.Geometry.CurveExtensionStyle.Line
-    elif( extension_type==1 ): extension_type = Rhino.Geometry.CurveExtensionStyle.Arc
-    elif( extension_type==2 ): extension_type = Rhino.Geometry.CurveExtensionStyle.Smooth
+    if curve is None or boundary_object_ids is None: return scriptcontext.errorhandler()
+    if extension_type==0: extension_type = Rhino.Geometry.CurveExtensionStyle.Line
+    elif extension_type==1: extension_type = Rhino.Geometry.CurveExtensionStyle.Arc
+    elif extension_type==2: extension_type = Rhino.Geometry.CurveExtensionStyle.Smooth
     else: return scriptcontext.errorhandler()
     
-    if( side==0 ): side = Rhino.Geometry.CurveEnd.Start
-    elif( side==1 ): side = Rhino.Geometry.CurveEnd.End
-    elif( side==2 ): side = Rhino.Geometry.CurveEnd.Both
+    if side==0: side = Rhino.Geometry.CurveEnd.Start
+    elif side==1: side = Rhino.Geometry.CurveEnd.End
+    elif side==2: side = Rhino.Geometry.CurveEnd.Both
     else: return scriptcontext.errorhandler()
     
     geometry = []
@@ -1833,7 +1835,7 @@ def ExtendCurve(curve_id, extension_type, side, boundary_object_ids):
         if rhobj: geometry.append(rhobj.Geometry)
     if not geometry: return scriptcontext.errorhandler()
     newcurve = curve.Extend(side, extension_type, geometry)
-    if( newcurve and newcurve.IsValid ):
+    if newcurve and newcurve.IsValid:
         objref = Rhino.DocObjects.ObjRef(curve_id)
         if scriptcontext.doc.Objects.Replace(objref, newcurve):
             scriptcontext.doc.Views.Redraw()
