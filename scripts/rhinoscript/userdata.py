@@ -31,8 +31,14 @@ def GetDocumentData(section=None, entry=None):
       value of the entry if both section and entry are specified
       None if not successful or on error
     """
-    if section is None: return scriptcontext.doc.Strings.GetSectionNames()
-    if entry is None: return scriptcontext.doc.Strings.GetEntryNames(section)
+    if section is None:
+        rc = scriptcontext.doc.Strings.GetSectionNames()
+        if rc: return list(rc)
+        return None
+    if entry is None:
+        rc = scriptcontext.doc.Strings.GetEntryNames(section)
+        if rc: return list(rc)
+        return None
     return scriptcontext.doc.Strings.GetValue(section, entry)
 
 
