@@ -2522,7 +2522,7 @@ def RebuildCurve( curve_id, degree=3, point_count=10 ):
     information, see the Rhino help for the Rebuild command.
     Parameters:
       curve_id = identifier of the curve object
-      degree[opt] = new degree (must be greater than 1)
+      degree[opt] = new degree (must be greater than 0)
       point_count [opt] = new point count, which must be bigger than degree.
     Returns:
       True of False indicating success or failure
