@@ -166,9 +166,9 @@ def GetInteger(message=None, number=None, minimum=None, maximum=None):
     """
     gi = Rhino.Input.Custom.GetInteger()
     if message: gi.SetCommandPrompt(message)
-    if number: gi.SetDefaultInteger(number)
-    if minimum: gi.SetLowerLimit(minimum, False)
-    if maximum: gi.SetUpperLimit(maximum, False)
+    if number is not None: gi.SetDefaultInteger(number)
+    if minimum is not None: gi.SetLowerLimit(minimum, False)
+    if maximum is not None: gi.SetUpperLimit(maximum, False)
     if gi.Get()!=Rhino.Input.GetResult.Number: return scriptcontext.errorhandler()
     rc = gi.Number()
     gi.Dispose()
@@ -357,9 +357,9 @@ def GetReal(message="Number", number=None, minimum=None, maximum=None):
     """
     gn = Rhino.Input.Custom.GetNumber()
     if message: gn.SetCommandPrompt(message)
-    if number: gn.SetDefaultNumber(number)
-    if minimum: gn.SetLowerLimit(minimum, False)
-    if maximum: gn.SetUpperLimit(maximum, False)
+    if number is not None: gn.SetDefaultNumber(number)
+    if minimum is not None: gn.SetLowerLimit(minimum, False)
+    if maximum is not None: gn.SetUpperLimit(maximum, False)
     if gn.Get()!=Rhino.Input.GetResult.Number: return None
     rc = gn.Number()
     gn.Dispose()
