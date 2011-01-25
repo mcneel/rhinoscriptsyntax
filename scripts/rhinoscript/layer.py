@@ -1,6 +1,7 @@
 import Rhino.DocObjects.Layer
 import scriptcontext
 import utility as rhutil
+import System.Guid
 
 
 def __getlayer(name_or_id):
@@ -407,3 +408,31 @@ def LayerVisible(layer, visible=False):
         scriptcontext.doc.Views.Redraw()
     return rc
 
+
+def ParentLayer(layer, parent=None):
+    """
+    Return's or modifies the parent layer of a layer
+    Parameters:
+      layer = name of an existing layer
+      parent[opt] = name of the new parent layer. To remove the parent layer,
+        thus making a root-level layer, specify an empty string
+    Returns:
+      If parent is not specified, the name of the current parent layer
+      If parent is specified, the name of the previous parent layer
+      None if the layer does not have a parent, or on error
+    """
+    layer = __getlayer(layer)
+    if layer is None: return scriptcontext.errorhandler()
+    parent_id = layer.ParentLayerId
+    oldparent = None
+    if parent_id!=System.Guid.Empty:
+        oldparentlayer = scriptcontext.doc.Layers.Find(parent_id, False)
+        if oldparentlayer is not None:
+            oldparentlayer = scriptcontext.doc.Layers[oldparentlayer]
+            oldparent = oldparentlayer.Name
+    if parent is None: return oldparent
+    if parent=="": parent = System.Guid.Empty
+    parent = rhutil.coerceguid(parent)
+    if parent is None: return scriptcontext.errorhandler()
+    layer.ParentLayerId = parent
+    return oldparent
