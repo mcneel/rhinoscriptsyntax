@@ -37,6 +37,9 @@ def AllObjects(select=False, include_lights=False, include_grips=False):
     it = Rhino.DocObjects.ObjectEnumeratorSettings()
     it.IncludeLights = include_lights
     it.IncludeGrips = include_grips
+    it.NormalObjects = True
+    it.LockedObjects = True
+    it.HiddenObjects = True
     e = scriptcontext.doc.Objects.GetObjectList(it)
     object_ids = []
     for object in e:
