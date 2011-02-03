@@ -482,7 +482,7 @@ def RestoreNamedView(named_view, view=None, restore_bitmap=False):
     viewinfo = scriptcontext.doc.NamedViews[index]
     if view.MainViewport.PushViewInfo(viewinfo, restore_bitmap):
         view.Redraw()
-        return view.Name
+        return view.MainViewport.Name
     return scriptcontext.errorhandler()
 
 
