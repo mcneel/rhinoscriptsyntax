@@ -375,7 +375,7 @@ def AddNurbsCurve( points, knots, degree, weights=None ):
     return rc
 
 
-def AddPolyline( points ):
+def AddPolyline( points, replace_id=None ):
     """
     Adds a polyline curve to the current model
     Parameters:
@@ -383,13 +383,24 @@ def AddPolyline( points ):
                the array will be removed. The array must contain at least
                two points. If the array contains less than four points,
                then the first point and the last point must be different.
+      replace_id[opt] = If set to the id of an existing object, the object
+               will be replaced by this polyline
     Returns:
       id of the new curve object if successful
       None on error
     """
     points = rhutil.coerce3dpointlist(points)
     if not points: return scriptcontext.errorhandler()
-    rc = scriptcontext.doc.Objects.AddPolyline(points)
+    replace_id = rhutil.coerceguid(replace_id)
+    rc = System.Guid.Empty
+    if replace_id:
+        objref = Rhino.DocObjects.ObjRef(replace_id)
+        if objref.Object() is None: return scriptcontext.errorhandler()
+        pl = Rhino.Geometry.Polyline(points)
+        if scriptcontext.doc.Objects.Replace(objref, pl):
+            rc = replace_id
+    else:
+        rc = scriptcontext.doc.Objects.AddPolyline(points)
     if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
