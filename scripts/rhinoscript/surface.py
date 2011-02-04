@@ -441,22 +441,23 @@ def AddSrfControlPtGrid(count, points, degree=(3,3)):
     """
     Creates a surface from a grid of points
     Parameters:
-      count = tuple of two numbers defining the number of points in the u,v directions
+      count = tuple of two numbers defining number of points in the u,v directions
       points = list of 3D points
-      degree[opt] = tuple of two numbers defining the degree of the surface in the u,v directions
+      degree[opt] = two numbers defining degree of the surface in the u,v directions
     Returns:
       The identifier of the new object if successful.
       None if not successful, or on error.
     """
     points = rhutil.coerce3dpointlist(points)
-    if( points==None ): return scriptcontext.errorhandler()
+    if points is None: return scriptcontext.errorhandler()
     surf = Rhino.Geometry.NurbsSurface.CreateFromPoints(points, count[0], count[1], degree[0], degree[1])
-    if( surf==None ): return scritpcontext.errorhandler()
+    if surf is None: return scritpcontext.errorhandler()
     id = scriptcontext.doc.Objects.AddSurface(surf)
-    if( id!=System.Guid.Empty ):
+    if id!=System.Guid.Empty:
         scriptcontext.doc.Views.Redraw()
         return id
     return scriptcontext.errorhandler()
+
 
 def AddSrfPt( points ):
     """
@@ -468,17 +469,18 @@ def AddSrfPt( points ):
       None if not successful, or on error.
     """
     points = rhutil.coerce3dpointlist(points)
-    if( points==None ): return scriptcontext.errorhandler()
+    if points is None: return scriptcontext.errorhandler()
     surface=None
-    if( len(points)==3 ):
+    if len(points)==3:
       surface = Rhino.Geometry.NurbsSurface.CreateFromCorners(points[0], points[1], points[2])
-    elif( len(points)==4 ):
+    elif len(points)==4:
       surface = Rhino.Geometry.NurbsSurface.CreateFromCorners(points[0], points[1], points[2], points[3])
-    if( surface==None ): return scriptcontext.errorhandler()
+    if surface is None: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddSurface(surface)
-    if( rc == System.Guid.Empty ): return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
+
 
 def AddTorus(base, major_radius, minor_radius, direction=None):
     """
@@ -494,21 +496,20 @@ def AddTorus(base, major_radius, minor_radius, direction=None):
     """
     baseplane = None
     basepoint = rhutil.coerce3dpoint(base)
-    if( basepoint==None ):
+    if basepoint is None:
         baseplane = rhutil.coerceplane(base)
-        if( baseplane==None or direction!=None ): return scriptcontext.errorhandler()
-    if( baseplane==None ):
+        if baseplane is None or direction!=None: return scriptcontext.errorhandler()
+    if baseplane is None:
         direction = rhutil.coerce3dpoint(direction)
-        if( direction!=None ):
-            direction = direction-basepoint
-        else:
-            direction = Rhino.Geometry.Vector3d.ZAxis
+        if direction!=None: direction = direction-basepoint
+        else: direction = Rhino.Geometry.Vector3d.ZAxis
         baseplane = Rhino.Geometry.Plane(basepoint, direction)
     torus = Rhino.Geometry.Torus(baseplane, major_radius, minor_radius)
     revsurf = torus.ToRevSurface()
     rc = scriptcontext.doc.Objects.AddSurface(revsurf)
     scriptcontext.doc.Views.Redraw()
     return rc
+
 
 def BooleanDifference(input0, input1, delete_input=True):
     """
@@ -524,36 +525,34 @@ def BooleanDifference(input0, input1, delete_input=True):
         None on error
     """
     if( type(input0) is list or type(input0) is tuple ): pass
-    else: input0 = (input0)
+    else: input0 = [input0]
     
     if( type(input1) is list or type(input1) is tuple ): pass
-    else: input1 = (input1)
+    else: input1 = [input1]
 
-    breps0 = list()
+    breps0 = []
     for id in input0:
         brep = rhutil.coercebrep(id)
-        if( brep!=None ): breps0.append(brep)
-    if( len(breps0)<1 ):
-        return scriptcontext.errorhandler()
+        if brep: breps0.append(brep)
+    if not breps0: return scriptcontext.errorhandler()
     
-    breps1 = list()
+    breps1 = []
     for id in input1:
         brep = rhutil.coercebrep(id)
-        if( brep!=None ): breps1.append(brep)
-    if( len(breps1)<1 ):
-        return scriptcontext.errorhandler()
+        if brep: breps1.append(brep)
+    if not breps1: return scriptcontext.errorhandler()
     
     tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     newbreps = Rhino.Geometry.Brep.CreateBooleanDifference(breps0, breps1, tolerance)
-    if( newbreps==None ):
-        return scriptcontext.errorhandler()
+    if newbreps is None: return scriptcontext.errorhandler()
     
     rc = [scriptcontext.doc.Objects.AddBrep(brep) for brep in newbreps]
-    if( delete_input ):
-        [scriptcontext.doc.Objects.Delete(id, True) for id in input0]
-        [scriptcontext.doc.Objects.Delete(id, True) for id in input1]
+    if delete_input:
+        for id in input0: scriptcontext.doc.Objects.Delete(id, True)
+        for id in input1: scriptcontext.doc.Objects.Delete(id, True)
     scriptcontext.doc.Views.Redraw()
     return rc
+
 
 def BooleanIntersection(input0, input1, delete_input=True):
     """
@@ -569,36 +568,34 @@ def BooleanIntersection(input0, input1, delete_input=True):
         None on error
     """
     if( type(input0) is list or type(input0) is tuple ): pass
-    else: input0 = (input0)
+    else: input0 = [input0]
     
     if( type(input1) is list or type(input1) is tuple ): pass
-    else: input1 = (input1)
+    else: input1 = [input1]
 
-    breps0 = list()
+    breps0 = []
     for id in input0:
         brep = rhutil.coercebrep(id)
-        if( brep!=None ): breps0.append(brep)
-    if( len(breps0)<1 ):
-        return scriptcontext.errorhandler()
+        if brep: breps0.append(brep)
+    if not breps0: return scriptcontext.errorhandler()
     
-    breps1 = list()
+    breps1 = []
     for id in input1:
         brep = rhutil.coercebrep(id)
-        if( brep!=None ): breps1.append(brep)
-    if( len(breps1)<1 ):
-        return scriptcontext.errorhandler()
+        if brep: breps1.append(brep)
+    if not breps1: return scriptcontext.errorhandler()
     
     tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     newbreps = Rhino.Geometry.Brep.CreateBooleanIntersection(breps0, breps1, tolerance)
-    if( newbreps==None ):
-        return scriptcontext.errorhandler()
+    if newbreps is None: return scriptcontext.errorhandler()
     
     rc = [scriptcontext.doc.Objects.AddBrep(brep) for brep in newbreps]
-    if( delete_input ):
-        [scriptcontext.doc.Objects.Delete(id, True) for id in input0]
-        [scriptcontext.doc.Objects.Delete(id, True) for id in input1]
+    if delete_input:
+        for id in input0: scriptcontext.doc.Objects.Delete(id, True)
+        for id in input1: scriptcontext.doc.Objects.Delete(id, True)
     scriptcontext.doc.Views.Redraw()
     return rc
+
 
 def BooleanUnion(input, delete_input=True):
     """
@@ -613,27 +610,24 @@ def BooleanUnion(input, delete_input=True):
         None on error
     """
     input = [rhutil.coerceguid(id) for id in input]
-    if( input==None or len(input) < 2 ):
-        return scriptcontext.errorhandler()
+    if input is None or len(input)<2: return scriptcontext.errorhandler()
 
-    breps = list()
+    breps = []
     for id in input:
         brep = rhutil.coercebrep(id)
-        if( brep!=None ): breps.append(brep)
-        
-    if( len(breps)<2 ):
-        return scriptcontext.errorhandler()
+        if brep: breps.append(brep)
+    if len(breps)<2: return scriptcontext.errorhandler()
     
     tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     newbreps = Rhino.Geometry.Brep.CreateBooleanUnion(breps, tolerance)
-    if( newbreps==None ):
-        return scriptcontext.errorhandler()
+    if newbreps is None: return scriptcontext.errorhandler()
     
     rc = [scriptcontext.doc.Objects.AddBrep(brep) for brep in newbreps]
-    if( delete_input ):
-        [scriptcontext.doc.Objects.Delete(id, True) for id in input]
+    if delete_input:
+        for id in input: scriptcontext.doc.Objects.Delete(id, True)
     scriptcontext.doc.Views.Redraw()
     return rc
+
 
 def BrepClosestPoint(object_id, point):
     """
@@ -643,15 +637,15 @@ def BrepClosestPoint(object_id, point):
       object_id = The object's identifier.
       point = The test, or sampling point.
     Returns:
-      A list of closest point information if successful. The list will
+      A tuple of closest point information if successful. The list will
       contain the following information:
       Element     Type             Description
          0        Point3d          The 3-D point at the parameter value of the 
                                    closest point.
-         1        [U, V]           Parameter values of closest point. Note, V 
+         1        (U, V)           Parameter values of closest point. Note, V 
                                    is 0 if the component index type is brep_edge
                                    or brep_vertex. 
-         2        [type, index]    The type and index of the brep component that
+         2        (type, index)    The type and index of the brep component that
                                    contains the closest point. Possible types are
                                    brep_face, brep_edge or brep_vertex.
          3        Vector3d         The normal to the brep_face, or the tangent
@@ -659,15 +653,16 @@ def BrepClosestPoint(object_id, point):
       None if not successful, or on error.
     """
     brep = rhutil.coercebrep(object_id)
-    if (brep == None): return scriptcontext.errorhandler()
+    if brep is None: return scriptcontext.errorhandler()
     point = rhutil.coerce3dpoint(point)
-    if(point == None): return scriptcontext.errorhandler()
+    if point is None: return scriptcontext.errorhandler()
     rc = brep.ClosestPoint(point, 0.0)
-    if (rc[0] == True):
+    if rc[0]==True:
         type = int(rc[2].ComponentIndexType)
         index = rc[2].Index
-        return [rc[1], [rc[3], rc[4]], [type, index], rc[5]]
+        return rc[1], (rc[3], rc[4]), (type, index), rc[5]
     return None
+
 
 def CapPlanarHoles( surface_id ):
     """
@@ -676,46 +671,45 @@ def CapPlanarHoles( surface_id ):
       True or False indicating success or failure
     """
     brep = rhutil.coercebrep(surface_id)
-    if( brep==None ): return False
+    if brep is None: return False
     tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     newbrep = brep.CapPlanarHoles(tolerance)
-    if( newbrep!=None ):
+    if newbrep:
         surface_id = rhutil.coerceguid(surface_id)
         objref = Rhino.DocObjects.ObjRef(surface_id)
-        if( scriptcontext.doc.Objects.Replace(objref, newbrep) ):
+        if scriptcontext.doc.Objects.Replace(objref, newbrep):
             scriptcontext.doc.Views.Redraw()
             return True
     return False
 
+
 def DuplicateEdgeCurves(object_id, select=False):
-  """
-  Duplicates the edge curves of a surface or polysurface. For more
-  information, see the Rhino help file for information on the DupEdge
-  command.
-  Parameters:
-    object_id = The identifier of the surface or polysurface object.
-    select [opt] = Select the duplicated edge curves. The default is not
-    to select (False).
-  Returns:
-    A list of Guids identifying the newly created curve objects if successful.
-    None if not successful, or on error.
-  """
-  brep = rhutil.coercebrep(object_id)
-  if(brep == None): return scriptcontext.errorhandler()
-  out_curves = brep.DuplicateEdgeCurves()
-  curves = list()
-  for i in xrange(out_curves.Count):
-    curve = out_curves[i]
-    if (curve != None and curve.IsValid):
-      rc = scriptcontext.doc.Objects.AddCurve(curve)
-      curve.Dispose()
-      if( rc == System.Guid.Empty ): return None
-      curves.append(rc)
-      if (select==True):
-        rhobject.SelectObject(rc)
-  if( len(curves)>0 ):
-    scriptcontext.doc.Views.Redraw()
-  return curves
+    """
+    Duplicates the edge curves of a surface or polysurface. For more
+    information, see the Rhino help file for information on the DupEdge
+    command.
+    Parameters:
+      object_id = The identifier of the surface or polysurface object.
+      select [opt] = Select the duplicated edge curves. The default is not
+      to select (False).
+    Returns:
+      A list of Guids identifying the newly created curve objects if successful.
+      None if not successful, or on error.
+    """
+    brep = rhutil.coercebrep(object_id)
+    if brep is None: return scriptcontext.errorhandler()
+    out_curves = brep.DuplicateEdgeCurves()
+    curves = []
+    for curve in out_curves:
+        if curve.IsValid:
+            rc = scriptcontext.doc.Objects.AddCurve(curve)
+            curve.Dispose()
+            if rc==System.Guid.Empty: return None
+            curves.append(rc)
+            if select: rhobject.SelectObject(rc)
+    if curves: scriptcontext.doc.Views.Redraw()
+    return curves
+
 
 def DuplicateSurfaceBorder( surface_id ):
     """
@@ -727,25 +721,25 @@ def DuplicateSurfaceBorder( surface_id ):
       None on error
     """
     brep = rhutil.coercebrep(surface_id)
-    if( brep==None ): return scriptcontext.errorhandler()
+    if brep is None: return scriptcontext.errorhandler()
     curves = brep.DuplicateEdgeCurves(True)
-    if( curves==None ): return scriptcontext.errorhandler()
+    if curves is None: return scriptcontext.errorhandler()
     tolerance = scriptcontext.doc.ModelAbsoluteTolerance * 2.1
     curves = Rhino.Geometry.Curve.JoinCurves(curves, tolerance)
-    if( curves==None ): return scriptcontext.errorhandler()
+    if curves is None: return scriptcontext.errorhandler()
     rc = [scriptcontext.doc.Objects.AddCurve(c) for c in curves]
     scriptcontext.doc.Views.Redraw()
     return rc
 
+
 def EvaluateSurface( surface_id, u, v ):
-    """
-    Evaluates a surface at a U,V parameter.
-    """
+    "Evaluates a surface at a U,V parameter"
     surface = rhutil.coercesurface(surface_id)
-    if( surface==None ): return scriptcontext.errorhandler()
+    if surface is None: return scriptcontext.errorhandler()
     rc = surface.PointAt(u,v)
-    if( rc.IsValid == False ): return scriptcontext.errorhandler()
-    return rc
+    if rc.IsValid: return rc
+    return scriptcontext.errorhandler()
+
 
 def ExplodePolysurfaces(object_ids, delete_input=False):
     """
@@ -759,21 +753,20 @@ def ExplodePolysurfaces(object_ids, delete_input=False):
       None on error
     """
     id = rhutil.coerceguid(object_ids)
-    if( id!=None ): object_ids = [object_ids]
+    if id: object_ids = [object_ids]
     ids = []
     for id in object_ids:
         brep = rhutil.coercebrep(id)
-        if( brep!=None and brep.Faces.Count>1 ):
+        if brep and brep.Faces.Count>1:
             for i in range(brep.Faces.Count):
                 copyface = brep.Faces[i].DuplicateFace(False)
                 face_id = scriptcontext.doc.Objects.AddBrep(copyface)
-                if( face_id!=System.Guid.Empty ):
-                    ids.append(face_id)
-            if( delete_input ):
-                scriptcontext.doc.Objects.Delete(id, True)
-    if( len(ids)<1 ): return scriptcontext.errorhandler()
+                if face_id!=System.Guid.Empty: ids.append(face_id)
+            if delete_input: scriptcontext.doc.Objects.Delete(id, True)
+    if not ids: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return ids
+
 
 def ExtractIsoCurve( surface_id, parameter, direction ):
     """
@@ -788,52 +781,54 @@ def ExtractIsoCurve( surface_id, parameter, direction ):
       None on error
     """
     surface = rhutil.coercesurface(surface_id)
-    if( surface==None ): return scriptcontext.errorhandler()
+    if surface is None: return scriptcontext.errorhandler()
 
     ids = []
-    if( direction==0 or direction==2 ):
+    if direction==0 or direction==2:
+        curves = None
+        if type(surface) is Rhino.Geometry.BrepFace:
+            curves = surface.TrimAwareIsoCurve(0, parameter[1])
+        else:
+            curves = [surface.IsoCurve(0,parameter[1])]
+        if curves:
+            for curve in curves:
+                id = scriptcontext.doc.Objects.AddCurve(curve)
+                if id!=System.Guid.Empty: ids.append(id)
+    if direction==1 or direction==2:
         curves = None
         if( type(surface) is Rhino.Geometry.BrepFace ):
-          curves = surface.TrimAwareIsoCurve(0, parameter[1])
+            curves = surface.TrimAwareIsoCurve(1, parameter[0])
         else:
-          curves = (surface.IsoCurve(0,parameter[1]))
-        if( curves!=None ):
-          for curve in curves:
-            id = scriptcontext.doc.Objects.AddCurve(curve)
-            if( id!=System.Guid.Empty ): ids.append(id)
-    if( direction==1 or direction==2 ):
-        curves = None
-        if( type(surface) is Rhino.Geometry.BrepFace ):
-          curves = surface.TrimAwareIsoCurve(1, parameter[0])
-        else:
-          curves = (surface.IsoCurve(1,parameter[0]))
-        if( curves!=None ):
-          for curve in curves:
-            id = scriptcontext.doc.Objects.AddCurve(curve)
-            if( id!=System.Guid.Empty ): ids.append(id)
-    if( len(ids)<1 ): return scriptcontext.errorhandler()
+            curves = [surface.IsoCurve(1,parameter[0])]
+        if curves:
+            for curve in curves:
+                id = scriptcontext.doc.Objects.AddCurve(curve)
+                if id!=System.Guid.Empty: ids.append(id)
+    if not ids: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return ids
+
 
 def ExtrudeCurve( curve_id, path_id ):
     """
     Creates a surface by extruding a curve along a path
     Parameters:
-        curve_id = identifier of the curve to extrude
-        path_id = identifier of the path curve
+      curve_id = identifier of the curve to extrude
+      path_id = identifier of the path curve
     Returns:
-        identifier of new surface on success
-        None on error
+      identifier of new surface on success
+      None on error
     """
     curve1 = rhutil.coercecurve(curve_id)
     curve2 = rhutil.coercecurve(path_id)
-    if( curve1==None or curve2==None ): return scriptcontext.errorhandler()
+    if  curve1 is None or curve2 is None: return scriptcontext.errorhandler()
     srf = Rhino.Geometry.SumSurface.Create(curve1, curve2)
-    if( srf==None ): return scriptcontext.errorhandler()
+    if srf is None: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddSurface(srf)
-    if( rc == System.Guid.Empty ): return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
+
 
 def ExtrudeCurvePoint( curve_id, point ):
     """
@@ -957,33 +952,32 @@ def IntersectBreps(brep1, brep2, tolerance=None):
     scriptcontext.doc.Views.Redraw()
   return ids
 
+
 def IsBrep(object_id):
-  """
-  Verifies an object is a Brep, or a boundary representation model, object.
-  Parameters:
-    object_id = The object's identifier.
-  Returns:
-    True if successful, otherwise False.
-    None on error.
-  """
-  brep = rhutil.coercebrep(object_id)
-  return (brep != None)
+    """
+    Verifies an object is a Brep, or a boundary representation model, object.
+    Parameters:
+      object_id = The object's identifier.
+    Returns:
+      True if successful, otherwise False.
+      None on error.
+    """
+    return rhutil.coercebrep(object_id)!=None
+
 
 def IsCone( object_id ):
-    """
-    Determines if a surface is a portion of a cone
-    """
+    "Determines if a surface is a portion of a cone"
     surface = rhutil.coercesurface(object_id)
-    if( surface==None ): return False
+    if surface is None: return False
     return surface.IsCone()
 
+
 def IsCylinder( object_id ):
-    """
-    Determines if a surface is a portion of a cone
-    """
+    "Determines if a surface is a portion of a cone"
     surface = rhutil.coercesurface(object_id)
-    if( surface==None ): return False
+    if surface is None: return False
     return surface.IsCylinder()
+
 
 def IsPointInSurface( object_id, point ):
     """
@@ -1430,21 +1424,21 @@ def SurfaceAreaMoments(surface_id):
 
 
 def SurfaceClosestPoint(surface_id, test_point):
-  """
-  Returns U,V parameters of point on a surface that is closest to a test point
-  Parameters:
-    surface_id = identifier of a surface object
-    test_point = sampling point
-  Returns:
-    The U,V parameters of the closest point on the surface if successful.
-    None on error.
-  """
-  surface = rhutil.coercesurface(surface_id)
-  point = rhutil.coerce3dpoint(test_point)
-  if surface is None or point is None: return scriptcontext.errorhandler()
-  rc, u, v = surface.ClosestPoint(point)
-  if not rc: return None
-  return u,v
+    """
+    Returns U,V parameters of point on a surface that is closest to a test point
+    Parameters:
+      surface_id = identifier of a surface object
+      test_point = sampling point
+    Returns:
+      The U,V parameters of the closest point on the surface if successful.
+      None on error.
+    """
+    surface = rhutil.coercesurface(surface_id)
+    point = rhutil.coerce3dpoint(test_point)
+    if surface is None or point is None: return scriptcontext.errorhandler()
+    rc, u, v = surface.ClosestPoint(point)
+    if not rc: return None
+    return u,v
 
 
 def SurfaceCone(surface_id):
