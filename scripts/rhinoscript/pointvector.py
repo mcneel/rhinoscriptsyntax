@@ -222,7 +222,11 @@ def ProjectPointToMesh(points, mesh_ids, direction):
      list of projected points on success
      None on error
     """
-    points = rhutil.coerce3dpointlist(points)
+    pts = rhutil.coerce3dpointlist(points)
+    if pts is None:
+        point = rhutil.coerce3dpoint(points)
+        if point is not None: pts = [point]
+    points = pts
     direction = rhutil.coerce3dvector(direction)
     if points is None or direction is None: return scriptcontext.errorhandler()
     if rhutil.coerceguid(mesh_ids): mesh_ids = [mesh_ids]
@@ -251,10 +255,11 @@ def ProjectPointToSurface(points, surface_ids, direction):
      list of projected points on success
      None on error
     """
-    points = rhutil.coerce3dpointlist(points)
-    if points is None:
+    pts = rhutil.coerce3dpointlist(points)
+    if pts is None:
         point = rhutil.coerce3dpoint(points)
-        if point is not None: points = [point]
+        if point is not None: pts = [point]
+    points = pts
     direction = rhutil.coerce3dvector(direction)
     if points is None or direction is None: return scriptcontext.errorhandler()
     if rhutil.coerceguid(surface_ids): surface_ids = [surface_ids]
