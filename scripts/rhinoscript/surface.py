@@ -850,6 +850,7 @@ def ExtrudeCurvePoint( curve_id, point ):
     scriptcontext.doc.Views.Redraw()
     return rc
 
+
 def ExtrudeCurveStraight( curve_id, start_point, end_point ):
     """
     Creates a surface by extruding a curve along two points that define a line
@@ -863,15 +864,49 @@ def ExtrudeCurveStraight( curve_id, start_point, end_point ):
     curve = rhutil.coercecurve(curve_id)
     start_point = rhutil.coerce3dpoint(start_point)
     end_point = rhutil.coerce3dpoint(end_point)
-    if( curve==None or start_point==None or end_point==None ):
+    if curve is None or start_point is None or end_point is None:
         return scriptcontext.errorhandler()
     vec = end_point - start_point
     srf = Rhino.Geometry.Surface.CreateExtrusion(curve, vec)
-    if( srf==None ): return scriptcontext.errorhandler()
+    if srf is None: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddSurface(srf)
-    if( rc == System.Guid.Empty ): return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
+
+
+def FilletSurfaces(surface0, surface1, radius, uvparam0=None, uvparam1=None):
+    """
+    Create constant radius rolling ball fillets between two surfaces. Note,
+    this function does not trim the original surfaces of the fillets
+    Parameters:
+      surface0, surface1 = identifiers of first and second surface
+      radius = a positive fillet radius
+      uvparam0[opt] = a u,v surface parameter of surface0 near where the fillet
+        is expected to hit the surface
+      uvparam1[opt] = same as uvparam0, but for surface1
+    Returns:
+      ids of surfaces created on success
+      None on error
+    """
+    surface0 = rhutil.coercesurface(surface0)
+    surface1 = rhutil.coercesurface(surface1)
+    if surface0 is None or surface1 is None: return scriptcontext.errorhandler()
+    uvparam0 = rhutil.coerce2dpoint(uvparam0)
+    uvparam1 = rhutil.coerce2dpoint(uvparam1)
+    surfaces = None
+    tol = scriptcontext.doc.ModelAbsoluteTolerance
+    if uvparam0 and uvparam1:
+        surfaces = Rhino.Geometry.Surface.CreateRollingBallFillet(surface0, uvparam0, surface1, uvparam1, radius, tol)
+    else:
+        surfaces = Rhino.Geometry.Surface.CreateRollingBallFillet(surface0, surface1, radius, tol)
+    if not surfaces: return scriptcontext.errorhandler()
+    rc = []
+    for surf in surfaces:
+        rc.append( scriptcontext.doc.Objects.AddSurface(surf) )
+    scriptcontext.doc.Views.Redraw()
+    return rc
+
 
 def FlipSurface(surface_id, flip=None):
     """
