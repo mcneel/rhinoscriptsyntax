@@ -1639,10 +1639,11 @@ def CurveWeights(curve_id, segment_index=-1):
     """
     curve = rhutil.coercecurve(curve_id, segment_index)
     if curve is None: return scriptcontext.errorhandler()
-    nc = curve.NurbsCurve(Rhino.RhinoMath.ZeroTolerance)
+    nc = curve
+    if type(curve) is not Rhino.Geometry.NurbsCurve:
+        nc = curve.ToNurbsCurve()
     if nc is None: return scriptcontext.errorhandler()
-    weights = [nc.Weight(i) for i in xrange(nc.CVCount)]
-    return weights
+    return [pt.Weight for pt in nc.Points]
 
 
 def DivideCurve(curve_id, segments, create_points=False, return_points=True):
