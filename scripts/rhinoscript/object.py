@@ -699,6 +699,89 @@ def ObjectLayout(object_id, layout=None, return_name=True):
     return rc
 
 
+def ObjectLinetype(object_ids, linetype=None):
+    """
+    Returns of modifies the linetype of an object
+    Parameters:
+      object_ids = identifiers of object(s)
+      linetype[opt] = name of an existing linetype. If omitted, the current
+        linetype is returned. If object_ids is a list of identifiers, this parameter
+        is required
+    Returns:
+      If a linetype is not specified, the object's current linetype
+      If linetype is specified, the object's previous linetype
+      If object_ids is a list, the number of objects modified
+      None on error
+    """
+    id = rhutil.coerceguid(object_ids)
+    if id:
+        rhino_object = rhutil.coercerhinoobject(id)
+        if rhino_object is None: return scriptcontext.errorhandler()
+        oldindex = scriptcontext.doc.Linetypes.LinetypeIndexForObject(rhino_object)
+        if linetype:
+            newindex = scriptcontext.doc.Linetypes.Find(linetype, True)
+            rhino_object.Attributes.LinetypeSource = Rhino.DocObjects.ObjectLinetypeSource.LinetypeFromObject
+            rhino_object.Attributes.LinetypeIndex = newindex
+            rhino_object.CommitChanges()
+            scriptcontext.doc.Views.Redraw()
+        return scriptcontext.doc.Linetypes[oldindex].Name
+    ids = rhutil.coerceguidlist(object_ids)
+    if not ids: return scriptcontext.errorhandler()
+    newindex = scriptcontext.doc.Linetypes.Find(linetype, True)
+    if newindex<0: return scriptcontext.errorhandler()
+    rc = 0
+    for id in ids:
+        rhino_object = rhutil.coercerhinoobject(id)
+        if rhino_object:
+            rhino_object.Attributes.LinetypeSource = Rhino.DocObjects.ObjectLinetypeSource.LinetypeFromObject
+            rhino_object.Attributes.LinetypeIndex = newindex
+            rhino_object.CommitChanges()
+            rc += 1
+    scriptcontext.doc.Views.Redraw()
+    return rc
+
+
+def ObjectLinetypeSource(object_ids, source=None):
+    """
+    Returns of modifies the linetype source of an object
+    Parameters:
+      object_ids = identifiers of object(s)
+      source[opt] = new linetype source. If omitted, the current source is returned.
+        If object_ids is a list of identifiers, this parameter is required
+          0 = By Layer
+          1 = By Object
+          3 = By Parent
+    Returns:
+      If a source is not specified, the object's current linetype source
+      If source is specified, the object's previous linetype source
+      If object_ids is a list, the number of objects modified
+      None on error
+    """
+    id = rhutil.coerceguid(object_ids)
+    if id:
+        rhino_object = rhutil.coercerhinoobject(id)
+        if rhino_object is None: return scriptcontext.errorhandler()
+        oldsource = rhino_object.Attributes.LinetypeSource
+        if source is not None:
+            source = System.Enum.ToObject(Rhino.DocObjects.ObjectLinetypeSource, source)
+            rhino_object.Attributes.LinetypeSource = source
+            rhino_object.CommitChanges()
+            scriptcontext.doc.Views.Redraw()
+        return int(oldsource)
+    ids = rhutil.coerceguidlist(object_ids)
+    if not ids or not source: return scriptcontext.errorhandler()
+    source = System.Enum.ToObject(Rhino.DocObjects.ObjectLinetypeSource, source)
+    rc = 0
+    for id in ids:
+        rhino_object = rhutil.coercerhinoobject(id)
+        if rhino_object:
+            rhino_object.Attributes.LinetypeSource = source
+            rhino_object.CommitChanges()
+            rc += 1
+    scriptcontext.doc.Views.Redraw()
+    return rc
+
+
 def ObjectMaterialIndex(object_id):
     """
     Returns the material index of an object. Rendering materials are stored in
