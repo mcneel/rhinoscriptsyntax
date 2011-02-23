@@ -921,7 +921,7 @@ def FlipSurface(surface_id, flip=None):
       None on error
     """
     brep = rhutil.coercebrep(surface_id)
-    if( brep==None or brep.Faces.Count>1 ): return scriptcontext.errorhandler()
+    if brep is None or brep.Faces.Count>1: return scriptcontext.errorhandler()
     face = brep.Faces[0]
     old_reverse = face.OrientationIsReversed
     if( flip!=None and brep.IsSolid==False and old_reverse!=flip ):
@@ -932,60 +932,86 @@ def FlipSurface(surface_id, flip=None):
         scriptcontext.doc.Views.Redraw()
     return old_reverse
 
+
 def IntersectBreps(brep1, brep2, tolerance=None):
-  """
-  Intersects a brep object with another brep object. Note, unlike the
-  SurfaceSurfaceIntersection function this function works on trimmed surfaces.
-  Parameters:
-    brep1 = The first brep object's identifier.
-    brep2 = The second  brep object's identifier.
-    tolerance = The distance tolerance at segment midpoints. If omitted,
-                the current absolute tolerance is used.
-  Returns:
-    A list of Guids identifying the newly created intersection curve and
-    point objects if successful.
-    None if not successful, or on error.
-  """
-  brep1 = rhutil.coercebrep(brep1)
-  brep2 = rhutil.coercebrep(brep2)
-  if(brep1 == None or brep2 == None): return scriptcontext.errorhandler()
-  
-  if(tolerance == None or tolerance < 0.0 ):
-    tolerance = scriptcontext.doc.ModelAbsoluteTolerance
-   
-  rc = Rhino.Geometry.Intersect.Intersection.BrepBrep(brep1, brep2, tolerance)
-  if (rc[0] != True): return None
-  out_curves = rc[1]
-  out_points = rc[2]
-  
-  merged_curves = Rhino.Geometry.Curve.JoinCurves(out_curves, 2.1 * tolerance)
-  
-  ids = list()
-  if (merged_curves != None and merged_curves.Count > 0):
-    for i in xrange(len(merged_curves)):
-      curve = merged_curves[i]
-      if (curve != None and curve.IsValid):
-        rc = scriptcontext.doc.Objects.AddCurve(merged_curves[i])
-        curve.Dispose()
-        if( rc == System.Guid.Empty ): return scriptcontext.errorhandler()
-        ids.append(rc)
-  else:
-    for i in xrange(len(out_curves)):
-      curve = out_curves[i]
-      if (curve != None and curve.IsValid):
-        rc = scriptcontext.doc.Objects.AddCurve(out_curves[i])
-        curve.Dispose()
-        if( rc == System.Guid.Empty ): return scriptcontext.errorhandler()
-        ids.append(rc)
+    """
+    Intersects a brep object with another brep object. Note, unlike the
+    SurfaceSurfaceIntersection function this function works on trimmed surfaces.
+    Parameters:
+      brep1 = The first brep object's identifier.
+      brep2 = The second  brep object's identifier.
+      tolerance = The distance tolerance at segment midpoints. If omitted,
+                  the current absolute tolerance is used.
+    Returns:
+      A list of Guids identifying the newly created intersection curve and
+      point objects if successful.
+      None if not successful, or on error.
+    """
+    brep1 = rhutil.coercebrep(brep1)
+    brep2 = rhutil.coercebrep(brep2)
+    if brep1 is None or brep2 is None: return scriptcontext.errorhandler()
     
-  for i in xrange(len(out_points)):
-    rc = scriptcontext.doc.Objects.AddPoint(out_points[i])
-    if( rc == System.Guid.Empty ): return scriptcontext.errorhandler()
-    ids.append(rc)
-  
-  if( len(ids) > 0 ):
-    scriptcontext.doc.Views.Redraw()
-  return ids
+    if tolerance is None or tolerance < 0.0:
+        tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+     
+    rc = Rhino.Geometry.Intersect.Intersection.BrepBrep(brep1, brep2, tolerance)
+    if not rc[0]: return None
+    out_curves = rc[1]
+    out_points = rc[2]
+    merged_curves = Rhino.Geometry.Curve.JoinCurves(out_curves, 2.1 * tolerance)
+    
+    ids = []
+    if merged_curves:
+        for curve in merged_curves:
+            if curve.IsValid:
+                rc = scriptcontext.doc.Objects.AddCurve(curve)
+                curve.Dispose()
+                if rc==System.Guid.Empty: return scriptcontext.errorhandler()
+                ids.append(rc)
+    else:
+        for curve in out_curves:
+            if curve.IsValid:
+                rc = scriptcontext.doc.Objects.AddCurve(curve)
+                curve.Dispose()
+                if rc==System.Guid.Empty: return scriptcontext.errorhandler()
+                ids.append(rc)
+
+    for point in out_points:
+        rc = scriptcontext.doc.Objects.AddPoint(point)
+        if rc==System.Guid.Empty: return scriptcontext.errorhandler()
+        ids.append(rc)
+    if ids: scriptcontext.doc.Views.Redraw()
+    return ids
+
+
+def IntersectSpheres(sphere_plane0, sphere_radius0, sphere_plane1, sphere_radius1):
+    """
+    Calculates intersections of two spheres
+    Parameters:
+      sphere_plane0 = an equatorial plane of the first sphere. The origin of the
+        plane will be the center point of the sphere
+      sphere_radius0 = radius of the first sphere
+      sphere_plane1 = plane for second sphere
+      sphere_radius1 = radius for second sphere
+    Returns:
+      List of intersection results
+        element 0 = type of intersection (0=point, 1=circle, 2=spheres are identical)
+        element 1 = Point of intersection or plane of circle intersection
+        element 2 = radius of circle if circle intersection
+      None on error
+    """
+    plane0 = rhutil.coerceplane(sphere_plane0)
+    plane1 = rhutil.coerceplane(sphere_plane1)
+    sphere0 = Rhino.Geometry.Sphere(plane0, sphere_radius0)
+    sphere1 = Rhino.Geometry.Sphere(plane1, sphere_radius1)
+    rc, circle = Rhino.Geometry.Intersect.Intersection.SphereSphere(sphere0, sphere1)
+    if rc==Rhino.Geometry.Intersect.SphereSphereIntersection.Point:
+        return [0, circle.Center]
+    if rc==Rhino.Geometry.Intersect.SphereSphereIntersection.Circle:
+        return [1, circle.Plane, circle.Radius]
+    if rc==Rhino.Geometry.Intersect.SphereSphereIntersection.Overlap:
+        return [2]
+    return scriptcontext.errorhandler()
 
 
 def IsBrep(object_id):
