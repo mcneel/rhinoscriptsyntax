@@ -1422,6 +1422,30 @@ def __GetMassProperties(object_id, area):
     return Rhino.Geometry.VolumeMassProperties.Compute(surface)
 
 
+def SplitBrep(brep_id, cutter_id, delete_input=False):
+    """
+    Splits a brep
+    Parameters:
+      brep = identifier of the brep to split
+      cutter = identifier of the brep to split with
+    Returns:
+      identifiers of split pieces on success
+      None on error
+    """
+    brep = rhutil.coercebrep(brep_id)
+    cutter = rhutil.coercebrep(cutter_id)
+    if brep is None or cutter is None: return scriptcontext.errorhandler()
+    tol = scriptcontext.doc.ModelAbsoluteTolerance
+    pieces = brep.Split(cutter, tol)
+    if not pieces: return scriptcontext.errorhandler()
+    if delete_input:
+        brep_id = rhutil.coerceguid(brep_id)
+        scriptcontext.doc.Objects.Delete(brep_id, True)
+    rc = [scriptcontext.doc.Objects.AddBrep(piece) for piece in pieces]
+    scriptcontext.doc.Views.Redraw()
+    return rc
+
+
 def SurfaceArea(object_id):
     """
     Calculates the area of a surface or polysurface object. The results are
