@@ -1579,6 +1579,23 @@ def SurfaceEvaluate( surface_id, parameter, derivative ):
     return rc
 
 
+def SurfaceFrame( surface_id, uv_parameter ):
+    """
+    Returns a plane based on the normal, u, and v directions at a surface U,V parameter
+    Parameters:
+      surface_id = the surface's identifier
+      uv_parameter = u,v parameter to evaluate
+    Returns:
+      plane on success
+      None on error
+    """
+    surface = rhutil.coercesurface(surface_id)
+    if surface is None: return scriptcontext.errorhandler()
+    rc, frame = surface.FrameAt(uv_parameter[0], uv_parameter[1])
+    if rc: return frame
+    return None
+
+
 def SurfaceIsocurveDensity( surface_id, density=None ):
     """
     Returns or sets the isocurve density of a surface or polysurface object.
