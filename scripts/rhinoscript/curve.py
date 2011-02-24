@@ -406,6 +406,26 @@ def AddPolyline( points, replace_id=None ):
     return rc
 
 
+def AddRectangle( plane, width, height ):
+    """
+    Adds a rectangular curve to the document
+    Paramters:
+      plane = plane on which the rectangle will lie
+      width, height = width and height of rectangle as measured along the plane's
+        x and y axes
+    Returns:
+      id of new rectangle
+      None on error
+    """
+    plane = rhutil.coerceplane(plane)
+    if plane is None: return scriptcontext.errorhandler()
+    rect = Rhino.Geometry.Rectangle3d(plane, width, height)
+    poly = rect.ToPolyline()
+    rc = scriptcontext.doc.Objects.AddPolyline(poly)
+    scriptcontext.doc.Views.Redraw()
+    return rc
+
+
 def AddSubCrv( curve_id, param0, param1 ):
     """
     Adds a curve object based on a portion, or interval of an existing curve
