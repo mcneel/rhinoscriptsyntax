@@ -957,7 +957,7 @@ def ZoomBoundingBox(bounding_box, view=None, all=False):
     if bbox:
       if all:
           views = scriptcontext.doc.Views.GetViewList(True, True)
-          for view in views: view.ZoomBoundingBox(bbox)
+          for view in views: view.ActiveViewport.ZoomBoundingBox(bbox)
           scriptcontext.doc.Views.Redraw()
       else:
           view = __viewhelper(view)
@@ -975,12 +975,12 @@ def ZoomExtents(view=None, all=False):
     """
     if all:
         views = scriptcontext.doc.Views.GetViewList(True, True)
-        for view in views: view.ZoomExtents(False)
+        for view in views: view.ActiveViewport.ZoomExtents()
         scriptcontext.doc.Views.Redraw()
     else:
         view = __viewhelper(view)
         if view:
-            view.ActiveViewport.ZoomExtents(False)
+            view.ActiveViewport.ZoomExtents()
             view.Redraw()
 
 
@@ -993,7 +993,7 @@ def ZoomSelected(view=None, all=False):
     """
     if all:
         views = scriptcontext.doc.Views.GetViewList(True, True)
-        for view in views: view.ZoomExtents(True)
+        for view in views: view.ActiveViewport.ZoomExtentsSelected()
         scriptcontext.doc.Views.Redraw()
     else:
         view = __viewhelper(view)
