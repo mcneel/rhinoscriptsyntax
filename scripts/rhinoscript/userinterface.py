@@ -291,7 +291,7 @@ def GetPointOnSurface( surface_id, message=None ):
     if( isinstance(surfOrBrep,Rhino.Geometry.Surface) ):
         gp.Constrain(surfOrBrep,False)
     else:
-        gp.Constrain(surfOrBrep)
+        gp.Constrain(surfOrBrep, -1, -1, False)
     gp.Get()
     if( gp.CommandResult() != Rhino.Commands.Result.Success ):
         return scriptcontext.errorhandler()
