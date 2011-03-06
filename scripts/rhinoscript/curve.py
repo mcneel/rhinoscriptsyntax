@@ -1542,19 +1542,26 @@ def CurveSeam(curve_id, parameter):
     return False
 
 
-def CurveStartPoint(curve_id, segment_index=-1):
+def CurveStartPoint(curve_id, segment_index=-1, point=None):
     """
     Returns the start point of a curve object
     Parameters:
       curve_id = identifier of the curve object
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
+      point [opt] = new start point
     Returns:
       The 3-D starting point of the curve if successful.
       None if not successful, or on error.
     """
     curve = rhutil.coercecurve(curve_id, segment_index)
     if curve is None: return scriptcontext.errorhandler()
-    return curve.PointAtStart
+    rc = curve.PointAtStart
+    point = rhutil.coerce3dpoint(point)
+    if point and curve.SetStartPoint(point):
+        objref = Rhino.DocObjects.ObjRef(curve_id)
+        scriptcontext.doc.Objects.Replace(objref, curve)
+        scriptcontext.doc.Views.Redraw()
+    return rc
 
 
 def CurveSurfaceIntersection(curve_id, surface_id, tolerance=-1, angle_tolerance=-1):
