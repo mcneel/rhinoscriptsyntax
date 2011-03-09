@@ -2,6 +2,7 @@ import Rhino
 import System.Drawing.Color
 import System.Array
 import System.Guid
+import time
 import System.Windows.Forms.Clipboard
 import scriptcontext
 import math
@@ -228,6 +229,15 @@ def Polar(point, angle_degrees, distance, plane=None):
     rc.Transform(xform)
     return rc
 
+
+def Sleep(milliseconds):
+    """
+    Suspends execution of a running script for the specified interval
+    """
+    sec = milliseconds / 1000.0
+    time.sleep(sec)
+    Rhino.RhinoApp.Wait() #keep the message pump alive
+    
 
 def SortPointList(points, tolerance=None):
     """
