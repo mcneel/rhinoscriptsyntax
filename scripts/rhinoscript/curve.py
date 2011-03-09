@@ -1329,7 +1329,11 @@ def CurveKnots(curve_id, segment_index=-1):
     if curve is None: return scriptcontext.errorhandler()
     nc = curve.ToNurbsCurve()
     if nc is None: return scriptcontext.errorhandler()
-    return nc.Knots
+    rc = []
+    for i in range(nc.Knots.Count):
+        rc.append(nc.Knots[i])
+    return rc
+
 
 def CurveLength(curve_id, segment_index=-1, sub_domain=None):
     """
