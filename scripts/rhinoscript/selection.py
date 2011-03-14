@@ -524,7 +524,34 @@ def LastCreatedObjects(select=False):
         serial_number += 1
     if select==True and rc: scriptcontext.doc.Views.Redraw()
     return rc
-    
+
+
+def LastObject(select=False, include_lights=False, include_grips=False):
+    """
+    Returns the identifier of the last object in the document. The last object
+    in the document is the first object created by the user
+    Parameters:
+      select[opt] = select the object
+      include_lights[opt] = include lights in the potential set
+      include_grips[opt] = include grips in the potential set
+    Returns:
+      identifier of the object on success
+      None on error
+    """
+    settings = Rhino.DocObjects.ObjectEnumeratorSettings()
+    settings.IncludeLights = include_lights
+    settings.IncludeGrips = include_grips
+    settings.DeletedObjects = False
+    rhobjs = scriptcontext.doc.Objects.GetObjectList(settings)
+    if not rhobjs: return None
+    firstobj = None
+    for obj in rhobjs: firstobj = obj
+    rc = firstobj.Id
+    if select:
+        firstobj.Select(True)
+        scriptcontext.doc.Views.Redraw()
+    return rc
+
 
 def ObjectsByGroup(group_name, select=False):
     """
