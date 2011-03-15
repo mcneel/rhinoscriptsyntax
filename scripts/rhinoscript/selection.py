@@ -543,9 +543,9 @@ def LastObject(select=False, include_lights=False, include_grips=False):
     settings.IncludeGrips = include_grips
     settings.DeletedObjects = False
     rhobjs = scriptcontext.doc.Objects.GetObjectList(settings)
-    if not rhobjs: return None
     firstobj = None
     for obj in rhobjs: firstobj = obj
+    if firstobj is None: return scriptcontext.errorhandler()
     rc = firstobj.Id
     if select:
         firstobj.Select(True)

@@ -6,6 +6,16 @@ import time
 import System.Windows.Forms.Clipboard
 import scriptcontext
 import math
+import string
+
+#should work all of the time unless we can't find the standard lib
+__cfparse = None
+try:
+    import ConfigParser
+except ImportError:
+    __cfparse = None
+else:
+    __cfparse = ConfigParser
 
 def Angle(point1, point2, plane=True):
     """
@@ -202,6 +212,33 @@ def Distance(point1, point2):
         distances.append(vec.Length)
     if len(distances)==0: return scriptcontext.errorhandler()
     return distances
+
+
+def GetSettings(filename, section=None, entry=None):
+    """
+    Returns a string from a specified section in a Windows-style initialization file.
+    Parameters:
+      filename = name of the initialization file
+      section[opt] = section containing the entry
+      entry[opt] = entry whose associated string is to be returned
+    Returns:
+      If section is not specified, a list containing all section names
+      If entry is not specified, a list containing all entry names for a given section
+      If section and entry are specied, a value for entry
+      None if not successful or on error
+    """
+    if __cfparse is None: return scriptcontext.errorhandler()
+    try:
+        cp = ConfigParser.ConfigParser()
+        cp.read(filename)
+        if not section: return cp.sections()
+        section = string.lower(section)
+        if not entry: return cp.options(section)
+        entry = string.lower(entry)
+        return cp.get(section, entry)
+    except IOError:
+        return scriptcontext.errorhander()
+    return scriptcontext.errorhandler()
 
 
 def Polar(point, angle_degrees, distance, plane=None):
