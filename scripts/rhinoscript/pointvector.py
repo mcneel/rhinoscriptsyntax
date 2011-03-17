@@ -115,6 +115,70 @@ def PointArrayTransform(points, xform):
     return rc
 
 
+def PointClosestObject(point, object_ids):
+    """
+    Finds the object that is closest to a test point
+    Parameters:
+      point = point to test
+      object_id = identifiers of one or more objects
+    Returns:
+      (closest object_id, point on object) on success
+      None on failure
+    """
+    object_ids = rhutil.coerceguidlist(object_ids)
+    point = rhutil.coerce3dpoint(point)
+    if not object_ids or not point: return scriptcontext.errorhandler()
+    closest = None
+    for id in object_ids:
+        objref = Rhino.DocObjects.ObjRef(id)
+        if objref.Object() is None:
+            objref.Dispose()
+            pass
+        point_geometry = objref.Point()
+        if point_geometry:
+            distance = point.DistanceTo( point_geometry.Location )
+            if closest is None or distance<closest[0]:
+                closest = distance, id, point_geometry.Location
+            objref.Dispose()
+            continue
+        point_cloud = objref.PointCloud()
+        if point_cloud:
+            index = point_cloud.ClosestPoint(point)
+            if index>=0:
+                distance = point.DistanceTo( point_cloud[index].Location )
+                if closest is None or distance<closest[0]:
+                    closest = distance, id, point_cloud[index].Location
+            objref.Dispose()
+            continue
+        curve = objref.Curve()
+        if curve:
+            rc, t = curve.ClosestPoint(point)
+            if rc:
+                distance = point.DistanceTo( curve.PointAt(t) )
+                if closest is None or distance<closest[0]:
+                    closest = distance, id, curve.PointAt(t)
+            objref.Dispose()
+            continue
+        brep = objref.Brep()
+        if brep:
+            brep_closest = brep.ClosestPoint(point)
+            distance = point.DistanceTo( brep_closest )
+            if closest is None or distance<closest[0]:
+                closest = distance, id, brep_closest
+            objref.Dispose()
+            continue
+        mesh = objref.Mesh()
+        if mesh:
+            mesh_closest = mesh.ClosestPoint(point)
+            distance = point.DistanceTo( mesh_closest )
+            if closest is None or distance<closest[0]:
+                closest = distance, id, mesh_closest
+            objref.Dispose()
+            continue
+    if closest is None: return scriptcontext.errorhandler()
+    return closest[1], closest[2]
+
+
 def PointCompare(point1, point2, tolerance=None):
     """
     Compares two 3-D points
