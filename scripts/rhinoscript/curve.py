@@ -1624,7 +1624,9 @@ def CurveSurfaceIntersection(curve_id, surface_id, tolerance=-1, angle_tolerance
     if tolerance is None or tolerance<0:
         tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     if angle_tolerance is None or angle_tolerance<0:
-        angle_tolerance = scriptcontext.doc.ModelAngleToleranceDegrees
+        angle_tolerance = scriptcontext.doc.ModelAngleToleranceRadians
+    else:
+        angle_tolerance = math.radians(angle_tolerance)
     rc = Rhino.Geometry.Intersect.Intersection.CurveSurface(curve, surface, tolerance, angle_tolerance)
     if rc is None: return scriptcontext.errorhandler()
     events = []
