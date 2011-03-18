@@ -121,7 +121,7 @@ def AddText( text, point_or_plane, height=1.0, font="Arial", font_style=0 ):
       None on failure
     """
     if text is None: return scriptcontext.errorhandler()
-    text = str(text)
+    if not isinstance(text, str): text = str(text)
     point = rhutil.coerce3dpoint(point_or_plane)
     plane = rhutil.coerceplane(point_or_plane)
     if point is None and plane is None: return scriptcontext.errorhandler()
@@ -148,7 +148,8 @@ def AddTextDot( text, point ):
     """
     point = rhutil.coerce3dpoint(point)
     if point is None: return scriptcontext.errorhandler()
-    rc = scriptcontext.doc.Objects.AddTextDot(str(text), point)
+    if not isinstance(text, str): text = str(text)
+    rc = scriptcontext.doc.Objects.AddTextDot(text, point)
     if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
@@ -383,7 +384,8 @@ def TextDotText(object_id, text=None):
     if textdot is None: return scriptcontext.errorhandler()
     rc = textdot.Text
     if text is not None:
-        textdot.Text = str(text)
+        if not isinstance(text, str): text = str(text)
+        textdot.Text = text
         scriptcontext.doc.Objects.Replace(objref, textdot)
         scriptcontext.doc.Views.Redraw()
     return rc
@@ -530,7 +532,8 @@ def TextObjectText(object_id, text=None):
     if annotation is None: return scriptcontext.errorhandler()
     rc = annotation.Text
     if text is not None:
-        annotation.Text = str(text)
+        if not isinstance(text, str): text = str(text)
+        annotation.Text = text
         scriptcontext.doc.Objects.Replace(objref, annotation)
         scriptcontext.doc.Views.Redraw()
     return rc
