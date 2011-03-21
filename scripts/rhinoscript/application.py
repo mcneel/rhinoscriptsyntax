@@ -612,6 +612,57 @@ def Snap(enable=None):
     return rc
 
 
+def StatusBarDistance(distance=0):
+    "Sets Rhino's status bar distance pane"
+    Rhino.UI.StatusBar.SetDistancePane(distance)
+
+
+def StatusBarMessage(message=None):
+    "Sets Rhino's status bar message pane"
+    Rhino.UI.StatusBar.SetMessagePane(message)
+
+
+def StatusBarPoint(point=None):
+    "Sets Rhino's status bar point coordinate pane"
+    point = rhutil.coerce3dpoint(point)
+    if not point: point = Rhino.Geometry.Point3d(0,0,0)
+    Rhino.UI.StatusBar.SetPointPane(point)
+
+
+def StatusBarProgressMeterShow(label, lower, upper, embed_label=True, show_percent=True):
+    """
+    Start the Rhino status bar progress meter
+    Parameters:
+      label = short description of the progesss
+      lower = lower limit of the progress meter's range
+      upper = upper limit of the progress meter's range
+      embed_label[opt] = if True, the label will show inside the meter.
+        If false, the label will show to the left of the meter
+      show_percent[opt] = show the percent complete
+    Returns:
+      True or False indicating success or failure
+    """
+    rc = Rhino.UI.StatusBar.ShowProgressMeter(lower, upper, label, embed_label, show_percent)
+    return rc==1
+
+
+def StatusBarProgressMeterUpdate(position, absolute=True):
+    """
+    Set the current position of the progress meter
+    Parameters:
+      position = new position in the progress meter
+      absolute[opt] = position is an absolute or relative
+    Returns:
+      previous position setting
+    """
+    return Rhino.UI.StatusBar.UpdateProgressMeter(position, absolute)
+
+
+def StatusBarProgressMeterHide():
+    "Hide the progres meter"
+    Rhino.UI.StatusBar.HideProgressMeter()
+
+
 def TemplateFile(filename=None):
     """
     Returns or sets Rhino's default template file. This is the template
