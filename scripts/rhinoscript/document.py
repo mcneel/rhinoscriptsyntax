@@ -233,6 +233,10 @@ def UnitScale(to_system, from_system=None):
   """
   if from_system is None:
       from_system = scriptcontext.doc.ModelUnitSystem
+  if type(from_system) is int:
+      from_system = System.Enum.ToObject(Rhino.UnitSystem, from_system)
+  if type(to_system) is int:
+      to_system = System.Enum.ToObject(Rhino.UnitSystem, to_system)
   return Rhino.RhinoMath.UnitScale(from_system, to_system)
 
 
