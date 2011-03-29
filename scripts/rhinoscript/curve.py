@@ -1294,10 +1294,10 @@ def CurveFrame(curve_id, parameter, segment_index=-1 ):
     if curve is None: return scriptcontext.errorhandler()
     domain = curve.Domain
     if not domain.IncludesParameter(parameter):
-        reltol = scriptcontext.doc.ModelRelativeTolerance
-        if parameter>domain.Max and (parameter-domain.Max)/domain.Length <= reltol:
+        tol = scriptcontext.doc.ModelAbsoluteTolerance
+        if parameter>domain.Max and (parameter-domain.Max)<=tol:
             parameter = domain.Max
-        elif parameter<domain.Min and (domain.Min-parameter)/domain.Length <= reltol:
+        elif parameter<domain.Min and (domain.Min-parameter)<=tol:
             parameter = domain.Min
         else:
             return scriptcontext.errorhandler()
