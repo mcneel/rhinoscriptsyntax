@@ -1292,9 +1292,17 @@ def CurveFrame(curve_id, parameter, segment_index=-1 ):
     """
     curve = rhutil.coercecurve(curve_id, segment_index)
     if curve is None: return scriptcontext.errorhandler()
-    if curve.Domain.IncludesParameter(parameter):
-        rc, frame = curve.FrameAt(parameter)
-        if rc and frame.IsValid: return frame
+    domain = curve.Domain
+    if not domain.IncludesParameter(parameter):
+        reltol = scriptcontext.doc.ModelRelativeTolerance
+        if parameter>domain.Max and (parameter-domain.Max)/domain.Length <= reltol:
+            parameter = domain.Max
+        elif parameter<domain.Min and (domain.Min-parameter)/domain.Length <= reltol:
+            parameter = domain.Min
+        else:
+            return scriptcontext.errorhandler()
+    rc, frame = curve.FrameAt(parameter)
+    if rc and frame.IsValid: return frame
     return scriptcontext.errorhandler()
 
 
