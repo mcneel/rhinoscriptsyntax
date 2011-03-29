@@ -69,7 +69,7 @@ def AddPlanarMesh( object_id, delete_input=False ):
     """
     curve = rhutil.coercecurve(object_id)
     if curve is None: return scriptcontext.errorhandler()
-    mesh = Rhino.Geometry.Mesh.CreateFromPlanarBoundary(curve)
+    mesh = Rhino.Geometry.Mesh.CreateFromPlanarBoundary(curve, Rhino.Geometry.MeshingParameters.Default)
     if mesh is None: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddMesh(mesh)
     if rc==System.Guid.Empty: return scriptcontext.errorhandler()
