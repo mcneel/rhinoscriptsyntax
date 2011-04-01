@@ -102,7 +102,7 @@ def AddPoints(points):
     return rc
 
 
-def AddText( text, point_or_plane, height=1.0, font="Arial", font_style=0 ):
+def AddText( text, point_or_plane, height=1.0, font="Arial", font_style=0, justification=None ):
     """
     Adds a text string to the document
     Parameters:
@@ -111,11 +111,12 @@ def AddText( text, point_or_plane, height=1.0, font="Arial", font_style=0 ):
           The origin of the plane will be the origin point of the text
       height [opt] = the text height
       font [opt] = the text font
-      font_style = any of the following flags
+      font_style[opt] = any of the following flags
          0 = normal
          1 = bold
          2 = italic
          3 = bold and italic
+      justification[opt] = text justification (see help for values)
     Returns:
       Guid for the object that was added to the doc on success
       None on failure
@@ -130,7 +131,12 @@ def AddText( text, point_or_plane, height=1.0, font="Arial", font_style=0 ):
         plane.Origin = point
     bold = (1==font_style or 3==font_style)
     italic = (2==font_style or 3==font_style)
-    id = scriptcontext.doc.Objects.AddText(text, plane, height, font, bold, italic)
+    id = None
+    if justification is None:
+        id = scriptcontext.doc.Objects.AddText(text, plane, height, font, bold, italic)
+    else:
+        just = System.Enum.ToObject(Rhino.Geometry.TextJustification, justification)
+        id = scriptcontext.doc.Objects.AddText(text, plane, height, font, bold, italic, just)
     if id==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return id
