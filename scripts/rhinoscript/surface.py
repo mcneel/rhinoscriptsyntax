@@ -1040,6 +1040,17 @@ def IsCylinder( object_id ):
     return surface.IsCylinder()
 
 
+def IsPlaneSurface( object_id ):
+    """
+    Verifies an object is a plane surface. Plane surfaces can be created by
+    the Plane command. Note, a plane surface is not a planar NURBS surface
+    """
+    face = rhutil.coercesurface(object_id)
+    if type(face) is Rhino.Geometry.BrepFace and face.IsSurface:
+        return type(face.UnderlyingSurface()) is Rhino.Geometry.PlaneSurface
+    return False
+    
+
 def IsPointInSurface( object_id, point ):
     """
     Verifies that a point is inside a closed surface or polysurface
@@ -1057,6 +1068,7 @@ def IsPointInSurface( object_id, point ):
         return scriptcontext.errorhandler()
     tolerance = Rhino.RhinoMath.SqrtEpsilon
     return obj.BrepGeometry.IsPointInside(point, tolerance, False)
+
 
 def IsPointOnSurface( object_id, point ):
     """
