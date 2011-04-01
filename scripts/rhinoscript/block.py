@@ -9,6 +9,8 @@ def __InstanceObjectFromId( id ):
     if id is None: return scriptcontext.errorhandler()
     objref = Rhino.DocObjects.ObjRef(id)
     instance = objref.Object()
+    if type(instance) is Rhino.DocObjects.InstanceObject: pass
+    else: instance = None
     objref.Dispose()
     return instance
 
