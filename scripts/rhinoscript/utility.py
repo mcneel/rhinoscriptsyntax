@@ -348,6 +348,16 @@ def clamp(lowvalue, highvalue, value):
     return value
 
 
+def frange(start, stop, step):
+    "a float version of the range function"
+    rc = []
+    x = start
+    while( x<=stop ):
+        rc.append(x)
+        x+=step
+    return rc
+
+
 def coerce3dpoint(point):
     "Convert input into a Rhino.Geometry.Point3d if possible."
     if point is None or type(point) is Rhino.Geometry.Point3d: return point

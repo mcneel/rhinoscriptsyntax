@@ -42,7 +42,7 @@ def AddArc3Pt(start, end, point_on_arc):
     pton = rhutil.coerce3dpoint(point_on_arc)
     if start is None or end is None or pton is None:
         return scriptcontext.errorhandler()
-    arc = Rhino.Geometry.Arc(start, end, pton)
+    arc = Rhino.Geometry.Arc(start, pton, end)
     rc = scriptcontext.doc.Objects.AddArc(arc)
     if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
