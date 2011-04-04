@@ -357,6 +357,13 @@ def frange(start, stop, step):
         x+=step
     return rc
 
+def fxrange(start, stop, step):
+    "a float version of the xrange function"
+    x = start
+    while( x<=stop ):
+        yield x
+        x+=step
+
 
 def coerce3dpoint(point):
     "Convert input into a Rhino.Geometry.Point3d if possible."
