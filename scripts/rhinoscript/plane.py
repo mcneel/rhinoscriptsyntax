@@ -142,12 +142,13 @@ def PlaneFromFrame(origin, x_axis, y_axis):
     return Rhino.Geometry.Plane(origin, x_axis, y_axis)
 
 
-def PlaneFromNormal(origin, normal):
+def PlaneFromNormal(origin, normal, xaxis=None):
     """
     Creates a plane from an origin point and a normal direction vector.
     Parameters:
       origin = A 3-D point identifying the origin of the plane.
       normal = A 3-D vector identifying the normal direction of the plane.
+      xaxis[opt] = optional vector defining the plane's x-axis
     Returns:
       The plane if successful.
       None if not successful, or on error.  
@@ -155,7 +156,15 @@ def PlaneFromNormal(origin, normal):
     origin = rhutil.coerce3dpoint(origin)
     normal = rhutil.coerce3dvector(normal)
     if origin is None or normal is None: return scriptcontext.errorhandler()
-    return Rhino.Geometry.Plane(origin, normal)
+    rc = Rhino.Geometry.Plane(origin, normal)
+    xaxis = rhutil.coerce3dpoint(xaxis)
+    if xaxis:
+        projected_start = rc.ClosestPoint(Rhino.Geometry.Point3d(0,0,0))
+        projected_end = rc.ClosestPoint(xaxis)
+        xaxis = projected_end - projected_start
+        if xaxis.IsValid and not xaxis.IsParallel(rc.YAxis):
+            rc = Rhino.Geometry.Plane(origin, xaxis, rc.YAxis)
+    return rc
 
 
 def PlaneFromPoints(origin, x, y):
