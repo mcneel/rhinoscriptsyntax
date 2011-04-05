@@ -222,34 +222,34 @@ def DeleteBlock( block_name ):
 
 
 def ExplodeBlockInstance( object_id ):
-  """
-  Explodes a block instance into it's geometric components. The
-  exploded objects are added to the document
-  Parameters:
-    object_id = The identifier of an existing block insertion object  
-  Returns:
-    list of identifiers for the newly exploded objects on success
-    None on failure
-  """
-  instance = __InstanceObjectFromId(object_id)
-  if instance is None: return scriptcontext.errorhandler()
-  subobjects = instance.GetSubObjects()
-  if subobjects is None: return scriptcontext.errorhandler()
-  persistSelect = (instance.IsSelected(False)>=2)
-  instance.Select(False, True)
-  rc = []
-  for item in subobjects:
-      id = scriptcontext.doc.Objects.AddObject(item)
-      if id!=System.Guid.Empty:
-          rc.append(id)
-          if persistSelect:
-              rhobj = scriptcontext.doc.Objects.Find(id)
-              rhobj.Select(True, True)
-  if len(rc)>0:
-      scriptcontext.doc.Objects.Delete( Rhino.DocObjects.ObjRef(instance) )
-      scriptcontext.doc.Views.Redraw()
-      return rc
-  return scriptcontext.errorhandler()
+    """
+    Explodes a block instance into it's geometric components. The
+    exploded objects are added to the document
+    Parameters:
+      object_id = The identifier of an existing block insertion object  
+    Returns:
+      list of identifiers for the newly exploded objects on success
+      None on failure
+    """
+    instance = __InstanceObjectFromId(object_id)
+    if instance is None: return scriptcontext.errorhandler()
+    subobjects = instance.GetSubObjects()
+    if subobjects is None: return scriptcontext.errorhandler()
+    persistSelect = (instance.IsSelected(False)>=2)
+    instance.Select(False, True)
+    rc = []
+    for item in subobjects:
+        id = scriptcontext.doc.Objects.AddObject(item)
+        if id!=System.Guid.Empty:
+            rc.append(id)
+            if persistSelect:
+                rhobj = scriptcontext.doc.Objects.Find(id)
+                rhobj.Select(True, True)
+    if rc:
+        scriptcontext.doc.Objects.Delete( Rhino.DocObjects.ObjRef(instance) )
+        scriptcontext.doc.Views.Redraw()
+        return rc
+    return scriptcontext.errorhandler()
 
 
 def InsertBlock( block_name, insertion_point, scale=(1,1,1), angle_degrees=0, rotation_normal=(0,0,1) ):

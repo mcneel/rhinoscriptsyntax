@@ -21,7 +21,7 @@ def AddGroup( group_name=None ):
 
 def AddObjectsToGroup( object_ids, group_name ):
     """
-    Adds one or more objects to an existing group. Neither the objects nor the group can be reference objects
+    Adds one or more objects to an existing group.
     Parameters:
       object_ids = list of Strings or Guids representing the object identifiers
       group_name = the name of an existing group
@@ -29,21 +29,15 @@ def AddObjectsToGroup( object_ids, group_name ):
       number of objects added to the group
     """
     index = scriptcontext.doc.Groups.Find(str(group_name), True)
-    if( index<0 or object_ids==None ): return 0
-    if( type(object_ids) is not list ): object_ids = [object_ids]
-    ids = []
-    for id in object_ids:
-        id = rhutil.coerceguid(id)
-        if id is not None: ids.append(id)
-    if not ids: return 0
-    if not scriptcontext.doc.Groups.AddToGroup(index, ids): return 0
+    object_ids = rhutil.coerceguidlist(object_ids)
+    if index<0 or not object_ids: return 0
+    if not scriptcontext.doc.Groups.AddToGroup(index, object_ids): return 0
     return len(ids)
 
 
 def AddObjectToGroup( object_id, group_name ):
     """
-    Adds a single object to an existing group. Neither the object nor the
-    group can be reference objects
+    Adds a single object to an existing group.
     Parameters:
       object_id = String or Guid representing the object identifier
       group_name = the name of an existing group

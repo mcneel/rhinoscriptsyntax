@@ -348,21 +348,25 @@ def clamp(lowvalue, highvalue, value):
     return value
 
 
-def frange(start, stop, step):
-    "a float version of the range function"
-    rc = []
-    x = start
-    while( x<=stop ):
-        rc.append(x)
-        x+=step
-    return rc
-
 def fxrange(start, stop, step):
     "a float version of the xrange function"
+    if step==0: raise ValueError("step must not equal 0")
     x = start
-    while( x<=stop ):
-        yield x
-        x+=step
+    if start<stop:
+        if step<0: raise ValueError("step must be greater than 0")
+        while x<=stop:
+            yield x
+            x+=step
+    else:
+        if step>0: raise ValueError("step must be less than 0")
+        while x>=stop:
+            yield x
+            x+=step
+
+
+def frange(start, stop, step):
+    "a float version of the range function"
+    return [x for x in fxrange(start, stop, step)]
 
 
 def coerce3dpoint(point):
