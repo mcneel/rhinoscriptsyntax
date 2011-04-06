@@ -162,7 +162,7 @@ def PlaneFromNormal(origin, normal, xaxis=None):
         projected_start = rc.ClosestPoint(Rhino.Geometry.Point3d(0,0,0))
         projected_end = rc.ClosestPoint(xaxis)
         xaxis = projected_end - projected_start
-        if xaxis.IsValid and not xaxis.IsParallel(rc.YAxis):
+        if xaxis.IsValid and not xaxis.IsParallelTo(rc.YAxis):
             rc = Rhino.Geometry.Plane(origin, xaxis, rc.YAxis)
     return rc
 
