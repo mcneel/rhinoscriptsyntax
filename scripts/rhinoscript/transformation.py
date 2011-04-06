@@ -4,6 +4,7 @@ import Rhino
 import System.Guid
 import System.Array
 import math
+import view as rhview
 
 
 def IsXformIdentity(xform):
@@ -284,6 +285,34 @@ def XformWorldtoCplane(point, plane):
     if point is None or plane is None: return scriptcontext.errorhandler()
     v = point - plane.Origin;
     return Rhino.Geometry.Point3d(v*plane.XAxis, v*plane.YAxis, v*plane.ZAxis)
+
+
+def XformWorldToScreen(point, view=None, screen_coordinates=False):
+    """
+    Transforms a point from world coordinates to either client-area coordinates of
+    the specified view or screen coordinates. The resulting coordinates are represented
+    as a 2-D point
+    Parameters:
+      point = 3D point in world coordinates
+      view[opt] = title or identifier of a view. If omitted, the active view is used
+      screen_coordinates[opt] = if False, the function returns the results as
+        client-area coordinates. If True, the result is in screen-area coordinates
+    Returns:
+      2D point on success
+      None on error
+    """
+    point = rhutil.coerce3dpoint(point)
+    view = rhview.__viewhelper(view)
+    if point is None or view is None: return scriptcontext.errorhandler()
+    viewport = view.MainViewport
+    xform = viewport.GetTransform(Rhino.DocObjects.CoordinateSystem.World, Rhino.DocObjects.CoordinateSystem.Screen)
+    point = xform * point
+    point = Rhino.Geometry.Point2d(point.X, point.Y)
+    if screen_coordinates:
+        screen = view.ScreenRectangle
+        point.X = point.X + screen.Left
+        point.Y = point.Y + screen.Top
+    return point
 
 
 def XformZero():
