@@ -475,7 +475,7 @@ def MessageBox(message, buttons=0, title=""):
     elif buttontype==4: btn = System.Windows.Forms.MessageBoxButtons.YesNo
     elif buttontype==5: btn = System.Windows.Forms.MessageBoxButtons.RetryCancel
     
-    icontype = buttons & 0x000000e0 #11100000 in binary
+    icontype = buttons & 0x00000070
     icon = System.Windows.Forms.MessageBoxIcon.None
     if icontype==16: icon = System.Windows.Forms.MessageBoxIcon.Exclamation
     elif icontype==32: icon = System.Windows.Forms.MessageBoxIcon.Question
