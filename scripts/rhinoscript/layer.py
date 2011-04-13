@@ -388,7 +388,7 @@ def LayerPrintWidth(layer, width=None):
     return rc
 
 
-def LayerVisible(layer, visible=False):
+def LayerVisible(layer, visible=False, force_visible=False):
     """
     Returns or changes the visible property of a layer.
     Parameters:
@@ -403,8 +403,11 @@ def LayerVisible(layer, visible=False):
     if layer is None: return scriptcontext.errorhandler()
     rc = layer.IsVisible
     if visible is not None and visible!=rc:
-        layer.IsVisible = visible
-        layer.CommitChanges()
+        if visible and force_visible:
+            scriptcontext.doc.Layers.ForceLayerVisible(layer.Id)
+        else:
+            layer.IsVisible = visible
+            layer.CommitChanges()
         scriptcontext.doc.Views.Redraw()
     return rc
 

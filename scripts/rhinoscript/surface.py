@@ -9,19 +9,14 @@ def AddBox(corners):
     """
     Adds a new box shaped polysurface to the document
     Parameters:
-      corners = list of 8 3D points that define the corners of the box. Points
-          need to be in counter-clockwise order starting with the bottom
-          rectangle of the box
+      corners = 8 3D points that define the corners of the box. Points need to
+        be in counter-clockwise order starting with the bottom rectangle of the box
     Returns:
       identifier of the new object on success
       None on error
     """
-    box = []
-    if len(corners)<8: return scriptcontext.errorhandler()
-    for i in range(8):
-        point = rhutil.coerce3dpoint(corners[i])
-        if point is None: return scriptcontext.errorhandler()
-        box.append(point)
+    box = rhutil.coerce3dpointlist(corners)
+    if box is None: return scriptcontext.errorhandler()
     brep = Rhino.Geometry.Brep.CreateFromBox(box)
     if brep is None: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddBrep(brep)
@@ -657,11 +652,10 @@ def BrepClosestPoint(object_id, point):
     point = rhutil.coerce3dpoint(point)
     if point is None: return scriptcontext.errorhandler()
     rc = brep.ClosestPoint(point, 0.0)
-    if rc[0]==True:
+    if rc[0]:
         type = int(rc[2].ComponentIndexType)
         index = rc[2].Index
         return rc[1], (rc[3], rc[4]), (type, index), rc[5]
-    return None
 
 
 def CapPlanarHoles( surface_id ):
@@ -739,6 +733,32 @@ def EvaluateSurface( surface_id, u, v ):
     rc = surface.PointAt(u,v)
     if rc.IsValid: return rc
     return scriptcontext.errorhandler()
+
+
+def ExtendSurface(surface_id, parameter, length, smooth=True):
+    """
+    Lengthens an untrimmed surface object
+    Parameters:
+      surface_id = identifier of a surface
+      parameter = tuple of two values definfing the U,V parameter to evaluate.
+        The surface edge closest to the U,V parameter will be the edge that is
+        extended
+      length = amount to extend to surface
+      smooth[opt] = If True, the surface is extended smoothly curving from the
+        edge. If False, the surface is extended in a straight line from the edge
+    Returns:
+      True or False indicating success or failure
+    """
+    surface = rhutil.coercesurface(surface_id)
+    if surface is None: return False
+    edge = surface.ClosestSide(parameter[0], parameter[1])
+    newsrf = surface.Extend(edge, length, smooth)
+    if newsrf:
+        surface_id = rhutil.coerceguid(surface_id)
+        objref = Rhino.DocObjects.ObjRef(surface_id)
+        scriptcontext.doc.Objects.Replace(objref, newsrf)
+        scriptcontext.doc.Views.Redraw()
+    return newsrf is not None
 
 
 def ExplodePolysurfaces(object_ids, delete_input=False):

@@ -69,6 +69,23 @@ def XformChangeBasis2(x0,y0,z0,x1,y1,z1):
     return xform
 
 
+def XformCompare(xform1, xform2):
+    """
+    Compares two transformation matrices
+    Parameters:
+      xform1, xform2 = matrices to compare
+    Returns:
+      -1 if xform1<xform2
+       1 if xform1>xform2
+       0 if xform1=xform2
+       None on error
+    """
+    xform1 = rhutil.coercexform(xform1)
+    xform2 = rhutil.coercexform(xform2)
+    if xform1 is None or xform2 is None: return scriptcontext.errorhandler()
+    return xform1.CompareTo(xform2)
+
+
 def XformCPlaneToWorld(point, plane):
     """
     Transforms a point from construction plane coordinates to world coordinates
@@ -245,11 +262,11 @@ def XformScale( scale, point=None ):
     """
     Creates a scale transformation
     Parameters:
-        scale = single number, list of 3 numbers, Point3d, or Vector3d
-        point[opt] = center of scale. If omitted, world origin is used
+      scale = single number, list of 3 numbers, Point3d, or Vector3d
+      point[opt] = center of scale. If omitted, world origin is used
     Returns:
-        The 4x4 transformation matrix on success
-        None on error
+      The 4x4 transformation matrix on success
+      None on error
     """
     factor = rhutil.coerce3dpoint(scale)
     if factor is None:
@@ -261,6 +278,53 @@ def XformScale( scale, point=None ):
     plane = Rhino.Geometry.Plane(point, Rhino.Geometry.Vector3d.ZAxis);
     xf = Rhino.Geometry.Transform.Scale(plane, factor[0], factor[1], factor[2])
     return xf
+
+
+def XformScreenToWorld(point, view=None, screen_coordinates=False):
+    """
+    Transforms a point from either client-area coordinates of the specified view
+    or screen coordinates to world coordinates. The resulting coordinates are represented
+    as a 3-D point
+    Parameters:
+      point = 2D point
+      view[opt] = title or identifier of a view. If omitted, the active view is used
+      screen_coordinates[opt] = if False, point is in client-area coordinates. If True,
+      point is in screen-area coordinates
+    Returns:
+      3D point on success
+      None on error
+    """
+    point = rhutil.coerce2dpoint(point)
+    view = rhview.__viewhelper(view)
+    if point is None or view is None: return scriptcontext.errorhandler()
+    viewport = view.MainViewport
+    xform = viewport.GetTransform(Rhino.DocObjects.CoordinateSystem.Screen, Rhino.DocObjects.CoordinateSystem.World)
+    point3d = Rhino.Geometry.Point3d(point.X, point.Y, 0)
+    if screen_coordinates:
+        screen = view.ScreenRectangle
+        point3d.X = point.X - screen.Left
+        point3d.Y = point.Y - screen.Top
+    point3d = xform * point3d
+    return point3d
+
+
+def XformShear(plane, x, y, z):
+    """
+    Returns a shear transformation matrix
+    Parameters:
+      plane = plane[0] is the fixed point
+      x,y,z = each axis scale factor
+    Returns:
+      The 4x4 transformation matrix on success
+      None on error
+    """
+    plane = rhutil.coerceplane(plane)
+    x = rhutil.coerce3dvector(x)
+    y = rhutil.coerce3dvector(y)
+    z = rhutil.coerce3dvector(z)
+    if plane is None or x is None or y is None or z is None:
+        return scriptcontext.errorhandler()
+    return Rhino.Geometry.Transform.Shear(plane,x,y,z)
 
 
 def XformTranslation(vector):

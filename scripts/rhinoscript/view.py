@@ -358,7 +358,7 @@ def IsViewPerspective( view ):
     return view.MainViewport.IsPerspectiveProjection
 
 
-def IsViewTitleVisible( view=None ):
+def IsViewTitleVisible(view=None):
     """
     Verifies that the specified view's title window is visible
     Paramters:
@@ -373,7 +373,14 @@ def IsViewTitleVisible( view=None ):
     return view.MainViewport.TitleVisible
 
 
-def MaximizeRestoreView( view=None ):
+def IsWallpaper(view):
+    "Verifies that the specified view contains a wallpaper image"
+    view = __viewhelper(view)
+    if view is None: return scriptcontext.errorhandler()
+    return len(view.MainViewport.WallpaperFilename)>0
+
+
+def MaximizeRestoreView(view=None):
     """
     Toggles a view's maximized/restore window state of the specified view
     Parameters:
@@ -942,6 +949,74 @@ def ViewTitle(view_id):
     view = scriptcontext.doc.Views.Find(view_id)
     if view is None: return scriptcontext.errorhandler()
     return view.MainViewport.Name
+
+
+def Wallpaper(view=None, filename=None):
+    """
+    Returns or sets the wallpaper bitmap of the specified view. To remove a wallpaper
+    bitmap, pass an empty string ""
+    Parameters:
+      view[opt] = String or Guid. The identifier of the view. If omitted, the
+        active view is used
+      filename[opt] = Name of the bitmap file to set as wallpaper
+    Returns:
+      If filename is not specified, the current wallpaper bitmap filename
+      If filename is specified, the previous wallpaper bitmap filename
+      None if not successful or on error
+    """
+    view = __viewhelper(view)
+    if view is None: return scriptcontext.errorhandler()
+    rc = view.ActiveViewport.WallpaperFilename
+    if filename is not None and filename!=rc:
+        view.ActiveViewport.SetWallpaper(filename, False)
+        view.Redraw()
+    return rc
+
+
+def WallpaperGrayScale(view=None, grayscale=None):
+    """
+    Returns or sets the grayscale display option of the wallpaper bitmap in a
+    specified view
+    Parameters:
+      view[opt] = String or Guid. The identifier of the view. If omitted, the
+        active view is used
+      grayscale[opt] = Display the wallpaper in gray(True) or color (False)
+    Returns:
+      If grayscale is not specified, the current grayscale display option
+      If grayscale is specified, the previous grayscale display option
+      None if not successful or on error
+    """
+    view = __viewhelper(view)
+    if view is None: return scriptcontext.errorhandler()
+    rc = view.ActiveViewport.WallpaperGrayscale
+    if grayscale is not None and grayscale!=rc:
+        filename = view.ActiveViewport.WallpaperFilename
+        view.ActiveViewport.SetWallpaper(filename, grayscale)
+        view.Redraw()
+    return rc
+
+
+def WallpaperHidden(view=None, hidden=None):
+    """
+    Returns or sets the visibility of the wallpaper bitmap in a specified view
+    Parameters:
+      view[opt] = String or Guid. The identifier of the view. If omitted, the
+        active view is used
+      hidden[opt] = Show or hide the wallpaper
+    Returns:
+      If hidden is not specified, the current hidden state
+      If hidden is specified, the previous hidden state
+      None if not successful or on error
+    """
+    view = __viewhelper(view)
+    if view is None: return scriptcontext.errorhandler()
+    rc = not view.ActiveViewport.WallpaperVisible
+    if hidden is not None and hidden!=rc:
+        filename = view.ActiveViewport.WallpaperFilename
+        gray = view.ActiveViewport.WallpaperGrayscale
+        view.ActiveViewport.SetWallpaper(filename, gray, not hidden)
+        view.Redraw()
+    return rc
 
 
 def ZoomBoundingBox(bounding_box, view=None, all=False):
