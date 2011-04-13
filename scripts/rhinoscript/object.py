@@ -888,6 +888,83 @@ def ObjectName(object_id, name=None):
     return rc
 
 
+def ObjectPrintWidth(object_ids, width=None):
+    """
+    Returns of modifies the print width of an object
+    Parameters:
+      object_ids = identifiers of object(s)
+      width[opt] = new print width value in millimeters, where width=0 means use
+        the default width, and width<0 means do not print (visible for screen display,
+        but does not show on print). If omitted, the current width is returned.
+    Returns:
+      If width is not specified, the object's current print width
+      If width is specified, the object's previous print width
+      If object_ids is a list or tuple, the number of objects modified
+      None on error
+    """
+    id = rhutil.coerceguid(object_ids)
+    if id:
+        rhino_object = rhutil.coercerhinoobject(id)
+        if not rhino_object: return scriptcontext.errorhandler()
+        rc = rhino_object.Attributes.PlotWeight
+        if width is not None:
+            rhino_object.Attributes.PlotWeightSource = Rhino.DocObjects.ObjectPlotWeightSource.PlotWeightFromObject
+            rhino_object.Attributes.PlotWeight = width
+            rhino_object.CommitChanges()
+            scriptcontext.doc.Views.Redraw()
+        return rc
+    ids = rhutil.coerceguidlist(object_ids)
+    if not ids or width is None: return scriptcontext.errorhandler()
+    rc = 0
+    for id in ids:
+        rhino_object = rhutil.coercerhinoobject(id)
+        if rhino_object:
+            rhino_object.Attributes.PlotWeightSource = Rhino.DocObjects.ObjectPlotWeightSource.PlotWeightFromObject
+            rhino_object.Attributes.PlotWeight = width
+            rhino_object.CommitChanges()
+            rc += 1
+    scriptcontext.doc.Views.Redraw()
+    return rc
+
+
+def ObjectPrintWidthSource(object_ids, source=None):
+    """
+    Returns of modifies the print width source of an object
+    Parameters:
+      object_ids = identifiers of object(s)
+      source[opt] = new print width source
+        0 = print width by layer
+        1 = print width by object
+        3 = print width by parent
+    Returns:
+      If source is not specified, the object's current print width source
+      If source is specified, the object's previous print width source
+      If object_ids is a list or tuple, the number of objects modified
+      None on error
+    """
+    id = rhutil.coerceguid(object_ids)
+    if id:
+        rhino_object = rhutil.coercerhinoobject(id)
+        if not rhino_object: return scriptcontext.errorhandler()
+        rc = int(rhino_object.Attributes.PlotWeight)
+        if source is not None:
+            rhino_object.Attributes.PlotWeightSource = System.Enum.ToObject(Rhino.DocObjects.ObjectPlotWeightSource, source)
+            rhino_object.CommitChanges()
+            scriptcontext.doc.Views.Redraw()
+        return rc
+    ids = rhutil.coerceguidlist(object_ids)
+    if not ids or source is None: return scriptcontext.errorhandler()
+    rc = 0
+    for id in ids:
+        rhino_object = rhutil.coercerhinoobject(id)
+        if rhino_object:
+            rhino_object.Attributes.PlotWeightSource = System.Enum.ToObject(Rhino.DocObjects.ObjectPlotWeightSource, source)
+            rhino_object.CommitChanges()
+            rc += 1
+    scriptcontext.doc.Views.Redraw()
+    return rc
+
+
 def ObjectType(object_id):
     """
     Returns the object type
