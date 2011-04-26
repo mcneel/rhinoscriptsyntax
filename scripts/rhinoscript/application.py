@@ -319,7 +319,7 @@ def EnableAutosave( enable=True ):
 
 def ExeFolder():
     "Returns the full path to Rhino's executable folder."
-    return Rhino.ApplicationSettings.FileSettings.ExecutableFolder.FullName
+    return Rhino.ApplicationSettings.FileSettings.ExecutableFolder
 
 
 def Exit():

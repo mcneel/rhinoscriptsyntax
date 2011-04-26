@@ -52,7 +52,7 @@ def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
     return rc
 
 
-def AddPoint(point):
+def AddPoint(point, y=None, z=None):
     """
     Adds a point object to the document
     Parameters:
@@ -61,6 +61,8 @@ def AddPoint(point):
       Guid for the object that was added to the doc on success
       None on failure
     """
+    if y is not None and z is not None:
+        point = Rhino.Geometry.Point3d(point,y,z)
     point = rhutil.coerce3dpoint(point)
     if point is None: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddPoint(point)

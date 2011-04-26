@@ -372,9 +372,8 @@ def frange(start, stop, step):
 def coerce3dpoint(point):
     "Convert input into a Rhino.Geometry.Point3d if possible."
     if point is None or type(point) is Rhino.Geometry.Point3d: return point
-    if type(point) is list or type(point) is tuple:
-        length = len(point)
-        if length==3 and type(point[0]) is not list and type(point[0]) is not Rhino.Geometry.Point3d:
+    if hasattr(point, "__len__") and len(point)==3 and hasattr(point, "__getitem__"):
+        if type(point[0]) is float or type(point[0]) is int:
             return Rhino.Geometry.Point3d(point[0], point[1], point[2])
         return None
     if type(point) is Rhino.Geometry.Vector3d or type(point) is Rhino.Geometry.Point3f:

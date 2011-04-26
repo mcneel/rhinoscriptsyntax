@@ -422,7 +422,7 @@ def MeshClosestPoint(object_id, point, maximum_distance=None):
     mesh = rhutil.coercemesh( object_id )
     point = rhutil.coerce3dpoint(point)
     if mesh is None or point is None: return scriptcontext.errorhandler()
-    tolerance=maximum_tolerance if maximum_tolerance else 0.0
+    tolerance=maximum_distance if maximum_distance else 0.0
     face, closest_point = mesh.ClosestPoint(point, tolerance)
     if( face<0 ): return scriptcontext.errorhandler()
     return closest_point, face
