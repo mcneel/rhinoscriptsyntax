@@ -218,12 +218,11 @@ def AddPlanarSrf( object_ids ):
       None on error
     """
     curves = Rhino.Collections.CurveList()
-    object_ids = rhutil.coerceguidlist(object_ids)
     if object_ids is None: return scriptcontext.errorhandler()
     for id in object_ids:
-        objref = Rhino.DocObjects.ObjRef(id)
-        curve = objref.Curve()
-        if curve is not None: curves.Add(curve)
+        curve = rhutil.coercecurve(id)
+        if curve is None: continue
+        curves.Add(curve)
     if curves.Count<1: return scriptcontext.errorhandler()
     breps = Rhino.Geometry.Brep.CreatePlanarBreps(curves)
     if breps is None: return scriptcontext.errorhandler()

@@ -548,11 +548,14 @@ def coerceline(line):
 
 def coercebrep( id ):
     "attempt to get polysurface geometry from the document with a given id"
+    if isinstance(id, Rhino.Geometry.Brep): return id
+    if type(id) is Rhino.DocObjects.ObjRef: return id.Brep()
     id = coerceguid(id)
     if id is None: return None
-    objref = Rhino.DocObjects.ObjRef(id)
-    brep = objref.Brep()
-    objref.Dispose()
+    brepObj = scriptcontext.doc.Objects.Find(id)
+    if brepObj is None: return None
+    brep = brepObj.Geometry
+    if not isinstance(brep, Rhino.Geometry.Brep): return None
     return brep
 
 
@@ -562,11 +565,12 @@ def coercecurve( id, segment_index=-1 ):
     if type(id) is Rhino.DocObjects.ObjRef: return id.Curve()
     id = coerceguid(id)
     if id is None: return None
-    objref = Rhino.DocObjects.ObjRef(id)
-    curve = objref.Curve()
+    crvObj = scriptcontext.doc.Objects.Find(id)
+    if crvObj is None: return None
+    curve = crvObj.Geometry
+    if not isinstance(curve, Rhino.Geometry.Curve): return None
     if curve and segment_index>=0 and type(curve) is Rhino.Geometry.PolyCurve:
         curve = curve.SegmentCurve(segment_index)
-    objref.Dispose()
     return curve
 
 
@@ -576,19 +580,23 @@ def coercesurface(object_id):
     if type(object_id) is Rhino.DocObjects.ObjRef: return object_id.Face()
     object_id = coerceguid(object_id)
     if object_id is None: return None
-    objref = Rhino.DocObjects.ObjRef(object_id)
-    srf = objref.Surface()
-    objref.Dispose()
+    srfObj = scriptcontext.doc.Objects.Find(id)
+    if srfObj is None: return None
+    srf = srfObj.Geometry
+    if not isinstance(srf, Rhino.Geometry.Surface): return None
     return srf
 
 
 def coercemesh( object_id ):
     "attempt to get mesh geometry from the document with a given id"
+    if isinstance(object_id, Rhino.Geometry.Mesh): return object_id
+    if type(object_id) is Rhino.DocObjects.ObjRef: return object_id.Mesh()
     object_id = coerceguid(object_id)
     if object_id is None: return None
-    objref = Rhino.DocObjects.ObjRef(object_id)
-    mesh = objref.Mesh()
-    objref.Dispose()
+    meshObj = scriptcontext.doc.Objects.Find(id)
+    if meshObj is None: return None
+    mesh = meshObj.Geometry
+    if not isinstance(mesh, Rhino.Geometry.Mesh): return None
     return mesh
 
 
