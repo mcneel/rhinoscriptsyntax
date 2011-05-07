@@ -1641,6 +1641,51 @@ def SurfaceDomain( surface_id, direction ):
     return domain.T0, domain.T1
 
 
+def SurfaceEditPoints( surface_id, return_parameters=False, return_all=True ):
+    """
+    Returns the edit, or Greville points of a surface object. For each surface
+    control point, there is a corresponding edit point
+    Parameters:
+      surface_id = the surface's identifier
+      return_parameters[opt] = If False, edit points are returned as a list of
+        3D points. If True, edit points are returned as a list of U,V surface
+        parameters
+      return_all[opt] = If True, all surface edit points are returned. If False,
+        the function will return surface edit points based on whether or not the
+        surface is closed or periodic
+    Returns:
+      if return_parameters is False, a list of 3D points
+      if return_parameters is True, a list of U,V parameters
+      None on error
+    """
+    surface = rhutil.coercesurface(surface_id)
+    if not surface: return scriptcontext.errorhandler()
+    nurb = surface.ToNurbsSurface()
+    if not nurb: return scriptcontext.errorhandler()
+    ufirst = 0
+    ulast = nurb.Points.CountU
+    vfirst = 0
+    vlast = nurb.Points.CountV
+    if not return_all:
+        if nurb.IsClosed(0): ulast = nurb.Points.CountU-1
+        if nurbs.IsPeriodic(0):
+            degree = nurb.Degree(0)
+            ufirst = degree/2
+            ulast = nurb.Points.CountU-degree+ufirst
+        if nurb.IsClosed(1): vlast = nurb.Points.CountV-1
+        if nurbs.IsPeriodic(1):
+            degree = nurb.Degree(1)
+            vfirst = degree/2
+            vlast = nurb.Points.CountV-degree+vfirst
+    rc = []
+    for u in range(ufirst, ulast):
+        for v in range(vfirst, vlast):
+            pt = nurb.Points.GetGrevillePoint(u,v)
+            if not return_parameters: pt = nurb.PointAt(pt.X, pt.Y)
+            rc.append(pt)
+    return rc
+
+
 def SurfaceEvaluate( surface_id, parameter, derivative ):
     """
     A general purpose surface evaluator
