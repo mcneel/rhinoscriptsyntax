@@ -217,12 +217,12 @@ def AddPlanarSrf( object_ids ):
       list of surfaces created on success
       None on error
     """
+    if not object_ids: return scriptcontext.errorhandler()
+    if getattr(object_ids, "__iter__", True): object_ids = [obect_ids]
     curves = Rhino.Collections.CurveList()
-    if object_ids is None: return scriptcontext.errorhandler()
     for id in object_ids:
         curve = rhutil.coercecurve(id)
-        if curve is None: continue
-        curves.Add(curve)
+        if curve: curves.Add(curve)
     if curves.Count<1: return scriptcontext.errorhandler()
     breps = Rhino.Geometry.Brep.CreatePlanarBreps(curves)
     if breps is None: return scriptcontext.errorhandler()

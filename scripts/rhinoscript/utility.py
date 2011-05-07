@@ -553,10 +553,10 @@ def coercebrep( id ):
     id = coerceguid(id)
     if id is None: return None
     brepObj = scriptcontext.doc.Objects.Find(id)
-    if brepObj is None: return None
-    brep = brepObj.Geometry
-    if not isinstance(brep, Rhino.Geometry.Brep): return None
-    return brep
+    if brepObj:
+        brep = brepObj.Geometry
+        if isinstance(brep, Rhino.Geometry.Brep): return brep
+    return None
 
 
 def coercecurve( id, segment_index=-1 ):
@@ -566,12 +566,12 @@ def coercecurve( id, segment_index=-1 ):
     id = coerceguid(id)
     if id is None: return None
     crvObj = scriptcontext.doc.Objects.Find(id)
-    if crvObj is None: return None
-    curve = crvObj.Geometry
-    if not isinstance(curve, Rhino.Geometry.Curve): return None
-    if curve and segment_index>=0 and type(curve) is Rhino.Geometry.PolyCurve:
-        curve = curve.SegmentCurve(segment_index)
-    return curve
+    if crvObj:
+        curve = crvObj.Geometry
+        if curve and segment_index>=0 and type(curve) is Rhino.Geometry.PolyCurve:
+            curve = curve.SegmentCurve(segment_index)
+        if isinstance(curve, Rhino.Geometry.Curve): return curve
+    return None
 
 
 def coercesurface(object_id):
@@ -581,10 +581,12 @@ def coercesurface(object_id):
     object_id = coerceguid(object_id)
     if object_id is None: return None
     srfObj = scriptcontext.doc.Objects.Find(id)
-    if srfObj is None: return None
-    srf = srfObj.Geometry
-    if not isinstance(srf, Rhino.Geometry.Surface): return None
-    return srf
+    if srfObj:
+        srf = srfObj.Geometry
+        if isinstance(srf, Rhino.Geometry.Surface): return srf
+        if isinstance(srf, Rhino.Geometry.Brep) and srf.IsSurface:
+            return srf.Faces[0].UnderlyingSurface()
+    return None
 
 
 def coercemesh( object_id ):
@@ -594,10 +596,10 @@ def coercemesh( object_id ):
     object_id = coerceguid(object_id)
     if object_id is None: return None
     meshObj = scriptcontext.doc.Objects.Find(id)
-    if meshObj is None: return None
-    mesh = meshObj.Geometry
-    if not isinstance(mesh, Rhino.Geometry.Mesh): return None
-    return mesh
+    if meshObj:
+        mesh = meshObj.Geometry
+        if isinstance(mesh, Rhino.Geometry.Mesh): return mesh
+    return None
 
 
 def coercerhinoobject(object_id):
