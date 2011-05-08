@@ -241,17 +241,14 @@ def AddInterpCrvOnSrf( surface_id, points ):
       id of the new curve object if successful
       None on error
     """
-    surface_id = rhutil.coerceguid(surface_id)
-    if( surface_id==None ): return scriptcontext.errorhandler()
-    objref = Rhino.DocObjects.ObjRef(surface_id)
+    surface = rhutil.coercesurface(surface_id)
     points = rhutil.coerce3dpointlist(points)
-    surface = objref.Surface()
-    if( points==None or surface==None ): return scriptcontext.errorhandler()
+    if points is None or surface is None: return scriptcontext.errorhandler()
     tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     curve = surface.InterpolatedCurveOnSurface(points, tolerance)
-    if( curve==None ): return scriptcontext.errorhandler()
+    if not curve: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddCurve(curve)
-    if( rc == System.Guid.Empty ): return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -269,17 +266,14 @@ def AddInterpCrvOnSrfUV( surface_id, points ):
       id of the new curve object if successful
       None on error
     """
-    surface_id = rhutil.coerceguid(surface_id)
-    if( surface_id==None ): return scriptcontext.errorhandler()
-    objref = Rhino.DocObjects.ObjRef(surface_id)
+    surface = rhutil.coercesurface(surface_id)
     points = rhutil.coerce2dpointlist(points)
-    surface = objref.Surface()
-    if( points==None or surface==None ): return scriptcontext.errorhandler()
+    if not points or not surface: return scriptcontext.errorhandler()
     tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     curve = surface.InterpolatedCurveOnSurfaceUV(points, tolerance)
-    if( curve==None ): return scriptcontext.errorhandler()
+    if curve is None: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddCurve(curve)
-    if( rc == System.Guid.Empty ): return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -394,10 +388,8 @@ def AddPolyline( points, replace_id=None ):
     replace_id = rhutil.coerceguid(replace_id)
     rc = System.Guid.Empty
     if replace_id:
-        objref = Rhino.DocObjects.ObjRef(replace_id)
-        if objref.Object() is None: return scriptcontext.errorhandler()
         pl = Rhino.Geometry.Polyline(points)
-        if scriptcontext.doc.Objects.Replace(objref, pl):
+        if scriptcontext.doc.Objects.Replace(replace_id, pl):
             rc = replace_id
     else:
         rc = scriptcontext.doc.Objects.AddPolyline(points)
@@ -1548,8 +1540,8 @@ def CurveSeam(curve_id, parameter):
     dupe = curve.Duplicate()
     if dupe:
         dupe.ChangeClosedCurveSeam(parameter)
-        objref = Rhino.DocObjects.ObjRef(curve_id)
-        dupe_obj = scriptcontext.doc.Objects.Replace(objref, dupe)
+        curve_id = rhutil.coerceguid(curve_id)
+        dupe_obj = scriptcontext.doc.Objects.Replace(curve_id, dupe)
         return dupe_obj is not None
     return False
 
@@ -1570,8 +1562,8 @@ def CurveStartPoint(curve_id, segment_index=-1, point=None):
     rc = curve.PointAtStart
     point = rhutil.coerce3dpoint(point)
     if point and curve.SetStartPoint(point):
-        objref = Rhino.DocObjects.ObjRef(curve_id)
-        scriptcontext.doc.Objects.Replace(objref, curve)
+        curve_id = rhutil.coerceguid(curve_id)
+        scriptcontext.doc.Objects.Replace(curve_id, curve)
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -1889,8 +1881,8 @@ def ExtendCurve(curve_id, extension_type, side, boundary_object_ids):
     if not geometry: return scriptcontext.errorhandler()
     newcurve = curve.Extend(side, extension_type, geometry)
     if newcurve and newcurve.IsValid:
-        objref = Rhino.DocObjects.ObjRef(curve_id)
-        if scriptcontext.doc.Objects.Replace(objref, newcurve):
+        curve_id = rhutil.coerceguid(curve_id)
+        if scriptcontext.doc.Objects.Replace(curve_id, newcurve):
             scriptcontext.doc.Views.Redraw()
             return curve_id
     return scriptcontext.errorhandler()
@@ -1922,9 +1914,9 @@ def ExtendCurveLength(curve_id, extension_type, side, length):
     else: return scriptcontext.errorhandler()
     
     newcurve = curve.Extend(side, length, extension_type)
-    if( newcurve and newcurve.IsValid ):
-        objref = Rhino.DocObjects.ObjRef(curve_id)
-        if( scriptcontext.doc.Objects.Replace( objref, newcurve ) ):
+    if newcurve and newcurve.IsValid:
+        curve_id = rhutil.coerceguid(curve_id)
+        if( scriptcontext.doc.Objects.Replace(curve_id, newcurve) ):
             scriptcontext.doc.Views.Redraw()
             return curve_id
     return scriptcontext.errorhandler()
@@ -1952,9 +1944,9 @@ def ExtendCurvePoint(curve_id, side, point):
     
     extension_type = Rhino.Geometry.CurveExtensionStyle.Smooth
     newcurve = curve.Extend(side, extension_type, point)
-    if( newcurve and newcurve.IsValid ):
-        objref = Rhino.DocObjects.ObjRef(curve_id)
-        if scriptcontext.doc.Objects.Replace( objref, newcurve ):
+    if newcurve and newcurve.IsValid:
+        curve_id = rhutil.coerceguid(curve_id)
+        if scriptcontext.doc.Objects.Replace( curve_id, newcurve ):
             scriptcontext.doc.Views.Redraw()
             return curve_id
     return scriptcontext.errorhandler()
@@ -1983,8 +1975,7 @@ def FairCurve(curve_id, tolerance=1.0):
     newcurve = curve.Fair(tolerance, angle_tol, clamp, clamp, 100)
     if newcurve is None: return scriptcontext.errorhandler()
     curve_id = rhutil.coerceguid(curve_id)
-    objref = Rhino.DocObjects.ObjRef(curve_id)
-    if scriptcontext.doc.Objects.Replace(objref, newcurve):
+    if scriptcontext.doc.Objects.Replace(curve_id, newcurve):
         scriptcontext.doc.Views.Redraw()
         return True
     return False
@@ -2050,8 +2041,7 @@ def InsertCurveKnot( curve_id, parameter, symmetrical=False ):
                 rc = nc.Knots.InsertKnot(t_sym,1)
         if rc:
             curve_id = rhutil.coerceguid(curve_id)
-            objref = Rhino.DocObjects.ObjRef(curve_id)
-            rc = scriptcontext.doc.Objects.Replace(objref, nc)
+            rc = scriptcontext.doc.Objects.Replace(curve_id, nc)
             if rc: scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -2321,13 +2311,19 @@ def MakeCurveNonPeriodic( curve_id, delete_input=False ):
     if nc is None: return scriptcontext.errorhandler()
     nc.Knots.ClampEnd( Rhino.Geometry.CurveEnd.Both )
     rc = None
-    objref = Rhino.DocObjects.ObjRef(rhutil.coerceguid(curve_id))
     if delete_input:
-        rc = scriptcontext.doc.Objects.Replace(objref, nc)
-        if not rc: return scriptcontext.errorhandler()
-        rc = rhutil.coerceguid(curve_id)
+        if type(curve_id) is Rhino.DocObjects.ObjRef: pass
+        else: curve_id = rhutil.coerceguid(curve_id)
+        if curve_id:
+          rc = scriptcontext.doc.Objects.Replace(curve_id, nc)
+          if not rc: return scriptcontext.errorhandler()
+          rc = rhutil.coerceguid(curve_id)
     else:
-        rc = scriptcontext.doc.Objects.AddCurve(nc, objref.Object().Attributes)
+        attrs = None
+        if type(scriptcontext.doc) is Rhino.RhinoDoc:
+            rhobj = rhutil.coercerhinoobject(curve_id)
+            if rhobj: attrs = rhobj.Attributes
+        rc = scriptcontext.doc.Objects.AddCurve(nc, attrs)
         if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     objref.Dispose()
     scriptcontext.doc.Views.Redraw()
@@ -2584,9 +2580,7 @@ def RebuildCurve( curve_id, degree=3, point_count=10 ):
     if curve is None or degree<1: return False
     newcurve = curve.Rebuild(point_count, degree, False)
     if newcurve is None: return False
-    objref = Rhino.DocObjects.ObjRef(curve_id)
-    scriptcontext.doc.Objects.Replace(objref, newcurve)
-    objref.Dispose()
+    scriptcontext.doc.Objects.Replace(curve_id, newcurve)
     scriptcontext.doc.Views.Redraw()
     return True
 
@@ -2602,9 +2596,7 @@ def ReverseCurve( curve_id ):
     curve = rhutil.coercecurve(curve_id)
     if curve and curve.Reverse():
         curve_id = rhutil.coerceguid(curve_id)
-        objref = Rhino.DocObjects.ObjRef(curve_id)
-        scriptcontext.doc.Objects.Replace(objref, curve)
-        objref.Dispose()
+        if curve_id: scriptcontext.doc.Objects.Replace(curve_id, curve)
         return True
     return False
 
@@ -2625,9 +2617,7 @@ def SimplifyCurve( curve_id, flags=0 ):
     newcurve = curve.Simplify( _flags, tol, ang_tol )
     if newcurve:
         curve_id = rhutil.coerceguid(curve_id)
-        objref = Rhino.DocObjects.ObjRef(curve_id)
-        scriptcontext.doc.Objects.Replace(objref, newcurve)
-        objref.Dispose()
+        if curve_id: scriptcontext.doc.Objects.Replace(curve_id, newcurve)
         scriptcontext.doc.Views.Redraw()
         return True
     return False
@@ -2649,11 +2639,14 @@ def SplitCurve( curve_id, parameter, delete_input=True ):
     if curve is None: return scriptcontext.errorhandler()
     newcurves = curve.Split(parameter)
     if newcurves is None: return scriptcontext.errorhandler()
-    objref = Rhino.DocObjects.ObjRef(rhutil.coerceguid(curve_id))
-    att = objref.Object().Attributes
+    att = None
+    rhobj = rhutil.coercerhinoobject(curve_id)
+    if rhobj: att = rhobj.Attributes
     rc = [scriptcontext.doc.Objects.AddCurve(crv, att) for crv in newcurves]
     if not rc: return scriptcontext.errorhandler()
-    if delete_input: scriptcontext.doc.Objects.Delete(objref, True)
+    if delete_input:
+        id = rhutil.coerceguid(curve_id)
+        if id: scriptcontext.doc.Objects.Delete(id, True)
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -2677,9 +2670,12 @@ def TrimCurve( curve_id, interval, delete_input=True ):
     if curve is None or interval[0]==interval[1]: return scriptcontext.errorhandler()
     newcurve = curve.Trim(interval[0], interval[1])
     if newcurve is None: return scriptcontext.errorhandler()
-    objref = Rhino.DocObjects.ObjRef(rhutil.coerceguid(curve_id))
-    att = objref.Object().Attributes
+    att = None
+    rhobj = rhutil.coercerhinoobject(curve_id)
+    if rhobj: att = rhobj.Attributes
     rc = scriptcontext.doc.Objects.AddCurve(newcurve, att)
-    if delete_input: scriptcontext.doc.Objects.Delete(objref, True)
+    if delete_input:
+        id = rhutil.coerceguid(curve_id)
+        if id: scriptcontext.doc.Objects.Delete(id, True)
     scriptcontext.doc.Views.Redraw()
     return rc
