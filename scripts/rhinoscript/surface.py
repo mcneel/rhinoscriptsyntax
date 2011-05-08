@@ -149,13 +149,9 @@ def AddEdgeSrf(curve_ids):
     """
     curves = []
     for id in curve_ids:
-        id = rhutil.coerceguid(id)
-        if id==None: return scriptcontext.errorhandler()
-        objref = Rhino.DocObjects.ObjRef(id)
-        curve = objref.Curve()
-        if curve==None: return scriptcontext.errorhandler()
+        curve = rhutil.coercecurve(id)
+        if curve is None: return scriptcontext.errorhandler()
         curves.append(curve)
-        objref.Dispose()
     brep = Rhino.Geometry.Brep.CreateEdgeSurface(curves)
     if brep is None: return scriptcontext.errorhandler()
     id = scriptcontext.doc.Objects.AddBrep(brep)
@@ -305,9 +301,8 @@ def AddLoftSrf(object_ids, start=None, end=None, loft_type=0, simplify_method=0,
     if object_ids is None: return scriptcontext.errorhandler()
     curves = []
     for id in object_ids:
-        objref = Rhino.DocObjects.ObjRef(id)
-        curve = objref.Curve()
-        if curve is not None: curves.append( curve )
+        curve = rhutil.coercecurve(id)
+        if curve: curves.append( curve )
     if len(curves)<2: return scriptcontext.errorhandler()
     if start is None: start = Rhino.Geometry.Point3d.Unset
     if end is None: end = Rhino.Geometry.Point3d.Unset
@@ -353,11 +348,8 @@ def AddRevSrf(curve_id, axis, start_angle=0.0, end_angle=360.0):
         identifier of new object if successful
         None on error
     """
-    curve_id = rhutil.coerceguid(curve_id)
-    if curve_id is None: return None
-    objref = Rhino.DocObjects.ObjRef(curve_id)
-    curve = objref.Curve()
-    objref.Dispose()
+    curve = rhutil.coercecurve(curve_id)
+    if curve is None: return None
     axis = rhutil.coerceline(axis)
     if axis is None or curve is None: return scriptcontext.errorhandler()
     start_angle = math.radians(start_angle)
@@ -669,8 +661,7 @@ def CapPlanarHoles( surface_id ):
     newbrep = brep.CapPlanarHoles(tolerance)
     if newbrep:
         surface_id = rhutil.coerceguid(surface_id)
-        objref = Rhino.DocObjects.ObjRef(surface_id)
-        if scriptcontext.doc.Objects.Replace(objref, newbrep):
+        if surface_id and scriptcontext.doc.Objects.Replace(surface_id, newbrep):
             scriptcontext.doc.Views.Redraw()
             return True
     return False
@@ -754,8 +745,7 @@ def ExtendSurface(surface_id, parameter, length, smooth=True):
     newsrf = surface.Extend(edge, length, smooth)
     if newsrf:
         surface_id = rhutil.coerceguid(surface_id)
-        objref = Rhino.DocObjects.ObjRef(surface_id)
-        scriptcontext.doc.Objects.Replace(objref, newsrf)
+        if surface_id: scriptcontext.doc.Objects.Replace(surface_id, newsrf)
         scriptcontext.doc.Views.Redraw()
     return newsrf is not None
 
@@ -946,8 +936,7 @@ def FlipSurface(surface_id, flip=None):
     if( flip!=None and brep.IsSolid==False and old_reverse!=flip ):
         brep.Flip()
         surface_id = rhutil.coerceguid(surface_id)
-        objref = Rhino.DocObjects.ObjRef(surface_id)
-        scriptcontext.doc.Objects.Replace(objref, brep)
+        if surface_id: scriptcontext.doc.Objects.Replace(surface_id, brep)
         scriptcontext.doc.Views.Redraw()
     return old_reverse
 
@@ -1293,8 +1282,7 @@ def MakeSurfacePeriodic(surface_id, direction, delete_input=False):
     if newsurf is None: return scriptcontext.errorhandler()
     id = rhutil.coerceguid(surface_id)
     if delete_input:
-        objref = Rhino.DocObjects.ObjRef(id)
-        scriptcontext.doc.Objects.Replace(objref, newsurf)
+        scriptcontext.doc.Objects.Replace(id, newsurf)
     else:
         id = scriptcontext.doc.Objects.AddSurface(newsurf)
     scriptcontext.doc.Views.Redraw()
@@ -1339,12 +1327,11 @@ def RebuildSurface(object_id, degree=(3,3), pointcount=(10,10)):
       True of False indicating success or failure
     """
     surface = rhutil.coercesurface(object_id)
-    if( surface==None ): return False
+    if surface is None: return False
     newsurf = surface.Rebuild( degree[0], degree[1], pointcount[0], pointcount[1] )
-    if( newsurf==None ): return False
-    objref = Rhino.DocObjects.ObjRef(rhutil.coerceguid(object_id))
-    rc = scriptcontext.doc.Objects.Replace(objref, newsurf)
-    objref.Dispose()
+    if newsurf is None: return False
+    object_id = rhutil.coerceguid(object_id)
+    rc = scriptcontext.doc.Objects.Replace(object_id, newsurf)
     if rc: scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -1436,9 +1423,7 @@ def ShrinkTrimmedSurface(object_id, create_copy=False):
         attr = oldobj.Attributes
         rc = scriptcontext.doc.Objects.AddBrep(brep, attr)
     else:
-        objref = Rhino.DocObjects.ObjRef(object_id)
-        rc = scriptcontext.doc.Objects.Replace(objref, brep)
-        objref.Dispose()
+        rc = scriptcontext.doc.Objects.Replace(object_id, brep)
     scriptcontext.doc.Views.Redraw()
     return rc
 
