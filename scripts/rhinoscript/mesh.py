@@ -664,8 +664,7 @@ def MeshQuadsToTriangles(object_id):
         rc = mesh.Faces.ConvertQuadsToTriangles()
         if rc:
             id = rhutil.coerceguid(object_id)
-            objref = Rhino.DocObjects.ObjRef(id)
-            scriptcontext.doc.Objects.Replace(objref, mesh)
+            if id: scriptcontext.doc.Objects.Replace(id, mesh)
             scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -708,8 +707,8 @@ def MeshVertexColors(mesh_id, colors=0):
         colors = [rhutil.coercecolor(c) for c in colors]
         mesh.VertexColors.Clear()
         for c in colors: mesh.VertexColors.Add(c)
-        objref = Rhino.DocObjects.ObjRef(rhutil.coerceguid(mesh_id))
-        scriptcontext.doc.Objects.Replace(objref, mesh)
+        id = rhutil.coerceguid(mesh_id)
+        if id: scriptcontext.doc.Objects.Replace(id, mesh)
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -886,7 +885,6 @@ def UnifyMeshNormals(object_id):
     rc = mesh.UnifyNormals()
     if rc>0:
         id = rhutil.coerceguid(object_id)
-        objref = Rhino.DocObjects.ObjRef(id)
-        scriptcontext.doc.Objects.Replace(objref, mesh)
+        if id: scriptcontext.doc.Objects.Replace(id, mesh)
         scriptcontext.doc.Views.Redraw()
     return rc
