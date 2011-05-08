@@ -235,10 +235,7 @@ def GetPointOnCurve( curve_id, message=None ):
       3d point if successful
       None on error
     """
-    curve_id = rhutil.coerceguid(curve_id)
-    if curve_id is None: return scriptcontext.errorhandler()
-    objref = Rhino.DocObjects.ObjRef(curve_id)
-    curve = objref.Curve()
+    curve = rhutil.coercecurve(curve_id)
     if curve is None: return scriptcontext.errorhandler()
     gp = Rhino.Input.Custom.GetPoint()
     if message: gp.SetCommandPrompt(message)
@@ -279,21 +276,18 @@ def GetPointOnSurface( surface_id, message=None ):
       3d point if successful
       None on error
     """
-    surface_id = rhutil.coerceguid(surface_id)
-    if( surface_id==None ): return scriptcontext.errorhandler()
-    objref = Rhino.DocObjects.ObjRef(surface_id)
-    surfOrBrep = objref.Surface()
-    if( surfOrBrep==None ):
-        surfOrBrep = objref.Brep()
-        if( surfOrBrep==None ): return scriptcontext.errorhandler()
+    surfOrBrep = rhutil.coercesurface(surface_id)
+    if not surfOrBrep:
+        surfOrBrep = rhutil.coercebrep(surface_id)
+        if not surfOrBrep: return scriptcontext.errorhandler()
     gp = Rhino.Input.Custom.GetPoint()
     if message: gp.SetCommandPrompt(message)
-    if( isinstance(surfOrBrep,Rhino.Geometry.Surface) ):
+    if isinstance(surfOrBrep,Rhino.Geometry.Surface):
         gp.Constrain(surfOrBrep,False)
     else:
         gp.Constrain(surfOrBrep, -1, -1, False)
     gp.Get()
-    if( gp.CommandResult() != Rhino.Commands.Result.Success ):
+    if gp.CommandResult()!=Rhino.Commands.Result.Success:
         return scriptcontext.errorhandler()
     pt = gp.Point()
     gp.Dispose()
