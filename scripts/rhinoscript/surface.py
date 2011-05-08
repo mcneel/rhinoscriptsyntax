@@ -1301,19 +1301,18 @@ def OffsetSurface( surface_id, distance, tolerance=None ):
       identifier of the new object if successful
       None on error
     """
-    surface_id = rhutil.coerceguid(surface_id)
-    if( surface_id==None ): return scriptcontext.errorhandler()
-    objref = Rhino.DocObjects.ObjRef(surface_id)
-    face = objref.Face()
-    objref.Dispose()
-    if( face==None ): return scriptcontext.errorhandler()
-    if( tolerance==None ): tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+    brep = rhutil.coercebrep(surface_id)
+    face = None
+    if brep and brep.IsSurface: face = brep.Faces[0]
+    if face is None: return scriptcontext.errorhandler()
+    if tolerance is None: tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     newbrep = Rhino.Geometry.Brep.CreateFromOffsetFace(face, distance, tolerance, False, False)
-    if( newbrep==None ): return scriptcontext.errorhandler()
+    if newbrep is None: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddBrep(newbrep)
-    if( rc==System.Guid.Empty ): return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
+
 
 def RebuildSurface(object_id, degree=(3,3), pointcount=(10,10)):
     """

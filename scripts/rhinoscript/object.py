@@ -8,8 +8,7 @@ def __copyhelper(object_id, xform=None):
     object_id = rhutil.coerceguid(object_id)
     if object_id is None: return None
     if xform is None: xform = Rhino.Geometry.Transform.Identity
-    objref = Rhino.DocObjects.ObjRef(object_id)
-    rc = scriptcontext.doc.Objects.Transform(objref, xform, False)
+    rc = scriptcontext.doc.Objects.Transform(object_id, xform, False)
     if rc!=System.Guid.Empty: return rc
 
 

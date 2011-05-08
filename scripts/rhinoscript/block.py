@@ -5,14 +5,8 @@ import math
 import System.Guid
 
 def __InstanceObjectFromId( id ):
-    id = rhutil.coerceguid(id)
-    if id is None: return scriptcontext.errorhandler()
-    objref = Rhino.DocObjects.ObjRef(id)
-    instance = objref.Object()
-    if type(instance) is Rhino.DocObjects.InstanceObject: pass
-    else: instance = None
-    objref.Dispose()
-    return instance
+    rhobj = rhutil.coercerhinoobject(id)
+    if isinstance(rhobj, Rhino.DocObject.InstanceObject): return rhobj
 
 
 def BlockContainerCount(block_name):
@@ -246,7 +240,7 @@ def ExplodeBlockInstance( object_id ):
                 rhobj = scriptcontext.doc.Objects.Find(id)
                 rhobj.Select(True, True)
     if rc:
-        scriptcontext.doc.Objects.Delete( Rhino.DocObjects.ObjRef(instance) )
+        scriptcontext.doc.Objects.Delete(instance)
         scriptcontext.doc.Views.Redraw()
         return rc
     return scriptcontext.errorhandler()

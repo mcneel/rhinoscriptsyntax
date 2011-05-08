@@ -725,26 +725,23 @@ def CurveArrows(curve_id, arrow_style=None):
         if arrow_style is specified, the previos arrow style
         None on error
     """
-    id = rhutil.coerceguid(curve_id)
-    if id is None: return scriptcontext.errorhandler()
-    objref = Rhino.DocObjects.ObjRef(id)
-    curve = objref.Curve()
-    rc = None
-    if curve:
-        attr = objref.Object().Attributes
-        rc = attr.ObjectDecoration
-        if arrow_style:
-            if arrow_style==0:
-                attr.ObjectDecoration = Rhino.DocObjects.ObjectDecoration.None
-            elif arrow_style==1:
-                attr.ObjectDecoration = Rhino.DocObjects.ObjectDecoration.StartArrowhead
-            elif arrow_style==2:
-                attr.ObjectDecoration = Rhino.DocObjects.ObjectDecoration.EndArrowhead
-            elif arrow_style==3:
-                attr.ObjectDecoration = Rhino.DocObjects.ObjectDecoration.BothArrowhead
-            scriptcontext.doc.Objects.ModifyAttributes(objref, attr, True)
-            scriptcontext.doc.Views.Redraw()
-    objref.Dispose()
+    curve = rhutil.coercecurve(curve_id)
+    rhobj = rhutil.coercerhinoobject(curve_id)
+    if curve is None or rhobj is None: return scriptcontext.errorhandler()
+    attr = rhobj.Attributes
+    rc = attr.ObjectDecoration
+    if arrow_style:
+        if arrow_style==0:
+            attr.ObjectDecoration = Rhino.DocObjects.ObjectDecoration.None
+        elif arrow_style==1:
+            attr.ObjectDecoration = Rhino.DocObjects.ObjectDecoration.StartArrowhead
+        elif arrow_style==2:
+            attr.ObjectDecoration = Rhino.DocObjects.ObjectDecoration.EndArrowhead
+        elif arrow_style==3:
+            attr.ObjectDecoration = Rhino.DocObjects.ObjectDecoration.BothArrowhead
+        id = rhutil.coerceguid(curve_id)
+        if id: scriptcontext.doc.Objects.ModifyAttributes(id, attr, True)
+        scriptcontext.doc.Views.Redraw()
     if rc==Rhino.DocObjects.ObjectDecoration.None: return 0
     if rc==Rhino.DocObjects.ObjectDecoration.StartArrowhead: return 1
     if rc==Rhino.DocObjects.ObjectDecoration.EndArrowhead: return 2
@@ -2315,9 +2312,9 @@ def MakeCurveNonPeriodic( curve_id, delete_input=False ):
         if type(curve_id) is Rhino.DocObjects.ObjRef: pass
         else: curve_id = rhutil.coerceguid(curve_id)
         if curve_id:
-          rc = scriptcontext.doc.Objects.Replace(curve_id, nc)
-          if not rc: return scriptcontext.errorhandler()
-          rc = rhutil.coerceguid(curve_id)
+            rc = scriptcontext.doc.Objects.Replace(curve_id, nc)
+            if not rc: return scriptcontext.errorhandler()
+            rc = rhutil.coerceguid(curve_id)
     else:
         attrs = None
         if type(scriptcontext.doc) is Rhino.RhinoDoc:
@@ -2325,7 +2322,6 @@ def MakeCurveNonPeriodic( curve_id, delete_input=False ):
             if rhobj: attrs = rhobj.Attributes
         rc = scriptcontext.doc.Objects.AddCurve(nc, attrs)
         if rc==System.Guid.Empty: return scriptcontext.errorhandler()
-    objref.Dispose()
     scriptcontext.doc.Views.Redraw()
     return rc
 

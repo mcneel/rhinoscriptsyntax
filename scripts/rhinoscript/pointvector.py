@@ -130,50 +130,43 @@ def PointClosestObject(point, object_ids):
     if not object_ids or not point: return scriptcontext.errorhandler()
     closest = None
     for id in object_ids:
-        objref = Rhino.DocObjects.ObjRef(id)
-        if objref.Object() is None:
-            objref.Dispose()
-            pass
-        point_geometry = objref.Point()
-        if point_geometry:
+        geom = rhutil.coercegeometry(id)
+        if not geom: continue
+        point_geometry = geom
+        if isinstance(point_geometry, Rhino.Geometry.Point):
             distance = point.DistanceTo( point_geometry.Location )
             if closest is None or distance<closest[0]:
                 closest = distance, id, point_geometry.Location
-            objref.Dispose()
             continue
-        point_cloud = objref.PointCloud()
-        if point_cloud:
+        point_cloud = geom
+        if isinstance(point_cloud, Rhino.Geometry.PointCloud):
             index = point_cloud.ClosestPoint(point)
             if index>=0:
                 distance = point.DistanceTo( point_cloud[index].Location )
                 if closest is None or distance<closest[0]:
                     closest = distance, id, point_cloud[index].Location
-            objref.Dispose()
             continue
-        curve = objref.Curve()
-        if curve:
+        curve = geom
+        if isinstance(curve, Rhino.Geometry.Curve):
             rc, t = curve.ClosestPoint(point)
             if rc:
                 distance = point.DistanceTo( curve.PointAt(t) )
                 if closest is None or distance<closest[0]:
                     closest = distance, id, curve.PointAt(t)
-            objref.Dispose()
             continue
-        brep = objref.Brep()
-        if brep:
+        brep = geom
+        if isinstance(brep, Rhino.Geometry.Brep):
             brep_closest = brep.ClosestPoint(point)
             distance = point.DistanceTo( brep_closest )
             if closest is None or distance<closest[0]:
                 closest = distance, id, brep_closest
-            objref.Dispose()
             continue
-        mesh = objref.Mesh()
-        if mesh:
+        mesh = geom
+        if isinstance(mesh, Rhino.Geometry.Mesh):
             mesh_closest = mesh.ClosestPoint(point)
             distance = point.DistanceTo( mesh_closest )
             if closest is None or distance<closest[0]:
                 closest = distance, id, mesh_closest
-            objref.Dispose()
             continue
     if closest is None: return scriptcontext.errorhandler()
     return closest[1], closest[2]
@@ -296,11 +289,7 @@ def ProjectPointToMesh(points, mesh_ids, direction):
     if rhutil.coerceguid(mesh_ids): mesh_ids = [mesh_ids]
     meshes = []
     for id in mesh_ids:
-        id = rhutil.coerceguid(id)
-        if id is None: return scriptcontext.errorhandler()
-        objref = Rhino.DocObjects.ObjRef(id)
-        mesh = objref.Mesh()
-        objref.Dispose()
+        mesh = rhutil.coercemesh(id)
         if mesh is None: return scriptcontext.errorhandler()
         meshes.append(mesh)
     tolerance = scriptcontext.doc.ModelAbsoluteTolerance
@@ -329,11 +318,7 @@ def ProjectPointToSurface(points, surface_ids, direction):
     if rhutil.coerceguid(surface_ids): surface_ids = [surface_ids]
     breps = []
     for id in surface_ids:
-        id = rhutil.coerceguid(id)
-        if id is None: return scriptcontext.errorhandler()
-        objref = Rhino.DocObjects.ObjRef(id)
-        brep = objref.Brep()
-        objref.Dispose()
+        brep = rhutil.coercebrep(id)
         if brep is None: return scriptcontext.errorhandler()
         breps.append(brep)
     tolerance = scriptcontext.doc.ModelAbsoluteTolerance

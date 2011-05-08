@@ -559,6 +559,18 @@ def coercebrep( id ):
     return None
 
 
+def coercegeometry( id ):
+    "attempt to get GeometryBase class from given input"
+    if isinstance(id, Rhino.Geometry.GeometryBase): return id
+    if type(id) is Rhino.DocObjects.ObjRef: return id.Geometry()
+    if isinstance(id, Rhino.DocObjects.RhinoObject): return id.Geometry
+    id = coerceguid(id)
+    if id is None: return None
+    rhobj = scriptcontext.doc.Objects.Find(id)
+    if rhobj: return rhobj.Geometry
+    return None
+
+
 def coercecurve( id, segment_index=-1 ):
     "attempt to get curve geometry from the document with a given id"
     if isinstance(id, Rhino.Geometry.Curve): return id
@@ -591,8 +603,8 @@ def coercesurface(object_id):
 
 def coercemesh( object_id ):
     "attempt to get mesh geometry from the document with a given id"
-    if isinstance(object_id, Rhino.Geometry.Mesh): return object_id
     if type(object_id) is Rhino.DocObjects.ObjRef: return object_id.Mesh()
+    if isinstance(object_id, Rhino.Geometry.Mesh): return object_id
     object_id = coerceguid(object_id)
     if object_id is None: return None
     meshObj = scriptcontext.doc.Objects.Find(id)

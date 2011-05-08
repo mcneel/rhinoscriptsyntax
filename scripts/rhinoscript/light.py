@@ -5,12 +5,8 @@ import math
 
 
 def __coercelight(id):
-    id = rhutil.coerceguid(id)
-    if not id: return None
-    objref = Rhino.DocObjects.ObjRef(id)
-    light = objref.Light()
-    objref.Dispose()
-    return light
+    light = rhutil.coercegeometry(id)
+    if isinstance(light, Rhino.Geometry.Light): return light
 
 
 def AddDirectionalLight(start_point, end_point):

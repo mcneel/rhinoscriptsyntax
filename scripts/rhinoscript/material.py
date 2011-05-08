@@ -37,11 +37,7 @@ def AddMaterialToObject(object_id):
       material index of the object if successful
       None on error
     """
-    object_id = rhutil.coerceguid(object_id)
-    if object_id is None: return scriptcontext.errorhandler()
-    objref = Rhino.DocObjects.ObjRef(object_id)
-    rhino_object = objref.Object()
-    objref.Dispose()
+    rhino_object = rhutil.coercerhinoobject(object_id)
     if rhino_object is None: return scriptcontext.errorhandler()
     attr = rhino_object.Attributes
     if attr.MaterialSource!=Rhino.DocObjects.ObjectMaterialSource.MaterialFromObject:
