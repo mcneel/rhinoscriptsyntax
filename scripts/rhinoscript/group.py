@@ -12,8 +12,11 @@ def AddGroup( group_name=None ):
       None is not successful or on error
     """
     index = -1
-    if group_name is None: index = scriptcontext.doc.Groups.Add()
-    else: index = scriptcontext.doc.Groups.Add( str(group_name) )
+    if group_name is None:
+        index = scriptcontext.doc.Groups.Add()
+    else:
+        if not isinstance(group_name, str): group_name = str(group_name)
+        index = scriptcontext.doc.Groups.Add( group_name )
     rc = scriptcontext.doc.Groups.GroupName(index)
     if rc is None: return scriptcontext.errorhandler()
     return rc
@@ -28,7 +31,8 @@ def AddObjectsToGroup( object_ids, group_name ):
     Returns:
       number of objects added to the group
     """
-    index = scriptcontext.doc.Groups.Find(str(group_name), True)
+    if not isinstance(group_name, str): group_name = str(group_name)
+    index = scriptcontext.doc.Groups.Find(group_name, True)
     object_ids = rhutil.coerceguidlist(object_ids)
     if index<0 or not object_ids: return 0
     if not scriptcontext.doc.Groups.AddToGroup(index, object_ids): return 0
@@ -45,7 +49,8 @@ def AddObjectToGroup( object_id, group_name ):
       True or False representing success or failure
     """
     object_id = rhutil.coerceguid(object_id)
-    index = scriptcontext.doc.Groups.Find(str(group_name), True)
+    if not isinstance(group_name, str): group_name = str(group_name)
+    index = scriptcontext.doc.Groups.Find(group_name, True)
     if object_id is None or index<0: return False
     return scriptcontext.doc.Groups.AddToGroup(index, object_id)
 
@@ -59,7 +64,8 @@ def DeleteGroup( group_name ):
     Returns:
       True or False representing success or failure
     """
-    index = scriptcontext.doc.Groups.Find(str(group_name), True)
+    if not isinstance(group_name, str): group_name = str(group_name)
+    index = scriptcontext.doc.Groups.Find(group_name, True)
     return scriptcontext.doc.Groups.Delete(index)
 
 
@@ -100,7 +106,8 @@ def IsGroup( group_name ):
     Returns:
       True or False
     """
-    return scriptcontext.doc.Groups.Find(str(group_name), True)>=0
+    if not isinstance(group_name, str): group_name = str(group_name)
+    return scriptcontext.doc.Groups.Find(group_name, True)>=0
 
 
 def IsGroupEmpty( group_name ):
@@ -112,7 +119,8 @@ def IsGroupEmpty( group_name ):
       True or False if group_name exists
       None if group_name does not exist
     """
-    index = scriptcontext.doc.Groups.Find(str(group_name), True)
+    if not isinstance(group_name, str): group_name = str(group_name)
+    index = scriptcontext.doc.Groups.Find(group_name, True)
     if index<0: return scriptcontext.errorhandler()
     return scriptcontext.doc.Groups.GroupObjectCount(index)>0
 
@@ -127,7 +135,8 @@ def LockGroup( group_name ):
       Number of objects that were locked if successful
       None on error
     """
-    index = scriptcontext.doc.Groups.Find(str(group_name), True)
+    if not isinstance(group_name, str): group_name = str(group_name)
+    index = scriptcontext.doc.Groups.Find(group_name, True)
     if index<0: return scriptcontext.errorhandler()
     return scriptcontext.doc.Groups.Lock(index);
 
@@ -173,7 +182,8 @@ def RemoveObjectsFromGroup( object_ids, group_name ):
       The number of objects removed from the group is successful
       None on error
     """
-    index = scriptcontext.doc.Groups.Find(str(group_name), True)
+    if not isinstance(group_name, str): group_name = str(group_name)
+    index = scriptcontext.doc.Groups.Find(group_name, True)
     if object_ids is None or index<0: return scriptcontext.errorhandler()
     if rhutil.coerceguid(objects_ids) is not None:
         object_ids = [object_ids]
@@ -200,9 +210,11 @@ def RenameGroup( old_name, new_name ):
       the new group name if successful
       None on error
     """
-    index = scriptcontext.doc.Groups.Find(str(old_name), True)
+    if not isinstance(old_name, str): old_name = str(old_name)
+    index = scriptcontext.doc.Groups.Find(old_name, True)
     if index<0: return scriptcontext.errorhandler()
-    if scriptcontext.doc.Groups.ChangeGroupName(index, str(new_name)):
+    if not isinstance(new_name, str): new_name = str(new_name)
+    if scriptcontext.doc.Groups.ChangeGroupName(index, new_name):
         return new_name
     return scriptcontext.errorhandler()
 
@@ -217,7 +229,8 @@ def ShowGroup( group_name ):
       The number of objects that were shown if successful
       None on error  
     """
-    index = scriptcontext.doc.Groups.Find(str(group_name), True)
+    if not isinstance(group_name, str): group_name = str(group_name)
+    index = scriptcontext.doc.Groups.Find(group_name, True)
     if index<0: return scriptcontext.errorhandler()
     return scriptcontext.doc.Groups.Show(index);
 
@@ -232,6 +245,7 @@ def UnlockGroup( group_name ):
       The number of objects that were unlocked if successful
       None on error  
     """
-    index = scriptcontext.doc.Groups.Find(str(group_name), True)
+    if not isinstance(group_name, str): group_name = str(group_name)
+    index = scriptcontext.doc.Groups.Find(group_name, True)
     if index<0: return scriptcontext.errorhandler()
     return scriptcontext.doc.Groups.Unlock(index);

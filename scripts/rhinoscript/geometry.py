@@ -383,7 +383,8 @@ def TextDotText(object_id, text=None):
     if isinstance(textdot, Rhino.Geometry.TextDot):
         rc = textdot.Text
         if text is not None:
-            textdot.Text = str(text)
+            if not isinstance(text, str): text = str(text)
+            textdot.Text = text
             id = rhutil.coerceguid(object_id)
             if id: scriptcontext.doc.Objects.Replace(id, textdot)
             scriptcontext.doc.Views.Redraw()

@@ -29,7 +29,9 @@ def AddLayer(name=None, color=None, visible=True, locked=False, parent=None):
       None if not successful or on error
     """
     layer = Rhino.DocObjects.Layer.GetDefaultLayerProperties()
-    if name: layer.Name = str(name)
+    if name:
+        if not isinstance(name, str): name = str(name)
+        layer.Name = name
     color = rhutil.coercecolor(color)
     if color: layer.Color = color
     layer.IsVisible = visible
@@ -266,7 +268,8 @@ def LayerLinetype(layer, linetype=None):
     index = layer.LinetypeIndex
     rc = scriptcontext.doc.Linetypes[index].Name
     if linetype:
-        index = scriptcontext.doc.Linetypes.Find(str(linetype), True)
+        if not isinstance(linetype, str): linetype = str(linetype)
+        index = scriptcontext.doc.Linetypes.Find(linetype, True)
         if index==-1: return scriptcontext.errorhandler()
         layer.LinetypeIndex = index
         layer.CommitChanges()

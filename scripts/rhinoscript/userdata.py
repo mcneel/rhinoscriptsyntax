@@ -67,7 +67,7 @@ def GetUserText(object_id, key=None, attached_to_geometry=False):
     else:
         userstrings = source.GetUserStrings()
         if userstrings and userstrings.Count>0:
-            rc = [str(userstrings.GetKey(i)) for i in range(userstrings.Count)]
+            rc = [userstrings.GetKey(i) for i in range(userstrings.Count)]
     return rc
 
 

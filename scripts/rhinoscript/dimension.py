@@ -40,8 +40,11 @@ def AddLeader( points, view=None, text=None ):
     if points is None or len(points)<2: return scriptcontext.errorhandler()
     rc = System.Guid.Empty
     if view is None:
-        if text is None: rc = scriptcontext.doc.Objects.AddLeader(points)
-        else: rc = scriptcontext.doc.Objects.AddLeader(str(text), points)
+        if text is None:
+            rc = scriptcontext.doc.Objects.AddLeader(points)
+        else:
+            if not isinstance(text, str): text = str(text)
+            rc = scriptcontext.doc.Objects.AddLeader(text, points)
     else:
         view = __viewhelper(view)
         plane = view.ActiveViewport.ConstructionPlane()
@@ -50,8 +53,11 @@ def AddLeader( points, view=None, text=None ):
             cprc, s, t = plane.ClosestParameter( point )
             if not cprc: return scriptcontext.errorhandler()
             points2d.append( Rhino.Geometry.Point2d(s,t) )
-        if text is None: rc = scriptcontext.doc.Objects.AddLeader(plane, points2d)
-        else: rc = scriptcontext.doc.Objects.AddLeader(str(text), plane, points2d)
+        if text is None:
+            rc = scriptcontext.doc.Objects.AddLeader(plane, points2d)
+        else:
+            if not isinstance(text, str): text = str(text)
+            rc = scriptcontext.doc.Objects.AddLeader(text, plane, points2d)
     if( rc==System.Guid.Empty ): return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc

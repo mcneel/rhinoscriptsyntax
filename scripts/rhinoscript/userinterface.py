@@ -23,8 +23,12 @@ def BrowseForFolder(folder=None, message=None, title=None):
       None on error
     """
     dlg = System.Windows.Forms.FolderBrowserDialog()
-    if folder: dlg.SelectedPath = str(folder)
-    if message: dlg.Description = str(message)
+    if folder:
+        if not isinstance(folder, str): folder = str(folder)
+        dlg.SelectedPath = folder
+    if message:
+        if not isinstance(message, str): message = str(message)
+        dlg.Description = message
     if dlg.ShowDialog()==System.Windows.Forms.DialogResult.OK:
         return dlg.SelectedPath
     return None
@@ -482,7 +486,7 @@ def MessageBox(message, buttons=0, title=""):
         defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button2
     elif defbtntype==512:
         defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button3
-    message = str(message)
+    if not isinstance(message, str): message = str(message)
     dlg_result = Rhino.UI.Dialogs.ShowMessageBox(message, title, btn, icon, defbtn)
     if dlg_result==System.Windows.Forms.DialogResult.OK:     return 1
     if dlg_result==System.Windows.Forms.DialogResult.Cancel: return 2
