@@ -95,10 +95,11 @@ def ClipboardText(text=None):
       None if not successful, or on error
     """
     rc = None
-    if( System.Windows.Forms.Clipboard.ContainsText() ):
+    if System.Windows.Forms.Clipboard.ContainsText():
         rc = System.Windows.Forms.Clipboard.GetText()
-    if( text!=None ):
-        System.Windows.Forms.Clipboard.SetText(str(text))
+    if text:
+        if not isinstance(text, str): text = str(text)
+        System.Windows.Forms.Clipboard.SetText(text)
     return rc
 
 
@@ -592,7 +593,7 @@ def coercesurface(object_id):
     if type(object_id) is Rhino.DocObjects.ObjRef: return object_id.Face()
     object_id = coerceguid(object_id)
     if object_id is None: return None
-    srfObj = scriptcontext.doc.Objects.Find(id)
+    srfObj = scriptcontext.doc.Objects.Find(object_id)
     if srfObj:
         srf = srfObj.Geometry
         if isinstance(srf, Rhino.Geometry.Surface): return srf
@@ -607,7 +608,7 @@ def coercemesh( object_id ):
     if isinstance(object_id, Rhino.Geometry.Mesh): return object_id
     object_id = coerceguid(object_id)
     if object_id is None: return None
-    meshObj = scriptcontext.doc.Objects.Find(id)
+    meshObj = scriptcontext.doc.Objects.Find(object_id)
     if meshObj:
         mesh = meshObj.Geometry
         if isinstance(mesh, Rhino.Geometry.Mesh): return mesh
