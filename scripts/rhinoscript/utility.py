@@ -374,9 +374,7 @@ def coerce3dpoint(point):
     "Convert input into a Rhino.Geometry.Point3d if possible."
     if point is None or type(point) is Rhino.Geometry.Point3d: return point
     if hasattr(point, "__len__") and len(point)==3 and hasattr(point, "__getitem__"):
-        if type(point[0]) is float or type(point[0]) is int:
-            return Rhino.Geometry.Point3d(point[0], point[1], point[2])
-        return None
+        return Rhino.Geometry.Point3d(float(point[0]), float(point[1]), float(point[2]))
     if type(point) is Rhino.Geometry.Vector3d or type(point) is Rhino.Geometry.Point3f:
         return Rhino.Geometry.Point3d(point.X, point.Y, point.Z)
     if type(point) is str:
