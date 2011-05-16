@@ -1428,9 +1428,9 @@ def ShrinkTrimmedSurface(object_id, create_copy=False):
 
 
 def __GetMassProperties(object_id, area):
-    surface = rhutil.coercesurface(object_id)
+    surface = rhutil.coercebrep(object_id)
     if surface is None:
-        surface = rhutil.coercebrep(object_id)
+        surface = rhutil.coercesurface(object_id)
         if surface is None: return None
     if area==True: return Rhino.Geometry.AreaMassProperties.Compute(surface)
     if not surface.IsSolid: return None
