@@ -1789,7 +1789,11 @@ def SurfaceNormal(surface_id, uv_parameter):
     """
     surface = rhutil.coercesurface(surface_id)
     if surface is None: return scriptcontext.errorhandler()
-    return surface.NormalAt(uv_parameter[0], uv_parameter[1])
+    normal = surface.NormalAt(uv_parameter[0], uv_parameter[1])
+    #check to see if this is a reversed BrepFace
+    brep = rhutil.coercebrep(surface_id)
+    if brep and brep.Faces[0].OrientationIsReversed: normal.Reverse()
+    return normal
 
 
 def SurfaceNormalizedParameter(surface_id, parameter):
