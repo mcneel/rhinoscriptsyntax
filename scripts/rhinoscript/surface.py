@@ -1141,6 +1141,8 @@ def IsSurface( object_id ):
     Returns:
       True if successful, otherwise False.
     """
+    brep = rhutil.coercebrep(object_id)
+    if brep and brep.Faces.Count==1: return True
     surface = rhutil.coercesurface(object_id)
     return (surface!=None)
 
