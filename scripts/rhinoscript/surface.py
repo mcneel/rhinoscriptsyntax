@@ -1535,7 +1535,10 @@ def SurfaceClosestPoint(surface_id, test_point):
       The U,V parameters of the closest point on the surface if successful.
       None on error.
     """
-    surface = rhutil.coercesurface(surface_id)
+    surface = None
+    brep = rhutil.coercebrep(surface_id)
+    if brep and brep.Faces.Count==1: surface=brep
+    else: surface = rhutil.coercesurface(surface_id)
     point = rhutil.coerce3dpoint(test_point)
     if surface is None or point is None: return scriptcontext.errorhandler()
     rc, u, v = surface.ClosestPoint(point)
