@@ -6,7 +6,7 @@ import System.Guid
 
 def __InstanceObjectFromId( id ):
     rhobj = rhutil.coercerhinoobject(id)
-    if isinstance(rhobj, Rhino.DocObject.InstanceObject): return rhobj
+    if isinstance(rhobj, Rhino.DocObjects.InstanceObject): return rhobj
 
 
 def BlockContainerCount(block_name):
