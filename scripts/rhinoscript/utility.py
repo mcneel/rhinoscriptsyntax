@@ -595,8 +595,9 @@ def coercesurface(object_id):
     if srfObj:
         srf = srfObj.Geometry
         if isinstance(srf, Rhino.Geometry.Surface): return srf
-        if isinstance(srf, Rhino.Geometry.Brep) and srf.IsSurface:
-            return srf.Faces[0].UnderlyingSurface()
+        #single face breps are considered surfaces in the context of scripts
+        if isinstance(srf, Rhino.Geometry.Brep) and srf.Faces.Count==1:
+            return srf.Faces[0]
     return None
 
 
