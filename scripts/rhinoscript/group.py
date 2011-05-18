@@ -36,7 +36,7 @@ def AddObjectsToGroup( object_ids, group_name ):
     object_ids = rhutil.coerceguidlist(object_ids)
     if index<0 or not object_ids: return 0
     if not scriptcontext.doc.Groups.AddToGroup(index, object_ids): return 0
-    return len(ids)
+    return len(object_ids)
 
 
 def AddObjectToGroup( object_id, group_name ):
