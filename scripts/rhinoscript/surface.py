@@ -214,7 +214,8 @@ def AddPlanarSrf( object_ids ):
       None on error
     """
     if not object_ids: return scriptcontext.errorhandler()
-    if getattr(object_ids, "__iter__", True): object_ids = [object_ids]
+    if getattr(object_ids, "__iter__", False): pass
+    else: object_ids = [object_ids]
     curves = Rhino.Collections.CurveList()
     for id in object_ids:
         curve = rhutil.coercecurve(id)
