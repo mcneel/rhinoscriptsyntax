@@ -1758,7 +1758,7 @@ def DivideCurveLength(curve_id, length, create_points=False, return_points=True)
     if return_points or create_points:
         outputpoints = [curve.PointAt(t) for t in rc]
         if create_points:
-            for point in outpoints:
+            for point in outputpoints:
                 if (point.IsValid): scriptcontext.doc.Objects.AddPoint(point)
         if return_points: rc = outputpoints
     return rc
