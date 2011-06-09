@@ -383,9 +383,9 @@ def frange(start, stop, step):
     return [x for x in fxrange(start, stop, step)]
 
 
-def coerce3dpoint(point):
+def coerce3dpoint(point, raise_on_error=False):
     "Convert input into a Rhino.Geometry.Point3d if possible."
-    if point is None or type(point) is Rhino.Geometry.Point3d: return point
+    if type(point) is Rhino.Geometry.Point3d: return point
     if hasattr(point, "__len__") and len(point)==3 and hasattr(point, "__getitem__"):
         return Rhino.Geometry.Point3d(float(point[0]), float(point[1]), float(point[2]))
     if type(point) is Rhino.Geometry.Vector3d or type(point) is Rhino.Geometry.Point3f:
@@ -393,7 +393,7 @@ def coerce3dpoint(point):
     if type(point) is str:
         point = point.split(',')
         return Rhino.Geometry.Point3d( float(point[0]), float(point[1]), float(point[2]) )
-    return None
+    if raise_on_error: raise ValueError("Could not convert %s to a Point3d" % point)
 
 
 def coerce2dpoint(point):
@@ -412,19 +412,12 @@ def coerce2dpoint(point):
     return None
 
 
-def coerce3dvector(vector):
+def coerce3dvector(vector, raise_on_error=False):
     "Convert input into a Rhino.Geometry.Vector3d if possible."
-    if vector is None or type(vector) is Rhino.Geometry.Vector3d: return vector
-    if type(vector) is list or type(vector) is tuple:
-        length = len(vector)
-        if length==3 and type(vector[0]) is not list:
-            return Rhino.Geometry.Vector3d(vector[0], vector[1], vector[2])
-        return None
-    if type(vector) is Rhino.Geometry.Point3d or type(vector) is Rhino.Geometry.Point3f:
-        return Rhino.Geometry.Vector3d(vector.X, vector.Y, vector.Z)
-    if type(vector) is Rhino.Geometry.Vector3f:
-        return Rhino.Geometry.Vector3d(vector.X, vector.Y, vector.Z)
-    return None
+    if type(vector) is Rhino.Geometry.Vector3d: return vector
+    point = coerce3dpoint(vector, False)
+    if point: return Rhino.Geometry.Vector3d(point.X, point.Y, point.Z)
+    if raise_on_error: raise ValueError("Could not convert %s to a Vector3d" % vector)
 
 
 def coerce3dpointlist(points):
@@ -494,10 +487,9 @@ def coerceplane(plane):
             ypoint = Rhino.Geometry.Point3d(plane[2][0],plane[2][1],plane[2][2])
             rc     = Rhino.Geometry.Plane(origin, xpoint, ypoint)
             return rc
-    return None
 
 
-def coercexform(xform):
+def coercexform(xform, raise_on_bad_input=False):
     "Convert input into a Rhino.Transform if possible."
     t = type(xform)
     if t is Rhino.Geometry.Transform: return xform
@@ -507,10 +499,10 @@ def coercexform(xform):
             for j in range(4):
                 xf[i,j] = xform[i][j]
         return xf
-    return None
+    if raise_on_bad_input: raise TypeError("%s can not be converted to a Transform"%xform)
 
 
-def coerceguid(id):
+def coerceguid(id, raise_exception=False):
     if type(id) is System.Guid: return id
     if type(id) is str and len(id)>30:
         try:
@@ -519,8 +511,8 @@ def coerceguid(id):
         except:
             pass
     if (type(id) is list or type(id) is tuple) and len(id)==1:
-        return coerceguid(id[0])
-    return None
+        return coerceguid(id[0], raise_exception)
+    if raise_exception: raise TypeError("Parameter must be a Guid or string representing a Guid")
 
 
 def coerceguidlist(ids):
@@ -535,20 +527,20 @@ def coerceguidlist(ids):
     return rc
 
 
-def coerceboundingbox(bbox):
-    if bbox is None or type(bbox) is Rhino.Geometry.BoundingBox: return bbox
+def coerceboundingbox(bbox, raise_on_bad_input=False):
+    if type(bbox) is Rhino.Geometry.BoundingBox: return bbox
     points = coerce3dpointlist(bbox)
     if points: return Rhino.Geometry.BoundingBox(points)
-    return None
+    if raise_on_bad_input: raise TypeError("%s can not be converted to a BoundingBox"%bbox)
 
 
-def coercecolor(c):
-    if c is None or type(c) is System.Drawing.Color: return c
+def coercecolor(c, raise_if_bad_input=False):
+    if type(c) is System.Drawing.Color: return c
     if type(c) is list or type(c) is tuple:
         if len(c)==3: return System.Drawing.Color.FromArgb(c[0], c[1], c[2])
         elif len(c)==4: return System.Drawing.Color.FromArgb(c[0], c[1], c[2], c[3])
     if type(c)==type(1): return System.Drawing.Color.FromArgb(c)
-    return None
+    if raise_if_bad_input: raise TypeError("%s can not be converted to a Color"%c)
 
 
 def coerceline(line):
@@ -627,8 +619,9 @@ def coercemesh( object_id ):
     return None
 
 
-def coercerhinoobject(object_id):
+def coercerhinoobject(object_id, raise_if_bad_input=False, raise_if_missing=False):
     "attempt to get RhinoObject from the document with a given id"
-    object_id = coerceguid(object_id)
+    object_id = coerceguid(object_id, raise_if_bad_input)
     if object_id is None: return None
-    return scriptcontext.doc.Objects.Find(object_id)
+    rc = scriptcontext.doc.Objects.Find(object_id)
+    if not rc and raise_if_missing: raise ValueError("%s does not exist in ObjectTable" % object_id)
