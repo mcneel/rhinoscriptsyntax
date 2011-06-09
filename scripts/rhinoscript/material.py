@@ -4,20 +4,17 @@ import utility as rhutil
 from layer import __getlayer
 
 def AddMaterialToLayer(layer):
-    """
-    Add a material to a layer and returns the new material's index. If the
-    layer already has a material, then the layer's current material index
-    is returned
+    """Add a material to a layer and returns the new material's index. If the
+    layer already has a material, then the layer's current material index is
+    returned
     Parameters:
       layer = name of an existing layer.
     Returns:
       Material index of the layer if successful
       None if not successful or on error
     """
-    layer = __getlayer(layer)
-    if layer is None: return scriptcontext.errorhandler()
-    if layer.RenderMaterialIndex>-1:
-        return layer.RenderMaterialIndex
+    layer = __getlayer(layer, True)
+    if layer.RenderMaterialIndex>-1: return layer.RenderMaterialIndex
     material_index = scriptcontext.doc.Materials.AddMaterial()
     layer.RenderMaterialIndex = material_index
     if scriptcontext.doc.Layers.Modify( layer, layer.LayerIndex, True):
