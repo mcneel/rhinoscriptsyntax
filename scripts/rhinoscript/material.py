@@ -24,8 +24,7 @@ def AddMaterialToLayer(layer):
 
 
 def AddMaterialToObject(object_id):
-    """
-    Adds a material to an object and returns the new material's index. If the
+    """Adds a material to an object and returns the new material's index. If the
     object already has a material, the the object's current material index is
     returned.
     Parameters:
@@ -51,8 +50,7 @@ def AddMaterialToObject(object_id):
 
     
 def CopyMaterial(source_index, destination_index):
-    """
-    Copies the definition of a source material to a destination material
+    """Copies the definition of a source material to a destination material
     Parameters:
       source_index, destination_index = indices of materials to copy
     Returns:
@@ -67,8 +65,7 @@ def CopyMaterial(source_index, destination_index):
 
 
 def IsMaterialDefault(material_index):
-    """
-    Verifies that a material is a copy of Rhino's built-in "default" material.
+    """Verifies that a material is a copy of Rhino's built-in "default" material.
     The default material is used by objects and layers that have not been
     assigned a material.
     Parameters:
@@ -81,8 +78,7 @@ def IsMaterialDefault(material_index):
 
 
 def IsMaterialReference(material_index):
-    """
-    Verifies a material is referenced from another file
+    """Verifies a material is referenced from another file
     Parameters:
       material_index = the zero-based material index
     Returns:
@@ -93,8 +89,7 @@ def IsMaterialReference(material_index):
 
 
 def MatchMaterial(source, destination):
-    """
-    Copies the material definition from one material to one or more objects
+    """Copies the material definition from one material to one or more objects
     Parameters:
       source = source material index -or- identifier of the source object.
         The object must have a material assigned
@@ -127,8 +122,7 @@ def MatchMaterial(source, destination):
 
 
 def MaterialBump(material_index, filename=None):
-    """
-    Returns or modifies a material's bump bitmap filename
+    """Returns or modifies a material's bump bitmap filename
     Parameters:
       material_index = zero based material index
       filename[opt] = the bump bitmap filename
@@ -149,8 +143,7 @@ def MaterialBump(material_index, filename=None):
 
 
 def MaterialColor(material_index, color=None):
-    """
-    Returns or modifies a material's diffuse color.
+    """Returns or modifies a material's diffuse color.
     Parameters:
       material_index = zero based material index
       color[opt] = the new color value
@@ -171,8 +164,7 @@ def MaterialColor(material_index, color=None):
 
 
 def MaterialEnvironmentMap(material_index, filename=None):
-    """
-    Returns or modifies a material's environment bitmap filename.
+    """Returns or modifies a material's environment bitmap filename.
     Parameters:
       material_index = zero based material index
       filename[opt] = the environment bitmap filename
@@ -193,8 +185,7 @@ def MaterialEnvironmentMap(material_index, filename=None):
 
 
 def MaterialName(material_index, name=None):
-    """
-    Returns or modifies a material's user defined name
+    """Returns or modifies a material's user defined name
     Parameters:
       material_index = zero based material index
       name[opt] = the new name
@@ -213,8 +204,7 @@ def MaterialName(material_index, name=None):
 
 
 def MaterialReflectiveColor(material_index, color=None):
-    """
-    Returns or modifies a material's reflective color.
+    """Returns or modifies a material's reflective color.
     Parameters:
       material_index = zero based material index
       color[opt] = the new color value
@@ -235,8 +225,7 @@ def MaterialReflectiveColor(material_index, color=None):
 
 
 def MaterialShine(material_index, shine=None):
-    """
-    Returns or modifies a material's shine value
+    """Returns or modifies a material's shine value
     Parameters:
       material_index = zero based material index
       shine[opt] = the new shine value. A material's shine value ranges from 0.0 to 255.0, with
@@ -257,8 +246,7 @@ def MaterialShine(material_index, shine=None):
 
 
 def MaterialTexture(material_index, filename=None):
-    """
-    Returns or modifies a material's texture bitmap filename
+    """Returns or modifies a material's texture bitmap filename
     Parameters:
       material_index = zero based material index
       filename[opt] = the texture bitmap filename
@@ -279,8 +267,7 @@ def MaterialTexture(material_index, filename=None):
 
 
 def MaterialTransparency(material_index, transparency=None):
-    """
-    Returns or modifies a material's transparency value
+    """Returns or modifies a material's transparency value
     Parameters:
       material_index = zero based material index
       transparency[opt] = the new transparency value. A material's transparency value ranges from 0.0 to 1.0, with
@@ -301,8 +288,7 @@ def MaterialTransparency(material_index, transparency=None):
 
 
 def MaterialTransparencyMap(material_index, filename=None):
-    """
-    Returns or modifies a material's transparency bitmap filename
+    """Returns or modifies a material's transparency bitmap filename
     Parameters:
       material_index = zero based material index
       filename[opt] = the transparency bitmap filename
@@ -323,8 +309,7 @@ def MaterialTransparencyMap(material_index, filename=None):
 
 
 def ResetMaterial(material_index):
-    """
-    Resets a material to Rhino's default material
+    """Resets a material to Rhino's default material
     Parameters:
       material_index = zero based material index
     Returns:
