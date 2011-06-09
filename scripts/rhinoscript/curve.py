@@ -5,8 +5,7 @@ import math
 import System.Guid, System.Array, System.Enum
 
 def AddArc(plane, radius, angle_degrees):
-    """
-    Adds an arc curve to the document
+    """Adds an arc curve to the document
     Parameters:
       plane = the plane on which the arc will lie. The origin of the plane
               will be the center point of the arc. The x-axis of the plane
@@ -18,7 +17,7 @@ def AddArc(plane, radius, angle_degrees):
       None on error  
     """
     plane = rhutil.coerceplane(plane)
-    if plane is None: return scriptcontext.errorhandler()
+    if not plane: return scriptcontext.errorhandler()
     radians = math.radians(angle_degrees)
     arc = Rhino.Geometry.Arc(plane, radius, radians)
     rc = scriptcontext.doc.Objects.AddArc(arc)
@@ -28,8 +27,7 @@ def AddArc(plane, radius, angle_degrees):
 
 
 def AddArc3Pt(start, end, point_on_arc):
-    """
-    Adds a 3-point arc curve to the document
+    """Adds a 3-point arc curve to the document
     Parameters:
       start, end = endpoints of the arc
       point_on_arc = a point on the arc
@@ -50,8 +48,7 @@ def AddArc3Pt(start, end, point_on_arc):
 
 
 def AddArcPtTanPt(start, direction, end):
-    """
-    Adds an arc curve, created from a start point, a start direction, and an
+    """Adds an arc curve, created from a start point, a start direction, and an
     end point, to the document
     Returns:
       id of the new curve object if successful
@@ -70,8 +67,7 @@ def AddArcPtTanPt(start, direction, end):
 
 
 def AddCircle( plane_or_center, radius ):
-    """
-    Adds a circle curve to the document
+    """Adds a circle curve to the document
     Parameters:
       planeOrCenter = plane on which the circle will lie. If a point is
           passed, this will be the center of the circle on the active
@@ -86,7 +82,6 @@ def AddCircle( plane_or_center, radius ):
     if plane:
         circle = Rhino.Geometry.Circle(plane, radius)
         rc = scriptcontext.doc.Objects.AddCircle(circle)
-        if rc==System.Guid.Empty: rc = None
     else:
         center = rhutil.coerce3dpoint(plane_or_center)
         if center:
@@ -95,15 +90,13 @@ def AddCircle( plane_or_center, radius ):
             plane.Origin = center
             circle = Rhino.Geometry.Circle(plane, radius)
             rc = scriptcontext.doc.Objects.AddCircle(circle)
-            if( rc == System.Guid.Empty ): rc = None
-    if rc is None: return scriptcontext.errorhandler()
+    if rc is None or rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
 
 
 def AddCircle3Pt(first, second, third):
-    """
-    Adds a 3-point circle curve to the document
+    """Adds a 3-point circle curve to the document
     Parameters:
       first, second, third = points on the circle
     Returns:
@@ -123,8 +116,7 @@ def AddCircle3Pt(first, second, third):
 
 
 def AddCurve( points, degree=3 ):
-    """
-    Adds a control points curve object to the document
+    """Adds a control points curve object to the document
     Parameters:
       points = a list of points
       degree [opt] = degree of the curve
@@ -143,8 +135,7 @@ def AddCurve( points, degree=3 ):
 
 
 def AddEllipse( plane, radiusX, radiusY ):
-    """
-    Adds an elliptical curve to the document
+    """Adds an elliptical curve to the document
     Parameters:
       plane = the plane on which the ellipse will lie. The origin of
               the plane will be the center of the ellipse
@@ -163,8 +154,7 @@ def AddEllipse( plane, radiusX, radiusY ):
 
 
 def AddEllipse3Pt( center, second, third ):
-    """
-    Adds a 3-point elliptical curve to the document
+    """Adds a 3-point elliptical curve to the document
     Parameters:
       center = center point of the ellipse
       second = end point of the x axis
@@ -186,8 +176,7 @@ def AddEllipse3Pt( center, second, third ):
 
 
 def AddFilletCurve( curve0id, curve1id, radius=1.0, base_point0=None, base_point1=None ):
-    """
-    Adds a fillet curve between two curve objects
+    """Adds a fillet curve between two curve objects
     Parameters:
       curve0id = identifier of the first curve object
       curve1id = identifier of the second curve object
@@ -229,10 +218,9 @@ def AddFilletCurve( curve0id, curve1id, radius=1.0, base_point0=None, base_point
 
 
 def AddInterpCrvOnSrf( surface_id, points ):
-    """
-    Adds an interpolated curve object that lies on a specified surface.
-    Note, this function will not create periodic curves, but it will
-    create closed curves.
+    """Adds an interpolated curve object that lies on a specified
+    surface.  Note, this function will not create periodic curves,
+    but it will create closed curves.
     Parameters:
       surface_id = identifier of the surface to create the curve on
       points = list of 3D points that lie on the specified surface.
@@ -254,10 +242,9 @@ def AddInterpCrvOnSrf( surface_id, points ):
 
 
 def AddInterpCrvOnSrfUV( surface_id, points ):
-    """
-    Adds an interpolated curve object based on surface parameters, that
-    lies on a specified surface. Note, this function will not create
-    periodic curves, but it will create closed curves.
+    """Adds an interpolated curve object based on surface parameters,
+    that lies on a specified surface. Note, this function will not
+    create periodic curves, but it will create closed curves.
     Parameters:
       surface_id = identifier of the surface to create the curve on
       points = list of 2D surface parameters. The list must contain
@@ -279,9 +266,8 @@ def AddInterpCrvOnSrfUV( surface_id, points ):
 
 
 def AddInterpCurve( points, degree=3, knotstyle=0, start_tangent=None, end_tangent=None ):
-    """
-    Adds an interpolated curve object to the document. Options exist to make a
-    periodic curve or to specify the tangent at the endpoints. The resulting
+    """Adds an interpolated curve object to the document. Options exist to make
+    a periodic curve or to specify the tangent at the endpoints. The resulting
     curve is a non-rational NURBS curve of the specified degree.
     Parameters:
       points = list containing 3D points to interpolate. For periodic curves,
@@ -306,22 +292,21 @@ def AddInterpCurve( points, degree=3, knotstyle=0, start_tangent=None, end_tange
       None on error
     """
     points = rhutil.coerce3dpointlist(points)
-    if( points == None ): return scriptcontext.errorhandler()
+    if not points: return scriptcontext.errorhandler()
     start_tangent = rhutil.coerce3dvector(start_tangent)
-    if( start_tangent==None ): start_tangent = Rhino.Geometry.Vector3d.Unset
+    if start_tangent is None: start_tangent = Rhino.Geometry.Vector3d.Unset
     end_tangent = rhutil.coerce3dvector(end_tangent)
-    if( end_tangent==None ): end_tangent = Rhino.Geometry.Vector3d.Unset
+    if end_tangent is None: end_tangent = Rhino.Geometry.Vector3d.Unset
     curve = Rhino.Geometry.Curve.CreateInterpolatedCurve(points, degree, knotstyle, start_tangent, end_tangent)
-    if( curve == None ): return scriptcontext.errorhandler()
+    if not curve: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddCurve(curve)
-    if( rc == System.Guid.Empty ): return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
 
 
 def AddLine( start, end ):
-    """
-    Adds a line curve to the current model.
+    """Adds a line curve to the current model.
     Parameters:
       start, end = end points of the line
     Returns:
@@ -330,16 +315,15 @@ def AddLine( start, end ):
     """
     start = rhutil.coerce3dpoint(start)
     end = rhutil.coerce3dpoint(end)
-    if( start==None or end==None ): return scriptcontext.errorhandler()
+    if start is None or end is None: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddLine(start, end)
-    if( rc == System.Guid.Empty ): return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
 
 
 def AddNurbsCurve( points, knots, degree, weights=None ):
-    """
-    Adds a NURBS curve object to the document
+    """Adds a NURBS curve object to the document
     Parameters:
       points = list containing 3D control points
       knots = Knot values for the curve. The number of elements in knots must
@@ -349,7 +333,7 @@ def AddNurbsCurve( points, knots, degree, weights=None ):
           equal the number of elements in points. Values must be greater than 0
     """
     points = rhutil.coerce3dpointlist(points)
-    if( points==None ): return scriptcontext.errorhandler()
+    if not points: return scriptcontext.errorhandler()
     cvcount = len(points)
     knotcount = cvcount + degree - 1
     if( len(knots) != knotcount ): return scriptcontext.errorhandler()
@@ -364,14 +348,13 @@ def AddNurbsCurve( points, knots, degree, weights=None ):
         nc.Points[i] = cp
     for i in xrange(knotcount): nc.Knots[i] = knots[i]
     rc = scriptcontext.doc.Objects.AddCurve(nc)
-    if( rc == System.Guid.Empty ): return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
 
 
 def AddPolyline( points, replace_id=None ):
-    """
-    Adds a polyline curve to the current model
+    """Adds a polyline curve to the current model
     Parameters:
       points = list of 3D points. Duplicate, consecutive points found in
                the array will be removed. The array must contain at least
@@ -399,8 +382,7 @@ def AddPolyline( points, replace_id=None ):
 
 
 def AddRectangle( plane, width, height ):
-    """
-    Adds a rectangular curve to the document
+    """Adds a rectangular curve to the document
     Paramters:
       plane = plane on which the rectangle will lie
       width, height = width and height of rectangle as measured along the plane's
@@ -419,8 +401,7 @@ def AddRectangle( plane, width, height ):
 
 
 def AddSubCrv( curve_id, param0, param1 ):
-    """
-    Adds a curve object based on a portion, or interval of an existing curve
+    """Adds a curve object based on a portion, or interval of an existing curve
     object. Similar in operation to Rhino's SubCrv command
     Parameters:
       curve_id = identifier of a closed planar curve object
@@ -439,8 +420,7 @@ def AddSubCrv( curve_id, param0, param1 ):
     return rc
 
 def ArcAngle( curve_id, segment_index=-1 ):
-    """
-    Returns the angle of an arc curve object.
+    """Returns the angle of an arc curve object.
     Parameters:
       curve_id = identifier of a curve object
       segment_index [opt] = identifies the curve segment if 
@@ -450,15 +430,14 @@ def ArcAngle( curve_id, segment_index=-1 ):
       None on error.
     """
     curve = rhutil.coercecurve(curve_id, segment_index)
-    if( curve == None ): return scriptcontext.errorhandler()
+    if not curve: return scriptcontext.errorhandler()
     rc, arc = curve.TryGetArc( Rhino.RhinoMath.ZeroTolerance )
     if not rc: return scriptcontext.errorhandler()
     return arc.AngleDegrees
 
 
 def ArcCenterPoint( curve_id, segment_index=-1 ):
-    """
-    Returns the center point of an arc curve object
+    """Returns the center point of an arc curve object
     Parameters:
       curve_id = identifier of a curve object
       segment_index [opt] = identifies the curve segment if
@@ -468,15 +447,14 @@ def ArcCenterPoint( curve_id, segment_index=-1 ):
       None on error.
     """
     curve = rhutil.coercecurve(curve_id, segment_index)
-    if( curve == None ): return scriptcontext.errorhandler()
+    if not curve: return scriptcontext.errorhandler()
     rc, arc = curve.TryGetArc( Rhino.RhinoMath.ZeroTolerance )
     if not rc: return scriptcontext.errorhandler()
     return arc.Center
 
 
 def ArcMidPoint( curve_id, segment_index=-1 ):
-    """
-    Returns the mid point of an arc curve object
+    """Returns the mid point of an arc curve object
     Parameters:
       curve_id = identifier of a curve object
       segment_index [opt] = identifies the curve segment if
@@ -486,15 +464,14 @@ def ArcMidPoint( curve_id, segment_index=-1 ):
       None on error.
     """
     curve = rhutil.coercecurve(curve_id, segment_index)
-    if( curve == None ): return scriptcontext.errorhandler()
+    if not curve: return scriptcontext.errorhandler()
     rc, arc = curve.TryGetArc( Rhino.RhinoMath.ZeroTolerance )
     if not rc: return scriptcontext.errorhandler()
     return arc.MidPoint
 
 
 def ArcRadius( curve_id, segment_index=-1 ):
-    """
-    Returns the radius of an arc curve object
+    """Returns the radius of an arc curve object
     Parameters:
       curve_id = identifier of a curve object
       segment_index [opt] = identifies the curve segment if 
@@ -504,15 +481,14 @@ def ArcRadius( curve_id, segment_index=-1 ):
       None on error.
     """
     curve = rhutil.coercecurve(curve_id, segment_index)
-    if( curve == None ): return scriptcontext.errorhandler()
+    if not curve: return scriptcontext.errorhandler()
     rc, arc = curve.TryGetArc( Rhino.RhinoMath.ZeroTolerance )
     if not rc: return scriptcontext.errorhandler()
     return arc.Radius
 
 
 def CircleCenterPoint( curve_id, segment_index=-1 ):
-    """
-    Returns the center point of a circle curve object
+    """Returns the center point of a circle curve object
     Parameters:
       curve_id = identifier of a curve object
       segment_index [opt] = identifies the curve segment if
@@ -522,14 +498,13 @@ def CircleCenterPoint( curve_id, segment_index=-1 ):
       None on error.
     """
     curve = rhutil.coercecurve(curve_id, segment_index)
-    if( curve == None ): return scriptcontext.errorhandler()
+    if not curve: return scriptcontext.errorhandler()
     rc, circle = curve.TryGetCircle( Rhino.RhinoMath.ZeroTolerance )
     if not rc: return scriptcontext.errorhandler()
     return circle.Center
 
 def CircleCircumference( curve_id, segment_index=-1 ):
-    """
-    Returns the circumference of a circle curve object
+    """Returns the circumference of a circle curve object
     Parameters:
       curve_id = identifier of a curve object
       segment_index [opt] = identifies the curve segment if
@@ -539,14 +514,13 @@ def CircleCircumference( curve_id, segment_index=-1 ):
       None on error.
     """
     curve = rhutil.coercecurve(curve_id, segment_index)
-    if( curve == None ): return scriptcontext.errorhandler()
+    if not curve: return scriptcontext.errorhandler()
     rc, circle = curve.TryGetCircle( Rhino.RhinoMath.ZeroTolerance )
     if not rc: return scriptcontext.errorhandler()
     return circle.Circumference
 
 def CircleRadius( curve_id, segment_index=-1 ):
-    """
-    Returns the radius of a circle curve object
+    """Returns the radius of a circle curve object
     Parameters:
       curve_id = identifier of a curve object
       segment_index [opt] = identifies the curve segment if
@@ -556,14 +530,13 @@ def CircleRadius( curve_id, segment_index=-1 ):
       None on error.
     """
     curve = rhutil.coercecurve(curve_id, segment_index)
-    if( curve == None ): return scriptcontext.errorhandler()
+    if not curve: return scriptcontext.errorhandler()
     rc, circle = curve.TryGetCircle( Rhino.RhinoMath.ZeroTolerance )
     if not rc: return scriptcontext.errorhandler()
     return circle.Radius
 
 def CloseCurve( curve_id, tolerance=-1.0 ):
-    """
-    Closes an open curve object by making adjustments to the end points so
+    """Closes an open curve object by making adjustments to the end points so
     they meet at a point
     Parameters:
       curve_id = identifier of a curve object
@@ -575,16 +548,15 @@ def CloseCurve( curve_id, tolerance=-1.0 ):
     """
     curve = rhutil.coercecurve(curve_id)
     if( curve==None or curve.IsClosed ): return scriptcontext.errorhandler()
-    if( tolerance < 0.0 ): tolerance = Rhino.RhinoMath.ZeroTolerance
-    if( curve.MakeClosed(tolerance) != True ): return scriptcontext.errorhandler()
+    if tolerance<0.0: tolerance = Rhino.RhinoMath.ZeroTolerance
+    if not curve.MakeClosed(tolerance): return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddCurve(curve)
-    if( rc == System.Guid.Empty ): return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
 
 def ClosedCurveOrientation( curve_id, direction=[0,0,1] ):
-    """
-    Determine the orientation (counter-clockwise or clockwise) of a closed,
+    """Determine the orientation (counter-clockwise or clockwise) of a closed,
     planar curve
     Parameters:
       curve_id = identifier of a curve object
@@ -605,8 +577,7 @@ def ClosedCurveOrientation( curve_id, direction=[0,0,1] ):
 
 
 def ConvertCurveToPolyline( curve_id, angle_tolerance=5.0, tolerance=0.01, delete_input=False):
-    """
-    Converts a curve to a polyline curve
+    """Converts a curve to a polyline curve
     Parameters:
       curve_id = identifier of a curve object
       angle_tolerance [opt] = The maximum angle between curve
@@ -622,22 +593,21 @@ def ConvertCurveToPolyline( curve_id, angle_tolerance=5.0, tolerance=0.01, delet
     """
     curve = rhutil.coercecurve(curve_id)
     if(curve == None): return scriptcontext.errorhandler()
-    if( angle_tolerance<=0 ): angle_tolerance = 5.0
+    if angle_tolerance<=0: angle_tolerance = 5.0
     angle_tolerance = Rhino.RhinoMath.ToRadians(angle_tolerance)
-    if( tolerance <= 0.0 ): tolerance = 0.01;
+    if tolerance<=0.0: tolerance = 0.01;
     polyline_curve = curve.ToPolyline( 0, 0, angle_tolerance, 0.0, 0.0, tolerance, 0.0, 0.0, True)
     if( polyline_curve==None ): return scriptcontext.errorhandler()
     id = System.Guid.Empty
     if delete_input:
-        if( scriptcontext.doc.Objects.Replace( curve_id, polyline_curve ) ): id = curve_id
+        if scriptcontext.doc.Objects.Replace( curve_id, polyline_curve): id = curve_id
     else:
         id = scriptcontext.doc.Objects.AddCurve( polyline_curve )
-    if( System.Guid.Empty == id ): return scriptcontext.errorhandler()
+    if System.Guid.Empty==id: return scriptcontext.errorhandler()
     return id
   
-def CurveArcLengthPoint( curve_id, length, from_start):
-    """
-    Returns the point on the curve that is a specified arc length
+def CurveArcLengthPoint( curve_id, length, from_start=True):
+    """Returns the point on the curve that is a specified arc length
     from the start of the curve.
     Parameters:
       curve_id = identifier of a curve object
@@ -649,24 +619,23 @@ def CurveArcLengthPoint( curve_id, length, from_start):
       Point3d if successful, or None on error.
     """
     curve = rhutil.coercecurve(curve_id)
-    if(curve == None): return scriptcontext.errorhandler()
+    if not curve: return scriptcontext.errorhandler()
     curve_length = curve.GetLength()
-    if(curve_length >= length):
+    if curve_length>=length:
         s = 0.0
-        if( length == 0.0 ): s = 0.0
-        elif( length == curve_length ): s = 1.0
+        if length==0.0: s = 0.0
+        elif length==curve_length: s = 1.0
         else: s = length / curve_length
         dupe = curve.Duplicate()
         if dupe:
-            if( from_start==False ): dupe.Reverse()
+            if from_start==False: dupe.Reverse()
             rc, t = dupe.NormalizedLengthParameter(s)
             if rc: return dupe.PointAt(t)
             dupe.Dispose()
 
 
 def CurveArea( curve_id ):
-    """
-    Returns area of closed planar curves. The results are based on the
+    """Returns area of closed planar curves. The results are based on the
     current drawing units.
     Parameters:
       curve_id = The identifier of a closed, planar curve object.
@@ -687,8 +656,7 @@ def CurveArea( curve_id ):
 
 
 def CurveAreaCentroid( curve_id ):
-    """
-    Returns area centroid of closed, planar curves. The results are based
+    """Returns area centroid of closed, planar curves. The results are based
     on the current drawing units.
     Parameters:
       curve_id = The identifier of a closed, planar curve object.
@@ -711,8 +679,7 @@ def CurveAreaCentroid( curve_id ):
     return scriptcontext.errorhandler()
 
 def CurveArrows(curve_id, arrow_style=None):
-    """
-    Enables or disables a curve object's annotation arrows
+    """Enables or disables a curve object's annotation arrows
     Parameters:
       curve_id = identifier of a curve
       arrow_style[opt] = the style of annotation arrow to be displayed
@@ -749,8 +716,7 @@ def CurveArrows(curve_id, arrow_style=None):
 
 
 def CurveBooleanDifference(curve_id_0, curve_id_1):
-    """
-    Calculates the difference between two closed, planar curves and
+    """Calculates the difference between two closed, planar curves and
     adds the results to the document. Note, curves must be coplanar.
     Parameters:
       curve_id_0 = identifier of the first curve object.
@@ -765,17 +731,16 @@ def CurveBooleanDifference(curve_id_0, curve_id_1):
     out_curves = Rhino.Geometry.Curve.CreateBooleanDifference(curve0, curve1)
     curves = []
     for curve in out_curves:
-        if(curve and curve.IsValid):
+        if curve and curve.IsValid:
             rc = scriptcontext.doc.Objects.AddCurve(curve)
             curve.Dispose()
-            if( rc==System.Guid.Empty ): return scriptcontext.errorhandler()
+            if rc==System.Guid.Empty: return scriptcontext.errorhandler()
             curves.append(rc)
     scriptcontext.doc.Views.Redraw()
     return curves
 
 def CurveBooleanIntersection(curve_id_0, curve_id_1):
-    """
-    Calculates the intersection of two closed, planar curves and adds
+    """Calculates the intersection of two closed, planar curves and adds
     the results to the document. Note, curves must be coplanar.
     Parameters:
       curve_id_0 = identifier of the first curve object.
@@ -790,18 +755,17 @@ def CurveBooleanIntersection(curve_id_0, curve_id_1):
     out_curves = Rhino.Geometry.Curve.CreateBooleanIntersection(curve0, curve1)
     curves = []
     for curve in out_curves:
-        if(curve and curve.IsValid):
+        if curve and curve.IsValid:
             rc = scriptcontext.doc.Objects.AddCurve(curve)
             curve.Dispose()
-            if( rc==System.Guid.Empty ): return scriptcontext.errorhandler()
+            if rc==System.Guid.Empty: return scriptcontext.errorhandler()
             curves.append(rc)
     scriptcontext.doc.Views.Redraw()
     return curves
 
 
 def CurveBooleanUnion(curve_id):
-    """
-    Calculates the union of two or more closed, planar curves and
+    """Calculates the union of two or more closed, planar curves and
     adds the results to the document. Note, curves must be coplanar.
     Parameters:
       curve_id = list of two or more close planar curves identifiers
@@ -817,20 +781,18 @@ def CurveBooleanUnion(curve_id):
     out_curves = Rhino.Geometry.Curve.CreateBooleanUnion(in_curves)
     curves = []
     for curve in out_curves:
-        if (curve and curve.IsValid):
+        if curve and curve.IsValid:
             rc = scriptcontext.doc.Objects.AddCurve(curve)
             curve.Dispose()
-            if( rc == System.Guid.Empty ): return scriptcontext.errorhandler()
+            if rc==System.Guid.Empty: return scriptcontext.errorhandler()
             curves.append(rc)
     scriptcontext.doc.Views.Redraw()
     return curves
 
 
 def CurveBrepIntersect(curve_id, brep_id, tolerance=None):
-    """
-    Intersects a curve object with a brep object. Note, unlike the
-    CurveSurfaceIntersection function, this function works on trimmed
-    surfaces.
+    """Intersects a curve object with a brep object. Note, unlike the
+    CurveSurfaceIntersection function, this function works on trimmed surfaces.
     Parameters:
       curve_id = identifier of a curve object
       brep_id = identifier of a brep object
@@ -856,7 +818,6 @@ def CurveBrepIntersect(curve_id, brep_id, tolerance=None):
             curve.Dispose()
             if( rc==System.Guid.Empty ): return scriptcontext.errorhandler()
             curves.append(rc)
-        
     for point in out_points:
         if (point and point.IsValid):
             rc = scriptcontext.doc.Objects.AddPoint(point)
@@ -866,10 +827,9 @@ def CurveBrepIntersect(curve_id, brep_id, tolerance=None):
 
 
 def CurveClosestObject(curve_id, object_ids):
-    """
-    Returns the 3-D point locations on two objects where they are closest
-    to each other. Note, this function provides similar functionality to
-    that of Rhino's ClosestPt command.
+    """Returns the 3-D point locations on two objects where they are closest to
+    each other. Note, this function provides similar functionality to that of
+    Rhino's ClosestPt command.
     Parameters:
       curve_id = identifier of a closed planar curve object
       object_ids = list of identifiers of one or more closed, planar curves
@@ -882,21 +842,21 @@ def CurveClosestObject(curve_id, object_ids):
       None on error.
     """
     curve = rhutil.coercecurve(curve_id)
-    if( curve==None ): return scriptcontext.errorhandler()
+    if not curve: return scriptcontext.errorhandler()
     geometry = []
     ids = []
     id = rhutil.coerceguid(object_ids)
-    if( id!=None ):
+    if id!=None:
         ids.append(id)
         rhobj = scriptcontext.doc.Objects.Find(id)
-        if( rhobj==None ): return scriptcontext.errorhandler()
+        if rhobj==None: return scriptcontext.errorhandler()
         geometry.append( rhobj.Geometry )
     else:
         for object_id in object_ids:
             id = rhutil.coerceguid(object_id)
-            if( id!=None ):
+            if id!=None:
                 rhobj = scriptcontext.doc.Objects.Find(id)
-                if( rhobj!=None ):
+                if rhobj:
                     geometry.append( rhobj.Geometry )
                     ids.append(id)
     if not geometry: return scriptcontext.errorhandler()
@@ -905,8 +865,7 @@ def CurveClosestObject(curve_id, object_ids):
 
     
 def CurveClosestPoint(curve_id, test_point, segment_index=-1 ):
-    """
-    Returns parameter of the point on a curve that is closest to a test point.
+    """Returns parameter of the point on a curve that is closest to a test point.
     Parameters:
       curve_id = identifier of a curve object
       point = sampling point
@@ -924,8 +883,7 @@ def CurveClosestPoint(curve_id, test_point, segment_index=-1 ):
 
 
 def CurveContourPoints(curve_id, start_point, end_point, interval=None):
-    """
-    Returns the 3-D point locations calculated by contouring a curve object.
+    """Returns the 3D point locations calculated by contouring a curve object.
     Parameters:
       curve_id = identifier of a curve object.
       start_point = 3-D starting point of a center line.
@@ -942,7 +900,7 @@ def CurveContourPoints(curve_id, start_point, end_point, interval=None):
     end_point = rhutil.coerce3dpoint(end_point)
     if (curve==None or start_point==None or end_point==None):
         return scriptcontext.errorhandler()
-    if( start_point.DistanceTo(end_point) < Rhino.RhinoMath.ZeroTolerance ):
+    if start_point.DistanceTo(end_point)<Rhino.RhinoMath.ZeroTolerance:
         return scriptcontext.errorhandler()
     if not interval:
         bbox = curve.GetBoundingBox(True)
@@ -953,8 +911,7 @@ def CurveContourPoints(curve_id, start_point, end_point, interval=None):
 
 
 def CurveCurvature(curve_id, parameter):
-    """
-    Returns the curvature of a curve at a parameter. See the Rhino help for
+    """Returns the curvature of a curve at a parameter. See the Rhino help for
     details on curve curvature
     Parameters:
       curve_id = identifier of the curve
@@ -969,13 +926,13 @@ def CurveCurvature(curve_id, parameter):
       None on failure
     """
     curve = rhutil.coercecurve(curve_id)
-    if(curve == None): return scriptcontext.errorhandler()
+    if not curve: return scriptcontext.errorhandler()
     point = curve.PointAt(parameter)
     tangent = curve.TangentAt(parameter)
-    if( tangent.IsTiny(0) ): return scriptcontext.errorhandler()
+    if tangent.IsTiny(0): return scriptcontext.errorhandler()
     cv = curve.CurvatureAt(parameter)
     k = cv.Length
-    if( k < Rhino.RhinoMath.SqrtEpsilon ): return scriptcontext.errorhandler()
+    if k<Rhino.RhinoMath.SqrtEpsilon: return scriptcontext.errorhandler()
     rv = cv / (k*k)
     circle = Rhino.Geometry.Circle(point, tangent, point + 2.0*rv)
     center = point + rv
@@ -984,8 +941,7 @@ def CurveCurvature(curve_id, parameter):
 
 
 def CurveCurveIntersection(curveA, curveB, tolerance=-1):
-    """
-    Calculates the intersection of two curve objects.
+    """Calculates the intersection of two curve objects.
     Parameters:
       curveA = The identifier of the first curve object.
       curveB = The identifier of the second curve object. If omitted, then a
@@ -1025,8 +981,8 @@ def CurveCurveIntersection(curveA, curveB, tolerance=-1):
     """
     curveA = rhutil.coercecurve(curveA)
     curveB = rhutil.coercecurve(curveB)
-    if(not curveA or not curveB): return scriptcontext.errorhandler()
-    if (tolerance==None or tolerance < 0.0):
+    if not curveA or not curveB: return scriptcontext.errorhandler()
+    if tolerance is None or tolerance<0.0:
         tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     rc = Rhino.Geometry.Intersect.Intersection.CurveCurve(curveA, curveB, tolerance, 0.0)
     if not rc: return scriptcontext.errorhandler()
@@ -1043,8 +999,7 @@ def CurveCurveIntersection(curveA, curveB, tolerance=-1):
 
 
 def CurveDegree(curve_id, segment_index=-1):
-    """
-    Returns the degree of a curve object.
+    """Returns the degree of a curve object.
     Parameters:
       curve_id = identifier of a curve object.
       segment_index [opt] = the curve segment if curve_id identifies a polycurve.
@@ -1052,13 +1007,12 @@ def CurveDegree(curve_id, segment_index=-1):
       The degree of the curve if successful. None on error.
     """
     curve = rhutil.coercecurve(curve_id, segment_index)
-    if (curve == None): return scriptcontext.errorhandler()
+    if not curve: return scriptcontext.errorhandler()
     return curve.Degree
 
 
 def CurveDeviation( curve_a, curve_b ):
-    """
-    Returns the minimum and maximum deviation between two curve objects
+    """Returns the minimum and maximum deviation between two curve objects
     Parameters:
       curve_a, curve_b = identifiers of two curves
     Returns:
@@ -1073,7 +1027,7 @@ def CurveDeviation( curve_a, curve_b ):
     """
     curve_a = rhutil.coercecurve( curve_a )
     curve_b = rhutil.coercecurve( curve_b )
-    if( curve_a==None or curve_b==None ): return scriptcontext.errorhandler()
+    if not curve_a or not curve_b: return scriptcontext.errorhandler()
     tol = scriptcontext.doc.ModelAbsoluteTolerance
     rc = Rhino.Geometry.Curve.GetDistancesBetweenCurves(curve_a, curve_b, tol)
     if not rc[0]: return scriptcontext.errorhandler()
@@ -1087,8 +1041,7 @@ def CurveDeviation( curve_a, curve_b ):
 
 
 def CurveDim(curve_id, segment_index=-1):
-    """
-    Returns the dimension of a curve object
+    """Returns the dimension of a curve object
     Parameters:
       curve_id = identifier of a curve object.
       segment_index [opt] = the curve segment if curve_id identifies a polycurve.
@@ -1096,17 +1049,15 @@ def CurveDim(curve_id, segment_index=-1):
       The dimension of the curve if successful. None on error.
     """
     curve = rhutil.coercecurve(curve_id, segment_index)
-    if (curve == None): return scriptcontext.errorhandler()
+    if not curve: return scriptcontext.errorhandler()
     return curve.Dimension
 
 
 def CurveDirectionsMatch(curve_id_0, curve_id_1):
-    """
-    Tests if two curve objects are generally in the same direction
-    or if they would be more in the same direction if one of them
-    were flipped. When testing curve directions, both curves must
-    be either open or closed - you cannot test one open curve and
-    one closed curve.
+    """Tests if two curve objects are generally in the same direction or if they
+    would be more in the same direction if one of them were flipped. When testing
+    curve directions, both curves must be either open or closed - you cannot test
+    one open curve and one closed curve.
     Parameters:
       curve_id_0 = identifier of first curve object
       curve_id_1 = identifier of second curve object
@@ -1116,13 +1067,12 @@ def CurveDirectionsMatch(curve_id_0, curve_id_1):
     """
     curve0 = rhutil.coercecurve(curve_id_0)
     curve1 = rhutil.coercecurve(curve_id_1)
-    if(curve0 == None or curve1 == None): return scriptcontext.errorhandler()
+    if not curve0 or not curve1: return scriptcontext.errorhandler()
     return Rhino.Geometry.Curve.DoDirectionsMatch(curve0, curve1)
 
 
 def CurveDiscontinuity(curve_id, style):   
-    """
-    Search for a derivatitive, tangent, or curvature discontinuity in
+    """Search for a derivatitive, tangent, or curvature discontinuity in
     a curve object.
     Parameters:
       curve_id = identifier of curve object
@@ -1155,8 +1105,7 @@ def CurveDiscontinuity(curve_id, style):
 
 
 def CurveDomain(curve_id, segment_index=-1):
-    """
-    Returns the domain of a curve object.
+    """Returns the domain of a curve object.
     Parameters:
       curve_id = identifier of the curve object
       segment_index [opt] = the curve segment if curve_id identifies a polycurve.
@@ -1171,8 +1120,7 @@ def CurveDomain(curve_id, segment_index=-1):
 
 
 def CurveEditPoints(curve_id, return_parameters=False, segment_index=-1):
-    """
-    Returns the edit, or Greville, points of a curve object. 
+    """Returns the edit, or Greville, points of a curve object. 
     For each curve control point, there is a corresponding edit point.
     Parameters:
       curve_id = identifier of the curve object
@@ -1192,8 +1140,7 @@ def CurveEditPoints(curve_id, return_parameters=False, segment_index=-1):
 
 
 def CurveEndPoint(curve_id, segment_index=-1):
-    """
-    Returns the end point of a curve object
+    """Returns the end point of a curve object
     Parameters:
       curve_id = identifier of the curve object
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
@@ -1207,15 +1154,13 @@ def CurveEndPoint(curve_id, segment_index=-1):
 
 
 def CurveFilletPoints(curve_id_0, curve_id_1, radius=1.0, base_point_0=None, base_point_1=None, return_points=True):
-    """
-    Find points at which to cut a pair of curves so that a fillet of a
-    specified radius fits. A fillet point is a pair of points
-    (point0, point1) such that there is a circle of radius
-    tangent to curve curve0 at point0 and tangent
-    to curve curve1 at point1. Of all possible fillet points,
-    this function returns the one which is the closest to the base
-    point base_point_0, base_point_1. Distance from the base point
-    is measured by  the sum of arc lengths along the two curves. 
+    """Find points at which to cut a pair of curves so that a fillet of a
+    specified radius fits. A fillet point is a pair of points (point0, point1)
+    such that there is a circle of radius tangent to curve curve0 at point0 and
+    tangent to curve curve1 at point1. Of all possible fillet points, this
+    function returns the one which is the closest to the base point base_point_0,
+    base_point_1. Distance from the base point is measured by the sum of arc
+    lengths along the two curves. 
     Parameters:
       curve_id_0 = identifier of the first curve object.
       curve_id_1 = identifier of the second curve object.
@@ -1268,8 +1213,7 @@ def CurveFilletPoints(curve_id_0, curve_id_1, radius=1.0, base_point_0=None, bas
 
 
 def CurveFrame(curve_id, parameter, segment_index=-1 ):
-    """
-    Returns the plane at a parameter of a curve. The plane is based on the
+    """Returns the plane at a parameter of a curve. The plane is based on the
     tangent and curvature vectors at a parameter.
     Parameters:
       curve_id = identifier of the curve object.
@@ -1296,8 +1240,7 @@ def CurveFrame(curve_id, parameter, segment_index=-1 ):
 
 
 def CurveKnotCount(curve_id, segment_index=-1):
-    """
-    Returns the knot count of a curve object.
+    """Returns the knot count of a curve object.
     Parameters:
       curve_id = identifier of the curve object.
       segment_index [opt] = the curve segment if curve_id identifies a polycurve.
@@ -1333,8 +1276,7 @@ def CurveKnots(curve_id, segment_index=-1):
 
 
 def CurveLength(curve_id, segment_index=-1, sub_domain=None):
-    """
-    Returns the length of a curve object.
+    """Returns the length of a curve object.
     Parameters:
       curve_id = identifier of the curve object
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
@@ -1357,8 +1299,7 @@ def CurveLength(curve_id, segment_index=-1, sub_domain=None):
 
 
 def CurveMidPoint(curve_id, segment_index=-1):
-    """
-    Returns the mid point of a curve object.
+    """Returns the mid point of a curve object.
     Parameters:
       curve_id = identifier of the curve object
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
@@ -1374,8 +1315,7 @@ def CurveMidPoint(curve_id, segment_index=-1):
 
 
 def CurveNormal(curve_id, segment_index=-1):
-    """
-    Returns the normal direction of the plane in which a planar curve object lies.
+    """Returns the normal direction of the plane in which a planar curve object lies.
     Parameters:
       curve_id = identifier of the curve object
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
@@ -1392,8 +1332,7 @@ def CurveNormal(curve_id, segment_index=-1):
 
 
 def CurveNormalizedParameter(curve_id, parameter):
-    """
-    Converts a curve parameter to a normalized curve parameter;
+    """Converts a curve parameter to a normalized curve parameter;
     one that ranges between 0-1
     Parameters:
       curve_id = identifier of the curve object
@@ -1424,8 +1363,7 @@ def CurveParameter(curve_id, parameter):
 
 
 def CurvePerpFrame(curve_id, parameter):
-    """
-    Returns the perpendicular plane at a parameter of a curve. The result
+    """Returns the perpendicular plane at a parameter of a curve. The result
     is relatively parallel (zero-twisting) plane
     Parameters:
         curve_id = identifier of the curve object
@@ -1446,8 +1384,7 @@ def CurvePerpFrame(curve_id, parameter):
 
 
 def CurvePlane(curve_id, segment_index=-1):
-    """
-    Returns the plane in which a planar curve lies. Note, this function works
+    """Returns the plane in which a planar curve lies. Note, this function works
     only on planar curves.
     Parameters:
       curve_id = identifier of the curve object
@@ -1465,8 +1402,7 @@ def CurvePlane(curve_id, segment_index=-1):
 
 
 def CurvePointCount(curve_id, segment_index=-1):
-    """
-    Returns the control points count of a curve object.
+    """Returns the control points count of a curve object.
     Parameters:
       curve_id = identifier of the curve object
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
@@ -1482,8 +1418,7 @@ def CurvePointCount(curve_id, segment_index=-1):
 
 
 def CurvePoints( curve_id, segment_index=-1 ):
-    """
-    Returns the control points, or control vertices, of a curve object.
+    """Returns the control points, or control vertices, of a curve object.
     If the curve is a rational NURBS curve, the euclidean control vertices
     are returned.
     """
@@ -1498,8 +1433,7 @@ def CurvePoints( curve_id, segment_index=-1 ):
 
 
 def CurveRadius(curve_id, test_point, segment_index=-1):
-    """
-    Returns the radius of curvature at a point on a curve.
+    """Returns the radius of curvature at a point on a curve.
     Parameters:
       curve_id = identifier of the curve object
       test_point = sampling point
@@ -1520,8 +1454,7 @@ def CurveRadius(curve_id, test_point, segment_index=-1):
 
 
 def CurveSeam(curve_id, parameter):
-    """
-    Adjusts the seam, or start/end, point of a closed curve.
+    """Adjusts the seam, or start/end, point of a closed curve.
     Parameters:
       curve_id = identifier of the curve object
       parameter = The parameter of the new start/end point. 
@@ -1544,8 +1477,7 @@ def CurveSeam(curve_id, parameter):
 
 
 def CurveStartPoint(curve_id, segment_index=-1, point=None):
-    """
-    Returns the start point of a curve object
+    """Returns the start point of a curve object
     Parameters:
       curve_id = identifier of the curve object
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
@@ -1566,9 +1498,8 @@ def CurveStartPoint(curve_id, segment_index=-1, point=None):
 
 
 def CurveSurfaceIntersection(curve_id, surface_id, tolerance=-1, angle_tolerance=-1):
-    """
-    Calculates the intersection of a curve object with a surface object. Note,
-    this function works on the untrimmed portion of the surface.
+    """Calculates the intersection of a curve object with a surface object.
+    Note, this function works on the untrimmed portion of the surface.
     Parameters:
       curve_id = The identifier of the first curve object.
       surface_id = The identifier of the second curve object. If omitted,
@@ -1639,8 +1570,7 @@ def CurveSurfaceIntersection(curve_id, surface_id, tolerance=-1, angle_tolerance
 
 
 def CurveTangent(curve_id, parameter, segment_index=-1):
-    """
-    Returns a 3-D vector that is the tangent to a curve at a parameter.
+    """Returns a 3D vector that is the tangent to a curve at a parameter.
     Parameters:
       curve_id = identifier of the curve object
       parameter = parameter to evaluate
@@ -1658,8 +1588,7 @@ def CurveTangent(curve_id, parameter, segment_index=-1):
 
 
 def CurveWeights(curve_id, segment_index=-1):
-    """
-    Returns list of weights that are assigned to the control points of a curve
+    """Returns list of weights that are assigned to the control points of a curve
     Parameters:
       curve_id = identifier of the curve object
       segment_index[opt] = the curve segment if curve_id identifies a polycurve
@@ -1677,8 +1606,7 @@ def CurveWeights(curve_id, segment_index=-1):
 
 
 def DivideCurve(curve_id, segments, create_points=False, return_points=True):
-    """
-    Divides a curve object into a specified number of segments.
+    """Divides a curve object into a specified number of segments.
     Parameters:
       curve_id = identifier of the curve object
       segments = The number of segments.
@@ -1707,8 +1635,7 @@ def DivideCurve(curve_id, segments, create_points=False, return_points=True):
 
 
 def DivideCurveEquidistant(curve_id, distance, create_points=False, return_points=True):
-    """
-    Divides a curve such that the linear distance between the points is equal.
+    """Divides a curve such that the linear distance between the points is equal.
     Parameters:
       curve_id = the object's identifier
       distance = linear distance between division points
@@ -1735,8 +1662,7 @@ def DivideCurveEquidistant(curve_id, distance, create_points=False, return_point
 
 
 def DivideCurveLength(curve_id, length, create_points=False, return_points=True):
-    """
-    Divides a curve object into segments of a specified length.
+    """Divides a curve object into segments of a specified length.
     Parameters:
       curve_id = identifier of the curve object
       length = The length of each segment.
@@ -1765,8 +1691,7 @@ def DivideCurveLength(curve_id, length, create_points=False, return_points=True)
 
 
 def EllipseCenterPoint(curve_id):
-    """
-    Returns the center point of an elliptical-shaped curve object.
+    """Returns the center point of an elliptical-shaped curve object.
     Parameters:
       curve_id = identifier of the curve object.    
     Returns:
@@ -1781,8 +1706,7 @@ def EllipseCenterPoint(curve_id):
 
 
 def EllipseQuadPoints(curve_id):
-    """
-    Returns the quadrant points of an elliptical-shaped curve object.
+    """Returns the quadrant points of an elliptical-shaped curve object.
     Parameters:
       curve_id = identifier of the curve object.
     Returns:
@@ -1800,8 +1724,7 @@ def EllipseQuadPoints(curve_id):
 
 
 def EvaluateCurve(curve_id, t, segment_index=-1):
-    """
-    Evaluates a curve at a parameter.
+    """Evaluates a curve at a parameter.
     Parameters:
       curve_id = identifier of the curve object
       t = the parameter to evaluate
@@ -1816,8 +1739,7 @@ def EvaluateCurve(curve_id, t, segment_index=-1):
 
 
 def ExplodeCurves(curve_ids, delete_input=False):
-    """
-    Explodes, or un-joins, one more curve objects. Polycurves will be
+    """Explodes, or un-joins, one more curve objects. Polycurves will be
     exploded into curve segments. Polylines will be exploded into line
     segments. ExplodeCurves will return the curves in topological order. 
     Parameters:
@@ -1846,8 +1768,7 @@ def ExplodeCurves(curve_ids, delete_input=False):
 
 
 def ExtendCurve(curve_id, extension_type, side, boundary_object_ids):
-    """
-    Extends a non-closed curve object by a line, arc, or smooth extension
+    """Extends a non-closed curve object by a line, arc, or smooth extension
     until it intersects a collection of objects.
     Parameters:
       curve_id: identifier of curve to extend
@@ -1886,9 +1807,8 @@ def ExtendCurve(curve_id, extension_type, side, boundary_object_ids):
 
 
 def ExtendCurveLength(curve_id, extension_type, side, length):
-    """
-    Extends a non-closed curve object by a line, arc, or smooth extension for
-    a specified distance
+    """Extends a non-closed curve object by a line, arc, or smooth extension
+    for a specified distance
     Parameters:
       curve_id: identifier of curve to extend
       extension_type: 0 = line, 1 = arc, 2 = smooth
@@ -1920,8 +1840,7 @@ def ExtendCurveLength(curve_id, extension_type, side, length):
 
 
 def ExtendCurvePoint(curve_id, side, point):
-    """
-    Extends a non-closed curve object by smooth extension to a point
+    """Extends a non-closed curve object by smooth extension to a point
     Parameters:
       curve_id: identifier of curve to extend
       side: 0=extend from start of the curve, 1=extend from end of the curve
@@ -1950,8 +1869,7 @@ def ExtendCurvePoint(curve_id, side, point):
 
 
 def FairCurve(curve_id, tolerance=1.0):
-    """
-    Fairs a curve object. Fair works best on degree 3 (cubic) curves. Fair
+    """Fairs a curve object. Fair works best on degree 3 (cubic) curves. Fair
     attempts to remove large curvature variations while limiting the geometry
     changes to be no more than the specified tolerance. Sometimes several
     applications of this method are necessary to remove nasty curvature problems.
@@ -1979,8 +1897,7 @@ def FairCurve(curve_id, tolerance=1.0):
 
 
 def FitCurve(curve_id, degree=3, distance_tolerance=-1, angle_tolerance=-1):
-    """
-    Reduces number of curve control points while maintaining the curve's same
+    """Reduces number of curve control points while maintaining the curve's same
     general shape. Use this function for replacing curves with many control
     points. For more information, see the Rhino help for the FitCrv command.
     Parameters:
@@ -2013,8 +1930,7 @@ def FitCurve(curve_id, degree=3, distance_tolerance=-1, angle_tolerance=-1):
 
 
 def InsertCurveKnot( curve_id, parameter, symmetrical=False ):
-    """
-    Inserts a knot into a curve object
+    """Inserts a knot into a curve object
     Parameters:
       curve_id = identifier of the curve object
       parameter = parameter on the curve
@@ -2044,8 +1960,7 @@ def InsertCurveKnot( curve_id, parameter, symmetrical=False ):
 
 
 def IsArc( curve_id, segment_index=-1 ):
-    """
-    Verifies an object is an arc curve
+    """Verifies an object is an arc curve
     Parameters:
       curve_id = Identifier of the curve object
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
@@ -2057,8 +1972,7 @@ def IsArc( curve_id, segment_index=-1 ):
 
 
 def IsCircle( curve_id, segment_index=-1 ):
-    """
-    Verifies an object is a circle curve
+    """Verifies an object is a circle curve
     Parameters:
       curve_id = Identifier of the curve object
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
@@ -2101,8 +2015,7 @@ def IsCurveClosed( object_id ):
 
 
 def IsCurveInPlane( object_id, plane=None ):
-    """
-    Test a curve to see if it lies in a specific plane
+    """Test a curve to see if it lies in a specific plane
     Parameters:
       object_id = the object's identifier
       plane[opt] = plane to test. If omitted, the active construction plane is used
@@ -2120,8 +2033,7 @@ def IsCurveInPlane( object_id, plane=None ):
 
 
 def IsCurveLinear( object_id, segment_index=-1 ):
-    """
-    Verifies an object is a linear curve
+    """Verifies an object is a linear curve
     Parameters:
       curve_id = identifier of the curve object
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
@@ -2133,8 +2045,7 @@ def IsCurveLinear( object_id, segment_index=-1 ):
 
 
 def IsCurvePeriodic( curve_id, segment_index=-1 ):
-    """
-    Verifies an object is a periodic curve object
+    """Verifies an object is a periodic curve object
     Parameters:
       curve_id = identifier of the curve object
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
@@ -2146,8 +2057,7 @@ def IsCurvePeriodic( curve_id, segment_index=-1 ):
 
 
 def IsCurvePlanar( curve_id, segment_index=-1 ):
-    """
-    Verifies an object is a planar curve
+    """Verifies an object is a planar curve
     Parameters:
       curve_id = identifier of the curve object
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
@@ -2160,8 +2070,7 @@ def IsCurvePlanar( curve_id, segment_index=-1 ):
 
 
 def IsCurveRational( curve_id, segment_index=-1 ):
-    """
-    Verifies an object is a rational NURBS curve
+    """Verifies an object is a rational NURBS curve
     Parameters:
       curve_id = identifier of the curve object
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
@@ -2175,8 +2084,7 @@ def IsCurveRational( curve_id, segment_index=-1 ):
 
 
 def IsEllipse( object_id ):
-    """
-    Verifies an ibject is an elliptical-shaped curve
+    """Verifies an object is an elliptical-shaped curve
     Parameters:
       curve_id = identifier of the curve object
     Returns:
@@ -2187,8 +2095,7 @@ def IsEllipse( object_id ):
 
 
 def IsLine( object_id, segment_index=-1 ):
-    """
-    Verifies an object is a line curve
+    """Verifies an object is a line curve
     Parameters:
       curve_id = identifier of the curve object
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
@@ -2200,8 +2107,7 @@ def IsLine( object_id, segment_index=-1 ):
 
 
 def IsPointOnCurve( object_id, point, segment_index=-1 ):
-    """
-    Verifies that a point is on a curve
+    """Verifies that a point is on a curve
     Parameters:
       curve_id = identifier of the curve object
       point = the test point
@@ -2217,8 +2123,7 @@ def IsPointOnCurve( object_id, point, segment_index=-1 ):
 
 
 def IsPolyCurve( object_id, segment_index=-1 ):
-    """
-    Verifies an object is a PolyCurve curve
+    """Verifies an object is a PolyCurve curve
     Parameters:
       curve_id = identifier of the curve object
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
@@ -2230,8 +2135,7 @@ def IsPolyCurve( object_id, segment_index=-1 ):
 
 
 def IsPolyline( object_id, segment_index=-1 ):
-    """
-    Verifies an object is a Polyline curve object
+    """Verifies an object is a Polyline curve object
     Parameters:
       curve_id = identifier of the curve object
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
@@ -2243,8 +2147,7 @@ def IsPolyline( object_id, segment_index=-1 ):
 
 
 def JoinCurves( object_ids, delete_input=False, tolerance=None ):
-    """
-    Joins multiple curves together to form one or more curves or polycurves
+    """Joins multiple curves together to form one or more curves or polycurves
     Parameters:
       object_ids = list of identifiers of multiple curve objects
       delete_input[opt] = delete input objects after joining
@@ -2275,8 +2178,7 @@ def JoinCurves( object_ids, delete_input=False, tolerance=None ):
 
 
 def LineFitFromPoints(points):
-    """
-    Returns a line that was fit through an array of 3D points
+    """Returns a line that was fit through an array of 3D points
     Parameters:
       points = a list of at least two 3D points
     Returns:
@@ -2291,8 +2193,7 @@ def LineFitFromPoints(points):
 
 
 def MakeCurveNonPeriodic( curve_id, delete_input=False ):
-    """
-    Makes a periodic curve non-periodic. Non-periodic curves can develop
+    """Makes a periodic curve non-periodic. Non-periodic curves can develop
     kinks when deformed
     Parameters:
       curve_id = identifier of the curve object
@@ -2327,8 +2228,7 @@ def MakeCurveNonPeriodic( curve_id, delete_input=False ):
 
 
 def MeshPolyline( polyline_id ):
-    """
-    Creates a polygon mesh object based on a closed polyline curve object.
+    """Creates a polygon mesh object based on a closed polyline curve object.
     The newly created mesh object is added to the document
     Parameters:
       polyline_id = identifier of the polyline curve object
@@ -2346,8 +2246,7 @@ def MeshPolyline( polyline_id ):
 
 
 def OffsetCurve( object_id, direction, distance, normal=None, style=1 ):
-    """
-    Offsets a curve by a distance. The offset curve will be added to Rhino
+    """Offsets a curve by a distance. The offset curve will be added to Rhino
     Parameters:
       object_id = identifier of a curve object
       direction = point describing direction of the offset
@@ -2382,16 +2281,15 @@ def OffsetCurve( object_id, direction, distance, normal=None, style=1 ):
 
 
 def OffsetCurveOnSurface( curve_id, surface_id, distance_or_parameter ):
-    """
-    Offset a curve on a surface. The source curve must lie on the surface. The offset curve or
-    curves will be added to Rhino
+    """Offset a curve on a surface. The source curve must lie on the surface.
+    The offset curve or curves will be added to Rhino
     Parameters:
       curve_id, surface_id = curve and surface identifiers
-      distance_or_parameter = If a single number is passed, then this is the distance of the offset.
-        Based on the curve's direction, a positive value will offset to the left and a negative
-        value will offset to the right.
-        If a tuple of two values is passed, this is interpreted as the surface U,V parameter that the
-        curve will be offset through
+      distance_or_parameter = If a single number is passed, then this is the
+        distance of the offset. Based on the curve's direction, a positive value
+        will offset to the left and a negative value will offset to the right.
+        If a tuple of two values is passed, this is interpreted as the surface
+        U,V parameter that the curve will be offset through
     Returns:
       Identifiers of the new curves if successful
       None on error
@@ -2414,8 +2312,7 @@ def OffsetCurveOnSurface( curve_id, surface_id, distance_or_parameter ):
 
 
 def PlanarClosedCurveContainment( curve_a, curve_b, plane=None, tolerance=None ):
-    """
-    Determines the relationship between the regions bounded by two coplanar
+    """Determines the relationship between the regions bounded by two coplanar
     simple closed curves
     Paramters:
       curve_a, curve_b = identifiers of two planar, closed curves
@@ -2443,8 +2340,7 @@ def PlanarClosedCurveContainment( curve_a, curve_b, plane=None, tolerance=None )
 
 
 def PointInPlanarClosedCurve( point, curve, plane=None, tolerance=None ):
-    """
-    Determines if a point is inside of a closed curve, on a closed curve, or
+    """Determines if a point is inside of a closed curve, on a closed curve, or
     outside of a closed curve
     Parameters:
       point = text point
@@ -2475,8 +2371,7 @@ def PointInPlanarClosedCurve( point, curve, plane=None, tolerance=None ):
 
 
 def PolyCurveCount( curve_id, segment_index=-1 ):
-    """
-    Returns the number of curve segments that make up a polycurve on success
+    """Returns the number of curve segments that make up a polycurve on success
     None on error
     """
     curve = rhutil.coercecurve(curve_id, segment_index)
@@ -2485,9 +2380,7 @@ def PolyCurveCount( curve_id, segment_index=-1 ):
 
 
 def PolylineVertices( curve_id, segment_index=-1 ):
-    """
-    Returns the vertices of a polyline curve on success or None on error
-    """
+    "Returns the vertices of a polyline curve on success or None on error"
     curve = rhutil.coercecurve(curve_id, segment_index)
     if curve is None: return scriptcontext.errorhandler()
     rc, polyline = curve.TryGetPolyline()
@@ -2496,8 +2389,7 @@ def PolylineVertices( curve_id, segment_index=-1 ):
 
 
 def ProjectCurveToMesh( curve_ids, mesh_ids, direction ):
-    """
-    Projects one or more curves onto one or more surfaces or meshes
+    """Projects one or more curves onto one or more surfaces or meshes
     Parameters:
       curve_ids = identifiers of curves to project
       mesh_ids = identifiers of meshes to project onto
@@ -2529,8 +2421,7 @@ def ProjectCurveToMesh( curve_ids, mesh_ids, direction ):
 
 
 def ProjectCurveToSurface( curve_ids, surface_ids, direction ):
-    """
-    Projects one or more curves onto one or more surfaces or polysurfaces
+    """Projects one or more curves onto one or more surfaces or polysurfaces
     Parameters:
       curve_ids = identifiers of curves to project
       surface_ids = identifiers of surfaces to project onto
@@ -2562,8 +2453,7 @@ def ProjectCurveToSurface( curve_ids, surface_ids, direction ):
 
 
 def RebuildCurve( curve_id, degree=3, point_count=10 ):
-    """
-    Rebuilds a curve to a given degree and control point count. For more
+    """Rebuilds a curve to a given degree and control point count. For more
     information, see the Rhino help for the Rebuild command.
     Parameters:
       curve_id = identifier of the curve object
@@ -2582,8 +2472,7 @@ def RebuildCurve( curve_id, degree=3, point_count=10 ):
 
 
 def ReverseCurve( curve_id ):
-    """
-    Reverses the direction of a curve object. Same as Rhino's Dir command
+    """Reverses the direction of a curve object. Same as Rhino's Dir command
     Parameters:
       curve_id = identifier of the curve object
     Returns:
@@ -2620,8 +2509,7 @@ def SimplifyCurve( curve_id, flags=0 ):
 
 
 def SplitCurve( curve_id, parameter, delete_input=True ):
-    """
-    Splits, or divides, a curve at a specified parameter. The parameter must
+    """Splits, or divides, a curve at a specified parameter. The parameter must
     be in the interior of the curve's domain
     Parameters:
       curve_id = identifier of the curve object
@@ -2648,8 +2536,7 @@ def SplitCurve( curve_id, parameter, delete_input=True ):
 
 
 def TrimCurve( curve_id, interval, delete_input=True ):
-    """
-    Trims a curve by removing portions of the curve outside the specified interval
+    """Trims a curve by removing portions of the curve outside the specified interval
     Paramters:
       curve_id = identifier of the curve object
       interval = two numbers indentifying the interval to keep. Portions of
