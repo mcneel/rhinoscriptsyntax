@@ -1,14 +1,21 @@
 # scriptcontext module
 import RhinoPython.Host as __host
 
-'''
-The Active Rhino document (Rhino.RhinoDoc in RhinoCommon) while a script
+'''The Active Rhino document (Rhino.RhinoDoc in RhinoCommon) while a script
 is executing. This variable is set by Rhino before the exection of every script.
 '''
 doc = None
 
+
+'''Identifies how the script is currently executing
+1 = running as standard python script
+2 = running inside grasshopper component
+3... potential other locations where script could be running
 '''
-A dictionary of values that can be reused between execution of scripts
+id = 1
+
+
+'''A dictionary of values that can be reused between execution of scripts
 '''
 sticky = dict()
 

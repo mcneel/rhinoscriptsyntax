@@ -8,6 +8,21 @@ import scriptcontext
 import math
 import string
 
+
+def ContextIsRhino():
+    """Returns True if the script is currently being executed in the context
+    of a normal script in Rhino
+    """
+    return scriptcontext.id == 1
+
+
+def ContextIsGrasshopper():
+    """Returns True if the script is currently being executed in a grasshopper
+    component
+    """
+    return scriptcontext.id == 2
+
+
 #should work all of the time unless we can't find the standard lib
 __cfparse = None
 try:
@@ -18,8 +33,7 @@ else:
     __cfparse = ConfigParser
 
 def Angle(point1, point2, plane=True):
-    """
-    Measures the angle between two points
+    """Measures the angle between two points
     Parameters:
       point1, point2: the input points
       plane[opt] = Boolean or Plane
@@ -85,8 +99,7 @@ def Angle2(line1, line2):
 
 
 def ClipboardText(text=None):
-    """
-    Returns or sets a text string to the Windows clipboard
+    """Returns or sets a text string to the Windows clipboard
     Parameters:
       text: [opt] text to set
     Returns:
