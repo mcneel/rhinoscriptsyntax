@@ -2,6 +2,8 @@ import scriptcontext
 import Rhino
 import utility as rhutil
 import application as rhapp
+from layer import __getlayer
+
 
 class filter:
     allobjects = 0
@@ -24,15 +26,13 @@ class filter:
     clippingplane = 536870912
 
 def AllObjects(select=False, include_lights=False, include_grips=False):
-    """
-    Returns the identifiers of all objects in the document.
+    """Returns the identifiers of all objects in the document.
     Parameters:
       select[opt] = Select the objects
       include_lights[opt] = Include light objects
       include_grips[opt] = Include grips objects
     Returns:
       A list of Guids identifying the objects
-      None if not successful, or on error.
     """
     it = Rhino.DocObjects.ObjectEnumeratorSettings()
     it.IncludeLights = include_lights
@@ -45,15 +45,12 @@ def AllObjects(select=False, include_lights=False, include_grips=False):
     for object in e:
         if select: object.Select(True)
         object_ids.append(object.Id)
-    if object_ids:
-        if select: scriptcontext.doc.Views.Redraw()
-        return object_ids
-    return None
+    if object_ids and select: scriptcontext.doc.Views.Redraw()
+    return object_ids
 
 
 def FirstObject(select=False, include_lights=False, include_grips=False):
-    """
-    Returns the identifier of the first object in the document. The first
+    """Returns the identifier of the first object in the document. The first
     object is the last object created by the user.
     """
     it = Rhino.DocObjects.ObjectEnumeratorSettings()
@@ -62,9 +59,9 @@ def FirstObject(select=False, include_lights=False, include_grips=False):
     e = scriptcontext.doc.Objects.GetObjectList(it).GetEnumerator()
     if not e.MoveNext(): return None
     object = e.Current
-    if object is None: return None
-    if select: object.Select(True)
-    return object.Id
+    if object:
+        if select: object.Select(True)
+        return object.Id
 
 
 def __FilterHelper(filter):
@@ -109,8 +106,7 @@ def __FilterHelper(filter):
 
 
 def GetCurveObject(message=None, preselect=False, select=False):
-    """
-    Prompts the user to pick or select a single curve object
+    """Prompts the user to pick or select a single curve object
     Parameters:
       message[opt] = a prompt or message.
       preselect[opt] =  Allow for the selection of pre-selected objects.
@@ -124,7 +120,7 @@ def GetCurveObject(message=None, preselect=False, select=False):
         element 3 = selection point
         element 4 = the curve parameter of the selection point
         element 5 = name of the view selection was made
-      None on error
+      None if no object picked
     """
     if not preselect:
         scriptcontext.doc.Objects.UnselectAll()
@@ -135,8 +131,7 @@ def GetCurveObject(message=None, preselect=False, select=False):
     go.SubObjectSelect = False
     go.GroupSelect = False
     go.AcceptNothing(True)
-    if go.Get()!=Rhino.Input.GetResult.Object:
-        return None
+    if go.Get()!=Rhino.Input.GetResult.Object: return None
  
     objref = go.Object(0)
     id = objref.ObjectId
@@ -159,8 +154,7 @@ def GetCurveObject(message=None, preselect=False, select=False):
 
 
 def GetObject(message=None, filter=0, preselect=False, select=False, custom_filter=None, subobjects=False):
-    """
-    Prompts the user to pick, or select, a single object.
+    """Prompts the user to pick, or select, a single object.
     Parameters:
       message[opt] = a prompt or message.
       filter[opt] = The type(s) of geometry (points, curves, surfaces, meshes,...)
@@ -174,7 +168,7 @@ def GetObject(message=None, filter=0, preselect=False, select=False, custom_filt
           of the subobject when passed into other functions
     Returns:
       Identifier of the picked object
-      None if not successful or an error occured
+      None if user did not pick an object
     """
     if not preselect:
         scriptcontext.doc.Objects.UnselectAll()
@@ -219,8 +213,7 @@ class __CustomGetObjectEx(Rhino.Input.Custom.GetObject):
         return False
 
 def GetObjectEx(message=None, filter=0, preselect=False, select=False, objects=None):
-    """
-    Prompts the user to pick, or select a single object
+    """Prompts the user to pick, or select a single object
     Parameters:
       message[opt] = a prompt or message.
       filter[opt] = The type(s) of geometry (points, curves, surfaces, meshes,...)
@@ -238,19 +231,16 @@ def GetObjectEx(message=None, filter=0, preselect=False, select=False, objects=N
         element 2 = selection method (see help)
         element 3 = selection point
         element 4 = name of the view selection was made
-      None on error
+      None if no object selected
     """
     if not preselect:
         scriptcontext.doc.Objects.UnselectAll()
         scriptcontext.doc.Views.Redraw()
     go = None
-    if objects is not None:
-        ids = []
-        for id in objects:
-            id = rhutil.coerceguid(id)
-            if id is not None: ids.append(id)
+    if objects:
+        ids = [rhutil.coerceguid(id, True) for id in objects]
         if ids: go = __CustomGetObjectEx(ids)
-    if go is None: go = Rhino.Input.Custom.GetObject()
+    if not go: go = Rhino.Input.Custom.GetObject()
     if message: go.SetCommandPrompt(message)
     geometry_filter = __FilterHelper(filter)
     if filter>0: go.GeometryFilter = geometry_filter
@@ -278,8 +268,7 @@ def GetObjectEx(message=None, filter=0, preselect=False, select=False, objects=N
 
 
 def GetObjects(message=None, filter=0, group=True, preselect=False, select=False, custom_filter=None):
-    """
-    Prompts the user to pick or select one or more objects.
+    """Prompts the user to pick or select one or more objects.
     Parameters:
       message[opt] = a prompt or message.
       filter[opt] = The type(s) of geometry (points, curves, surfaces, meshes,...)
@@ -293,7 +282,6 @@ def GetObjects(message=None, filter=0, group=True, preselect=False, select=False
           picked are not selected.
     Returns
       list of Guids identifying the picked object
-      None if not successful or an error occured
     """
     if not preselect:
         scriptcontext.doc.Objects.UnselectAll()
@@ -329,12 +317,11 @@ def GetObjects(message=None, filter=0, group=True, preselect=False, select=False
         obj = objref.Object()
         if select and obj is not None: obj.Select(select)
     go.Dispose()
-    if rc: return rc
+    return rc
 
 
 def GetObjectsEx(message=None, filter=0, group=True, preselect=False, select=False, objects=None):
-    """
-    Prompts the user to pick, or select one or more objects
+    """Prompts the user to pick, or select one or more objects
     Parameters:
       message[opt] = a prompt or message.
       filter[opt] = The type(s) of geometry (points, curves, surfaces, meshes,...)
@@ -355,26 +342,22 @@ def GetObjectsEx(message=None, filter=0, group=True, preselect=False, select=Fal
         element 2 = selection method (see help)
         element 3 = selection point
         element 4 = name of the view selection was made
-      None on error
     """
     if not preselect:
         scriptcontext.doc.Objects.UnselectAll()
         scriptcontext.doc.Views.Redraw()
     go = None
-    if objects is not None:
-        ids = []
-        for id in objects:
-            id = rhutil.coerceguid(id)
-            if id is not None: ids.append(id)
+    if objects:
+        ids = [rhutil.coerceguid(id) for id in objects]
         if ids: go = __CustomGetObjectEx(ids)
-    if go is None: go = Rhino.Input.Custom.GetObject()
+    if not go: go = Rhino.Input.Custom.GetObject()
     if message: go.SetCommandPrompt(message)
     geometry_filter = __FilterHelper(filter)
     if filter>0: go.GeometryFilter = geometry_filter
     go.SubObjectSelect = False
     go.GroupSelect = False
     go.AcceptNothing(True)      
-    if go.GetMultiple(1,0)!=Rhino.Input.GetResult.Object: return None
+    if go.GetMultiple(1,0)!=Rhino.Input.GetResult.Object: return []
     if not select:
         scriptcontext.doc.Objects.UnselectAll()
         scriptcontext.doc.Views.Redraw()
@@ -395,19 +378,15 @@ def GetObjectsEx(message=None, filter=0, group=True, preselect=False, select=Fal
         obj = objref.Object()
         if select and obj is not None: obj.Select(select)
     go.Dispose()
-    if not rc: return scriptcontext.errorhandler()
     return rc
 
 
 def GetPointCoordinates(message="select points", preselect=False):
-    """
-    Prompts the user to select one or more point objects.
+    """Prompts the user to select one or more point objects.
     Returns:
       list of 3d coordinates on success
-      None on error
     """
     ids = GetObjects(message, filter.point, preselect=preselect)
-    if ids is None: return None
     rc = []
     for id in ids:
         rhobj = scriptcontext.doc.Objects.Find(id)
@@ -416,8 +395,7 @@ def GetPointCoordinates(message="select points", preselect=False):
 
 
 def GetSurfaceObject(message="select surface", preselect=False, select=False):
-    """
-    Prompts the user to select a single surface
+    """Prompts the user to select a single surface
     Parameters:
       message[opt] = prompt displayed
       preselect[opt] = allow for preselected objects
@@ -464,8 +442,7 @@ def GetSurfaceObject(message="select surface", preselect=False, select=False):
 
 
 def HiddenObjects(include_lights=False, include_grips=False):
-    """
-    Returns identifiers of all hidden objects in the document. Hidden objects
+    """Returns identifiers of all hidden objects in the document. Hidden objects
     are not visible, cannot be snapped to, and cannot be selected
     Parameters:
       include_lights[opt] = include light objects
@@ -479,13 +456,11 @@ def HiddenObjects(include_lights=False, include_grips=False):
     settings.IncludeGrips = include_grips
     items = scriptcontext.doc.Objects.GetObjectList(settings)
     rc = [item.Id for item in items]
-    if rc: return rc
-    return None
+    return rc
 
 
 def InvertSelectedObjects(include_lights=False, include_grips=False):
-    """
-    Inverts the current object selection. The identifiers of the newly
+    """Inverts the current object selection. The identifiers of the newly
     selected objects are returned
     """
     settings = Rhino.DocObjects.ObjectEnumeratorSettings()
@@ -505,8 +480,7 @@ def InvertSelectedObjects(include_lights=False, include_grips=False):
 
 
 def LastCreatedObjects(select=False):
-    """
-    Returns identifiers of the objects that were most recently created or changed
+    """Returns identifiers of the objects that were most recently created or changed
     by scripting a Rhino command using the Command function. It is important to
     call this function immediately after calling the Command function as only the
     most recently created or changed object identifiers will be returned
@@ -527,8 +501,7 @@ def LastCreatedObjects(select=False):
 
 
 def LastObject(select=False, include_lights=False, include_grips=False):
-    """
-    Returns the identifier of the last object in the document. The last object
+    """Returns the identifier of the last object in the document. The last object
     in the document is the first object created by the user
     Parameters:
       select[opt] = select the object
@@ -536,7 +509,6 @@ def LastObject(select=False, include_lights=False, include_grips=False):
       include_grips[opt] = include grips in the potential set
     Returns:
       identifier of the object on success
-      None on error
     """
     settings = Rhino.DocObjects.ObjectEnumeratorSettings()
     settings.IncludeLights = include_lights
@@ -554,19 +526,17 @@ def LastObject(select=False, include_lights=False, include_grips=False):
 
 
 def ObjectsByGroup(group_name, select=False):
-    """
-    Returns identifiers of all objects based on the objects' group name
+    """Returns identifiers of all objects based on the objects' group name
     Parameters:
       group_name = name of the group
       select [opt] = select the objects
     Returns:
       list of identifiers on success
-      None on error
     """
     group_index = scriptcontext.doc.Groups.Find(group_name, True)
-    if group_index<0: return scriptcontext.errorhandler()
+    if group_index<0: raise ValueError("%s does not exist in GroupTable"%group_name)
     rhino_objects = scriptcontext.doc.Objects.FindByGroup(group_index)
-    if not rhino_objects: return scriptcontext.errorhandler()
+    if not rhino_objects: return []
     if select:
         for obj in rhino_objects: obj.Select(True)
         scriptcontext.doc.Views.Redraw()
@@ -574,20 +544,16 @@ def ObjectsByGroup(group_name, select=False):
 
 
 def ObjectsByLayer(layer_name, select=False):
-    """
-    Returns identifiers of all objects based on the objects' layer name
+    """Returns identifiers of all objects based on the objects' layer name
     Parameters:
       layer_name = name of the layer
       select [opt] = select the objects
     Returns:
-      list of identifiers on success
-      None on error
+      list of identifiers
     """
-    layer_index = scriptcontext.doc.Layers.Find(layer_name, True)
-    if layer_index<0: return scriptcontext.errorhandler()
-    layer = scriptcontext.doc.Layers[layer_index]
+    layer = __getlayer(layer_name, True)
     rhino_objects = scriptcontext.doc.Objects.FindByLayer(layer)
-    if not rhino_objects: return None
+    if not rhino_objects: return []
     if select:
         for rhobj in rhino_objects: rhobj.Select(True)
         scriptcontext.doc.Views.Redraw()
@@ -595,15 +561,13 @@ def ObjectsByLayer(layer_name, select=False):
 
 
 def ObjectsByName(name, select=False, include_lights=False):
-    """
-    Returns identifiers of all objects based on user-assigned name
+    """Returns identifiers of all objects based on user-assigned name
     Parameters:
       name = name of the object or objects
       select[opt] = select the objects
       include_lights[opt] = include light objects
     Returns:
-      list of identifiers on success
-      None on error
+      list of identifiers
     """
     settings = Rhino.DocObjects.ObjectEnumeratorSettings()
     settings.HiddenObjects = True
@@ -614,7 +578,7 @@ def ObjectsByName(name, select=False, include_lights=False):
     settings.NameFilter = name
     objects = scriptcontext.doc.Objects.GetObjectList(settings)
     ids = [rhobj.Id for rhobj in objects]
-    if not ids: return None
+    if not ids: return []
     if select:
         objects = scriptcontext.doc.Objects.GetObjectList(settings)
         for rhobj in objects: rhobj.Select(True)
@@ -623,8 +587,7 @@ def ObjectsByName(name, select=False, include_lights=False):
    
 
 def ObjectsByType(type, select=False):
-    """
-    Returns identifiers of all objects based on the objects' geometry type.
+    """Returns identifiers of all objects based on the objects' geometry type.
     Parameters:
       type = The type(s) of geometry objects (points, curves, surfaces,
              meshes, etc.) that can be selected. Object types can be
@@ -650,8 +613,7 @@ def ObjectsByType(type, select=False):
                536870912   Clipping plane
       select[opt] = Select the objects
     Returns:
-      A list of Guids identifying the objects if successful.
-      None if not successful, or on error.
+      A list of Guids identifying the objects.
     """
     bSurface = False
     bPolySurface = False
@@ -692,31 +654,25 @@ def ObjectsByType(type, select=False):
             if select: object.Select(True)
             object_ids.append(object.Id)
 
-    if object_ids:
-        if select: scriptcontext.doc.Views.Redraw()
-        return object_ids
-    return None
+    if object_ids and select: scriptcontext.doc.Views.Redraw()
+    return object_ids
   
 
 def SelectedObjects(include_lights=False, include_grips=False):
-    """
-    Returns the identifiers of all objects that are currently selected
+    """Returns the identifiers of all objects that are currently selected
     Parameters:
       include_lights [opt] = include light objects
       include_grips [opt] = include grip objects
     Returns:
-      list of Guids identifying the objects if successful
-      None if not successful
+      list of Guids identifying the objects
     """
     selobjects = scriptcontext.doc.Objects.GetSelectedObjects(include_lights, include_grips)
     rc = [obj.Id for obj in selobjects]
-    if not rc: return scriptcontext.errorhandler()
     return rc
 
 
 def UnselectAllObjects():
-    """
-    Unselects all objects in the document
+    """Unselects all objects in the document
     Returns:
       the number of objects that were unselected
     """
