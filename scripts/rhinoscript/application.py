@@ -9,8 +9,7 @@ import utility as rhutil
 
 
 def AddAlias(alias, macro):
-    """
-    Adds a new command alias to Rhino. Command aliases can be added manually by
+    """Adds a new command alias to Rhino. Command aliases can be added manually by
     using Rhino's Options command and modifying the contents of the Aliases tab.
     Parameters:
       alias = name of new command alias. Cannot match command names or existing
@@ -23,8 +22,7 @@ def AddAlias(alias, macro):
 
 
 def AddSearchPath( folder, index=-1 ):
-    """
-    Add new path to Rhino's search path list. Search paths can be added by
+    """Add new path to Rhino's search path list. Search paths can be added by
     using Rhino's Options command and modifying the contents of the files tab.
     Parameters:
       folder = A valid folder, or path, to add.
@@ -41,8 +39,7 @@ def AliasCount():
 
 
 def AliasMacro( alias, macro=None ):
-    """
-    Returns or modifies the macro of a command alias.
+    """Returns or modifies the macro of a command alias.
     Parameters:
       alias = The name of an existing command alias.
       macro [opt] = The new macro to run when the alias is executed.
@@ -64,8 +61,7 @@ def AliasNames():
 
 
 def AppearanceColor( item, color=None ):
-    """
-    Returns or modifies an application interface item's color.
+    """Returns or modifies an application interface item's color.
     Parameters:
       item = Item number to either query or modify
              0  = View background
@@ -86,7 +82,6 @@ def AppearanceColor( item, color=None ):
     Returns:
       if color is not specified, the current item color
       if color is specified, the previous item color
-      None if not successful
     """
     rc = None
     color = rhutil.coercecolor(color)
@@ -134,42 +129,36 @@ def AppearanceColor( item, color=None ):
     elif item==13:
         rc = appearance.CommandPromptHypertextColor
         if color: appearance.CommandPromptHypertextColor = color
-    if rc is None: return scriptcontext.errorhandler()
+    if rc is None: raise ValueError("item is out of range")
     return rc
 
 
 def AutosaveFile( filename=None ):
-    """
-    Returns or changes the file name used by Rhino's automatic file saving
+    """Returns or changes the file name used by Rhino's automatic file saving
     Parameters:
       filename [opt] = name of the new autosave file
     Returns:
       if filename is not specified, the name of the current autosave file
       if filename is specified, the name of the previous autosave file
-      None on error
     """
     rc = Rhino.ApplicationSettings.FileSettings.AutosaveFile
     if filename: Rhino.ApplicationSettings.FileSettings.AutosaveFile = filename
-    if rc is None: return scriptcontext.errorhandler()
     return rc
 
 
 def AutosaveInterval( minutes=None ):
-    """
-    Returns or changes how often the document will be saved when Rhino's
+    """Returns or changes how often the document will be saved when Rhino's
     automatic file saving mechanism is enabled
     Parameters:
       minutes [opt] = the number of minutes between saves
     Returns:
       if minutes is not specified, the current interval in minutes
       if minutes is specified, the previous interval in minutes
-      None on error
     """
     rc = Rhino.ApplicationSettings.FileSettings.AutosaveInterval.TotalMinutes
     if minutes:
         timespan = System.TimeSpan.FromMinutes(minutes)
         Rhino.ApplicationSettings.FileSettings.AutosaveInterval = timespan
-    if rc is None: return scriptcontext.errorhandler()
     return rc
 
 
@@ -180,8 +169,7 @@ def BuildDate():
 
 
 def ClearCommandHistory():
-    """
-    Clears contents of Rhino's command history window. You can view the
+    """Clears contents of Rhino's command history window. You can view the
     command history window by using the CommandHistory command in Rhino.
     """
     Rhino.RhinoApp.ClearCommandHistoryWindow()
@@ -190,8 +178,7 @@ def ClearCommandHistory():
 __command_serial_numbers = None
 
 def Command(commandString, echo=True):
-    """
-    Runs a Rhino command script. All Rhino commands can be used in command
+    """Runs a Rhino command script. All Rhino commands can be used in command
     scripts. The command can be a built-in Rhino command or one provided by a
     3rd party plug-in.
     Parameters:
@@ -238,8 +225,7 @@ def CommandHistory():
 
 
 def DeleteAlias( alias ):
-    """
-    Deletes an existing alias from Rhino.
+    """Deletes an existing alias from Rhino.
     Parameters:
       alias = the name of an existing alias
     Returns:
@@ -249,9 +235,8 @@ def DeleteAlias( alias ):
 
 
 def DeleteSearchPath( folder ):
-    """
-    Removes existing path from Rhino's search path list. Search path items can
-    be removed manually by using Rhino's options command and modifying the
+    """Removes existing path from Rhino's search path list. Search path items
+    can be removed manually by using Rhino's options command and modifying the
     contents of the files tab
     Parameters:
       folder = a folder to remove
@@ -267,26 +252,22 @@ def DisplayOleAlerts( enable ):
 
 
 def EdgeAnalysisColor( color=None ):
-    """
-    Returns or modifies edge analysis color displayed by the ShowEdges command
+    """Returns or modifies edge analysis color displayed by the ShowEdges command
     Parameters:
       color [opt] = the new color
     Returns:
       if color is not specified, the current edge analysis color
       if color is specified, the previous edge analysis color
-      None on error
     """
     rc = Rhino.ApplicationSettings.EdgeAnalysisSettings.ShowEdgeColor
-    color = rhutil.coercecolor(color)
     if color:
+        color = rhutil.coercecolor(color, True)
         Rhino.ApplicationSettings.EdgeAnalysisSettings.ShowEdgeColor = color
-    if rc is None: return scriptcontext.errorhandler()
     return rc
 
 
 def EdgeAnalysisMode( mode=None ):
-    """
-    Returns or modifies edge analysis mode displayed by the ShowEdges command
+    """Returns or modifies edge analysis mode displayed by the ShowEdges command
     Parameters:
       mode [opt] = the new display mode. The available modes are
                    0 - display all edges
@@ -294,26 +275,22 @@ def EdgeAnalysisMode( mode=None ):
     Returns:
       if mode is not specified, the current edge analysis mode
       if mode is specified, the previous edge analysis mode
-      None on error
     """
     rc = Rhino.ApplicationSettings.EdgeAnalysisSettings.ShowEdges
     if mode==1 or mode==2:
         Rhino.ApplicationSettings.EdgeAnalysisSettings.ShowEdges = mode
-    if rc is None: return scriptcontext.errorhandler()
     return rc
 
 
 def EnableAutosave( enable=True ):
-    """
-    Enables or disables Rhino's automatic file saving mechanism
+    """Enables or disables Rhino's automatic file saving mechanism
     Parameters:
       enable = the autosave state
     Returns:
       the previous autosave state
     """
     rc = Rhino.ApplicationSettings.FileSettings.AutosaveEnabled
-    if rc!=enable:
-        Rhino.ApplicationSettings.FileSettings.AutosaveEnabled = enable
+    if rc!=enable: Rhino.ApplicationSettings.FileSettings.AutosaveEnabled = enable
     return rc
 
 
@@ -328,9 +305,8 @@ def Exit():
 
 
 def FindFile(filename):
-    """
-    Searches for a file using Rhino's search path. Rhino will look for a file
-    in the following locations:
+    """Searches for a file using Rhino's search path. Rhino will look for a
+    file in the following locations:
       1. The current document's folder.
       2. Folder's specified in Options dialog, File tab.
       3. Rhino's System folders
@@ -338,16 +314,12 @@ def FindFile(filename):
       filename = short file name to search for
     Returns:
       full path on success
-      None on error
     """
-    rc = Rhino.ApplicationSettings.FileSettings.FindFile(filename)
-    if rc is None: return scriptcontext.errorhandler()
-    return rc
+    return Rhino.ApplicationSettings.FileSettings.FindFile(filename)
 
 
 def GetPlugInObject( plug_in ):
-    """
-    Returns a scriptable object from a specified plug-in. Not all plug-ins
+    """Returns a scriptable object from a specified plug-in. Not all plug-ins
     contain scriptable objects. Check with the manufacturer of your plug-in
     to see if they support this capability.
     Parameters:
@@ -357,16 +329,13 @@ def GetPlugInObject( plug_in ):
       scriptable object if successful
       None on error
     """
-    rc = Rhino.RhinoApp.GetPlugInObject(plug_in)
-    if rc is None: return scriptcontext.errorhandler()
-    return rc
+    return Rhino.RhinoApp.GetPlugInObject(plug_in)
   
 
 def InCommand(ignore_runners=True):
-    """
-    Determines if Rhino is currently running a command. Because Rhino allows
-    for transparent commands (commands run from inside of other commands),
-    this method returns the total number of active commands.
+    """Determines if Rhino is currently running a command. Because Rhino allows
+    for transparent commands (commands run from inside of other commands), this
+    method returns the total number of active commands.
     Parameters:
       ignore_runners [opt] = If true, script running commands, such as
           LoadScript, RunScript, and ReadCommandFile will not counted.
@@ -383,8 +352,7 @@ def InstallFolder():
 
 
 def IsAlias(alias):
-    """
-    Verifies that a command alias exists in Rhino
+    """Verifies that a command alias exists in Rhino
     Parameters:
       the name of an existing command alias
     """
@@ -392,8 +360,7 @@ def IsAlias(alias):
 
 
 def IsCommand(command_name):
-    """
-    Verifies that a command exists in Rhino. Useful when scripting commands
+    """Verifies that a command exists in Rhino. Useful when scripting commands
     found in 3rd party plug-ins.
     Parameters:
       command_name = the command name to test
@@ -413,8 +380,7 @@ def LastCommandName():
 
 
 def LastCommandResult():
-    """
-    Returns the result code for the last executed command
+    """Returns the result code for the last executed command
     0 = success (command successfully completed)
     1 = cancel (command was cancelled by the user)
     2 = nothing (command did nothing, but was not cancelled)
@@ -425,8 +391,7 @@ def LastCommandResult():
 
 
 def LocaleID():
-    """
-    Returns the current language used for the Rhino interface.  The current
+    """Returns the current language used for the Rhino interface.  The current
     language is returned as a locale ID, or LCID, value.
       1029  Czech
       1031  German-Germany
@@ -442,8 +407,7 @@ def LocaleID():
 
 
 def Ortho(enable=None):
-    """
-    Enables or disables Rhino's ortho modeling aid.
+    """Enables or disables Rhino's ortho modeling aid.
     Parameters:
       enable [opt] = the new enabled status (True or False)
     Returns:
@@ -456,8 +420,7 @@ def Ortho(enable=None):
 
 
 def Osnap(enable=None):
-    """
-    Enables or disables Rhino's object snap modeling aid.
+    """Enables or disables Rhino's object snap modeling aid.
     Object snaps are tools for specifying points on existing objects.
     Parameters:
       enable [opt] = the new enabled status (True or False)
@@ -471,8 +434,7 @@ def Osnap(enable=None):
 
 
 def OsnapDialog(visible=None):
-    """
-    Shows or hides Rhino's dockable object snap bar
+    """Shows or hides Rhino's dockable object snap bar
     Parameters:
       visible [opt] = the new visibility state (True or False)
     Returns:
@@ -485,8 +447,7 @@ def OsnapDialog(visible=None):
 
 
 def OsnapMode(mode=None):
-    """
-    Returns or sets the object snap mode. Object snaps are tools for
+    """Returns or sets the object snap mode. Object snaps are tools for
     specifying points on existing objects
     Parameters:
       mode [opt] = The object snap mode or modes to set. Object snap modes
@@ -509,14 +470,13 @@ def OsnapMode(mode=None):
       if mode is specified, then the previous object snap mode(s) 
     """
     rc = modelaid.OsnapModes
-    if mode:
+    if mode is not None:
         modelaid.OsnapModes = System.Enum.ToObject(Rhino.ApplicationSettings.OsnapModes, mode)
     return int(rc)
 
 
 def Planar(enable=None):
-    """
-    Enables or disables Rhino's planar modeling aid
+    """Enables or disables Rhino's planar modeling aid
     Parameters:
       enable = the new enable status (True or False)
     Returns:
@@ -529,8 +489,7 @@ def Planar(enable=None):
 
 
 def ProjectOsnaps(enable=None):
-    """
-    Enables or disables object snap projection
+    """Enables or disables object snap projection
     Parameters:
       enable [opt] = the new enabled status (True or False)
     Returns:
@@ -543,8 +502,7 @@ def ProjectOsnaps(enable=None):
 
 
 def Prompt(message=None):
-    """
-    Change Rhino's command window prompt
+    """Change Rhino's command window prompt
     Parameters:
       message [opt] = the new prompt
     """
@@ -555,8 +513,7 @@ def Prompt(message=None):
 
 
 def ScreenSize():
-    """
-    Returns current width and height, of the screen of the primary monitor.
+    """Returns current width and height, of the screen of the primary monitor.
     Returns:
       Tuple containing two numbers identifying the width and height
     """
@@ -565,32 +522,28 @@ def ScreenSize():
 
 
 def SdkVersion():
-    """
-    Returns version of the Rhino SDK supported by the executing Rhino.
+    """Returns version of the Rhino SDK supported by the executing Rhino.
     Rhino SDK versions are 9 digit numbers in the form of YYYYMMDDn.
     """
     return Rhino.RhinoApp.SdkVersion
 
 
 def SearchPathCount():
-    """
-    Returns the number of path items in Rhino's search path list.
+    """Returns the number of path items in Rhino's search path list.
     See "Options Files settings" in the Rhino help file for more details.
     """
     return Rhino.ApplicationSettings.FileSettings.SearchPathCount
 
 
 def SearchPathList():
-    """
-    Returns all of the path items in Rhino's search path list.
+    """Returns all of the path items in Rhino's search path list.
     See "Options Files settings" in the Rhino help file for more details.
     """
     return Rhino.ApplicationSettings.FileSettings.GetSearchPaths()
 
 
 def SendKeystrokes(keys=None, add_return=True):
-    """
-    Sends a string of printable characters to Rhino's command line
+    """Sends a string of printable characters to Rhino's command line
     Parameters:
       keys [opt] = A string of characters to send to the command line.
       add_returns [opt] = Append a return character to the end of the string.
@@ -599,8 +552,7 @@ def SendKeystrokes(keys=None, add_return=True):
 
 
 def Snap(enable=None):
-    """
-    Enables or disables Rhino's grid snap modeling aid
+    """Enables or disables Rhino's grid snap modeling aid
     Parameters:
       enable [opt] = the new enabled status (True or False)
     Returns:
@@ -630,8 +582,7 @@ def StatusBarPoint(point=None):
 
 
 def StatusBarProgressMeterShow(label, lower, upper, embed_label=True, show_percent=True):
-    """
-    Start the Rhino status bar progress meter
+    """Start the Rhino status bar progress meter
     Parameters:
       label = short description of the progesss
       lower = lower limit of the progress meter's range
@@ -647,8 +598,7 @@ def StatusBarProgressMeterShow(label, lower, upper, embed_label=True, show_perce
 
 
 def StatusBarProgressMeterUpdate(position, absolute=True):
-    """
-    Set the current position of the progress meter
+    """Set the current position of the progress meter
     Parameters:
       position = new position in the progress meter
       absolute[opt] = position is an absolute or relative
@@ -664,8 +614,7 @@ def StatusBarProgressMeterHide():
 
 
 def TemplateFile(filename=None):
-    """
-    Returns or sets Rhino's default template file. This is the template
+    """Returns or sets Rhino's default template file. This is the template
     file used when Rhino starts.
     Parameters:
       filename[opt] = The name of the new default template file (must exist)
@@ -679,8 +628,7 @@ def TemplateFile(filename=None):
 
 
 def TemplateFolder(folder=None):
-    """
-    Returns or sets the location of Rhino's template folder
+    """Returns or sets the location of Rhino's template folder
     Parameters:
       The location of Rhino's template files. Note, the location must exist
     Returns:
@@ -688,7 +636,7 @@ def TemplateFolder(folder=None):
       if folder is specified, then the previous template file folder
     """
     rc = Rhino.ApplicationSettings.FileSettings.TemplateFolder
-    if folder: Rhino.ApplicationSettings.FileSettings.TemplateFolder = folder
+    if folder is not None: Rhino.ApplicationSettings.FileSettings.TemplateFolder = folder
     return rc
 
 
@@ -698,8 +646,7 @@ def WindowHandle():
 
 
 def WorkingFolder(folder=None):
-    """
-    Returns or sets Rhino's working directory, or folder.
+    """Returns or sets Rhino's working directory, or folder.
     The working folder is the default folder for all file operations.
     Parameters:
       folder[opt] = the new working folder
@@ -708,5 +655,5 @@ def WorkingFolder(folder=None):
       if folder is specified, then the previous working folder
     """
     rc = Rhino.ApplicationSettings.FileSettings.WorkingFolder
-    if folder: Rhino.ApplicationSettings.FileSettings.WorkingFolder = folder
+    if folder is not None: Rhino.ApplicationSettings.FileSettings.WorkingFolder = folder
     return rc

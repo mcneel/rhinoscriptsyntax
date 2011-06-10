@@ -420,15 +420,14 @@ def coerce3dvector(vector, raise_on_error=False):
     if raise_on_error: raise ValueError("Could not convert %s to a Vector3d" % vector)
 
 
-def coerce3dpointlist(points):
-    if points is None: return None
+def coerce3dpointlist(points, raise_on_error=False):
     if isinstance(points, System.Array[Rhino.Geometry.Point3d]):
         return list(points)
     if isinstance(points, Rhino.Collections.Point3dList): return list(points)
     if type(points) is list or type(points) is tuple:
         count = len(points)
         if count>0 and (coerce3dpoint(points[0]) is not None):
-            return [coerce3dpoint(points[i]) for i in xrange(count)]
+            return [coerce3dpoint(points[i], raise_on_error) for i in xrange(count)]
         elif count>2 and type(points[0]) is not list:
             point_count = count/3
             rc = []
@@ -436,7 +435,7 @@ def coerce3dpointlist(points):
                 pt = Rhino.Geometry.Point3d(points[i*3], points[i*3+1], points[i*3+2])
                 rc.append(pt)
             return rc
-    return None
+    if raise_on_error: raise ValueError("Could not convert %s to a list of points" % points)
 
 
 def coerce2dpointlist(points):
@@ -465,10 +464,9 @@ def coerce2dpointlist(points):
     return None
 
 
-def coerceplane(plane):
+def coerceplane(plane, raise_on_bad_input=False):
     "Convert input into a Rhino.Geometry.Plane if possible."
     if type(plane) is Rhino.Geometry.Plane: return plane
-    if plane is None: return None
     if type(plane) is list or type(plane) is tuple:
         length = len(plane)
         if length==3 and type(plane[0]) is not list:
@@ -487,6 +485,7 @@ def coerceplane(plane):
             ypoint = Rhino.Geometry.Point3d(plane[2][0],plane[2][1],plane[2][2])
             rc     = Rhino.Geometry.Plane(origin, xpoint, ypoint)
             return rc
+    if raise_on_bad_input: raise TypeError("%s can not be converted to a Plane"%plane)
 
 
 def coercexform(xform, raise_on_bad_input=False):
@@ -550,17 +549,16 @@ def coerceline(line):
     return None
 
 
-def coercebrep( id ):
+def coercebrep(id, raise_if_missing=False):
     "attempt to get polysurface geometry from the document with a given id"
     if isinstance(id, Rhino.Geometry.Brep): return id
     if type(id) is Rhino.DocObjects.ObjRef: return id.Brep()
-    id = coerceguid(id)
-    if id is None: return None
+    id = coerceguid(id, True)
     brepObj = scriptcontext.doc.Objects.Find(id)
     if brepObj:
         brep = brepObj.Geometry
         if isinstance(brep, Rhino.Geometry.Brep): return brep
-    return None
+    if raise_if_missing: raise ValueError("unable to convert %s into Brep geometry"%id)
 
 
 def coercegeometry( id ):
@@ -575,27 +573,25 @@ def coercegeometry( id ):
     return None
 
 
-def coercecurve( id, segment_index=-1 ):
+def coercecurve(id, segment_index=-1, raise_if_missing=False):
     "attempt to get curve geometry from the document with a given id"
     if isinstance(id, Rhino.Geometry.Curve): return id
     if type(id) is Rhino.DocObjects.ObjRef: return id.Curve()
-    id = coerceguid(id)
-    if id is None: return None
+    id = coerceguid(id, True)
     crvObj = scriptcontext.doc.Objects.Find(id)
     if crvObj:
         curve = crvObj.Geometry
         if curve and segment_index>=0 and type(curve) is Rhino.Geometry.PolyCurve:
             curve = curve.SegmentCurve(segment_index)
         if isinstance(curve, Rhino.Geometry.Curve): return curve
-    return None
+    if raise_if_missing: raise ValueError("unable to convert %s into Curve geometry"%id)
 
 
-def coercesurface(object_id):
+def coercesurface(object_id, raise_if_missing=False):
     "attempt to get surface geometry from the document with a given id"
     if isinstance(object_id, Rhino.Geometry.Surface): return object_id
     if type(object_id) is Rhino.DocObjects.ObjRef: return object_id.Face()
-    object_id = coerceguid(object_id)
-    if object_id is None: return None
+    object_id = coerceguid(object_id, True)
     srfObj = scriptcontext.doc.Objects.Find(object_id)
     if srfObj:
         srf = srfObj.Geometry
@@ -603,20 +599,19 @@ def coercesurface(object_id):
         #single face breps are considered surfaces in the context of scripts
         if isinstance(srf, Rhino.Geometry.Brep) and srf.Faces.Count==1:
             return srf.Faces[0]
-    return None
+    if raise_if_missing: raise ValueError("unable to convert %s into Surface geometry"%object_id)
 
 
-def coercemesh( object_id ):
+def coercemesh(object_id, raise_if_missing=False):
     "attempt to get mesh geometry from the document with a given id"
     if type(object_id) is Rhino.DocObjects.ObjRef: return object_id.Mesh()
     if isinstance(object_id, Rhino.Geometry.Mesh): return object_id
-    object_id = coerceguid(object_id)
-    if object_id is None: return None
+    object_id = coerceguid(object_id, True)
     meshObj = scriptcontext.doc.Objects.Find(object_id)
     if meshObj:
         mesh = meshObj.Geometry
         if isinstance(mesh, Rhino.Geometry.Mesh): return mesh
-    return None
+    if raise_if_missing: raise ValueError("unable to convert %s into Mesh geometry"%object_id)
 
 
 def coercerhinoobject(object_id, raise_if_bad_input=False, raise_if_missing=False):
