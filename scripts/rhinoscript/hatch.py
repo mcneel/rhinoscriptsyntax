@@ -4,8 +4,7 @@ import Rhino
 import System.Guid
 
 def AddHatch(curve_id, hatch_pattern=None, scale=1.0, rotation=0.0):
-    """
-    Creates a new hatch object from a closed planar curve object
+    """Creates a new hatch object from a closed planar curve object
     Parameters:
       curve_id = identifier of the closed planar curve that defines the
           boundary of the hatch object
@@ -17,14 +16,13 @@ def AddHatch(curve_id, hatch_pattern=None, scale=1.0, rotation=0.0):
       identifier of the newly created hatch on success
       None on error
     """
-    rc = AddHatches( curve_id, hatch_pattern, scale, rotation )
+    rc = AddHatches(curve_id, hatch_pattern, scale, rotation)
     if rc: return rc[0]
     return scriptcontext.errorhandler()
 
 
 def AddHatches(curve_ids, hatch_pattern=None, scale=1.0, rotation=0.0):
-    """
-    Creates one or more new hatch objects a list of closed planar curves
+    """Creates one or more new hatch objects a list of closed planar curves
     Parameters:
       curve_ids = identifiers of the closed planar curves that defines the
           boundary of the hatch objects
@@ -36,8 +34,7 @@ def AddHatches(curve_ids, hatch_pattern=None, scale=1.0, rotation=0.0):
       identifiers of the newly created hatch on success
       None on error
     """
-    id = rhutil.coerceguid(curve_ids)
-    if id: curve_ids = [curve_ids]
+    if rhutil.coerceguid(curve_ids, False): curve_ids = [curve_ids]
     index = scriptcontext.doc.HatchPatterns.CurrentHatchPatternIndex
     if hatch_pattern and hatch_pattern!=index:
         if isinstance(hatch_pattern, int):
@@ -45,12 +42,7 @@ def AddHatches(curve_ids, hatch_pattern=None, scale=1.0, rotation=0.0):
         else:
             index = scriptcontext.doc.HatchPatterns.Find(hatch_pattern, True)
         if index<0: return scriptcontext.errorhandler()
-    rc = []
-    curves = []
-    for id in curve_ids:
-        id = rhutil.coerceguid(id)
-        curve = rhutil.coercecurve(id)
-        if curve is not None: curves.append(curve)
+    curves = [rhutil.coercecurve(id, -1, True) for id in curve_ids]
     rotation = Rhino.RhinoMath.ToRadians(rotation)
     hatches = Rhino.Geometry.Hatch.Create(curves, index, rotation, scale)
     if not hatches: return scriptcontext.errorhandler()
@@ -65,8 +57,7 @@ def AddHatches(curve_ids, hatch_pattern=None, scale=1.0, rotation=0.0):
 
 
 def AddHatchPatterns(filename, replace=False):
-    """
-    Adds hatch patterns to the document by importing hatch pattern definitions
+    """Adds hatch patterns to the document by importing hatch pattern definitions
     from a pattern file.
     Parameters:
       filename = name of the hatch pattern file
@@ -90,8 +81,7 @@ def AddHatchPatterns(filename, replace=False):
 
 
 def CurrentHatchPattern(hatch_pattern=None):
-    """
-    Returns or sets the current hatch pattern file
+    """Returns or sets the current hatch pattern file
     Parameters:
       hatch_pattern[opt] = name of an existing hatch pattern to make current
     Returns:
@@ -108,8 +98,7 @@ def CurrentHatchPattern(hatch_pattern=None):
 
 
 def ExplodeHatch(hatch_id, delete=False):
-    """
-    Explodes a hatch object into its component objects. The exploded objects
+    """Explodes a hatch object into its component objects. The exploded objects
     will be added to the document. If the hatch object uses a solid pattern,
     then planar face Brep objects will be created. Otherwise, line curve objects
     will be created
@@ -120,9 +109,7 @@ def ExplodeHatch(hatch_id, delete=False):
       list of identifiers for the newly created objects
       None on error
     """
-    hatch_id = rhutil.coerceguid(hatch_id)
-    if hatch_id is None: return scriptcontext.errorhandler()
-    rhobj = scriptcontext.doc.Objects.Find(hatch_id)
+    rhobj = rhutil.coercerhinoobject(hatch_id, True, True)
     if not isinstance(rhobj, Rhino.DocObjects.HatchObject):
         return scriptcontext.errorhandler()
     pieces = rhobj.HatchGeometry.Explode()
@@ -136,13 +123,11 @@ def ExplodeHatch(hatch_id, delete=False):
         elif isinstance(piece, Rhino.Geometry.Brep):
             id = scriptcontext.doc.Objects.AddBrep(piece, attr)
         if id: rc.append(id)
-    if not rc: return scriptcontext.errorhandler()
     return rc
 
 
 def HatchPattern(hatch_id, hatch_pattern=None):
-    """
-    Returns or changes a hatch object's hatch pattern
+    """Returns or changes a hatch object's hatch pattern
     Paramters:
       hatch_id = identifier of a hatch object
       hatch_pattern[opt] = name of an existing hatch pattern to replace the
@@ -152,9 +137,7 @@ def HatchPattern(hatch_id, hatch_pattern=None):
       if hatch_pattern is specified, the previous hatch pattern
       None on error
     """
-    hatch_id = rhutil.coerceguid(hatch_id)
-    if hatch_id is None: return scriptcontext.errorhandler()
-    hatchobj = scriptcontext.doc.Objects.Find(hatch_id)
+    hatchobj = rhutil.coercerhinoobject(hatch_id, True, True)
     if not isinstance(hatchobj, Rhino.DocObjects.HatchObject):
         return scriptcontext.errorhandler()
     old_index = hatchobj.HatchGeometry.PatternIndex
@@ -173,8 +156,7 @@ def HatchPatternCount():
 
 
 def HatchPatternDescription(hatch_pattern):
-    """
-    Returns the description of a hatch pattern. Note, not all hatch patterns
+    """Returns the description of a hatch pattern. Note, not all hatch patterns
     have descriptions
     Parameters:
       hatch_pattern = name of an existing hatch pattern
@@ -185,8 +167,7 @@ def HatchPatternDescription(hatch_pattern):
 
 
 def HatchPatternFillType(hatch_pattern):
-    """
-    Returns the fill type of a hatch pattern.
+    """Returns the fill type of a hatch pattern.
         0 = solid, uses object color
         1 = lines, uses pattern file definition
         2 = gradient, uses fill color definition
@@ -201,17 +182,15 @@ def HatchPatternFillType(hatch_pattern):
 
 def HatchPatternNames():
     "Returns the names of all of the hatch patterns in the document"
-    count = scriptcontext.doc.HatchPatterns.Count
     rc = []
-    for i in range(count):
+    for i in range(scriptcontext.doc.HatchPatterns.Count):
         hatchpattern = scriptcontext.doc.HatchPatterns[i]
         if hatchpattern.IsDeleted: continue
         rc.append(hatchpattern.Name)
-    if rc: return rc
+    return rc
 
 def HatchRotation(hatch_id, rotation=None):
-    """
-    Returns or modifies the rotation applied to the hatch pattern when
+    """Returns or modifies the rotation applied to the hatch pattern when
     it is mapped to the hatch's plane
     Parameters:
       hatch_id = identifier of a hatch object
@@ -221,9 +200,7 @@ def HatchRotation(hatch_id, rotation=None):
       if rotation is specified, the previous rotation angle
       None on error
     """
-    hatch_id = rhutil.coerceguid(hatch_id)
-    if hatch_id is None: return scriptcontext.errorhandler()
-    hatchobj = scriptcontext.doc.Objects.Find(hatch_id)
+    hatchobj = rhutil.coercerhinoobject(hatch_id, True, True)
     if not isinstance(hatchobj, Rhino.DocObjects.HatchObject):
         return scriptcontext.errorhandler()
     rc = hatchobj.HatchGeometry.PatternRotation
@@ -237,8 +214,7 @@ def HatchRotation(hatch_id, rotation=None):
 
 
 def HatchScale(hatch_id, scale=None):
-    """
-    Returns or modifies the scale applied to the hatch pattern when it is
+    """Returns or modifies the scale applied to the hatch pattern when it is
     mapped to the hatch's plane
     Parameters:
       hatch_id = identifier of a hatch object
@@ -248,13 +224,11 @@ def HatchScale(hatch_id, scale=None):
       if scale is defined, the previous scale factor
       None on error
     """
-    hatch_id = rhutil.coerceguid(hatch_id)
-    if hatch_id is None: return scriptcontext.errorhandler()
-    hatchobj = scriptcontext.doc.Objects.Find(hatch_id)
+    hatchobj = rhutil.coercerhinoobject(hatch_id)
     if not isinstance(hatchobj, Rhino.DocObjects.HatchObject):
         return scriptcontext.errorhandler()
     rc = hatchobj.HatchGeometry.PatternScale
-    if scale is not None and scale!=rc:
+    if scale and scale!=rc:
         hatchobj.HatchGeometry.PatternScale = scale
         hatchobj.CommitChanges()
         scriptcontext.doc.Views.Redraw()
@@ -262,33 +236,28 @@ def HatchScale(hatch_id, scale=None):
 
 
 def IsHatch(object_id):
-    """
-    Verifies the existence of a hatch object in the document
+    """Verifies the existence of a hatch object in the document
     Paramters:
       object_id = identifier of an object
     Returns:
       True or False
     """
-    id = rhutil.coerceguid(object_id)
-    rhobj = scriptcontext.doc.Objects.Find(id)
-    return rhobj and isinstance(rhobj, Rhino.DocObjects.HatchObject)
+    rhobj = rhutil.coercerhinoobject(object_id, True, False)
+    return isinstance(rhobj, Rhino.DocObjects.HatchObject)
 
 
 def IsHatchPattern(name):
-    """
-    Verifies the existence of a hatch pattern in the document
+    """Verifies the existence of a hatch pattern in the document
     Parameters:
       name = the name of a hatch pattern
     Returns:
       True or False
     """
-    index = scriptcontext.doc.HatchPatterns.Find(name, True)
-    return index>=0
+    return scriptcontext.doc.HatchPatterns.Find(name, True)>=0
 
 
 def IsHatchPatternCurrent(hatch_pattern):
-    """
-    Verifies that a hatch pattern is the current hatch pattern
+    """Verifies that a hatch pattern is the current hatch pattern
     Parameters:
       hatch_pattern = name of an existing hatch pattern
     Returns:
@@ -301,8 +270,7 @@ def IsHatchPatternCurrent(hatch_pattern):
 
 
 def IsHatchPatternReference(hatch_pattern):
-    """
-    Verifies that a hatch pattern is from a reference file
+    """Verifies that a hatch pattern is from a reference file
     Parameters:
       hatch_pattern = name of an existing hatch pattern
     Returns:

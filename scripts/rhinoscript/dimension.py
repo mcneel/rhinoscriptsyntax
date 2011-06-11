@@ -4,9 +4,8 @@ import Rhino
 import System.Guid
 from view import __viewhelper
 
-def AddDimStyle( dimstyle_name=None ):
-    """
-    Adds a new dimension style to the document. The new dimension style will
+def AddDimStyle(dimstyle_name=None):
+    """Adds a new dimension style to the document. The new dimension style will
     be initialized with the current default dimension style properties.
     Properties:
       dimstyle_name[opt] = name of the new dimension style. If omitted, Rhino
@@ -21,9 +20,8 @@ def AddDimStyle( dimstyle_name=None ):
     return ds.Name
 
 
-def AddLeader( points, view=None, text=None ):
-    """
-    Adds an annotation leader to the document. Leader objects are planar.
+def AddLeader(points, view=None, text=None):
+    """Adds an annotation leader to the document. Leader objects are planar.
     The 3D points passed to this function should be co-planar
     Paramters:
       points = list of (at least 2) 3D points
@@ -37,9 +35,9 @@ def AddLeader( points, view=None, text=None ):
       None on error
     """
     points = rhutil.coerce3dpointlist(points)
-    if points is None or len(points)<2: return scriptcontext.errorhandler()
+    if points is None or len(points)<2: raise ValueError("points must have at least two items")
     rc = System.Guid.Empty
-    if view is None:
+    if not view:
         if text is None:
             rc = scriptcontext.doc.Objects.AddLeader(points)
         else:
@@ -58,27 +56,24 @@ def AddLeader( points, view=None, text=None ):
         else:
             if not isinstance(text, str): text = str(text)
             rc = scriptcontext.doc.Objects.AddLeader(text, plane, points2d)
-    if( rc==System.Guid.Empty ): return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
 
 
-def AddLinearDimension( start_point, end_point, point_on_dimension_line ):
-    """
-    Adds a linear dimension to the document
+def AddLinearDimension(start_point, end_point, point_on_dimension_line):
+    """Adds a linear dimension to the document
     Returns:
       identifier of the new object on success
       None on error
     """
-    start = rhutil.coerce3dpoint(start_point)
-    end = rhutil.coerce3dpoint(end_point)
-    onpoint = rhutil.coerce3dpoint(point_on_dimension_line)
-    if start is None or end is None or onpoint is None:
-        return scriptcontext.errorhandler()
+    start = rhutil.coerce3dpoint(start_point, True)
+    end = rhutil.coerce3dpoint(end_point, True)
+    onpoint = rhutil.coerce3dpoint(point_on_dimension_line, True)
     ldim = Rhino.Geometry.LinearDimension.FromPoints(start, end, onpoint)
-    if ldim is None: return scriptcontext.errorhandler()
+    if not ldim: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddLinearDimension(ldim)
-    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: raise Exception("unable to add dimension to document")
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -102,8 +97,7 @@ def CurrentDimStyle( dimstyle_name=None ):
 
 
 def DeleteDimStyle(dimstyle_name):
-    """
-    Removes an existing dimension style from the document. The dimension style
+    """Removes an existing dimension style from the document. The dimension style
     to be removed cannot be referenced by any dimension objects.
     Parameters:
       dimstyle_name = the name of an unreferenced dimension style
@@ -112,14 +106,20 @@ def DeleteDimStyle(dimstyle_name):
       None on error
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle_name, True)
-    if( ds is not None and scriptcontext.doc.DimStyles.DeleteDimensionStyle(ds.Index, True) ):
+    if ds and scriptcontext.doc.DimStyles.DeleteDimensionStyle(ds.Index, True):
         return dimstyle_name
     return scriptcontext.errorhandler()
 
 
+def __coerceannotation(object_id):
+    id = rhutil.coerceguid(object_id, True)
+    annotation_object = scriptcontext.doc.Objects.Find(id)
+    if not isinstance(annotation_object, Rhino.DocObjects.AnnotationObjectBase):
+        raise ValueError("object_id does not refer to an Annotation")
+    return annotation_object
+
 def DimensionStyle(object_id, dimstyle_name=None):
-    """
-    Returns or modifies the dimension style of a dimension object
+    """Returns or modifies the dimension style of a dimension object
     Parameters:
       object_id = identifier of the object
       dimstyle_name[opt] = the name of an existing dimension style
@@ -128,16 +128,12 @@ def DimensionStyle(object_id, dimstyle_name=None):
       if dimstyle_name is not specified, the object's previous dimension style name
       None on error
     """
-    id = rhutil.coerceguid(object_id)
-    if id is None: return scriptcontext.errorhandler()
-    annotation_object = scriptcontext.doc.Objects.Find(id)
-    if not isinstance(annotation_object, Rhino.DocObjects.AnnotationObjectBase):
-        return scriptcontext.errorhandler()
+    annotation_object = __coerceannotation(object_id)
     ds = annotation_object.DimensionStyle
     rc = ds.Name
-    if dimstyle_name is not None:
+    if dimstyle_name:
         ds = scriptcontext.doc.DimStyles.Find(dimstyle_name, True)
-        if ds is None: return scriptcontext.errorhandler()
+        if not ds: return scriptcontext.errorhandler()
         annotation = annotation_object.Geometry
         annotation.DimensionStyleIndex = ds.Index
         annotation_object.CommitChanges()
@@ -145,36 +141,25 @@ def DimensionStyle(object_id, dimstyle_name=None):
 
 
 def DimensionText(object_id):
-    """
-    Returns the text displayed by a dimension object
+    """Returns the text displayed by a dimension object
     Parameters:
       object_id = identifier of the object
     """
-    id = rhutil.coerceguid(object_id)
-    if id is None: return scriptcontext.errorhandler()
-    annotation_object = scriptcontext.doc.Objects.Find(id)
-    if not isinstance(annotation_object, Rhino.DocObjects.AnnotationObjectBase):
-        return scriptcontext.errorhandler()
+    annotation_object = __coerceannotation(object_id)
     return annotation_object.DisplayText
 
 
 def DimensionUserText(object_id, usertext=None):
-    """
-    Returns of modifies the user text string of a dimension object. The user text is the
-    string that gets printed when the dimension is defined
+    """Returns of modifies the user text string of a dimension object. The user
+    text is the string that gets printed when the dimension is defined
     Parameters:
       object_id = identifier of the object
       usertext[opt] = the new user text string value
     Returns:
       if usertext is not specified, the current usertext string
       if usertext is specified, the previous usertext string
-      None on error
     """
-    id = rhutil.coerceguid(object_id)
-    if id is None: return scriptcontext.errorhandler()
-    annotation_object = scriptcontext.doc.Objects.Find(id)
-    if not isinstance(annotation_object, Rhino.DocObjects.AnnotationObjectBase):
-        return scriptcontext.errorhandler()
+    annotation_object = __coerceannotation(object_id)
     rc = annotation_object.Geometry.Text
     if usertext is not None:
         annotation_object.Geometry.Text = usertext
@@ -183,25 +168,18 @@ def DimensionUserText(object_id, usertext=None):
 
 
 def DimensionValue(object_id):
-    """
-    Returns the value of a dimension object
+    """Returns the value of a dimension object
     Parameters:
       object_id = identifier of the object
     Returns:
       numeric value of the dimension if successful
-      None on error
     """
-    id = rhutil.coerceguid(object_id)
-    if id is None: return scriptcontext.errorhandler()
-    annotation_object = scriptcontext.doc.Objects.Find(id)
-    if not isinstance(annotation_object, Rhino.DocObjects.AnnotationObjectBase):
-        return scriptcontext.errorhandler()
+    annotation_object = __coerceannotation(object_id)
     return annotation_object.Geometry.NumericValue
 
 
 def DimStyleAnglePrecision(dimstyle, precision=None):
-    """
-    Returns or changes the angle display precision of a dimension style
+    """Returns or changes the angle display precision of a dimension style
     Parameters:
       dimstyle = the name of an existing dimension style
       precision[opt] = the new angle precision value. If omitted, the current angle
@@ -209,7 +187,6 @@ def DimStyleAnglePrecision(dimstyle, precision=None):
     Returns:
       If a precision is not specified, the current angle precision
       If a precision is specified, the previous angle precision
-      None on error
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     if ds is None: return scriptcontext.errorhandler()
@@ -220,9 +197,9 @@ def DimStyleAnglePrecision(dimstyle, precision=None):
         scriptcontext.doc.Views.Redraw()
     return rc
 
+
 def DimStyleArrowSize(dimstyle, size=None):
-    """
-    Returns or changes the arrow size of a dimension style
+    """Returns or changes the arrow size of a dimension style
     Parameters:
       dimstyle = the name of an existing dimension style
       size[opt] = the new arrow size. If omitted, the current arrow size is returned
@@ -247,8 +224,7 @@ def DimStyleCount():
 
 
 def DimStyleExtension(dimstyle, extension=None):
-    """
-    Returns or changes the extension line extension of a dimension style
+    """Returns or changes the extension line extension of a dimension style
     Parameters:
       dimstyle = the name of an existing dimension style
       extension[opt] = the new extension line extension
@@ -268,8 +244,7 @@ def DimStyleExtension(dimstyle, extension=None):
 
 
 def DimStyleFont(dimstyle, font=None):
-    """
-    Returns or changes the font used by a dimension style
+    """Returns or changes the font used by a dimension style
     Parameters:
       dimstyle = the name of an existing dimension style
       font[opt] = the new font face name
@@ -291,8 +266,7 @@ def DimStyleFont(dimstyle, font=None):
 
 
 def DimStyleLeaderArrowSize(dimstyle, size=None):
-    """
-    Returns or changes the leader arrow size of a dimension style
+    """Returns or changes the leader arrow size of a dimension style
     Parameters:
       dimstyle = the name of an existing dimension style
       size[opt] = the new leader arrow size
@@ -312,8 +286,7 @@ def DimStyleLeaderArrowSize(dimstyle, size=None):
 
 
 def DimStyleLengthFactor(dimstyle, factor=None):
-    """
-    Returns or changes the length factor of a dimension style. Length factor
+    """Returns or changes the length factor of a dimension style. Length factor
     is the conversion between Rhino units and dimension units
     Parameters:
       dimstyle = the name of an existing dimension style
@@ -332,9 +305,9 @@ def DimStyleLengthFactor(dimstyle, factor=None):
         scriptcontext.doc.Views.Redraw()
     return rc
 
+
 def DimStyleLinearPrecision(dimstyle, precision=None):
-    """
-    Returns or changes the linear display precision of a dimension style
+    """Returns or changes the linear display precision of a dimension style
     Parameters:
       dimstyle = the name of an existing dimension style
       precision[opt] = the new linear precision value
@@ -364,8 +337,7 @@ def DimStyleNames(sort=False):
 
 
 def DimStyleNumberFormat(dimstyle, format=None):
-    """
-    Returns or changes the number display format of a dimension style
+    """Returns or changes the number display format of a dimension style
     Parameters:
       dimstyle = the name of an existing dimension style
       format[opt] = the new number format
@@ -390,8 +362,7 @@ def DimStyleNumberFormat(dimstyle, format=None):
 
 
 def DimStyleOffset(dimstyle, offset=None):
-    """
-    Returns or changes the extension line offset of a dimension style
+    """Returns or changes the extension line offset of a dimension style
     Parameters:
       dimstyle = the name of an existing dimension style
       offset[opt] = the new extension line offset
@@ -411,8 +382,7 @@ def DimStyleOffset(dimstyle, offset=None):
 
 
 def DimStylePrefix(dimstyle, prefix=None):
-    """
-    Returns or changes the prefix of a dimension style - the text to
+    """Returns or changes the prefix of a dimension style - the text to
     prefix to the dimension text.
     Parameters:
       dimstyle = the name of an existing dimstyle
@@ -433,8 +403,7 @@ def DimStylePrefix(dimstyle, prefix=None):
 
 
 def DimStyleSuffix(dimstyle, suffix=None):
-    """
-    Returns or changes the suffix of a dimension style - the text to
+    """Returns or changes the suffix of a dimension style - the text to
     append to the dimension text.
     Parameters:
       dimstyle = the name of an existing dimstyle
@@ -455,8 +424,7 @@ def DimStyleSuffix(dimstyle, suffix=None):
 
 
 def DimStyleTextAlignment(dimstyle, alignment=None):
-    """
-    Returns or changes the text alignment mode of a dimension style
+    """Returns or changes the text alignment mode of a dimension style
     Parameters:
       dimstyle = the name of an existing dimension style
       alignment[opt] = the new text alignment
@@ -483,8 +451,7 @@ def DimStyleTextAlignment(dimstyle, alignment=None):
 
 
 def DimStyleTextGap(dimstyle, gap=None):
-    """
-    Returns or changes the text gap used by a dimension style
+    """Returns or changes the text gap used by a dimension style
     Parameters:
       dimstyle = the name of an existing dimension style
       gap[opt] = the new text gap
@@ -504,8 +471,7 @@ def DimStyleTextGap(dimstyle, gap=None):
 
 
 def DimStyleTextHeight(dimstyle, height=None):
-    """
-    Returns or changes the text height used by a dimension style
+    """Returns or changes the text height used by a dimension style
     Parameters:
       dimstyle = the name of an existing dimension style
       height[opt] = the new text height
@@ -517,7 +483,7 @@ def DimStyleTextHeight(dimstyle, height=None):
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     if ds is None: return scriptcontext.errorhandler()
     rc = ds.TextHeight
-    if height is not None:
+    if height:
         ds.TextHeight = height
         ds.CommitChanges()
         scriptcontext.doc.Views.Redraw()
@@ -526,8 +492,8 @@ def DimStyleTextHeight(dimstyle, height=None):
 
 def IsAlignedDimension(object_id):
     "Verifies an object is an aligned dimension object"
-    id = rhutil.coerceguid(object_id)
-    if id is None: return scriptcontext.errorhandler()
+    annotation_object = __coerceannotation(object_id)
+    id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
     geom = annotation_object.Geometry
     if isinstance(geom, Rhino.Geometry.LinearDimension): return geom.Aligned
@@ -536,8 +502,7 @@ def IsAlignedDimension(object_id):
 
 def IsAngularDimension(object_id):
     "Verifies an object is an angular dimension object"
-    id = rhutil.coerceguid(object_id)
-    if id is None: return scriptcontext.errorhandler()
+    id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
     geom = annotation_object.Geometry
     return isinstance(geom, Rhino.Geometry.AngularDimension)
@@ -545,8 +510,7 @@ def IsAngularDimension(object_id):
 
 def IsDiameterDimension(object_id):
     "Verifies an object is a diameter dimension object"
-    id = rhutil.coerceguid(object_id)
-    if id is None: return scriptcontext.errorhandler()
+    id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
     geom = annotation_object.Geometry
     if isinstance(geom, Rhino.Geometry.RadialDimension):
@@ -556,16 +520,14 @@ def IsDiameterDimension(object_id):
 
 def IsDimension(object_id):
     "Verifies an object is a dimension object"
-    id = rhutil.coerceguid(object_id)
-    if id is None: return scriptcontext.errorhandler()
+    id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
     geom = annotation_object.Geometry
     return isinstance(geom, Rhino.Geometry.AnnotationBase)
 
 
 def IsDimStyle(dimstyle):
-    """
-    Verifies the existance of a dimension style in the document
+    """Verifies the existance of a dimension style in the document
     Parameters:
       dimstyle = the name of a dimstyle to test for
     """
@@ -574,8 +536,7 @@ def IsDimStyle(dimstyle):
 
 
 def IsDimStyleReference(dimstyle):
-    """
-    Verifies that an existing dimension style is from a reference file
+    """Verifies that an existing dimension style is from a reference file
     Parameters:
       dimstyle = the name of an existing dimension style
     """
@@ -586,8 +547,7 @@ def IsDimStyleReference(dimstyle):
 
 def IsLeader(object_id):
     "Verifies an object is a dimension leader object"
-    id = rhutil.coerceguid(object_id)
-    if id is None: return scriptcontext.errorhandler()
+    id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
     geom = annotation_object.Geometry
     return isinstance(geom, Rhino.Geometry.Leader)
@@ -595,8 +555,7 @@ def IsLeader(object_id):
 
 def IsLinearDimension(object_id):
     "Verifies an object is a linear dimension object"
-    id = rhutil.coerceguid(object_id)
-    if id is None: return scriptcontext.errorhandler()
+    id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
     geom = annotation_object.Geometry
     return isinstance(geom, Rhino.Geometry.LinearDimension)
@@ -604,8 +563,7 @@ def IsLinearDimension(object_id):
 
 def IsOrdinateDimension(object_id):
     "Verifies an object is an ordinate dimension object"
-    id = rhutil.coerceguid(object_id)
-    if id is None: return scriptcontext.errorhandler()
+    id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
     geom = annotation_object.Geometry
     return isinstance(geom, Rhino.Geometry.OrdinateDimension)
@@ -613,16 +571,14 @@ def IsOrdinateDimension(object_id):
 
 def IsRadialDimension(object_id):
     "Verifies an object is a radial dimension object"
-    id = rhutil.coerceguid(object_id)
-    if id is None: return scriptcontext.errorhandler()
+    id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
     geom = annotation_object.Geometry
     return isinstance(geom, Rhino.Geometry.RadialDimension)
 
 
 def LeaderText(object_id, text=None):
-    """
-    Returns or modifies the text string of a dimension leader object
+    """Returns or modifies the text string of a dimension leader object
     Parameters:
       object_id = the object's identifier
       text[opt] = the new text string
@@ -631,8 +587,7 @@ def LeaderText(object_id, text=None):
       if text is specified, the previous text string
       None on error
     """
-    id = rhutil.coerceguid(object_id)
-    if id is None: return scriptcontext.errorhandler()
+    id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
     geom = annotation_object.Geometry
     if not isinstance(geom, Rhino.Geometry.Leader):
@@ -646,8 +601,7 @@ def LeaderText(object_id, text=None):
 
 
 def RenameDimStyle(oldstyle, newstyle):
-    """
-    Renames an existing dimension style
+    """Renames an existing dimension style
     Parameters:
       oldstyle = the name of an existing dimension style
       newstyle = the new dimension style name

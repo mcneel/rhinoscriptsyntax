@@ -3,8 +3,7 @@ import Rhino
 import System.Enum
 
 def CreatePreviewImage(filename, view=None, size=None, flags=0, wireframe=False):
-    """
-    Creates a bitmap preview image of the current model
+    """Creates a bitmap preview image of the current model
     Parameters:
       filename = name of the bitmap file to create
       view[opt] = title of the view. If omitted, the active view is used
@@ -21,24 +20,23 @@ def CreatePreviewImage(filename, view=None, size=None, flags=0, wireframe=False)
     rhview = scriptcontext.doc.Views.ActiveView
     if view is not None:
         rhview = scriptcontext.doc.Views.Find(view, False)
-        if rhview is None: return scriptcontext.errorhandler()
+        if rhview is None: return False
     rhsize = rhview.ClientRectangle.Size
-    if size is not None: rhsize = System.Drawing.Size(size[0], size[1])
+    if size: rhsize = System.Drawing.Size(size[0], size[1])
     ignore_highlights = (flags&1)!=1
     drawcplane = (flags&2)==2
     useghostedshading = (flags&4)==4
-    if( wireframe ):
+    if wireframe:
         return rhview.CreateWireframePreviewImage(filename, rhsize, ignore_highlights, drawcplane)
     else:
         return rhview.CreateShadedPreviewImage(filename, rhsize, ignore_highlights, drawcplane, useghostedshading)
 
 
 def DocumentModified(modified=None):
-    """
-    Returns or sets the document's modified flag. This flag indicates whether
-    or not any changes to the current document have been made. NOTE: setting
-    the document modified flag to False will prevent the "Do you want to save
-    this file..." from displaying when you close Rhino.
+    """Returns or sets the document's modified flag. This flag indicates whether
+    or not any changes to the current document have been made. NOTE: setting the
+    document modified flag to False will prevent the "Do you want to save this
+    file..." from displaying when you close Rhino.
     Parameters:
       modified [optional] = the modified state, either True or False
     Returns:
@@ -49,6 +47,7 @@ def DocumentModified(modified=None):
     if modified is not None and modified!=oldstate:
         scriptcontext.doc.Modified = modified
     return oldstate
+
 
 def DocumentName():
     "Returns the name of the currently loaded Rhino document (3DM file)"
@@ -61,19 +60,17 @@ def DocumentPath():
 
 
 def EnableRedraw(enable=True):
-    """
-    Enables or disables screen redrawing
+    """Enables or disables screen redrawing
     Returns:
       previous screen redrawing state
     """
     old = scriptcontext.doc.Views.RedrawEnabled
-    if( old!=enable ): scriptcontext.doc.Views.RedrawEnabled = enable
+    if old!=enable: scriptcontext.doc.Views.RedrawEnabled = enable
     return old
 
 
-def ExtractPreviewImage( filename, modelname=None ):
-    """
-    Extracts the bitmap preview image from the specified model (.3dm)
+def ExtractPreviewImage(filename, modelname=None):
+    """Extracts the bitmap preview image from the specified model (.3dm)
     Parameters:
       filename = name of the bitmap file to create. The extension of
          the filename controls the format of the bitmap file created.
@@ -91,12 +88,11 @@ def IsDocumentModified():
     return scriptcontext.doc.Modified
 
 
-def Notes( newnotes=None ):
-    """
-    Returns or sets the document's notes. Notes are generally created
+def Notes(newnotes=None):
+    """Returns or sets the document's notes. Notes are generally created
     using Rhino's Notes command
     Parameters:
-      newnotes [opt] = new notes to set
+      newnotes[opt] = new notes to set
     Returns:
       if newnotes is omitted, the current notes if successful
       if newnotes is specified, the previous notes if successful
@@ -107,8 +103,7 @@ def Notes( newnotes=None ):
 
 
 def ReadFileVersion():
-    """
-    Returns the file version of the current document. Use this function to
+    """Returns the file version of the current document. Use this function to
     determine which version of Rhino last saved the document. Note, this
     function will not return values from referenced or merged files.
     """
@@ -120,9 +115,8 @@ def Redraw():
     scriptcontext.doc.Views.Redraw()
 
 
-def UnitAbsoluteTolerance( tolerance=None, in_model_units=True ):
-    """
-    Resturns or sets the document's absolute tolerance. Absolute tolerance
+def UnitAbsoluteTolerance(tolerance=None, in_model_units=True):
+    """Resturns or sets the document's absolute tolerance. Absolute tolerance
     is measured in drawing units. See Rhino's document properties command
     (Units and Page Units Window) for details
     Parameters:
@@ -145,9 +139,8 @@ def UnitAbsoluteTolerance( tolerance=None, in_model_units=True ):
     return rc
 
 
-def UnitAngleTolerance( angle_tolerance_degrees=None, in_model_units=True ):
-    """
-    Returns or sets the document's angle tolerance. Angle tolerance is
+def UnitAngleTolerance(angle_tolerance_degrees=None, in_model_units=True):
+    """Returns or sets the document's angle tolerance. Angle tolerance is
     measured in degrees. See Rhino's DocumentProperties command
     (Units and Page Units Window) for details
     Parameters:
@@ -171,8 +164,7 @@ def UnitAngleTolerance( angle_tolerance_degrees=None, in_model_units=True ):
 
 
 def UnitRelativeTolerance(relative_tolerance=None, in_model_units=True):
-    """
-    Returns or sets the document's relative tolerance. Relative tolerance
+    """Returns or sets the document's relative tolerance. Relative tolerance
     is measured in percent. See Rhino's DocumentProperties command
     (Units and Page Units Window) for details
     Parameters:
@@ -196,8 +188,7 @@ def UnitRelativeTolerance(relative_tolerance=None, in_model_units=True):
 
 
 def UnitScale(to_system, from_system=None):
-  """
-  Returns the scale factor for changing between unit systems.
+  """Returns the scale factor for changing between unit systems.
   Parameters:
     to_system = The unit system to convert to. The unit systems are are:
        0 - No unit system
@@ -240,9 +231,8 @@ def UnitScale(to_system, from_system=None):
   return Rhino.RhinoMath.UnitScale(from_system, to_system)
 
 
-def UnitSystem( unit_system=None, scale=False, in_model_units=True ):
-    """
-    Returns or sets the document's units system. See Rhino's DocumentProperties
+def UnitSystem(unit_system=None, scale=False, in_model_units=True):
+    """Returns or sets the document's units system. See Rhino's DocumentProperties
     command (Units and Page Units Window) for details
     Parameters:
       unit_system = The unit system to set the document to. The unit systems are:
@@ -281,7 +271,8 @@ def UnitSystem( unit_system=None, scale=False, in_model_units=True ):
       if unit_system is specified, then the previous unit system
       None on error
     """
-    if(unit_system is not None and (unit_system<1 or unit_system>25)): return None
+    if (unit_system is not None and (unit_system<1 or unit_system>25)):
+        raise ValueError("unit_system value of %s is not valid"%unit_system)
     rc = None
     if in_model_units:
         rc = int(scriptcontext.doc.ModelUnitSystem)

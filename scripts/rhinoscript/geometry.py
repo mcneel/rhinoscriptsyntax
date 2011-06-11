@@ -1,15 +1,12 @@
 import scriptcontext
 import utility as rhutil
 import Rhino
-import System.Guid
-import System.Array
+import System.Guid, System.Array
 
 
 def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
-    """
-    Creates a clipping plane. A clipping plane is a plane for visibly
-    clipping away geometry in a specific view. Note, clipping planes
-    are infinite
+    """Creates a clipping plane. A clipping plane is a plane for visibly clipping
+    away geometry in a specific view. Note, clipping planes are infinite
     Parameters:
       plane = the plane
       u_magnitude, v_magnitude = size of the plane
@@ -24,9 +21,9 @@ def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
     if views is None:
         viewlist.append(scriptcontext.doc.Views.ActiveView.ActiveViewportID)
     else:
-        if( type(views) is System.Guid ):
+        if type(views) is System.Guid:
             viewlist.append(views)
-        elif( type(views) is str ):
+        elif type(views) is str:
             modelviews = scriptcontext.doc.Views.GetViewList(True, False)
             rc = None
             for item in modelviews:
@@ -47,14 +44,13 @@ def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
                             break
     if not viewlist: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddClippingPlane(plane, u_magnitude, v_magnitude, viewlist)
-    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: raise Exception("unable to add clipping plane to document")
     scriptcontext.doc.Views.Redraw()
     return rc
 
 
 def AddPoint(point, y=None, z=None):
-    """
-    Adds a point object to the document
+    """Adds a point object to the document
     Parameters:
       point = x,y,z location of point to add
     Returns:
@@ -63,50 +59,43 @@ def AddPoint(point, y=None, z=None):
     """
     if y is not None and z is not None:
         point = Rhino.Geometry.Point3d(point,y,z)
-    point = rhutil.coerce3dpoint(point)
-    if point is None: return scriptcontext.errorhandler()
+    point = rhutil.coerce3dpoint(point, True)
     rc = scriptcontext.doc.Objects.AddPoint(point)
-    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: raise Exception("unable to add point to document")
     scriptcontext.doc.Views.Redraw()
     return rc
 
 
 def AddPointCloud(points):
-    """
-    Adds a point cloud object to the document
+    """Adds a point cloud object to the document
     Parameters:
       points = list of values where every multiple of three represents a point
     Returns:
       identifier of point cloud on success
       None on failure
     """
-    points = rhutil.coerce3dpointlist(points)
-    if( points==None ): return scriptcontext.errorhandler()
+    points = rhutil.coerce3dpointlist(points, True)
     rc = scriptcontext.doc.Objects.AddPointCloud(points)
-    if( rc==System.Guid.Empty ): return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: raise Exception("unable to add point cloud to document")
     scriptcontext.doc.Views.Redraw()
     return rc
 
 
 def AddPoints(points):
-    """
-    Adds one or more point objects to the document
+    """Adds one or more point objects to the document
     Parameters:
       points = list of points
     Returns:
       list of Guid identifiers of the new objects on success
-      None on error
     """
-    points = rhutil.coerce3dpointlist(points)
-    if points is None: return scriptcontext.errorhandler()
+    points = rhutil.coerce3dpointlist(points, True)
     rc = [scriptcontext.doc.Objects.AddPoint(point) for point in points]
     scriptcontext.doc.Views.Redraw()
     return rc
 
 
-def AddText( text, point_or_plane, height=1.0, font="Arial", font_style=0, justification=None ):
-    """
-    Adds a text string to the document
+def AddText(text, point_or_plane, height=1.0, font="Arial", font_style=0, justification=None):
+    """Adds a text string to the document
     Parameters:
       text = the text to display
       point_or_plane = a 3-D point or the plane on which the text will lie.
@@ -123,12 +112,12 @@ def AddText( text, point_or_plane, height=1.0, font="Arial", font_style=0, justi
       Guid for the object that was added to the doc on success
       None on failure
     """
-    if text is None: return scriptcontext.errorhandler()
+    if not text: raise ValueError("text invalid")
     if not isinstance(text, str): text = str(text)
     point = rhutil.coerce3dpoint(point_or_plane)
-    plane = rhutil.coerceplane(point_or_plane)
-    if point is None and plane is None: return scriptcontext.errorhandler()
-    if plane is None:
+    plane = None
+    if not point: plane = rhutil.coerceplane(point_or_plane, True)
+    if not plane:
         plane = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
         plane.Origin = point
     bold = (1==font_style or 3==font_style)
@@ -139,44 +128,38 @@ def AddText( text, point_or_plane, height=1.0, font="Arial", font_style=0, justi
     else:
         just = System.Enum.ToObject(Rhino.Geometry.TextJustification, justification)
         id = scriptcontext.doc.Objects.AddText(text, plane, height, font, bold, italic, just)
-    if id==System.Guid.Empty: return scriptcontext.errorhandler()
+    if id==System.Guid.Empty: raise ValueError("unable to add text to document")
     scriptcontext.doc.Views.Redraw()
     return id
 
 
-def AddTextDot( text, point ):
-    """
-    Adds an annotation text dot to the document.
+def AddTextDot(text, point):
+    """Adds an annotation text dot to the document.
     Parameters:
       text = string in dot
-      point = A 3-D point identifying the origin point.
+      point = A 3D point identifying the origin point.
     Returns:
       The identifier of the new object if successful
       None if not successful, or on error
     """
-    point = rhutil.coerce3dpoint(point)
-    if point is None: return scriptcontext.errorhandler()
+    point = rhutil.coerce3dpoint(point, True)
     if not isinstance(text, str): text = str(text)
     rc = scriptcontext.doc.Objects.AddTextDot(text, point)
-    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
+    if id==System.Guid.Empty: raise ValueError("unable to add text dot to document")
     scriptcontext.doc.Views.Redraw()
     return rc
 
 
-def Area( object_id ):
+def Area(object_id):
     "Compute the area of a closed curve, hatch, surface, polysurface, or mesh"
-    id = rhutil.coerceguid(object_id)
-    if id is None: return scriptcontext.errorhandler()
-    rhobj = scriptcontext.doc.Objects.Find(id)
-    if rhobj is None: return scriptcontext.errorhandler()
+    rhobj = rhutil.coercerhinoobject(object_id, True, True)
     mp = Rhino.Geometry.AreaMassProperties.Compute(rhobj.Geometry)
-    if mp is None: return scriptcontext.errorhandler()
+    if mp is None: raise Exception("unable to compute area mass properties")
     return mp.Area
 
 
-def BoundingBox( objects, view_or_plane=None, in_world_coords=True ):
-    """
-    Returns either a world axis-aligned or a construction plane axis-aligned
+def BoundingBox(objects, view_or_plane=None, in_world_coords=True):
+    """Returns either a world axis-aligned or a construction plane axis-aligned
     bounding box of an object or of several objects
     Parameters:
       objects = The identifiers of the objects
@@ -193,35 +176,33 @@ def BoundingBox( objects, view_or_plane=None, in_world_coords=True ):
       None if not successful, or on error
     """
     def __objectbbox(object, xform):
-        geom = rhutil.coercegeometry(object)
-        if geom is None: return None
+        geom = rhutil.coercegeometry(object, True)
         if xform: return geom.GetBoundingBox(xform)
         return geom.GetBoundingBox(True)
 
-    if objects is None: return scriptcontext.errorhandler()
     xform = None
     plane = rhutil.coerceplane(view_or_plane)
-    if plane is None and view_or_plane is not None:
+    if plane is None:
         view = view_or_plane
         modelviews = scriptcontext.doc.Views.GetStandardRhinoViews()
         for item in modelviews:
             viewport = item.MainViewport
-            if( type(view) is str and viewport.Name==view ):
+            if type(view) is str and viewport.Name==view:
                 plane = viewport.ConstructionPlane()
                 break
-            elif( type(view) is System.Guid and viewport.Id==view ):
+            elif type(view) is System.Guid and viewport.Id==view:
                 plane = viewport.ConstructionPlane()
                 break
         if plane is None: return scriptcontext.errorhandler()
         xform = Rhino.Geometry.Transform.ChangeBasis(Rhino.Geometry.Plane.WorldXY, plane)
     bbox = Rhino.Geometry.BoundingBox.Empty
-    if( type(objects) is list or type(objects) is tuple ):
+    if type(objects) is list or type(objects) is tuple:
         for object in objects:
             objectbbox = __objectbbox(object, xform)
-            if objectbbox: bbox = Rhino.Geometry.BoundingBox.Union(bbox,objectbbox)
+            bbox = Rhino.Geometry.BoundingBox.Union(bbox,objectbbox)
     else:
         objectbbox = __objectbbox(objects, xform)
-        if objectbbox: bbox = Rhino.Geometry.BoundingBox.Union(bbox,objectbbox)
+        bbox = Rhino.Geometry.BoundingBox.Union(bbox,objectbbox)
     if not bbox.IsValid: return scriptcontext.errorhandler()
 
     corners = bbox.GetCorners()
@@ -231,9 +212,8 @@ def BoundingBox( objects, view_or_plane=None, in_world_coords=True ):
     return corners
 
 
-def IsClippingPlane( object_id ):
-    """
-    Verifies that an object is a clipping plane object
+def IsClippingPlane(object_id):
+    """Verifies that an object is a clipping plane object
     Parameters:
       object_id: the object's identifier
     Returns:
@@ -243,9 +223,8 @@ def IsClippingPlane( object_id ):
     return isinstance(cp, Rhino.Geometry.ClippingPlaneSurface)
 
 
-def IsPoint( object_id ):
-    """
-    Verifies an object is a point object.
+def IsPoint(object_id):
+    """Verifies an object is a point object.
     Parameters:
       object_id: the object's identifier
     Returns:
@@ -255,9 +234,8 @@ def IsPoint( object_id ):
     return isinstance(p, Rhino.Geometry.Point)
 
 
-def IsPointCloud( object_id ):
-    """
-    Verifies an object is a point cloud object.
+def IsPointCloud(object_id):
+    """Verifies an object is a point cloud object.
     Parameters:
       object_id: the object's identifier
     Returns:
@@ -267,9 +245,8 @@ def IsPointCloud( object_id ):
     return isinstance(pc, Rhino.Geometry.PointCloud)
 
 
-def IsText( object_id ):
-    """
-    Verifies an object is a text object.
+def IsText(object_id):
+    """Verifies an object is a text object.
     Parameters:
       object_id: the object's identifier
     Returns:
@@ -279,9 +256,8 @@ def IsText( object_id ):
     return isinstance(text, Rhino.Geometry.TextEntity)
 
 
-def IsTextDot( object_id ):
-    """
-    Verifies an object is a text dot object.
+def IsTextDot(object_id):
+    """Verifies an object is a text dot object.
     Parameters:
       object_id: the object's identifier
     Returns:
@@ -291,86 +267,80 @@ def IsTextDot( object_id ):
     return isinstance(td, Rhino.Geometry.TextDot)
 
 
-def PointCloudCount( object_id ):
-    """
-    Returns the point count of a point cloud object
+def PointCloudCount(object_id):
+    """Returns the point count of a point cloud object
     Parameters:
       object_id: the point cloud object's identifier
     Returns:
       number of points if successful
       None on error (object_id does not represent a point cloud)
     """
-    pc = rhutil.coercegeometry(object_id)
+    pc = rhutil.coercegeometry(object_id, True)
     if isinstance(pc, Rhino.Geometry.PointCloud):
         return pc.PointCount
     return scriptcontext.errorhandler()
 
 
 def PointCloudPoints(object_id):
-    """
-    Returns the points of a point cloud object
+    """Returns the points of a point cloud object
     Parameters:
       object_id: the point cloud object's identifier
     Returns:
       list of points if successful
       None on error (object_id does not represent a point cloud)
     """
-    pc = rhutil.coercegeometry(object_id)
+    pc = rhutil.coercegeometry(object_id, True)
     if isinstance(pc, Rhino.Geometry.PointCloud):
         return pc.GetPoints()
     return scriptcontext.errorhandler()
 
 
 def PointCoordinates(object_id, point=None):
-    """
-    Returns or modifies the X, Y, and Z coordinates of a point object
+    """Returns or modifies the X, Y, and Z coordinates of a point object
     Parameters:
       object_id = The identifier of a point object
-      point [opt] = A new 3-D point location.
+      point[opt] = A new 3D point location.
     Returns:
       If point is not specified, the current 3-D point location
       If point is specified, the previous 3-D point location
       None if not successful, or on error
     """
-    point = rhutil.coercegeometry(object_id)
+    point = rhutil.coercegeometry(object_id, True)
     if isinstance(point, Rhino.Geometry.Point):
         rc = point.Location
-        point = rhutil.coerce3dpoint(point)
-        if point is not None:
-            id = rhutil.coerceguid(object_id)
-            if id: scriptcontext.doc.Objects.Replace(id, point)
+        if point:
+            point = rhutil.coerce3dpoint(point, True)
+            id = rhutil.coerceguid(object_id, True)
+            scriptcontext.doc.Objects.Replace(id, point)
             scriptcontext.doc.Views.Redraw()
         return rc
     return scriptcontext.errorhandler()
 
 
 def TextDotPoint(object_id, point=None):
-    """
-    Returns or modifies the location, or insertion point, on a text dot object
+    """Returns or modifies the location, or insertion point, on a text dot object
     Parameters:
       object_id = The identifier of a text dot object
-      point [opt] = list of 3 numbers or a Point3d. A new 3-D point location.
+      point[opt] = A new 3D point location.
     Returns:
       If point is not specified, the current 3-D text dot location
       If point is specified, the previous 3-D text dot location
       None if not successful, or on error
     """
-    textdot = rhutil.coercegeometry(object_id)
+    textdot = rhutil.coercegeometry(object_id, True)
     if isinstance(textdot, Rhino.Geometry.TextDot):
         rc = textdot.Point
-        point = rhutil.coerce3dpoint(point)
-        if point is not None:
-            textdot.Point = point
-            id = rhutil.coerceguid(object_id)
-            if id: scriptcontext.doc.Objects.Replace(id, textdot)
+        if point:
+            textdot.Point = rhutil.coerce3dpoint(point, True)
+            id = rhutil.coerceguid(object_id, True)
+            scriptcontext.doc.Objects.Replace(id, textdot)
             scriptcontext.doc.Views.Redraw()
         return rc
     return scriptcontext.errorhandler()
 
 
 def TextDotText(object_id, text=None):
-    """
-    Returns or modifies the text on a text dot object
+    """Returns or modifies the text on a text dot object
     Parameters:
       object_id =tThe identifier of a text dot object
       text [opt] = a new string for the dot
@@ -379,22 +349,21 @@ def TextDotText(object_id, text=None):
       If text is specified, the previous text dot text
       None if not successful, or on error
     """
-    textdot = rhutil.coercegeometry(object_id)
+    textdot = rhutil.coercegeometry(object_id, True)
     if isinstance(textdot, Rhino.Geometry.TextDot):
         rc = textdot.Text
         if text is not None:
             if not isinstance(text, str): text = str(text)
             textdot.Text = text
-            id = rhutil.coerceguid(object_id)
-            if id: scriptcontext.doc.Objects.Replace(id, textdot)
+            id = rhutil.coerceguid(object_id, True)
+            scriptcontext.doc.Objects.Replace(id, textdot)
             scriptcontext.doc.Views.Redraw()
         return rc
     return scriptcontext.errorhandler()
 
 
 def TextObjectFont(object_id, font=None):
-    """
-    Returns of modifies the font used by a text object
+    """Returns of modifies the font used by a text object
     Parameters:
       object_id = the identifier of a text object
       font [opt] = the new font face name
@@ -403,7 +372,7 @@ def TextObjectFont(object_id, font=None):
       if a font is specified, the previous font face name
       None if not successful, or on error
     """
-    annotation = rhutil.coercegeometry(object_id)
+    annotation = rhutil.coercegeometry(object_id, True)
     if not isinstance(annotation, Rhino.Geometry.TextEntity):
         return scriptcontext.errorhandler()
     fontdata = scriptcontext.doc.Fonts[annotation.FontIndex]
@@ -412,88 +381,82 @@ def TextObjectFont(object_id, font=None):
     if font:
         index = scriptcontext.doc.Fonts.FindOrCreate( font, fontdata.Bold, fontdata.Italic )
         annotation.FontIndex = index
-        id = rhutil.coerceguid(object_id)
-        if id: scriptcontext.doc.Objects.Replace(id, annotation)
+        id = rhutil.coerceguid(object_id, True)
+        scriptcontext.doc.Objects.Replace(id, annotation)
         scriptcontext.doc.Views.Redraw()
     return rc
 
 
 def TextObjectHeight(object_id, height=None):
-    """
-    Returns or modifies the height of a text object
+    """Returns or modifies the height of a text object
     Parameters:
       object_id = the identifier of a text object
-      height [opt] = the new text height.
+      height[opt] = the new text height.
     Returns:
       if height is not specified, the current text height
       if height is specified, the previous text height
       None if not successful, or on error
     """
-    annotation = rhutil.coercegeometry(object_id)
+    annotation = rhutil.coercegeometry(object_id, True)
     if not isinstance(annotation, Rhino.Geometry.TextEntity):
         return scriptcontext.errorhandler()
     rc = annotation.TextHeight
     if height:
         annotation.TextHeight = height
-        id = rhutil.coerceguid(object_id)
-        if id: scriptcontext.doc.Objects.Replace(id, annotation)
+        id = rhutil.coerceguid(object_id, True)
+        scriptcontext.doc.Objects.Replace(id, annotation)
         scriptcontext.doc.Views.Redraw()
     return rc
 
 
 def TextObjectPlane(object_id, plane=None):
-    """
-    Returns or modifies the plane used by a text object
+    """Returns or modifies the plane used by a text object
     Parameters:
       object_id = the identifier of a text object
-      plane [opt] = the new text object plane
+      plane[opt] = the new text object plane
     Returns:
       if a plane is not specified, the current plane if successful
       if a plane is specified, the previous plane if successful
       None if not successful, or on Error
     """
-    annotation = rhutil.coercegeometry(object_id)
+    annotation = rhutil.coercegeometry(object_id, True)
     if not isinstance(annotation, Rhino.Geometry.TextEntity):
         return scriptcontext.errorhandler()
     rc = annotation.Plane
-    plane = rhutil.coerceplane(plane)
-    if plane is not None:
-        annotation.Plane = plane
-        id = rhutil.coerceid(object_id)
-        if id: scriptcontext.doc.Objects.Replace(id, annotation)
+    if plane:
+        annotation.Plane = rhutil.coerceplane(plane, True)
+        id = rhutil.coerceid(object_id, True)
+        scriptcontext.doc.Objects.Replace(id, annotation)
         scriptcontext.doc.Views.Redraw()
     return rc
 
 
 def TextObjectPoint(object_id, point=None):
-    """
-    Returns or modifies the location of a text object
+    """Returns or modifies the location of a text object
     Parameters:
       object_id = the identifier of a text object
-      point [opt] = the new text object location
+      point[opt] = the new text object location
     Returns:
       if point is not specified, the 3D point identifying the current location
       if point is specified, the 3D point identifying the previous location
       None if not successful, or on Error
     """
-    text = rhutil.coercegeometry(object_id)
+    text = rhutil.coercegeometry(object_id, True)
     if not isinstance(text, Rhino.Geometry.TextEntity):
         return scriptcontext.errorhandler()
     plane = text.Plane
     rc = plane.Origin
-    point = rhutil.coerce3dpoint(point)
-    if point is not None:
-        plane.Origin = point
+    if point:
+        plane.Origin = rhutil.coerce3dpoint(point, True)
         text.Plane = plane
-        id = rhutil.coerceguid(object_id)
-        if id: scriptcontext.doc.Objects.Replace(id, text)
+        id = rhutil.coerceguid(object_id, True)
+        scriptcontext.doc.Objects.Replace(id, text)
         scriptcontext.doc.Views.Redraw()
     return rc
 
 
 def TextObjectStyle(object_id, style=None):
-    """
-    Returns or modifies the font style of a text object
+    """Returns or modifies the font style of a text object
     Parameters:
       object_id = the identifier of a text object
       style [opt] = the font style. Can be any of the following flags
@@ -505,7 +468,7 @@ def TextObjectStyle(object_id, style=None):
       if style is specified, the previous font style
       None if not successful, or on Error
     """
-    annotation = rhutil.coercegeometry(object_id)
+    annotation = rhutil.coercegeometry(object_id, True)
     if not isinstance(annotation, Rhino.Geometry.TextEntity):
         return scriptcontext.errorhandler()
     fontdata = scriptcontext.doc.Fonts[annotation.FontIndex]
@@ -516,15 +479,14 @@ def TextObjectStyle(object_id, style=None):
     if style is not None and style!=rc:
         index = scriptcontext.doc.Fonts.FindOrCreate( fontdata.FaceName, (style&1)==1, (style&2)==2 )
         annotation.FontIndex = index
-        id = rhutil.coerceguid(object_id)
-        if id: scriptcontext.doc.Objects.Replace(id, annotation)
+        id = rhutil.coerceguid(object_id, True)
+        scriptcontext.doc.Objects.Replace(id, annotation)
         scriptcontext.doc.Views.Redraw()
     return rc
 
 
 def TextObjectText(object_id, text=None):
-    """
-    Returns or modifies the text string of a text object.
+    """Returns or modifies the text string of a text object.
     Parameters:
       object_id = the identifier of a text object
       text [opt] = a new text string
@@ -533,14 +495,14 @@ def TextObjectText(object_id, text=None):
       if text is specified, the previous string value if successful
       None if not successful, or on error
     """
-    annotation = rhutil.coercegeometry(object_id)
+    annotation = rhutil.coercegeometry(object_id, True)
     if not isinstance(annotation, Rhino.Geometry.TextEntity):
         return scriptcontext.errorhandler()
     rc = annotation.Text
-    if text is not None:
+    if text:
         if not isinstance(text, str): text = str(text)
         annotation.Text = text
-        id = rhutil.coerceguid(object_id)
-        if id: scriptcontext.doc.Objects.Replace(id, annotation)
+        id = rhutil.coerceguid(object_id, True)
+        scriptcontext.doc.Objects.Replace(id, annotation)
         scriptcontext.doc.Views.Redraw()
     return rc

@@ -4,30 +4,21 @@ import Rhino
 
 
 def EnableObjectGrips(object_id, enable=True):
-    """
-    Enables or disables an object's grips. For curves and surfaces, these are
+    """Enables or disables an object's grips. For curves and surfaces, these are
     also called control points.
     Parameters:
       object_id = identifier of the object
       enable [opt] = if True, the specified object's grips will be turned on.
         Otherwise, they will be turned off
-    Returns:
-      True or False indicating success or failure
     """
-    object_id = rhutil.coerceguid(object_id)
-    if object_id:
-        rhobj = scriptcontext.doc.Objects.Find(object_id)
-        if rhobj:
-            rhobj.GripsOn = enable
-            if enable==rhobj.GripsOn:
-                scriptcontext.doc.Views.Redraw()
-                return True
-    return False
+    rhobj = rhutil.coercerhinoobject(object_id, True, True)
+    if enable!=rhobj.GripsOn:
+        rhobj.GripsOn = enable
+        scriptcontext.doc.Views.Redraw()
 
 
 def GetObjectGrip(message=None, preselect=False, select=False):
-    """
-    Prompts the user to pick a single object grip
+    """Prompts the user to pick a single object grip
     Parameters:
       message [opt] = prompt for picking
       preselect [opt] = allow for selection of pre-selected object grip.
@@ -51,8 +42,7 @@ def GetObjectGrip(message=None, preselect=False, select=False):
 
 
 def GetObjectGrips(message=None, preselect=False, select=False):
-    """
-    Prompts the user to pick one or more object grips from one or more objects.
+    """Prompts the user to pick one or more object grips from one or more objects.
     Parameters:
       message [opt] = prompt for picking
       preselect [opt] = allow for selection of pre-selected object grips
@@ -81,26 +71,22 @@ def GetObjectGrips(message=None, preselect=False, select=False):
 
 
 def ObjectGripCount(object_id):
-    """
-    Returns number of grips owned by an object
+    """Returns number of grips owned by an object
     Parameters:
       object_id = identifier of the object
     Returns:
       number of grips if successful
       None on error  
     """
-    object_id = rhutil.coerceguid(object_id)
-    if object_id is None: return scriptcontext.errorhandler()
-    rhobj = scriptcontext.doc.Objects.Find(object_id)
-    if rhobj is None or not rhobj.GripsOn: return scriptcontext.errorhandler()
+    rhobj = rhutil.coercerhinoobject(object_id, True, True)
+    if not rhobj.GripsOn: return scriptcontext.errorhandler()
     grips = rhobj.GetGrips()
     if not grips: return scriptcontext.errorhandler()
     return grips.Length
 
 
 def ObjectGripLocation(object_id, index, point=None):
-    """
-    Returns or modifies the location of an object's grip
+    """Returns or modifies the location of an object's grip
     Parameters:
       object_id = identifier of the object
       index = index of the grip to either query or modify
@@ -110,26 +96,22 @@ def ObjectGripLocation(object_id, index, point=None):
       if point is specified, the previous location of the grip referenced by index
       None on error
     """
-    object_id = rhutil.coerceguid(object_id)
-    if object_id is None: return scriptcontext.errorhandler()
-    rhobj = scriptcontext.doc.Objects.Find(object_id)
-    if rhobj is None or not rhobj.GripsOn: return scriptcontext.errorhandler()
+    rhobj = rhutil.coercerhinoobject(object_id, True, True)
+    if not rhobj.GripsOn: return scriptcontext.errorhandler()
     grips = rhobj.GetGrips()
-    if grips is None or index<0 or index>=grips.Length:
+    if not grips or index<0 or index>=grips.Length:
         return scriptcontext.errorhandler()
     grip = grips[index]
     rc = grip.CurrentLocation
-    point = rhutil.coerce3dpoint(point)
-    if point is not None:
-        grip.CurrentLocation = point
+    if point:
+        grip.CurrentLocation = rhutil.coerce3dpoint(point, True)
         scriptcontext.doc.Objects.GripUpdate(rhobj, True)
         scriptcontext.doc.Views.Redraw()
     return rc
 
 
 def ObjectGripLocations(object_id, points=None):
-    """
-    Returns or modifies the location of all grips owned by an object. The
+    """Returns or modifies the location of all grips owned by an object. The
     locations of the grips are returned in a list of Point3d with each position
     in the list corresponding to that grip's index. To modify the locations of
     the grips, you must provide a list of points that contain the same number
@@ -142,15 +124,13 @@ def ObjectGripLocations(object_id, points=None):
       if points is specified, the previous location of all grips
       None if not successful
     """
-    object_id = rhutil.coerceguid(object_id)
-    if object_id is None: return scriptcontext.errorhandler()
-    rhobj = scriptcontext.doc.Objects.Find(object_id)
-    if rhobj is None or not rhobj.GripsOn: return scriptcontext.errorhandler()
+    rhobj = rhutil.coercerhinoobject(object_id, True, True)
+    if not rhobj.GripsOn: return scriptcontext.errorhandler()
     grips = rhobj.GetGrips()
     if grips is None: return scriptcontext.errorhandler()
     rc = [grip.CurrentLocation for grip in grips]
-    points = rhutil.coerce3dpointlist(points)
-    if points is not None and len(points)==len(grips):
+    if points and len(points)==len(grips):
+        points = rhutil.coerce3dpointlist(points, True)
         for i, grip in enumerate(grips):
             point = points[i]
             grip.CurrentLocation = point
@@ -160,34 +140,27 @@ def ObjectGripLocations(object_id, points=None):
 
 
 def ObjectGripsOn(object_id):
-    """
-    Verifies that an object's grips are turned on
+    """Verifies that an object's grips are turned on
     Parameters:
       object_id = identifier of the object
     Returns:
       True or False indcating Grips state
       None on error
     """
-    object_id = rhutil.coerceguid(object_id)
-    if object_id is None: return scriptcontext.errorhandler()
-    rhobj = scriptcontext.doc.Objects.Find(object_id)
-    if rhobj is None: return scriptcontext.errorhandler()
+    rhobj = rhutil.coercerhinoobject(object_id, True, True)
     return rhobj.GripsOn
 
 
-def ObjectGripsSelected( object_id ):
-    """
-    Verifies that an object's grips are turned on and at least one grip
+def ObjectGripsSelected(object_id):
+    """Verifies that an object's grips are turned on and at least one grip
     is selected
     Parameters:
       object_id = identifier of the object
     Returns:
       True or False indicating success or failure
     """
-    object_id = rhutil.coerceguid(object_id)
-    if object_id is None: return False
-    rhobj = scriptcontext.doc.Objects.Find(object_id)
-    if rhobj is None or not rhobj.GripsOn: return False
+    rhobj = rhutil.coercerhinoobject(object_id, True, True)
+    if not rhobj.GripsOn: return False
     grips = rhobj.GetGrips()
     if grips is None: return False
     for grip in grips:
@@ -196,31 +169,25 @@ def ObjectGripsSelected( object_id ):
 
 
 def SelectedObjectGrips(object_id):
-    """
-    Returns a list of grip indices indentifying an object's selected grips
+    """Returns a list of grip indices indentifying an object's selected grips
     Parameters:
       object_id = identifier of the object
     Returns:
       list of indices on success
       None on failure or if no grips are selected
     """
-    object_id = rhutil.coerceguid(object_id)
-    if object_id is None: return scriptcontext.errorhandler()
-    rhobj = scriptcontext.doc.Objects.Find(object_id)
-    if rhobj is None: return scriptcontext.errorhandler()
+    rhobj = rhutil.coercerhinoobject(object_id, True, True)
     if not rhobj.GripsOn: return None
     grips = rhobj.GetGrips()
-    if grips is None: return scriptcontext.errorhandler()
     rc = []
-    for i in xrange(grips.Length):
-        if( grips[i].IsSelected(False) ): rc.append(i)
-    if not rc: return scriptcontext.errorhandler()
+    if grips:
+        for i in xrange(grips.Length):
+            if grips[i].IsSelected(False): rc.append(i)
     return rc
 
 
 def SelectObjectGrip(object_id, index):
-    """
-    Selects a single grip owned by an object. If the object's grips are
+    """Selects a single grip owned by an object. If the object's grips are
     not turned on, the grips will not be selected
     Parameters:
       object_id = identifier of the object
@@ -228,10 +195,8 @@ def SelectObjectGrip(object_id, index):
     Returns:
       True or False indicating success or failure
     """
-    object_id = rhutil.coerceguid(object_id)
-    if object_id is None: return False
-    rhobj = scriptcontext.doc.Objects.Find(object_id)
-    if rhobj is None or not rhobj.GripsOn: return False
+    rhobj = rhutil.coercerhinoobject(object_id, True, True)
+    if not rhobj.GripsOn: return False
     grips = rhobj.GetGrips()
     if grips is None: return False
     if index<0 or index>=grips.Length: return False
@@ -243,8 +208,7 @@ def SelectObjectGrip(object_id, index):
 
 
 def SelectObjectGrips(object_id):
-    """
-    Selects an object's grips. If the object's grips are not turned on,
+    """Selects an object's grips. If the object's grips are not turned on,
     they will not be selected
     Parameters:
       object_id = identifier of the object
@@ -252,15 +216,13 @@ def SelectObjectGrips(object_id):
       Number of grips selected on success
       None on failure
     """
-    object_id = rhutil.coerceguid(object_id)
-    if object_id is None: return scriptcontext.errorhandler()
-    rhobj = scriptcontext.doc.Objects.Find(object_id)
-    if rhobj is None or not rhobj.GripsOn: return scriptcontext.errorhandler()
+    rhobj = rhutil.coercerhinoobject(object_id, True, True)
+    if not rhobj.GripsOn: return scriptcontext.errorhandler()
     grips = rhobj.GetGrips()
     if grips is None: return scriptcontext.errorhandler()
     count = 0
     for grip in grips:
-        if( grip.Select(True,True)>0 ): count += 1
+        if grip.Select(True,True)>0: count+=1
     if count>0:
         scriptcontext.doc.Views.Redraw()
         return count
@@ -268,19 +230,16 @@ def SelectObjectGrips(object_id):
 
 
 def UnselectObjectGrip(object_id, index):
-    """
-    Unselects a single grip owned by an object. If the object's grips are not turned on, the grips will
-    not be unselected
+    """Unselects a single grip owned by an object. If the object's grips are
+    not turned on, the grips will not be unselected
     Parameters:
       object_id = identifier of the object
       index = index of the grip to unselect
     Returns:
       True or False indicating success or failure
     """
-    object_id = rhutil.coerceguid(object_id)
-    if object_id is None: return False
-    rhobj = scriptcontext.doc.Objects.Find(object_id)
-    if rhobj is None or not rhobj.GripsOn: return False
+    rhobj = rhutil.coercerhinoobject(object_id, True, True)
+    if not rhobj.GripsOn: return False
     grips = rhobj.GetGrips()
     if grips is None: return False
     if index<0 or index>=grips.Length: return False
@@ -292,18 +251,15 @@ def UnselectObjectGrip(object_id, index):
 
 
 def UnselectObjectGrips(object_id):
-    """
-    Unselects an object's grips. Note, the grips will not be turned off.
+    """Unselects an object's grips. Note, the grips will not be turned off.
     Parameters:
       object_id = identifier of the object
     Returns:
       Number of grips unselected on success
       None on failure
     """
-    object_id = rhutil.coerceguid(object_id)
-    if object_id is None: return scriptcontext.errorhandler()
-    rhobj = scriptcontext.doc.Objects.Find(object_id)
-    if rhobj is None or not rhobj.GripsOn: return scriptcontext.errorhandler()
+    rhobj = rhutil.coercerhinoobject(object_id, True, True)
+    if not rhobj.GripsOn: return scriptcontext.errorhandler()
     grips = rhobj.GetGrips()
     if grips is None: return scriptcontext.errorhandler()
     count = 0

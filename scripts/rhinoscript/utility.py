@@ -561,16 +561,15 @@ def coercebrep(id, raise_if_missing=False):
     if raise_if_missing: raise ValueError("unable to convert %s into Brep geometry"%id)
 
 
-def coercegeometry( id ):
+def coercegeometry(id, raise_if_missing=False):
     "attempt to get GeometryBase class from given input"
     if isinstance(id, Rhino.Geometry.GeometryBase): return id
     if type(id) is Rhino.DocObjects.ObjRef: return id.Geometry()
     if isinstance(id, Rhino.DocObjects.RhinoObject): return id.Geometry
-    id = coerceguid(id)
-    if id is None: return None
+    id = coerceguid(id, True)
     rhobj = scriptcontext.doc.Objects.Find(id)
     if rhobj: return rhobj.Geometry
-    return None
+    if raise_if_missing: raise ValueError("unable to convert %s into geometry"%id)
 
 
 def coercecurve(id, segment_index=-1, raise_if_missing=False):
