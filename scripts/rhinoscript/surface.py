@@ -102,7 +102,7 @@ def AddCylinder(base, height, radius, cap=True):
     """
     cylinder=None
     height_point = rhutil.coerce3dpoint(height)
-    if height_point is not None:
+    if height_point:
         #base must be a point
         base = rhutil.coerce3dpoint(base, True)
         normal = height_point-base
@@ -112,6 +112,7 @@ def AddCylinder(base, height, radius, cap=True):
         cylinder = Rhino.Geometry.Cylinder(circle, height)
     else:
         #base must be a plane
+        if type(base) is Rhino.Geometry.Point3d: base = [base.X, base.Y, base.Z]
         base = rhutil.coerceplane(base, True)
         circle = Rhino.Geometry.Circle(base, radius)
         cylinder = Rhino.Geometry.Cylinder(circle, height)
@@ -164,7 +165,7 @@ def AddNurbsSurface(point_count, points, knots_u, knots_v, degree, weights=None)
     index = 0
     for i in range(point_count[0]):
         for j in range(point_count[1]):
-            if weights is not None:
+            if weights:
                 cp = Rhino.Geometry.ControlPoint(points[index], weights[index])
                 controlpoints.SetControlPoint(i,j,cp)
             else:
@@ -255,13 +256,10 @@ def AddLoftSrf(object_ids, start=None, end=None, loft_type=0, simplify_method=0,
       An array containing the identifiers of the new surface objects if successful
       None on error
     """
-    #perform a little input validation
-    if loft_type<0 or loft_type>5: return scriptcontext.errorhandler()
-    if simplify_method<0 or simplify_method>2: return scriptcontext.errorhandler()
+    if loft_type<0 or loft_type>5: raise ValueError("loft_type must be 0-4")
+    if simplify_method<0 or simplify_method>2: raise ValueError("simplify_method must be 0-2")
 
     # get set of curves from object_ids
-    object_ids = rhutil.coerceguidlist(object_ids)
-    if object_ids is None: return scriptcontext.errorhandler()
     curves = [rhutil.coercecurve(id,-1,True) for id in object_ids]
     if len(curves)<2: return scriptcontext.errorhandler()
     if start is None: start = Rhino.Geometry.Point3d.Unset
@@ -286,32 +284,32 @@ def AddLoftSrf(object_ids, start=None, end=None, loft_type=0, simplify_method=0,
         refit = abs(value)
         if refit==0: refit = scriptcontext.doc.ModelAbsoluteTolerance
         breps = Rhino.Geometry.Brep.CreateFromLoftRefit(curves, start, end, lt, closed, refit)
-    if len(breps)<1: return scriptcontext.errorhandler()
+    if not breps: return scriptcontext.errorhandler()
 
     idlist = []
     for brep in breps:
         id = scriptcontext.doc.Objects.AddBrep(brep)
         if id!=System.Guid.Empty: idlist.append(id)
-    if len(idlist)>0: scriptcontext.doc.Views.Redraw()
+    if idlist: scriptcontext.doc.Views.Redraw()
     return idlist
 
 
 def AddRevSrf(curve_id, axis, start_angle=0.0, end_angle=360.0):
     """Creates a surface by revolving a curve around an axis
     Parameters:
-        curve_id = identifier of profile curve
-        axis = line for the rail revolve axis
-        start_angle[opt], end_angle[opt] = start and end angles of revolve
+      curve_id = identifier of profile curve
+      axis = line for the rail revolve axis
+      start_angle[opt], end_angle[opt] = start and end angles of revolve
     Returns:
-        identifier of new object if successful
-        None on error
+      identifier of new object if successful
+      None on error
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     axis = rhutil.coerceline(axis, True)
     start_angle = math.radians(start_angle)
     end_angle = math.radians(end_angle)
     srf = Rhino.Geometry.RevSurface.Create(curve, axis, start_angle, end_angle)
-    if srf is None: return scriptcontext.errorhandler()
+    if not srf: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddSurface(srf)
     scriptcontext.doc.Views.Redraw()
     return rc

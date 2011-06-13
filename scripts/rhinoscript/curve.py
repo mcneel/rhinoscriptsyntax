@@ -61,7 +61,7 @@ def AddArcPtTanPt(start, direction, end):
 def AddCircle(plane_or_center, radius):
     """Adds a circle curve to the document
     Parameters:
-      planeOrCenter = plane on which the circle will lie. If a point is
+      plane_or_center = plane on which the circle will lie. If a point is
           passed, this will be the center of the circle on the active
           construction plane
       radius = the radius of the circle
