@@ -4,23 +4,20 @@ import Rhino
 import System.Enum
 import math
 
-def __viewhelper( view ):
-    foundView=None
-    if view is None: foundView = scriptcontext.doc.Views.ActiveView
-    if foundView: return foundView
+def __viewhelper(view):
+    if view is None: return scriptcontext.doc.Views.ActiveView
     allviews = scriptcontext.doc.Views.GetViewList(True, True)
-    view_id = rhutil.coerceguid(view)
+    view_id = rhutil.coerceguid(view, False)
     for item in allviews:
         if view_id:
-            if item.MainViewport.Id == view_id:
-                return item
+            if item.MainViewport.Id == view_id: return item
         elif item.MainViewport.Name == view:
             return item
+    raise ValueError("unable to coerce %s into a view"%view)
 
 
 def AddDetail(layout_id, corner1, corner2, title=None, projection=1):
-    """
-    Adds a new detail view to an existing layout view
+    """Adds a new detail view to an existing layout view
     Parameters:
       layout_id = identifier of an existing layout
       corner1, corner2 = 2d corners of the detail in the layout's unit system
@@ -37,23 +34,21 @@ def AddDetail(layout_id, corner1, corner2, title=None, projection=1):
       identifier of the newly created detial on success
       None on error
     """
-    layout_id = rhutil.coerceguid(layout_id)
-    corner1 = rhutil.coerce2dpoint(corner1)
-    corner2 = rhutil.coerce2dpoint(corner2)
-    if layout_id is None or corner1 is None or corner2 is None or projection<1 or projection>7:
-        return scriptcontext.errorhandler()
+    layout_id = rhutil.coerceguid(layout_id, True)
+    corner1 = rhutil.coerce2dpoint(corner1, True)
+    corner2 = rhutil.coerce2dpoint(corner2, True)
+    if projection<1 or projection>7: return scriptcontext.errorhandler()
     layout = scriptcontext.doc.Views.Find(layout_id)
-    if layout is None: return scriptcontext.errorhandler()
+    if not layout: return scriptcontext.errorhandler()
     projection = System.Enum.ToObject(Rhino.Display.DefinedViewportProjection, projection)
     detail = layout.AddDetailView(title, corner1, corner2, projection)
-    if detail is None: return scriptcontext.errorhandler()
+    if not detail: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return detail.Id
 
 
 def AddLayout(title=None, size=None):
-    """
-    Adds a new page layout view
+    """Adds a new page layout view
     Parameters:
       title[opt] = title of new layout
       size[opt] = width and height of paper for the new layout
@@ -69,8 +64,7 @@ def AddLayout(title=None, size=None):
 
 
 def AddNamedCPlane(cplane_name, view=None):
-    """
-    Adds a new named construction plane to the document
+    """Adds a new named construction plane to the document
     Parameters:
       cplane_name: the name of the new named construction plane
       view:[opt] string or Guid. Title or identifier of the view from which to save
@@ -80,18 +74,15 @@ def AddNamedCPlane(cplane_name, view=None):
       None on error
     """
     view = __viewhelper(view)
-    if cplane_name is None or len(cplane_name)<1 or view is None:
-        return scriptcontext.errorhandler()
+    if not cplane_name: raise ValueError("cplane_name is empty")
     plane = view.MainViewport.ConstructionPlane()
-    if plane is None: return scriptcontext.errorhandler()
     index = scriptcontext.doc.NamedConstructionPlanes.Add(cplane_name, plane)
     if index<0: return scriptcontext.errorhandler()
     return cplane_name
 
 
 def AddNamedView(name, view=None):
-    """
-    Adds a new named view to the document
+    """Adds a new named view to the document
     Parameters:
       name: the name of the new named view
       view: [opt] the title or identifier of the view to save. If omitted, the current
@@ -101,8 +92,7 @@ def AddNamedView(name, view=None):
       None on error
     """
     view = __viewhelper(view)
-    if view is None or name is None or len(name)<1:
-        return scriptcontext.errorhandler()
+    if not name: raise ValueError("name is empty")
     viewportId = view.MainViewport.Id
     index = scriptcontext.doc.NamedViews.Add(name, viewportId)
     if index<0: return scriptcontext.errorhandler()
@@ -110,8 +100,7 @@ def AddNamedView(name, view=None):
 
 
 def CurrentDetail(layout, detail=None, return_name=True):
-    """
-    Returns or changes the current detail view in a page layout view
+    """Returns or changes the current detail view in a page layout view
     Parameters:
       layout = title or identifier of an existing page layout view
       detail[opt] = title or identifier the the detail view to set
@@ -142,8 +131,7 @@ def CurrentDetail(layout, detail=None, return_name=True):
 
 
 def CurrentView(view=None, return_name=True):
-    """
-    Returns or sets the currently active view
+    """Returns or sets the currently active view
     Parameters:
       view:[opt] String or Guid. Title or id of the view to set current.
         If omitted, only the title or identifier of the current view is returned
@@ -168,8 +156,7 @@ def CurrentView(view=None, return_name=True):
 
 
 def DeleteNamedCPlane(name):
-    """
-    Removes a named construction plane from the document
+    """Removes a named construction plane from the document
     Parameters:
       name: name of the construction plane to remove
     Returns:
@@ -179,8 +166,7 @@ def DeleteNamedCPlane(name):
 
 
 def DeleteNamedView(name):
-    """
-    Removes a named view from the document
+    """Removes a named view from the document
     Parameters:
       name: name of the named view to remove
     Returns:
@@ -189,9 +175,8 @@ def DeleteNamedView(name):
     return scriptcontext.doc.NamedViews.Delete(name)
 
 
-def DetailLock( detail_id, lock=None ):
-    """
-    Returns or modifies the projection locked state of a detail
+def DetailLock(detail_id, lock=None):
+    """Returns or modifies the projection locked state of a detail
     Parameters:
       detail_id = identifier of a detail object
       lock[opt] = the new lock state
@@ -200,10 +185,9 @@ def DetailLock( detail_id, lock=None ):
       if lock is True or False, the previous detail projection locked state
       None on error
     """
-    detail_id = rhutil.coerceguid(detail_id)
-    if detail_id is None: return scriptcontext.errorhandler()
+    detail_id = rhutil.coerceguid(detail_id, True)
     detail = scriptcontext.doc.Objects.Find(detail_id)
-    if detail is None: return scriptcontext.errohandler()
+    if not detail: return scriptcontext.errohandler()
     rc = detail.DetailGeometry.IsProjectionLocked
     if lock and lock!=rc:
         detail.DetailGeometry.IsProjectionLocked = lock
@@ -211,9 +195,8 @@ def DetailLock( detail_id, lock=None ):
     return rc
 
 
-def DetailScale( detail_id, model_length=None, page_length=None ):
-    """
-    Returns or modifies the scale of a detail object
+def DetailScale(detail_id, model_length=None, page_length=None):
+    """Returns or modifies the scale of a detail object
     Parameters:
       detail_id = identifier of a detail object
       model_length[opt] = a length in the current model units
@@ -223,8 +206,7 @@ def DetailScale( detail_id, model_length=None, page_length=None ):
       previous page to model scale ratio if model_length and page_length are values
       None on error
     """
-    detail_id = rhutil.coerceguid(detail_id)
-    if detail_id is None: return scriptcontext.errorhandler()
+    detail_id = rhutil.coerceguid(detail_id, True)
     detail = scriptcontext.doc.Objects.Find(detail_id)
     if detail is None: return scriptcontext.errorhandler()
     rc = detail.DetailGeometry.PageToModelRatio
@@ -239,9 +221,8 @@ def DetailScale( detail_id, model_length=None, page_length=None ):
     return rc
 
 
-def IsDetail( layout, detail ):
-    """
-    Verifies that a detail view exists on a page layout view
+def IsDetail(layout, detail):
+    """Verifies that a detail view exists on a page layout view
     Parameters:
       layout: title or identifier of an existing page layout
       detail: title or identifier of an existing detail view
@@ -274,9 +255,8 @@ def IsDetail( layout, detail ):
     return False
 
 
-def IsLayout( layout ):
-    """
-    Verifies that a view is a page layout view
+def IsLayout(layout):
+    """Verifies that a view is a page layout view
     Parameters:
       layout: title or identifier of an existing page layout view
     Returns:
@@ -298,9 +278,8 @@ def IsLayout( layout ):
     return scriptcontext.errorhandler()
 
 
-def IsView( view ):
-    """
-    Verifies that the specified view exists
+def IsView(view):
+    """Verifies that the specified view exists
     Parameters:
       view: title or identifier of the view
     Returns:
@@ -317,8 +296,7 @@ def IsView( view ):
 
 
 def IsViewCurrent(view):
-    """
-    Verifies that the specified view is the current, or active view
+    """Verifies that the specified view is the current, or active view
     Parameters:
       view: title or identifier of the view
     Returns:
@@ -330,9 +308,8 @@ def IsViewCurrent(view):
     return view==activeview.MainViewport.Name
 
 
-def IsViewMaximized( view=None ):
-    """
-    Verifies that the specified view is maximized (enlarged so as to fill
+def IsViewMaximized(view=None):
+    """Verifies that the specified view is maximized (enlarged so as to fill
     the entire Rhino window)
     Paramters:
       view: [opt] title or identifier of the view. If omitted, the current
@@ -341,61 +318,50 @@ def IsViewMaximized( view=None ):
       True of False
     """
     view = __viewhelper(view)
-    return view and view.Maximized
+    return view.Maximized
 
 
-def IsViewPerspective( view ):
-    """
-    Verifies that the specified view's projection is set to perspective
+def IsViewPerspective(view):
+    """Verifies that the specified view's projection is set to perspective
     Parameters:
       view: title or identifier of the view
     Returns:
       True of False
-      None on error
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     return view.MainViewport.IsPerspectiveProjection
 
 
 def IsViewTitleVisible(view=None):
-    """
-    Verifies that the specified view's title window is visible
+    """Verifies that the specified view's title window is visible
     Paramters:
       view: [opt] The title or identifier of the view. If omitted, the current
             active view is used
     Returns:
-      True of False indicating success or failure
-      None on error
+      True of False
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     return view.MainViewport.TitleVisible
 
 
 def IsWallpaper(view):
     "Verifies that the specified view contains a wallpaper image"
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     return len(view.MainViewport.WallpaperFilename)>0
 
 
 def MaximizeRestoreView(view=None):
-    """
-    Toggles a view's maximized/restore window state of the specified view
+    """Toggles a view's maximized/restore window state of the specified view
     Parameters:
       view: [opt] the title or identifier of the view. If omitted, the current
             active view is used
-    Returns:
-      None
     """
     view = __viewhelper(view)
-    if view: view.Maximized = not view.Maximized
+    view.Maximized = not view.Maximized
 
 
-def NamedCPlane( name ):
-    """
-    Returns the plane geometry of the specified named construction plane
+def NamedCPlane(name):
+    """Returns the plane geometry of the specified named construction plane
     Parameters:
       name: the name of the construction plane
     Returns:
@@ -420,9 +386,8 @@ def NamedViews():
     return [scriptcontext.doc.NamedViews[i].Name for i in range(count)]
 
 
-def RenameView( old_title, new_title ):
-    """
-    Changes the title of the specified view
+def RenameView(old_title, new_title):
+    """Changes the title of the specified view
     Parameters:
       old_title: the title or identifier of the view to rename
       new_title: the new title of the view
@@ -430,8 +395,7 @@ def RenameView( old_title, new_title ):
       the view's previous title if successful
       None on error
     """
-    if old_title is None or new_title is None:
-        return scriptcontext.errorhandler()
+    if not old_title or not new_title: return scriptcontext.errorhandler()
     old_id = rhutil.coerceguid(old_title)
     foundview = None
     allviews = scriptcontext.doc.Views.GetViewList(True, True)
@@ -450,8 +414,7 @@ def RenameView( old_title, new_title ):
 
 
 def RestoreNamedCPlane(cplane_name, view=None):
-    """
-    Restores a named construction plane to the specified view.
+    """Restores a named construction plane to the specified view.
     Parameters:
       cplane_name: name of the construction plane to restore
       view: [opt] the title or identifier of the view. If omitted, the current
@@ -461,7 +424,6 @@ def RestoreNamedCPlane(cplane_name, view=None):
       None if not successful or on error
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     index = scriptcontext.doc.NamedConstructionPlanes.Find(cplane_name)
     if index<0: return scriptcontext.errorhandler()
     cplane = scriptcontext.doc.NamedConstructionPlanes[index]
@@ -471,8 +433,7 @@ def RestoreNamedCPlane(cplane_name, view=None):
 
 
 def RestoreNamedView(named_view, view=None, restore_bitmap=False):
-    """
-    Restores a named view to the specified view
+    """Restores a named view to the specified view
     Parameters:
       named_view: name of the named view to restore
       view:[opt] title or id of the view to restore the named view.
@@ -483,7 +444,6 @@ def RestoreNamedView(named_view, view=None, restore_bitmap=False):
       None on error
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     index = scriptcontext.doc.NamedViews.Find(named_view)
     if index<0: return scriptcontext.errorhandler()
     viewinfo = scriptcontext.doc.NamedViews[index]
@@ -494,8 +454,7 @@ def RestoreNamedView(named_view, view=None, restore_bitmap=False):
 
 
 def RotateCamera(view=None, direction=0, angle=None):
-    """
-    Rotates a perspective-projection view's camera. See the RotateCamera
+    """Rotates a perspective-projection view's camera. See the RotateCamera
     command in the Rhino help file for more details
     Parameters:
       view:[opt] title or id of the view. If omitted, current active view is used
@@ -508,7 +467,6 @@ def RotateCamera(view=None, direction=0, angle=None):
       True or False indicating success or failure
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     viewport = view.ActiveViewport
     if angle is None:
         angle = 2.0*math.pi/Rhino.ApplicationSettings.ViewSettings.RotateCircleIncrement
@@ -538,8 +496,7 @@ def RotateCamera(view=None, direction=0, angle=None):
 
 
 def RotateView(view=None, direction=0, angle=None):
-    """
-    Rotates a view. See RotateView command in Rhino help for more information
+    """Rotates a view. See RotateView command in Rhino help for more information
     Parameters:
       view:[opt] title or id of the view. If omitted, the current active view is used
       direction:[opt] the direction to rotate the view where
@@ -551,7 +508,6 @@ def RotateView(view=None, direction=0, angle=None):
       True or False indicating success or failure
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     viewport = view.ActiveViewport
     if angle is None:
         angle = 2.0*math.pi/Rhino.ApplicationSettings.ViewSettings.RotateCircleIncrement
@@ -568,18 +524,15 @@ def RotateView(view=None, direction=0, angle=None):
 
 
 def ShowGrid(view=None, show=None):
-    """
-    Shows or hides a view's construction plane grid
+    """Shows or hides a view's construction plane grid
     Parameters:
       view:[opt] title or id of the view. If omitted, the current active view is used
       show:[opt] The grid state to set. If omitted, the current grid display state is returned
     Returns:
       If show is not specified, then the grid display state if successful
       If show is specified, then the previous grid display state if successful
-      None on error
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     viewport = view.ActiveViewport
     rc = viewport.ConstructionGridVisible
     if show is not None and rc!=show:
@@ -589,8 +542,7 @@ def ShowGrid(view=None, show=None):
 
 
 def ShowGridAxes(view=None, show=None):
-    """
-    Shows or hides a view's construction plane grid axes.
+    """Shows or hides a view's construction plane grid axes.
     Parameters:
       view:[opt] title or id of the view. If omitted, the current active view
         is used
@@ -599,10 +551,8 @@ def ShowGridAxes(view=None, show=None):
     Returns:
       If show is not specified, then the grid axes display state
       If show is specified, then the previous grid axes display state
-      None on error
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     viewport = view.ActiveViewport
     rc = viewport.ConstructionAxesVisible
     if show is not None and rc!=show:
@@ -612,8 +562,7 @@ def ShowGridAxes(view=None, show=None):
 
 
 def ShowViewTitle(view=None, show=True):
-    """
-    Shows or hides the title window of a view
+    """Shows or hides the title window of a view
     Parameters:
       view:[opt] title or id of the view. If omitted, the current active view is used
       show:[opt] The state to set.
@@ -624,18 +573,15 @@ def ShowViewTitle(view=None, show=True):
 
 
 def ShowWorldAxes(view=None, show=None):
-    """
-    Shows or hides a view's world axis icon
+    """Shows or hides a view's world axis icon
     Parameters:
       view: [opt] title or id of the view. If omitted, the current active view is used
       show: [opt] The state to set.
     Returns:
       If show is not specified, then the world axes display state
       If show is specified, then the previous world axes display state
-      None on error
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     viewport = view.ActiveViewport
     rc = viewport.WorldAxesVisible
     if show is not None and rc!=show:
@@ -645,8 +591,7 @@ def ShowWorldAxes(view=None, show=None):
 
 
 def TiltView(view=None, direction=0, angle=None):
-    """
-    Tilts a view by rotating the camera up vector. See the TiltView command in
+    """Tilts a view by rotating the camera up vector. See the TiltView command in
     the Rhino help file for more details.
       view:[opt] title or id of the view. If omitted, the current active view is used
       direction:[opt] the direction to rotate the view where 0=right, 1=left
@@ -657,7 +602,6 @@ def TiltView(view=None, direction=0, angle=None):
       True or False indicating success or failure
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     viewport = view.ActiveViewport
     if angle is None:
         angle = 2.0*math.pi/Rhino.ApplicationSettings.ViewSettings.RotateCircleIncrement
@@ -674,8 +618,7 @@ def TiltView(view=None, direction=0, angle=None):
 
 
 def ViewCamera(view=None, camera_location=None):
-    """
-    Returns or sets the camera location of the specified view
+    """Returns or sets the camera location of the specified view
     Parameters:
       view:[opt] title or id of the view. If omitted, the current active view is used
       camera_location: [opt] a 3D point identifying the new camera location.
@@ -686,7 +629,6 @@ def ViewCamera(view=None, camera_location=None):
       None on error    
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     rc = view.ActiveViewport.CameraLocation
     if camera_location is None: return rc
     camera_location = rhutil.coerce3dpoint(camera_location)
@@ -697,8 +639,7 @@ def ViewCamera(view=None, camera_location=None):
 
 
 def ViewCameraLens(view=None, length=None):
-    """
-    Returns or sets the 35mm camera lens length of the specified perspective
+    """Returns or sets the 35mm camera lens length of the specified perspective
     projection view.
     Parameters:
       view:[opt] title or id of the view. If omitted, the current active view is used
@@ -707,10 +648,8 @@ def ViewCameraLens(view=None, length=None):
     Returns:
       If lens length is not specified, the current lens length
       If lens length is specified, the previous lens length
-      None on error
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     rc = view.ActiveViewport.Camera35mmLensLength
     if not length: return rc
     view.ActiveViewport.Camera35mmLensLength = length
@@ -719,8 +658,7 @@ def ViewCameraLens(view=None, length=None):
 
 
 def ViewCameraPlane(view=None):
-    """
-    Returns the orientation of a view's camera.
+    """Returns the orientation of a view's camera.
     Parameters:
       view:[opt] title or id of the view. If omitted, the current active view is used
     Returns:
@@ -728,15 +666,13 @@ def ViewCameraPlane(view=None):
       None on error
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     rc, frame = view.ActiveViewport.GetCameraFrame()
     if not rc: return scriptcontext.errorhandler()
     return frame
 
 
 def ViewCameraTarget(view=None, camera=None, target=None):
-    """
-    Returns or sets the camera and target positions of the specified view
+    """Returns or sets the camera and target positions of the specified view
     Parameters:
       view:[opt] title or id of the view. If omitted, current active view is used
       camera:[opt] 3d point identifying the new camera location. If camera and
@@ -748,10 +684,8 @@ def ViewCameraTarget(view=None, camera=None, target=None):
         the current camera and target locations is returned
       if either camera or target are specified, then the 3d points containing the
         previous camera and target locations is returned
-      None on error
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     rc = view.ActiveViewport.CameraLocation, view.ActiveViewport.CameraTarget
     camera = rhutil.coerce3dpoint(camera)
     target = rhutil.coerce3dpoint(target)
@@ -764,8 +698,7 @@ def ViewCameraTarget(view=None, camera=None, target=None):
 
 
 def ViewCameraUp(view=None, up_vector=None):
-    """
-    Returns or sets the camera up direction of a specified
+    """Returns or sets the camera up direction of a specified
     Parameters:
       view: [opt] title or id of the view. If omitted, the current active view is used
       up_vector: [opt] 3d vector identifying the new camera up direction
@@ -775,7 +708,6 @@ def ViewCameraUp(view=None, up_vector=None):
       None on error
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     rc = view.ActiveViewport.CameraUp
     if up_vector is None: return rc
     up_vector=rhutil.coerce3dvector(up_vector)
@@ -786,18 +718,15 @@ def ViewCameraUp(view=None, up_vector=None):
 
 
 def ViewCPlane(view=None, plane=None):
-    """
-    Returns or sets the specified view's construction plane
+    """Returns or sets the specified view's construction plane
     Parameters:
       view:[opt] title or id of the view. If omitted, current active view is used.
       plane:[opt] the new construction plane if setting
     Returns:
       If a construction plane is not specified, the current construction plane
       If a construction plane is specified, the previous construction plane
-      None if not successful or on Error
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     cplane = view.ActiveViewport.ConstructionPlane()
     plane = rhutil.coerceplane(plane)
     if plane:
@@ -807,8 +736,7 @@ def ViewCPlane(view=None, plane=None):
 
 
 def ViewNames(return_names=True, view_type=0):
-    """
-    Returns the names, or titles, or identifiers of all views in the document
+    """Returns the names, or titles, or identifiers of all views in the document
     Parameters:
       return_names: [opt] if True then the names of the views are returned.
         If False, then the identifiers of the views are returned
@@ -829,24 +757,20 @@ def ViewNames(return_names=True, view_type=0):
 
 
 def ViewNearCorners(view=None):
-    """
-    Returns the 3d corners of a view's near clipping plane rectangle. Useful
+    """Returns the 3d corners of a view's near clipping plane rectangle. Useful
     in determining the "real world" size of a parallel-projected view
     Parameters:
       view:[opt] title or id of the view. If omitted, current active view is used
     Returns:
       Four Point3d that define the corners of the rectangle (counter-clockwise order)
-      None on error
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     rc = view.ActiveViewport.GetNearRect()
     return rc[0], rc[1], rc[2], rc[3]
 
 
 def ViewProjection(view=None, mode=None):
-    """
-    Returns or sets a view's projection mode. A view's projection mode can be
+    """Returns or sets a view's projection mode. A view's projection mode can be
     either parallel or perspective
     Parameters:
       view:[opt] title or id of the view. If omitted, current active view is used
@@ -854,10 +778,8 @@ def ViewProjection(view=None, mode=None):
     Returns:
       if mode is not specified, the current projection mode for the specified view
       if mode is specified, the previous projection mode for the specified view
-      None on error
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     viewport = view.ActiveViewport
     rc = 2
     if viewport.IsParallelProjection: rc = 1
@@ -869,8 +791,7 @@ def ViewProjection(view=None, mode=None):
     return rc
 
 def ViewRadius(view=None, radius=None):
-    """
-    Returns or sets the radius of a parallel-projected view. Useful
+    """Returns or sets the radius of a parallel-projected view. Useful
     when you need an absolute zoom factor for a parallel-projected view
     Parameters:
       view:[opt] title or id of the view. If omitted, current active view is used
@@ -878,10 +799,8 @@ def ViewRadius(view=None, radius=None):
     Returns:
       if radius is not specified, the current view radius for the specified view
       if radius is specified, the previous view radius for the specified view
-      None on error
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     viewport = view.ActiveViewport
     if not viewport.IsParallelProjection: return scriptcontext.errorhandler()
     fr = viewport.GetFrustum()
@@ -897,23 +816,19 @@ def ViewRadius(view=None, radius=None):
 
 
 def ViewSize(view=None):
-    """
-    Returns the width and height in pixels of the specified view
+    """Returns the width and height in pixels of the specified view
     Parameters:
       view:[opt] title or id of the view. If omitted, current active view is used
     Returns:
       tuple of two numbers idenfitying width and height
-      None on error
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     cr = view.ClientRectangle
     return cr.Width, cr.Height
 
 
 def ViewTarget(view=None, target=None):
-    """
-    Returns or sets the target location of the specified view
+    """Returns or sets the target location of the specified view
     Parameters:
       view:[opt] title or id of the view. If omitted, current active view is used
       target:[opt] 3d point identifying the new target location. If omitted,
@@ -924,7 +839,6 @@ def ViewTarget(view=None, target=None):
       None on error
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     viewport = view.ActiveViewport
     old_target = viewport.CameraTarget
     if target is None: return old_target
@@ -936,8 +850,7 @@ def ViewTarget(view=None, target=None):
 
 
 def ViewTitle(view_id):
-    """
-    Returns the name, or title, of a given view's identifier
+    """Returns the name, or title, of a given view's identifier
     Parameters:
       view_id: String or Guid. The identifier of the view
     Returns:
@@ -952,9 +865,8 @@ def ViewTitle(view_id):
 
 
 def Wallpaper(view=None, filename=None):
-    """
-    Returns or sets the wallpaper bitmap of the specified view. To remove a wallpaper
-    bitmap, pass an empty string ""
+    """Returns or sets the wallpaper bitmap of the specified view. To remove a
+    wallpaper bitmap, pass an empty string ""
     Parameters:
       view[opt] = String or Guid. The identifier of the view. If omitted, the
         active view is used
@@ -962,10 +874,8 @@ def Wallpaper(view=None, filename=None):
     Returns:
       If filename is not specified, the current wallpaper bitmap filename
       If filename is specified, the previous wallpaper bitmap filename
-      None if not successful or on error
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     rc = view.ActiveViewport.WallpaperFilename
     if filename is not None and filename!=rc:
         view.ActiveViewport.SetWallpaper(filename, False)
@@ -974,8 +884,7 @@ def Wallpaper(view=None, filename=None):
 
 
 def WallpaperGrayScale(view=None, grayscale=None):
-    """
-    Returns or sets the grayscale display option of the wallpaper bitmap in a
+    """Returns or sets the grayscale display option of the wallpaper bitmap in a
     specified view
     Parameters:
       view[opt] = String or Guid. The identifier of the view. If omitted, the
@@ -984,10 +893,8 @@ def WallpaperGrayScale(view=None, grayscale=None):
     Returns:
       If grayscale is not specified, the current grayscale display option
       If grayscale is specified, the previous grayscale display option
-      None if not successful or on error
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     rc = view.ActiveViewport.WallpaperGrayscale
     if grayscale is not None and grayscale!=rc:
         filename = view.ActiveViewport.WallpaperFilename
@@ -997,8 +904,7 @@ def WallpaperGrayScale(view=None, grayscale=None):
 
 
 def WallpaperHidden(view=None, hidden=None):
-    """
-    Returns or sets the visibility of the wallpaper bitmap in a specified view
+    """Returns or sets the visibility of the wallpaper bitmap in a specified view
     Parameters:
       view[opt] = String or Guid. The identifier of the view. If omitted, the
         active view is used
@@ -1006,10 +912,8 @@ def WallpaperHidden(view=None, hidden=None):
     Returns:
       If hidden is not specified, the current hidden state
       If hidden is specified, the previous hidden state
-      None if not successful or on error
     """
     view = __viewhelper(view)
-    if view is None: return scriptcontext.errorhandler()
     rc = not view.ActiveViewport.WallpaperVisible
     if hidden is not None and hidden!=rc:
         filename = view.ActiveViewport.WallpaperFilename
@@ -1020,8 +924,7 @@ def WallpaperHidden(view=None, hidden=None):
 
 
 def ZoomBoundingBox(bounding_box, view=None, all=False):
-    """
-    Zooms to the extents of a specified bounding box in the specified view
+    """Zooms to the extents of a specified bounding box in the specified view
     Parameters:
       bounding_box: eight points that define the corners of a bounding box
         or a BoundingBox class instance
@@ -1036,14 +939,12 @@ def ZoomBoundingBox(bounding_box, view=None, all=False):
           scriptcontext.doc.Views.Redraw()
       else:
           view = __viewhelper(view)
-          if view:
-              view.ActiveViewport.ZoomBoundingBox(bbox)
-              view.Redraw()
+          view.ActiveViewport.ZoomBoundingBox(bbox)
+          view.Redraw()
 
 
 def ZoomExtents(view=None, all=False):
-    """
-    Zooms to the extents of visible objects in the specified view
+    """Zooms to the extents of visible objects in the specified view
     Parameters:
       view:[opt] title or id of the view. If omitted, current active view is used
       all:[opt] zoom extents in all views
@@ -1054,14 +955,12 @@ def ZoomExtents(view=None, all=False):
         scriptcontext.doc.Views.Redraw()
     else:
         view = __viewhelper(view)
-        if view:
-            view.ActiveViewport.ZoomExtents()
-            view.Redraw()
+        view.ActiveViewport.ZoomExtents()
+        view.Redraw()
 
 
 def ZoomSelected(view=None, all=False):
-    """
-    Zooms to the extents of selected objects in the specified view
+    """Zooms to the extents of selected objects in the specified view
     Parameters:
       view: [opt] title or id of the view. If omitted, current active view is used
       all: [opt] zoom extents in all views
@@ -1072,6 +971,5 @@ def ZoomSelected(view=None, all=False):
         scriptcontext.doc.Views.Redraw()
     else:
         view = __viewhelper(view)
-        if view:
-            view.ActiveViewport.ZoomExtentsSelected()
-            view.Redraw()
+        view.ActiveViewport.ZoomExtentsSelected()
+        view.Redraw()

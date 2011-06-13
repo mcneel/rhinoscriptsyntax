@@ -3,8 +3,9 @@ import scriptcontext
 import utility as rhutil
 from layer import __getlayer
 
+
 def AddMaterialToLayer(layer):
-    """Add a material to a layer and returns the new material's index. If the
+    """Add material to a layer and returns the new material's index. If the
     layer already has a material, then the layer's current material index is
     returned
     Parameters:
@@ -24,17 +25,15 @@ def AddMaterialToLayer(layer):
 
 
 def AddMaterialToObject(object_id):
-    """Adds a material to an object and returns the new material's index. If the
+    """Adds material to an object and returns the new material's index. If the
     object already has a material, the the object's current material index is
     returned.
     Parameters:
       object_id = identifier of an object
     Returns:
-      material index of the object if successful
-      None on error
+      material index of the object
     """
-    rhino_object = rhutil.coercerhinoobject(object_id)
-    if rhino_object is None: return scriptcontext.errorhandler()
+    rhino_object = rhutil.coercerhinoobject(object_id, True, True)
     attr = rhino_object.Attributes
     if attr.MaterialSource!=Rhino.DocObjects.ObjectMaterialSource.MaterialFromObject:
         attr.MaterialSource = Rhino.DocObjects.ObjectMaterialSource.MaterialFromObject
@@ -42,7 +41,6 @@ def AddMaterialToObject(object_id):
         attr = rhino_object.Attributes
     material_index = attr.MaterialIndex
     if material_index>-1: return material_index
-    
     material_index = scriptcontext.doc.Materials.AddMaterial()
     attr.MaterialIndex = material_index
     scriptcontext.doc.Objects.ModifyAttributes(rhino_object, attr, True)
@@ -50,7 +48,7 @@ def AddMaterialToObject(object_id):
 
     
 def CopyMaterial(source_index, destination_index):
-    """Copies the definition of a source material to a destination material
+    """Copies definition of a source material to a destination material
     Parameters:
       source_index, destination_index = indices of materials to copy
     Returns:
@@ -65,7 +63,7 @@ def CopyMaterial(source_index, destination_index):
 
 
 def IsMaterialDefault(material_index):
-    """Verifies that a material is a copy of Rhino's built-in "default" material.
+    """Verifies a material is a copy of Rhino's built-in "default" material.
     The default material is used by objects and layers that have not been
     assigned a material.
     Parameters:
@@ -101,11 +99,10 @@ def MatchMaterial(source, destination):
     source_id = rhutil.coerceguid(source)
     source_mat = None
     if source_id:
-        rhobj = scriptcontext.doc.Objects.Find(source_id)
-        if rhobj is None: return scriptcontext.errorhandler()
+        rhobj = rhutil.coercerhinoobject(source_id, True, True)
         source = rhobj.Attributes.MaterialIndex
     mat = scriptcontext.doc.Materials[source]
-    if mat is None: return scriptcontext.errorhandler()
+    if not mat: return scriptcontext.errorhandler()
     destination_id = rhutil.coerceguid(destination)
     if destination_id: destination = [destination]
     ids = [rhutil.coerceguid(d) for d in destination]

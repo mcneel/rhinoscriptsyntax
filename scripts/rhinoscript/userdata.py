@@ -2,8 +2,7 @@ import scriptcontext
 import utility as rhutil
 
 def DeleteDocumentData(section=None, entry=None):
-    """
-    Removes user data strings from the current document
+    """Removes user data strings from the current document
     Parameters:
       section = the section name. If omitted, all sections and their
           corresponding entries are removed
@@ -20,8 +19,7 @@ def DocumentDataCount():
 
 
 def GetDocumentData(section=None, entry=None):
-    """
-    Returns a user data item from the current document
+    """Returns a user data item from the current document
     Parameters:
       section[opt] = the section name. If omitted, all section names are returned
       entry[opt] = the entry name. If omitted, all entry names for section are returned
@@ -43,8 +41,7 @@ def GetDocumentData(section=None, entry=None):
 
 
 def GetUserText(object_id, key=None, attached_to_geometry=False):
-    """
-    Returns user text that is stored on an object.
+    """Returns user text that is stored on an object.
     Parameters:
       object_id = the object's identifies
       key[opt] = the key name. If omitted all key names for an object are returned
@@ -54,10 +51,7 @@ def GetUserText(object_id, key=None, attached_to_geometry=False):
       if key is not specified, a list of key names if successful
       None if not successful
     """
-    object_id = rhutil.coerceguid(object_id)
-    if object_id is None: return scriptcontext.errorhandler()
-    obj = scriptcontext.doc.Objects.Find(object_id)
-    if obj is None: return scriptcontext.errorhandler()
+    obj = rhutil.coercerhinoobject(object_id, True, True)
     source = None
     if attached_to_geometry: source = obj.Geometry
     else: source = obj.Attributes
@@ -72,17 +66,15 @@ def GetUserText(object_id, key=None, attached_to_geometry=False):
 
 
 def IsDocumentData():
-    """
-    Verifies that the current document contains Script user data
+    """Verifies that the current document contains Script user data
     Returns:
       True or False indicating the presence of Script user data
     """
     return scriptcontext.doc.Strings.Count>0
 
 
-def IsUserText( object_id ):
-    """
-    Verifies that an object contains user text
+def IsUserText(object_id):
+    """Verifies that an object contains user text
     Returns:
       0 = no user text
       1 = attribute user text
@@ -90,19 +82,15 @@ def IsUserText( object_id ):
       3 = both attribute and geometry user text
       None on error
     """
-    object_id = rhutil.coerceguid(object_id)
-    if object_id is None: return scriptcontext.errorhandler()
-    obj = scriptcontext.doc.Objects.Find(object_id)
-    if obj is None: return scriptcontext.errorhandler()
+    obj = rhutil.coercerhinoobject(object_id, True, True)
     rc = 0
     if obj.Attributes.UserStringCount>0: rc = rc|1
     if obj.Geometry.UserStringCount>0: rc = rc|2
     return rc
 
 
-def SetDocumentData( section, entry, value ):
-    """
-    Adds or sets a user data string to the current document
+def SetDocumentData(section, entry, value):
+    """Adds or sets a user data string to the current document
     Parameters:
       section = the section name
       entry = the entry name
@@ -126,10 +114,7 @@ def SetUserText( object_id, key, value=None, attach_to_geometry=False ):
     Returns:
       True or False indicating success or failure 
     """
-    object_id = rhutil.coerceguid(object_id)
-    if object_id is None: return scriptcontext.errorhandler()
-    obj = scriptcontext.doc.Objects.Find(object_id)
-    if obj is None: return scriptcontext.errorhandler()
+    obj = rhutil.coercerhinoobject(object_id, True, True)
     rc = False
     if attach_to_geometry:
         geometry = obj.Geometry

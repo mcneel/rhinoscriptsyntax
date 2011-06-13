@@ -1,7 +1,5 @@
 import Rhino
-import System.Drawing.Color
-import System.Array
-import System.Guid
+import System.Drawing.Color, System.Array, System.Guid
 import time
 import System.Windows.Forms.Clipboard
 import scriptcontext
@@ -83,12 +81,11 @@ def Angle(point1, point2, plane=True):
 
 def Angle2(line1, line2):
     """Measures the angle between two lines"""
-    line1 = coerceline(line1)
-    line2 = coerceline(line2)
-    if line1 is None or line2 is None: return scriptcontext.errorhandler()
+    line1 = coerceline(line1, True)
+    line2 = coerceline(line2, True)
     vec0 = line1.To - line1.From
     vec1 = line2.To - line2.From
-    if( not vec0.Unitize() or not vec1.Unitize() ): return scriptcontext.errorhandler()
+    if not vec0.Unitize() or not vec1.Unitize(): return scriptcontext.errorhandler()
     dot = vec0 * vec1
     dot = clamp(-1,1,dot)
     angle = math.acos(dot)
@@ -116,10 +113,9 @@ def ClipboardText(text=None):
     return rc
 
 
-def ColorAdjustLuma( rgb, luma, scale=False ):
-    """
-    Changes the luminance of a red-green-blue value. Hue and saturation are not
-    affected
+def ColorAdjustLuma(rgb, luma, scale=False):
+    """Changes the luminance of a red-green-blue value. Hue and saturation are
+    not affected
     Parameters:
       rgb = initial rgb value
       luma = The luminance in units of 0.1 percent of the total range. A
@@ -130,11 +126,10 @@ def ColorAdjustLuma( rgb, luma, scale=False ):
       modified rgb value if successful
       None on error
     """
-    rgb = coercecolor(rgb)
-    if rgb is None: return scriptcontext.errorhandler()
+    rgb = coercecolor(rgb, True)
     hsl = Rhino.Display.ColorHSL(rgb)
     luma = luma / 1000.0
-    if scale==True: luma = hsl.L + luma
+    if scale: luma = hsl.L + luma
     hsl.L = luma
     rgb = hsl.ToArgbColor()
     return rgb.ToArgb()
@@ -142,15 +137,13 @@ def ColorAdjustLuma( rgb, luma, scale=False ):
 
 def ColorBlueValue(rgb):
     "Retrieves intensity value for the blue component of an RGB color"
-    rgb = coercecolor(rgb)
-    if rgb is None: return scriptcontext.errorhandler()
+    rgb = coercecolor(rgb, True)
     return rgb.B
 
 
 def ColorGreenValue(rgb):
     "Retrieves intensity value for the green component of an RGB color"
-    rgb = coercecolor(rgb)
-    if rgb is None: return scriptcontext.errorhandler()
+    rgb = coercecolor(rgb, True)
     return rgb.G
 
 
@@ -168,58 +161,52 @@ def ColorHLSToRGB(hls):
 
 def ColorRedValue(rgb):
     "Retrieves intensity value for the red component of an RGB color"
-    rgb = coercecolor(rgb)
-    if rgb is None: return scriptcontext.errorhandler()
+    rgb = coercecolor(rgb, True)
     return rgb.R
 
 
 def ColorRGBToHLS(rgb):
     "Converts colors from RGB to HLS"
-    rgb = coercecolor(rgb)
-    if rgb is None: return scriptcontext.errorhandler()
+    rgb = coercecolor(rgb, True)
     hls = Rhino.Display.ColorHSL(rgb)
     return (hls.H, hls.S, hls.L, hls.A)
 
 
 def CullDuplicatePoints(points, tolerance=-1):
-    """
-    Removes duplicates from a list of 3-D points.
+    """Removes duplicates from a list of 3D points.
     Parameters:
-      points = A list of 3-D points.
-      tolerance [opt] = The minimum distance between points. Points that fall
-                        within this tolerance will be discarded. If omitted,
-                        Rhino's internal zero tolerance is used.
+      points = A list of 3D points.
+      tolerance [opt] = Minimum distance between points. Points within this
+        tolerance will be discarded. If omitted, Rhino's internal zero tolerance
+        is used.
     Returns:
-      A list of 3-D points with duplicates removed if successful.
+      list of 3D points with duplicates removed if successful.
       None if not successful or on error.
     """
-    points = coerce3dpointlist(points)
-    if points is None: return scriptcontext.errorhandler()
+    points = coerce3dpointlist(points, True)
     if tolerance is None or tolerance < 0:
         tolerance = Rhino.RhinoMath.ZeroTolerance
     return Rhino.Geometry.Point3d.CullDuplicates(points, tolerance)
 
 
 def Distance(point1, point2):
-    """
-    Measures the distance between two 3-D points, or between a 3-D point and
+    """Measures the distance between two 3D points, or between a 3D point and
     an array of 3-D points.
     Parameters:
-      point1 = The first 3-D point.
-      point2 = The second 3-D point or list of 3-D points.
+      point1 = The first 3D point.
+      point2 = The second 3D point or list of 3-D points.
     Returns:
-      If point2 is a 3-D point then the distance if successful.
+      If point2 is a 3D point then the distance if successful.
       If point2 is a list of points, then an list of distances if successful.
       None if not successful, or on error.
     """
-    from_pt = coerce3dpoint(point1)
+    from_pt = coerce3dpoint(point1, True)
     to_pt = coerce3dpoint(point2)
-    if from_pt and to_pt:
+    if to_pt:
         vec = to_pt - from_pt
         return vec.Length
     # check if we have a list of points
-    to_pt = coerce3dpointlist(point2)
-    if to_pt is None: return scriptcontext.errorhandler()
+    to_pt = coerce3dpointlist(point2, True)
     distances = []
     for point in to_pt:
         vec = point - from_pt
@@ -229,8 +216,7 @@ def Distance(point1, point2):
 
 
 def GetSettings(filename, section=None, entry=None):
-    """
-    Returns a string from a specified section in a Windows-style initialization file.
+    """Returns string from a specified section in a initialization file.
     Parameters:
       filename = name of the initialization file
       section[opt] = section containing the entry
@@ -256,9 +242,7 @@ def GetSettings(filename, section=None, entry=None):
 
 
 def Polar(point, angle_degrees, distance, plane=None):
-    """
-    Returns the 3D point that is a specified angle and distance
-    from a 3D point
+    """Returns 3D point that is a specified angle and distance from a 3D point
     Parameters:
       point = the point to transform
       plane[opt] = plane to base the transformation. If omitted, the world
@@ -267,11 +251,10 @@ def Polar(point, angle_degrees, distance, plane=None):
       resulting point is successful
       None on error
     """
-    point = coerce3dpoint(point)
-    if point is None: return scriptcontext.errorhandler()
-    plane = coerceplane(plane)
+    point = coerce3dpoint(point, True)
     angle = math.radians(angle_degrees)
-    if plane is None: plane = Rhino.Geometry.Plane.WorldXY
+    if plane: plane = coerceplane(plane)
+    else: plane = Rhino.Geometry.Plane.WorldXY
     offset = plane.XAxis
     offset.Unitize()
     offset *= distance
@@ -282,27 +265,23 @@ def Polar(point, angle_degrees, distance, plane=None):
 
 
 def Sleep(milliseconds):
-    """
-    Suspends execution of a running script for the specified interval
-    """
+    "Suspends execution of a running script for the specified interval"
     sec = milliseconds / 1000.0
     time.sleep(sec)
     Rhino.RhinoApp.Wait() #keep the message pump alive
     
 
 def SortPointList(points, tolerance=None):
-    """
-    Sorts a list of points so they will be connected in a "reasonable" polyline order
+    """Sorts list of points so they will be connected in a "reasonable" polyline order
     Parameters:
       points = the points to sort
       tolerance[opt] = minimum distance between points. Points that fall within this tolerance
         will be discarded. If omitted, Rhino's internal zero tolerance is used.
     Returns:
-      a list of sorted 3-D points if successful
+      a list of sorted 3D points if successful
       None on error
     """
-    points = coerce3dpointlist(points)
-    if points is None: return scriptcontext.errorhandler()
+    points = coerce3dpointlist(points, True)
     if tolerance is None: tolerance = Rhino.RhinoMath.ZeroTolerance
     return Rhino.Geometry.Point3d.SortAndCullPointList(points, tolerance)
 
@@ -352,7 +331,7 @@ def SortPoints(points, ascending=True, order=0):
 
 def Str2Pt(point):
     "converts a formatted string value into a 3-D point value"
-    return coerce3dpoint(point)
+    return coerce3dpoint(point, True)
 
 
 def clamp(lowvalue, highvalue, value):
@@ -396,20 +375,19 @@ def coerce3dpoint(point, raise_on_error=False):
     if raise_on_error: raise ValueError("Could not convert %s to a Point3d" % point)
 
 
-def coerce2dpoint(point):
+def coerce2dpoint(point, raise_on_error=False):
     "Convert input into a Rhino.Geometry.Point2d if possible."
-    if point is None or type(point) is Rhino.Geometry.Point2d: return point
+    if type(point) is Rhino.Geometry.Point2d: return point
     if type(point) is list or type(point) is tuple:
         length = len(point)
         if length==2 and type(point[0]) is not list and type(point[0]) is not Rhino.Geometry.Point2d:
             return Rhino.Geometry.Point2d(point[0], point[1])
-        return None
     if type(point) is Rhino.Geometry.Vector3d or type(point) is Rhino.Geometry.Point3d:
         return Rhino.Geometry.Point2d(point.X, point.Y)
     if type(point) is str:
         point = point.split(',')
         return Rhino.Geometry.Point2d( float(point[0]), float(point[1]) )
-    return None
+    if raise_on_error: raise ValueError("Could not convert %s to a Point2d" % point)
 
 
 def coerce3dvector(vector, raise_on_error=False):
@@ -542,11 +520,11 @@ def coercecolor(c, raise_if_bad_input=False):
     if raise_if_bad_input: raise TypeError("%s can not be converted to a Color"%c)
 
 
-def coerceline(line):
-    if line is None or type(line) is Rhino.Geometry.Line: return line
-    points = coerce3dpointlist(line)
+def coerceline(line, raise_if_bad_input=False):
+    if type(line) is Rhino.Geometry.Line: return line
+    points = coerce3dpointlist(line, raise_if_bad_input)
     if points and len(points)>1: return Rhino.Geometry.Line(points[0], points[1])
-    return None
+    if raise_if_bad_input: raise TypeError("%s can not be converted to a Line"%line)
 
 
 def coercebrep(id, raise_if_missing=False):

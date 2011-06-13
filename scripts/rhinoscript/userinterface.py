@@ -12,8 +12,7 @@ import System.Windows.Forms.FolderBrowserDialog
 
 
 def BrowseForFolder(folder=None, message=None, title=None):
-    """
-    Displays the browse-for-folder dialog allowing the user to select a folder
+    """Displays the browse-for-folder dialog allowing the user to select a folder
     Parameters:
       folder[opt] = a default folder
       message[opt] = a prompt or message
@@ -35,8 +34,7 @@ def BrowseForFolder(folder=None, message=None, title=None):
 
 
 def CheckListBox(items, message=None, title=None):
-    """
-    Displays a list of items in a checkable-style list dialog box
+    """Displays a list of items in a checkable-style list dialog box
     Parameters:
       items = a list of tuples containing a string and a boolean check state
       message[opt] = a prompt or message
@@ -56,8 +54,7 @@ def CheckListBox(items, message=None, title=None):
 
 
 def ComboListBox(items, message=None, title=None):
-    """
-    Displays a list of items in a combo-style list box dialog.
+    """Displays a list of items in a combo-style list box dialog.
     Parameters:
       items = a list of string
       message[opt] = a prompt of message
@@ -70,8 +67,7 @@ def ComboListBox(items, message=None, title=None):
 
 
 def EditBox(default_string=None, message=None, title=None):
-    """
-    Displays a dialog box prompting the user to enter a string value. The
+    """Displays a dialog box prompting the user to enter a string value. The
     string value may span multiple lines
     """
     rc, text = Rhino.UI.Dialogs.ShowEditBox(title, message, default_string, True)
@@ -79,8 +75,7 @@ def EditBox(default_string=None, message=None, title=None):
 
 
 def GetBoolean(message, items, defaults):
-    """
-    Pauses for user input of one or more boolean values. Boolean values are
+    """Pauses for user input of one or more boolean values. Boolean values are
     displayed as click-able command line option toggles
     Parameters:
       message = a prompt
@@ -118,8 +113,7 @@ def GetBoolean(message, items, defaults):
 
 
 def GetBox(mode=0, base_point=None, prompt1=None, prompt2=None, prompt3=None):
-    """
-    Pauses for user input of a box
+    """Pauses for user input of a box
     Parameters:
       mode[opt] = The box selection mode.
          0 = All modes
@@ -141,8 +135,7 @@ def GetBox(mode=0, base_point=None, prompt1=None, prompt2=None, prompt3=None):
 
 
 def GetColor(color=[0,0,0]):
-    """
-    Displays the Rhino color picker dialog allowing the user to select an RGB color
+    """Displays the Rhino color picker dialog allowing the user to select an RGB color
     Parameters:
       color [opt] = a default RGB value. If omitted, the default color is black
     Returns:
@@ -157,8 +150,7 @@ def GetColor(color=[0,0,0]):
 
 
 def GetInteger(message=None, number=None, minimum=None, maximum=None):
-    """
-    Pauses for user input of a whole number.
+    """Pauses for user input of a whole number.
     Parameters:
       message [optional] = A prompt or message.
       number [optional] = A default whole number value.
@@ -180,8 +172,7 @@ def GetInteger(message=None, number=None, minimum=None, maximum=None):
 
 
 def GetLayer(title="Select Layer", layer=None, show_new_button=False, show_set_current=False):
-    """
-    Displays a dialog box prompting the user to select a layer
+    """Displays a dialog box prompting the user to select a layer
     Parameters:
       title[opt] = dialog box title
       layer[opt] = name of a layer to preseclt. If omitted, the current layer will be preselected
@@ -201,8 +192,7 @@ def GetLayer(title="Select Layer", layer=None, show_new_button=False, show_set_c
 
 
 def GetPoint(message=None, base_point=None, distance=None, in_plane=False):
-    """
-    Pauses for user input of a point.
+    """Pauses for user input of a point.
     Parameters:
       message [opt] = A prompt or message.
       base_point [opt] = list of 3 numbers or Point3d identifying a starting, or base point
@@ -229,9 +219,8 @@ def GetPoint(message=None, base_point=None, distance=None, in_plane=False):
     return pt
 
 
-def GetPointOnCurve( curve_id, message=None ):
-    """
-    Pauses for user input of a point constrainted to a curve object
+def GetPointOnCurve(curve_id, message=None):
+    """Pauses for user input of a point constrainted to a curve object
     Parameters:
       curve_id = identifier of the curve to get a point on
       message [opt] = a prompt of message
@@ -239,8 +228,7 @@ def GetPointOnCurve( curve_id, message=None ):
       3d point if successful
       None on error
     """
-    curve = rhutil.coercecurve(curve_id)
-    if curve is None: return scriptcontext.errorhandler()
+    curve = rhutil.coercecurve(curve_id, -1, True)
     gp = Rhino.Input.Custom.GetPoint()
     if message: gp.SetCommandPrompt(message)
     gp.Constrain(curve, False)
@@ -252,9 +240,8 @@ def GetPointOnCurve( curve_id, message=None ):
     return pt
 
 
-def GetPointOnMesh( mesh_id, message=None ):
-    """
-    Pauses for user input of a point constrained to a mesh object
+def GetPointOnMesh(mesh_id, message=None):
+    """Pauses for user input of a point constrained to a mesh object
     Parameters:
       mesh_id = identifier of the mesh to get a point on
       message [opt] = a prompt or message
@@ -262,17 +249,16 @@ def GetPointOnMesh( mesh_id, message=None ):
       3d point if successful
       None on error
     """
-    mesh_id = rhutil.coerceguid(mesh_id)
-    if mesh_id is None: return scriptcontext.errorhandler()
+    mesh_id = rhutil.coerceguid(mesh_id, True)
     if not message: message = "Point"
     cmdrc, point = Rhino.Input.RhinoGet.GetPointOnMesh(mesh_id, message, False)
     if cmdrc==Rhino.Commands.Result.Success: return point
     return None
 
 
-def GetPointOnSurface( surface_id, message=None ):
-    """
-    Pauses for user input of a point constrained to a surface or polysurface object
+def GetPointOnSurface(surface_id, message=None):
+    """Pauses for user input of a point constrained to a surface or polysurface
+    object
     Parameters:
       surface_id = identifier of the surface to get a point on
       message [opt] = a prompt or message
@@ -282,8 +268,7 @@ def GetPointOnSurface( surface_id, message=None ):
     """
     surfOrBrep = rhutil.coercesurface(surface_id)
     if not surfOrBrep:
-        surfOrBrep = rhutil.coercebrep(surface_id)
-        if not surfOrBrep: return scriptcontext.errorhandler()
+        surfOrBrep = rhutil.coercebrep(surface_id, True)
     gp = Rhino.Input.Custom.GetPoint()
     if message: gp.SetCommandPrompt(message)
     if isinstance(surfOrBrep,Rhino.Geometry.Surface):
@@ -299,8 +284,7 @@ def GetPointOnSurface( surface_id, message=None ):
 
 
 def GetPoints(draw_lines=False, in_plane=False, message1=None, message2=None, max_points=None, base_point=None):
-    """
-    Pauses for user input of one or more points
+    """Pauses for user input of one or more points
     Parameters:
       draw_lines [opt] = Draw lines between points
       in_plane[opt] = Constrain point selection to the active construction plane
@@ -342,8 +326,7 @@ def GetPoints(draw_lines=False, in_plane=False, message1=None, message2=None, ma
 
 
 def GetReal(message="Number", number=None, minimum=None, maximum=None):
-    """
-    Pauses for user input of a number.
+    """Pauses for user input of a number.
     Parameters:
       message [optional] = A prompt or message.
       number [optional] = A default number value.
@@ -365,8 +348,7 @@ def GetReal(message="Number", number=None, minimum=None, maximum=None):
 
 
 def GetRectangle(mode=0, base_point=None, prompt1=None, prompt2=None, prompt3=None):
-    """
-    Pauses for user input of a rectangle
+    """Pauses for user input of a rectangle
     Parameters:
       mode[opt] = The rectangle selection mode. The modes are as follows
           0 = All modes
@@ -393,8 +375,7 @@ def GetRectangle(mode=0, base_point=None, prompt1=None, prompt2=None, prompt3=No
 
 
 def GetString(message=None, defaultString=None, strings=None):
-    """
-    Pauses for user input of a string value
+    """Pauses for user input of a string value
     Parameters:
       message [opt]: a prompt or message
       defaultString [opt]: a default value
@@ -415,8 +396,7 @@ def GetString(message=None, defaultString=None, strings=None):
 
 
 def ListBox(items, message=None, title=None):
-    """
-    Displays a list of items in a list box dialog.
+    """Displays a list of items in a list box dialog.
     Parameters:
       items = a list of string
       message [optional] = a prompt of message
@@ -429,8 +409,7 @@ def ListBox(items, message=None, title=None):
 
 
 def MessageBox(message, buttons=0, title=""):
-    """
-    Displays a message box. A message box contains a message and
+    """Displays a message box. A message box contains a message and
     title, plus any combination of predefined icons and push buttons.
     Parameters:
       message = A prompt or message.
@@ -498,8 +477,7 @@ def MessageBox(message, buttons=0, title=""):
 
 
 def PropertyListBox(items, values, message=None, title=None):
-    """
-    Displays list of items and their values in a property-style list box dialog
+    """Displays list of items and their values in a property-style list box dialog
     Parameters:
       items, values = list of string items and their corresponding values
       message [opt] = a prompt or message
@@ -514,8 +492,7 @@ def PropertyListBox(items, values, message=None, title=None):
 
 
 def OpenFileName(title=None, filter=None, folder=None, filename=None, extension=None):
-    """
-    Displays file open dialog box allowing the user to enter a file name.
+    """Displays file open dialog box allowing the user to enter a file name.
     Note, this function does not open the file.
     Parameters:
       title[opt] = A dialog box title.
@@ -540,8 +517,7 @@ def OpenFileName(title=None, filter=None, folder=None, filename=None, extension=
 
 
 def RealBox(message="", default_number=None, title=""):
-    """
-    Displays a dialog box prompting the user to enter a number
+    """Displays a dialog box prompting the user to enter a number
     Returns:
       number on success
       None on error
@@ -553,8 +529,7 @@ def RealBox(message="", default_number=None, title=""):
 
 
 def SaveFileName(title=None, filter=None, folder=None, filename=None, extension=None):
-    """
-    Displays a save dialog box allowing the user to enter a file name.
+    """Displays a save dialog box allowing the user to enter a file name.
     Note, this function does not save the file.
     Parameters:
       title[opt] = A dialog box title.
