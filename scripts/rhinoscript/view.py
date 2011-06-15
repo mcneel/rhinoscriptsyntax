@@ -17,7 +17,7 @@ def __viewhelper(view):
 
 
 def AddDetail(layout_id, corner1, corner2, title=None, projection=1):
-    """Adds a new detail view to an existing layout view
+    """Adds new detail view to an existing layout view
     Parameters:
       layout_id = identifier of an existing layout
       corner1, corner2 = 2d corners of the detail in the layout's unit system
@@ -37,9 +37,9 @@ def AddDetail(layout_id, corner1, corner2, title=None, projection=1):
     layout_id = rhutil.coerceguid(layout_id, True)
     corner1 = rhutil.coerce2dpoint(corner1, True)
     corner2 = rhutil.coerce2dpoint(corner2, True)
-    if projection<1 or projection>7: return scriptcontext.errorhandler()
+    if projection<1 or projection>7: raise ValueError("projection must be a value between 1-7")
     layout = scriptcontext.doc.Views.Find(layout_id)
-    if not layout: return scriptcontext.errorhandler()
+    if not layout: raise ValueError("no layout found for given layout_id")
     projection = System.Enum.ToObject(Rhino.Display.DefinedViewportProjection, projection)
     detail = layout.AddDetailView(title, corner1, corner2, projection)
     if not detail: return scriptcontext.errorhandler()
@@ -64,7 +64,7 @@ def AddLayout(title=None, size=None):
 
 
 def AddNamedCPlane(cplane_name, view=None):
-    """Adds a new named construction plane to the document
+    """Adds new named construction plane to the document
     Parameters:
       cplane_name: the name of the new named construction plane
       view:[opt] string or Guid. Title or identifier of the view from which to save
@@ -421,7 +421,7 @@ def RestoreNamedCPlane(cplane_name, view=None):
             active view is used
     Returns:
       name of the restored named construction plane if successful
-      None if not successful or on error
+      None on error
     """
     view = __viewhelper(view)
     index = scriptcontext.doc.NamedConstructionPlanes.Find(cplane_name)
@@ -687,9 +687,9 @@ def ViewCameraTarget(view=None, camera=None, target=None):
     """
     view = __viewhelper(view)
     rc = view.ActiveViewport.CameraLocation, view.ActiveViewport.CameraTarget
-    camera = rhutil.coerce3dpoint(camera)
-    target = rhutil.coerce3dpoint(target)
-    if camera is None and target is None: return rc
+    if not camera and not target: return rc
+    if camera: camera = rhutil.coerce3dpoint(camera, True)
+    if target: target = rhutil.coerce3dpoint(target, True)
     if camera and target: view.ActiveViewport.SetCameraLocations(target, camera)
     elif camera is None: view.ActiveViewport.SetCameraTarget(target, True)
     else: view.ActiveViewport.SetCameraLocation(camera, True)
@@ -700,20 +700,17 @@ def ViewCameraTarget(view=None, camera=None, target=None):
 def ViewCameraUp(view=None, up_vector=None):
     """Returns or sets the camera up direction of a specified
     Parameters:
-      view: [opt] title or id of the view. If omitted, the current active view is used
-      up_vector: [opt] 3d vector identifying the new camera up direction
+      view[opt]: title or id of the view. If omitted, the current active view is used
+      up_vector[opt]: 3D vector identifying the new camera up direction
     Returns:
       if up_vector is not specified, then the current camera up direction
       if up_vector is specified, then the previous camera up direction
-      None on error
     """
     view = __viewhelper(view)
     rc = view.ActiveViewport.CameraUp
-    if up_vector is None: return rc
-    up_vector=rhutil.coerce3dvector(up_vector)
-    if up_vector is None: return scriptcontext.errorhandler()
-    view.ActiveViewport.CameraUp = up_vector
-    view.Redraw()
+    if up_vector:
+        view.ActiveViewport.CameraUp = rhutil.coerce3dvector(up_vector, True)
+        view.Redraw()
     return rc
 
 
@@ -728,8 +725,8 @@ def ViewCPlane(view=None, plane=None):
     """
     view = __viewhelper(view)
     cplane = view.ActiveViewport.ConstructionPlane()
-    plane = rhutil.coerceplane(plane)
     if plane:
+        plane = rhutil.coerceplane(plane, True)
         view.ActiveViewport.SetConstructionPlane(plane)
         view.Redraw()
     return cplane

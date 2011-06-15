@@ -4,9 +4,9 @@ import utility as rhutil
 def DeleteDocumentData(section=None, entry=None):
     """Removes user data strings from the current document
     Parameters:
-      section = the section name. If omitted, all sections and their
-          corresponding entries are removed
-      entry = the entry name. If omitted, all entries for section are removed
+      section = section name. If omitted, all sections and their corresponding
+        entries are removed
+      entry = entry name. If omitted, all entries for section are removed
     Returns:
       True or False indicating success or failure
     """
@@ -21,22 +21,21 @@ def DocumentDataCount():
 def GetDocumentData(section=None, entry=None):
     """Returns a user data item from the current document
     Parameters:
-      section[opt] = the section name. If omitted, all section names are returned
-      entry[opt] = the entry name. If omitted, all entry names for section are returned
+      section[opt] = section name. If omitted, all section names are returned
+      entry[opt] = entry name. If omitted, all entry names for section are returned
     Returns:
       list of all section names if section name is omitted
       list of all entry names for a section if entry is omitted
       value of the entry if both section and entry are specified
-      None if not successful or on error
     """
     if section is None:
         rc = scriptcontext.doc.Strings.GetSectionNames()
         if rc: return list(rc)
-        return None
+        return []
     if entry is None:
         rc = scriptcontext.doc.Strings.GetEntryNames(section)
         if rc: return list(rc)
-        return None
+        return []
     return scriptcontext.doc.Strings.GetValue(section, entry)
 
 
@@ -49,7 +48,6 @@ def GetUserText(object_id, key=None, attached_to_geometry=False):
     Returns:
       if key is specified, the associated value if successful
       if key is not specified, a list of key names if successful
-      None if not successful
     """
     obj = rhutil.coercerhinoobject(object_id, True, True)
     source = None
@@ -57,16 +55,15 @@ def GetUserText(object_id, key=None, attached_to_geometry=False):
     else: source = obj.Attributes
     rc = None
     if key:
-        rc = source.GetUserString(key)
+        return source.GetUserString(key)
     else:
         userstrings = source.GetUserStrings()
-        if userstrings and userstrings.Count>0:
-            rc = [userstrings.GetKey(i) for i in range(userstrings.Count)]
-    return rc
+        rc = [userstrings.GetKey(i) for i in range(userstrings.Count)]
+        return rc
 
 
 def IsDocumentData():
-    """Verifies that the current document contains Script user data
+    """Verifies the current document contains  user data
     Returns:
       True or False indicating the presence of Script user data
     """
@@ -80,7 +77,6 @@ def IsUserText(object_id):
       1 = attribute user text
       2 = geometry user text
       3 = both attribute and geometry user text
-      None on error
     """
     obj = rhutil.coercerhinoobject(object_id, True, True)
     rc = 0
@@ -96,15 +92,13 @@ def SetDocumentData(section, entry, value):
       entry = the entry name
       value  = the string value
     Returns:
-      The previous value if successful
-      None if no previous value exists, if not successful, or on error
+      The previous value
     """
     return scriptcontext.doc.Strings.SetString(section, entry, value)
 
 
-def SetUserText( object_id, key, value=None, attach_to_geometry=False ):
-    """
-    Sets or removes user text stored on an object.
+def SetUserText(object_id, key, value=None, attach_to_geometry=False):
+    """Sets or removes user text stored on an object.
     Parameters:
       object_id = the object's identifier
       key = the key name to set
@@ -115,11 +109,5 @@ def SetUserText( object_id, key, value=None, attach_to_geometry=False ):
       True or False indicating success or failure 
     """
     obj = rhutil.coercerhinoobject(object_id, True, True)
-    rc = False
-    if attach_to_geometry:
-        geometry = obj.Geometry
-        rc = geometry.SetUserString(key, value)
-    else:
-        attr = obj.Attributes
-        rc = attr.SetUserString(key, value)
-    return rc
+    if attach_to_geometry: return obj.Geometry.SetUserString(key, value)
+    return obj.Attributes.SetUserString(key, value)
