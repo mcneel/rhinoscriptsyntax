@@ -597,3 +597,4 @@ def coercerhinoobject(object_id, raise_if_bad_input=False, raise_if_missing=Fals
     if object_id is None: return None
     rc = scriptcontext.doc.Objects.Find(object_id)
     if not rc and raise_if_missing: raise ValueError("%s does not exist in ObjectTable" % object_id)
+    return rc

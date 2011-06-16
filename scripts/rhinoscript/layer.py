@@ -279,10 +279,8 @@ def LayerNames(sort=False):
     Returns
       list of strings
     """
-    count = scriptcontext.doc.Layers.Count
     rc = []
-    for i in xrange(count):
-        layer = scriptcontext.doc.Layers[i]
+    for layer in scriptcontext.doc.Layers:
         if not layer.IsDeleted: rc.append(layer.Name)
     if sort: rc.sort()
     return rc

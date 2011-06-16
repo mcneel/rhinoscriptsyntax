@@ -190,7 +190,8 @@ def AddPlanarSrf(object_ids):
       list of surfaces created on success
       None on error
     """
-    if rhutil.coerceguid(object_ids, False): object_ids = [object_ids]
+    id = rhutil.coerceguid(object_ids, False)
+    if id: object_ids = [id]
     curves = [rhutil.coercecurve(id,-1,True) for id in object_ids]
     breps = Rhino.Geometry.Brep.CreatePlanarBreps(curves)
     rc = [scriptcontext.doc.Objects.AddBrep(brep) for brep in breps]
@@ -659,7 +660,8 @@ def ExplodePolysurfaces(object_ids, delete_input=False):
     Returns:
       List of identifiers of exploded pieces on success
     """
-    if rhutil.coerceguid(object_ids): object_ids = [object_ids]
+    id = rhutil.coerceguid(object_ids, False)
+    if id: object_ids = [id]
     ids = []
     for id in object_ids:
         brep = rhutil.coercebrep(id, True)
@@ -1198,7 +1200,8 @@ def ShootRay(surface_ids, start_point, direction, reflections=10):
     """
     start_point = rhutil.coerce3dpoint(start_point, True)
     direction = rhutil.coerce3dvector(direction, True)
-    if rhutil.coerceguid(surface_ids): surface_ids = [surface_ids]
+    id = rhutil.coerceguid(surface_ids, False)
+    if id: surface_ids = [id]
     ray = Rhino.Geometry.Ray3d(start_point, direction)
     breps = []
     for id in surface_ids:

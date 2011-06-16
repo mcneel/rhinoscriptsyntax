@@ -240,7 +240,8 @@ def ProjectPointToMesh(points, mesh_ids, direction):
     if pts is None:
         pts = [rhutil.coerce3dpoint(points, True)]
     direction = rhutil.coerce3dvector(direction, True)
-    if rhutil.coerceguid(mesh_ids): mesh_ids = [mesh_ids]
+    id = rhutil.coerceguid(mesh_ids, False)
+    if id: mesh_ids = [id]
     meshes = [rhutil.coercemesh(id, True) for id in mesh_ids]
     tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     rc = Rhino.Geometry.Intersect.Intersection.ProjectPointsToMeshes(meshes, pts, direction, tolerance)
@@ -260,7 +261,8 @@ def ProjectPointToSurface(points, surface_ids, direction):
     if pts is None:
         pts = [rhutil.coerce3dpoint(points, True)]
     direction = rhutil.coerce3dvector(direction, True)
-    if rhutil.coerceguid(surface_ids): surface_ids = [surface_ids]
+    id = rhutil.coerceguid(surface_ids, False)
+    if id: surface_ids = [id]
     breps = [rhutil.coercebrep(id, True) for id in surface_ids]
     tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     rc = Rhino.Geometry.Intersect.Intersection.ProjectPointsToBreps(breps, pts, direction, tolerance)

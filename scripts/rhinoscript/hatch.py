@@ -34,7 +34,8 @@ def AddHatches(curve_ids, hatch_pattern=None, scale=1.0, rotation=0.0):
       identifiers of the newly created hatch on success
       None on error
     """
-    if rhutil.coerceguid(curve_ids, False): curve_ids = [curve_ids]
+    id = rhutil.coerceguid(curve_ids, False)
+    if id: curve_ids = [id]
     index = scriptcontext.doc.HatchPatterns.CurrentHatchPatternIndex
     if hatch_pattern and hatch_pattern!=index:
         if isinstance(hatch_pattern, int):

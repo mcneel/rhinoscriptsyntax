@@ -245,8 +245,10 @@ def MeshBooleanDifference(input0, input1, delete_input=True):
     Returns:
       list of identifiers of new meshes
     """
-    if rhutil.coerceguid(input0): input0 = [input0]
-    if rhutil.coerceguid(input1): input1 = [input1]
+    id = rhutil.coerceguid(input0)
+    if id: input0 = [id]
+    id = rhutil.coerceguid(input1)
+    if id: input1 = [id]
     meshes0 = [rhutil.coercemesh(id, True) for id in input0]
     meshes1 = [rhutil.coercemesh(id, True) for id in input1]
     if not meshes0 or not meshes1: raise ValueError("no meshes to work with")
@@ -272,8 +274,10 @@ def MeshBooleanIntersection(input0, input1, delete_input=True):
     Returns:
       list of identifiers of new meshes on success
     """
-    if rhutil.coerceguid(input0): input0 = [input0]
-    if rhutil.coerceguid(input1): input1 = [input1]
+    id = rhutil.coerceguid(input0)
+    if id: input0 = [id]
+    id = rhutil.coerceguid(input1)
+    if id: input1 = [id]
     meshes0 = [rhutil.coercemesh(id, True) for id in input0]
     meshes1 = [rhutil.coercemesh(id, True) for id in input1]
     if not meshes0 or not meshes1: raise ValueError("no meshes to work with")
@@ -299,8 +303,10 @@ def MeshBooleanSplit(input0, input1, delete_input=True):
       list of identifiers of new meshes on success
       None on error
     """
-    if rhutil.coerceguid(input0): input0 = [input0]
-    if rhutil.coerceguid(input1): input1 = [input1]
+    id = rhutil.coerceguid(input0)
+    if id: input0 = [id]
+    id = rhutil.coerceguid(input1)
+    if id: input1 = [id]
     meshes0 = [rhutil.coercemesh(id, True) for id in input0]
     meshes1 = [rhutil.coercemesh(id, True) for id in input1]
     if not meshes0 or not meshes1: raise ValueError("no meshes to work with")
@@ -676,7 +682,8 @@ def MeshVolume(object_ids, True):
         element[2] = the error estimate
       None if not successful
     """
-    if rhutil.coerceguid(object_ids): object_ids = [object_ids]
+    id = rhutil.coerceguid(object_ids)
+    if id: object_ids = [id]
     meshes_used = 0
     total_volume = 0.0
     error_estimate = 0.0

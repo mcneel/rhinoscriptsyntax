@@ -77,7 +77,8 @@ def DeleteObjects(object_ids):
       Number of objects deleted
     """
     rc = 0
-    if rhutil.coerceguid(object_ids, False): object_ids = [object_ids]
+    id = rhutil.coerceguid(object_ids, False)
+    if id: object_ids = [id]
     for id in object_ids:
         id = rhutil.coerceguid(id, True)
         if scriptcontext.doc.Objects.Delete(id, True): rc+=1
@@ -93,7 +94,8 @@ def FlashObject(object_ids, style=True):
       style[opt] = If True, flash between object color and selection color.
         If False, flash between visible and invisible
     """
-    if rhutil.coerceguid(object_ids, False): object_ids = [object_ids]
+    id = rhutil.coerceguid(object_ids, False)
+    if id: object_ids = [id]
     rhobjs = [rhutil.coercerhinoobject(id, True, True) for id in object_ids]
     if rhobjs: scriptcontext.doc.Views.FlashObjects(rhobjs, style)
 
@@ -120,7 +122,8 @@ def HideObjects(object_ids):
     Returns:
       Number of objects hidden
     """
-    if rhutil.coerceguid(object_ids, False): object_ids = [object_ids]
+    id = rhutil.coerceguid(object_ids, False)
+    if id: object_ids = [id]
     rc = 0
     for id in object_ids:
         id = rhutil.coerceguid(id, True)
@@ -318,7 +321,8 @@ def LockObjects(object_ids):
     Returns:
       number of objects locked
     """
-    if rhutil.coerceguid(object_ids, False): object_ids = [object_ids]
+    id = rhutil.coerceguid(object_ids, False)
+    if id: object_ids = [id]
     rc = 0
     for id in object_ids:
         id = rhutil.coerceguid(id, True)
@@ -336,7 +340,8 @@ def MatchObjectAttributes(target_ids, source_id=None):
     Returns:
       number of objects modified
     """
-    if rhutil.coerceguid(target_ids, False): target_ids = [target_ids]
+    id = rhutil.coerceguid(target_ids, False)
+    if id: target_ids = [id]
     source_attr = Rhino.DocObjects.ObjectAttributes()
     if source_id:
         source = rhutil.coercerhinoobject(source_id, True, True)
@@ -375,7 +380,8 @@ def MirrorObjects(object_ids, start_point, end_point, copy=False):
     Returns:
       List of identifiers of the mirrored objects if successful
     """
-    if rhutil.coerceguid(object_ids, False): object_ids = [object_ids]
+    id = rhutil.coerceguid(object_ids, False)
+    if id: object_ids = [id]
     start_point = rhutil.coerce3dpoint(start_point)
     end_point = rhutil.coerce3dpoint(end_point)
     if start_point is None or end_point is None:
@@ -418,7 +424,8 @@ def MoveObjects(object_ids, translation):
     Returns:
       List of identifiers of the moved objects if successful
     """
-    if rhutil.coerceguid(object_ids, False): object_ids = [object_ids]
+    id = rhutil.coerceguid(object_ids, False)
+    if id: object_ids = [id]
     translation = rhutil.coerce3dvector(translation, True)
     xf = Rhino.Geometry.Transform.Translation(translation.X, translation.Y, translation.Z)
     rc = []
@@ -917,7 +924,8 @@ def RotateObjects( object_ids, center_point, rotation_angle, axis=None, copy=Fal
     Returns:
       List of identifiers of the rotated objects if successful
     """
-    if rhutil.coerceguid(object_ids, False): object_ids = [object_ids]
+    id = rhutil.coerceguid(object_ids, False)
+    if id: object_ids = [id]
     rc = []
     center_point = rhutil.coerce3dpoint(center_point, True)
     if not axis:
@@ -963,7 +971,8 @@ def ScaleObjects(object_ids, origin, scale, copy=False):
       List of identifiers of the scaled objects if successful
       None on error
     """
-    if rhutil.coerceguid(object_ids, False): object_ids = [object_ids]
+    id = rhutil.coerceguid(object_ids, False)
+    if id: object_ids = [id]
     rc = []
     origin = rhutil.coerce3dpoint(origin, True)
     scale = rhutil.coerce3dpoint(scale, True)
@@ -999,7 +1008,8 @@ def SelectObjects( object_ids):
     Returns:
       number of selected objects
     """
-    if rhutil.coerceguid(object_ids, False): object_ids = [object_ids]
+    id = rhutil.coerceguid(object_ids, False)
+    if id: object_ids = [id]
     rc = 0
     for id in object_ids:
         if SelectObject(id)==True: rc += 1
@@ -1025,7 +1035,8 @@ def ShowObjects(object_ids):
     Returns:
       Number of objects shown
     """
-    if rhutil.coerceguid(object_ids, False): object_ids = [object_ids]
+    id = rhutil.coerceguid(object_ids, False)
+    if id: object_ids = [id]
     rc = 0
     for id in object_ids:
         id = rhutil.coerceguid(id, True)
@@ -1066,7 +1077,8 @@ def TransformObjects(object_ids, matrix, copy=False):
       List of Guids identifying the newly transformed objects
     """
     xform = rhutil.coercexform(matrix, True)
-    if rhutil.coerceguid(object_ids, False): object_ids = [object_ids]
+    id = rhutil.coerceguid(object_ids, False)
+    if id: object_ids = [id]
     rc = []
     for object_id in object_ids:
         object_id = rhutil.coerceguid(object_id, True)
@@ -1096,7 +1108,8 @@ def UnlockObjects(object_ids):
     Returns:
       number of objects unlocked
     """
-    if rhutil.coerceguid(object_ids, False): object_ids = [object_ids]
+    id = rhutil.coerceguid(object_ids, False)
+    if id: object_ids = [id]
     rc = 0
     for id in object_ids:
         id = rhutil.coerceguid(id, True)
@@ -1122,7 +1135,8 @@ def UnselectObjects(object_ids):
     Returns:
       The number of objects unselected
     """
-    if rhutil.coerceguid(object_ids, False): object_ids = [object_ids]
+    id = rhutil.coerceguid(object_ids, False)
+    if id: object_ids = [id]
     count = len(object_ids)
     for id in object_ids:
         obj = rhutil.coercerhinoobject(id, True, True)
