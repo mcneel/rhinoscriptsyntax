@@ -2008,7 +2008,7 @@ def JoinCurves(object_ids, delete_input=False, tolerance=None):
         rc = [scriptcontext.doc.Objects.AddCurve(crv) for crv in newcurves]
     if rc and delete_input:
         for id in object_ids:
-            id = rhutil.coerceguid(id, Ture)
+            id = rhutil.coerceguid(id, True)
             scriptcontext.doc.Objects.Delete(id, False)
     scriptcontext.doc.Views.Redraw()
     return rc
