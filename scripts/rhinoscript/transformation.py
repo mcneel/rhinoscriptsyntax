@@ -7,13 +7,13 @@ import view as rhview
 
 
 def IsXformIdentity(xform):
-    "Verifies that a matrix is the identity matrix"
+    "Verifies a matrix is the identity matrix"
     xform = rhutil.coercexform(xform, True)
     return xform==Rhino.Geometry.Transform.Identity
 
 
 def IsXformSimilarity(xform):
-    """Verifies that a matrix is a similarity transformation. A similarity
+    """Verifies a matrix is a similarity transformation. A similarity
     transformation can be broken into a sequence of dialations, translations,
     rotations, and reflections
     """
@@ -64,7 +64,6 @@ def XformCompare(xform1, xform2):
       -1 if xform1<xform2
        1 if xform1>xform2
        0 if xform1=xform2
-       None on error
     """
     xform1 = rhutil.coercexform(xform1, True)
     xform2 = rhutil.coercexform(xform2, True)
@@ -72,12 +71,12 @@ def XformCompare(xform1, xform2):
 
 
 def XformCPlaneToWorld(point, plane):
-    """Transforms a point from construction plane coordinates to world coordinates
+    """Transform point from construction plane coordinates to world coordinates
     Parameters:
       point = A 3D point in construction plane coordinates.
       plane = The construction plane
     Returns:
-      A 3D point in world coordinates if successful.
+      A 3D point in world coordinates
     """
     point = rhutil.coerce3dpoint(point, True)
     plane = rhutil.coerceplane(plane, True)
