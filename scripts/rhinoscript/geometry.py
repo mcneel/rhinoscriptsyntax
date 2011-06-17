@@ -5,22 +5,19 @@ import System.Guid, System.Array
 
 
 def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
-    """Creates a clipping plane. A clipping plane is a plane for visibly clipping
-    away geometry in a specific view. Note, clipping planes are infinite
+    """Creates a clipping plane which is a plane for visibly clipping away
+    geometry in a specific view. Note, clipping planes are infinite
     Parameters:
       plane = the plane
       u_magnitude, v_magnitude = size of the plane
-      views [opt] = string, Guid, list of strings or list of Guids. The
-        titles or ids the the view(s) to clip. If omitted, the active
+      views[opt]= Titles or ids the the view(s) to clip. If omitted, the active
         view is used.
     Returns:
       object identifier on success
       None on failure  
     """
     viewlist = []
-    if views is None:
-        viewlist.append(scriptcontext.doc.Views.ActiveView.ActiveViewportID)
-    else:
+    if views:
         if type(views) is System.Guid:
             viewlist.append(views)
         elif type(views) is str:
@@ -32,8 +29,8 @@ def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
                     rc = AddClippingPlane(plane, u_magnitude, v_magnitude, id)
                     break
             return rc
-        elif views:
-            if( type(views[0]) is System.Guid ):
+        else:
+            if type(views[0]) is System.Guid:
                 viewlist = views
             elif( type(views[0]) is str ):
                 modelviews = scriptcontext.doc.Views.GetViewList(True,False)
@@ -42,6 +39,8 @@ def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
                         if item.Name==viewname:
                             viewlist.append(item.ActiveViewportID)
                             break
+    else:
+        viewlist.append(scriptcontext.doc.Views.ActiveView.ActiveViewportID)
     if not viewlist: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddClippingPlane(plane, u_magnitude, v_magnitude, viewlist)
     if rc==System.Guid.Empty: raise Exception("unable to add clipping plane to document")
@@ -50,15 +49,13 @@ def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
 
 
 def AddPoint(point, y=None, z=None):
-    """Adds a point object to the document
+    """Adds point object to the document
     Parameters:
       point = x,y,z location of point to add
     Returns:
-      Guid for the object that was added to the doc on success
-      None on failure
+      Guid for the object that was added to the doc
     """
-    if y is not None and z is not None:
-        point = Rhino.Geometry.Point3d(point,y,z)
+    if y and z: point = Rhino.Geometry.Point3d(point,y,z)
     point = rhutil.coerce3dpoint(point, True)
     rc = scriptcontext.doc.Objects.AddPoint(point)
     if rc==System.Guid.Empty: raise Exception("unable to add point to document")
@@ -67,12 +64,11 @@ def AddPoint(point, y=None, z=None):
 
 
 def AddPointCloud(points):
-    """Adds a point cloud object to the document
+    """Adds point cloud object to the document
     Parameters:
       points = list of values where every multiple of three represents a point
     Returns:
       identifier of point cloud on success
-      None on failure
     """
     points = rhutil.coerce3dpointlist(points, True)
     rc = scriptcontext.doc.Objects.AddPointCloud(points)
@@ -159,21 +155,21 @@ def Area(object_id):
 
 
 def BoundingBox(objects, view_or_plane=None, in_world_coords=True):
-    """Returns either a world axis-aligned or a construction plane axis-aligned
+    """Returns either world axis-aligned or a construction plane axis-aligned
     bounding box of an object or of several objects
     Parameters:
       objects = The identifiers of the objects
-      view_or_plane[opt] = The title or id of the view that contains the
+      view_or_plane[opt] = Title or id of the view that contains the
           construction plane to which the bounding box should be aligned -or-
           user defined plane. If omitted, a world axis-aligned bounding box
           will be calculated
-      in_world_coords[opt] = whether or not to return the bounding box as
-          world coordinates or construction plane coordinates. Note, this
-          option does not apply to world axis-aligned bounding boxes.
+      in_world_coords[opt] = return the bounding box as world coordinates or
+          construction plane coordinates. Note, this option does not apply to
+          world axis-aligned bounding boxes.
     Returns:
-      A list of eight 3-D points that define the bounding box if successful. Points are returned
-      in counter-clockwise order starting with the bottom rectangle of the box.
-      None if not successful, or on error
+      Eight 3D points that define the bounding box. Points returned in counter-
+      clockwise order starting with the bottom rectangle of the box.
+      None on error
     """
     def __objectbbox(object, xform):
         geom = rhutil.coercegeometry(object, True)
@@ -182,7 +178,7 @@ def BoundingBox(objects, view_or_plane=None, in_world_coords=True):
 
     xform = None
     plane = rhutil.coerceplane(view_or_plane)
-    if plane is None:
+    if plane is None and view_or_plane:
         view = view_or_plane
         modelviews = scriptcontext.doc.Views.GetStandardRhinoViews()
         for item in modelviews:
@@ -205,7 +201,7 @@ def BoundingBox(objects, view_or_plane=None, in_world_coords=True):
         bbox = Rhino.Geometry.BoundingBox.Union(bbox,objectbbox)
     if not bbox.IsValid: return scriptcontext.errorhandler()
 
-    corners = bbox.GetCorners()
+    corners = list(bbox.GetCorners())
     if in_world_coords and plane is not None:
         plane_to_world = Rhino.Geometry.Transform.ChangeBasis(plane, Rhino.Geometry.Plane.WorldXY)
         return [pt.Transform(plane_to_world) for pt in corners]
@@ -273,11 +269,10 @@ def PointCloudCount(object_id):
       object_id: the point cloud object's identifier
     Returns:
       number of points if successful
-      None on error (object_id does not represent a point cloud)
+      None on error
     """
     pc = rhutil.coercegeometry(object_id, True)
-    if isinstance(pc, Rhino.Geometry.PointCloud):
-        return pc.PointCount
+    if isinstance(pc, Rhino.Geometry.PointCloud): return pc.PointCount
     return scriptcontext.errorhandler()
 
 
@@ -287,11 +282,10 @@ def PointCloudPoints(object_id):
       object_id: the point cloud object's identifier
     Returns:
       list of points if successful
-      None on error (object_id does not represent a point cloud)
+      None on error
     """
     pc = rhutil.coercegeometry(object_id, True)
-    if isinstance(pc, Rhino.Geometry.PointCloud):
-        return pc.GetPoints()
+    if isinstance(pc, Rhino.Geometry.PointCloud): return pc.GetPoints()
     return scriptcontext.errorhandler()
 
 
