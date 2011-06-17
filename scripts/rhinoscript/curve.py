@@ -1561,12 +1561,11 @@ def EllipseCenterPoint(curve_id):
     Parameters:
       curve_id = identifier of the curve object.    
     Returns:
-      The 3-D center point of the ellipse if successful.
-      None if not successful, or on error.
+      The 3D center point of the ellipse if successful.
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     rc, ellipse = curve.TryGetEllipse()
-    if not rc: return scriptcontext.errorhandler()
+    if not rc: raise ValueError("curve is not an ellipse")
     return ellipse.Plane.Origin
 
 
@@ -1575,12 +1574,11 @@ def EllipseQuadPoints(curve_id):
     Parameters:
       curve_id = identifier of the curve object.
     Returns:
-      A tuple 3D points identifying the quadrants of the ellipse
-      None if not successful, or on error.
+      Four 3D points identifying the quadrants of the ellipse
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     rc, ellipse = curve.TryGetEllipse()
-    if not rc: return scriptcontext.errorhandler()
+    if not rc: raise ValueError("curve is not an ellipse")
     origin = ellipse.Plane.Origin;
     xaxis = ellipse.Radius1 * ellipse.Plane.XAxis;
     yaxis = ellipse.Radius2 * ellipse.Plane.YAxis;
@@ -1588,30 +1586,28 @@ def EllipseQuadPoints(curve_id):
 
 
 def EvaluateCurve(curve_id, t, segment_index=-1):
-    """Evaluates a curve at a parameter.
+    """Evaluates a curve at a parameter and returns a 3D point
     Parameters:
       curve_id = identifier of the curve object
       t = the parameter to evaluate
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
-    Returns:
-      A 3d point if successful.
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     return curve.PointAt(t)
 
 
 def ExplodeCurves(curve_ids, delete_input=False):
-    """Explodes, or un-joins, one more curve objects. Polycurves will be
-    exploded into curve segments. Polylines will be exploded into line
-    segments. ExplodeCurves will return the curves in topological order. 
+    """Explodes, or un-joins, one curves. Polycurves will be exploded into curve
+    segments. Polylines will be exploded into line segments. ExplodeCurves will
+    return the curves in topological order. 
     Parameters:
-      curve_ids = identifier of the curve object(s) to explode.
-      delete_input [opt] = Delete input objects after exploding.
+      curve_ids = the curve object(s) to explode.
+      delete_input[opt] = Delete input objects after exploding.
     Returns:
-      A list identifying the newly created curve objects
+      List identifying the newly created curve objects
     """
-    id = rhutil.coerceguid(curve_ids, False)
-    if id: curve_ids = [id]
+    if( type(curve_ids) is list or type(curve_ids) is tuple ): pass
+    else: curve_ids = [curve_ids]
     rc = []
     for id in curve_ids:
         curve = rhutil.coercecurve(id, -1, True)
@@ -1636,7 +1632,7 @@ def ExtendCurve(curve_id, extension_type, side, boundary_object_ids):
       boundary_object_ids: curve, surface, and polysurface objects to extend to
     Returns:
       The identifier of the new object if successful.
-      None if not successful, or on error.
+      None if not successful
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     if extension_type==0: extension_type = Rhino.Geometry.CurveExtensionStyle.Line
@@ -1670,7 +1666,7 @@ def ExtendCurveLength(curve_id, extension_type, side, length):
       length: distance to extend
     Returns:
       The identifier of the new object
-      None if not successful, or on error.
+      None if not successful
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     if extension_type==0: extension_type = Rhino.Geometry.CurveExtensionStyle.Line
