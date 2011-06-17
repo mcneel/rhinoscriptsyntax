@@ -2332,7 +2332,7 @@ def SplitCurve(curve_id, parameter, delete_input=True):
 
 
 def TrimCurve(curve_id, interval, delete_input=True):
-    """Trims a curve by removing portions of the curve outside the specified interval
+    """Trims a curve by removing portions of the curve outside a specified interval
     Paramters:
       curve_id = identifier of the curve object
       interval = two numbers indentifying the interval to keep. Portions of
@@ -2348,7 +2348,7 @@ def TrimCurve(curve_id, interval, delete_input=True):
     curve = rhutil.coercecurve(curve_id, -1, True)
     if interval[0]==interval[1]: raise ValueError("interval values are equal")
     newcurve = curve.Trim(interval[0], interval[1])
-    if newcurve is None: return scriptcontext.errorhandler()
+    if not newcurve: return scriptcontext.errorhandler()
     att = None
     rhobj = rhutil.coercerhinoobject(curve_id)
     if rhobj: att = rhobj.Attributes

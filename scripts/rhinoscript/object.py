@@ -971,8 +971,8 @@ def ScaleObjects(object_ids, origin, scale, copy=False):
       List of identifiers of the scaled objects if successful
       None on error
     """
-    id = rhutil.coerceguid(object_ids, False)
-    if id: object_ids = [id]
+    if type(object_ids) is list or type(object_ids) is tuple: pass
+    else: object_ids = [object_ids]
     rc = []
     origin = rhutil.coerce3dpoint(origin, True)
     scale = rhutil.coerce3dpoint(scale, True)
@@ -981,9 +981,14 @@ def ScaleObjects(object_ids, origin, scale, copy=False):
     xf = Rhino.Geometry.Transform.Scale(plane, scale.X, scale.Y, scale.Z)
     delete_original = not copy
     for object_id in object_ids:
-        object_id = rhutil.coerceguid(object_id, True)
-        id = scriptcontext.doc.Objects.Transform(object_id, xf, delete_original)
-        if id!=System.Guid.Empty: rc.append(id)
+        if isinstance(object_id, Rhino.Geometry.GeometryBase):
+            if copy: object_id = object_id.Duplicate()
+            object_id.Transform(xf)
+            rc.append(object_id)
+        else:
+            object_id = rhutil.coerceguid(object_id, True)
+            id = scriptcontext.doc.Objects.Transform(object_id, xf, delete_original)
+            if id!=System.Guid.Empty: rc.append(id)
     if rc: scriptcontext.doc.Views.Redraw()
     return rc
 
