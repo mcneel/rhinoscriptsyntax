@@ -299,9 +299,9 @@ def PointCoordinates(object_id, point=None):
       If point is specified, the previous 3-D point location
       None if not successful, or on error
     """
-    point = rhutil.coercegeometry(object_id, True)
-    if isinstance(point, Rhino.Geometry.Point):
-        rc = point.Location
+    point_geometry = rhutil.coercegeometry(object_id, True)
+    if isinstance(point_geometry, Rhino.Geometry.Point):
+        rc = point_geometry.Location
         if point:
             point = rhutil.coerce3dpoint(point, True)
             id = rhutil.coerceguid(object_id, True)
