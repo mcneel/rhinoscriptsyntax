@@ -1645,8 +1645,9 @@ def ExtendCurve(curve_id, extension_type, side, boundary_object_ids):
     elif side==2: side = Rhino.Geometry.CurveEnd.Both
     else: raise ValueError("side must be 0, 1, or 2")
     
-    geometry = [rhutil.coercerhinoobject(id) for id in boundary_object_ids]
-    if not geometry: raise ValueError("boundary_object_ids must contain at least one item")
+    rhobjs = [rhutil.coercerhinoobject(id) for id in boundary_object_ids]
+    if not rhobjs: raise ValueError("boundary_object_ids must contain at least one item")
+    geometry = [obj.Geometry for obj in rhobjs]
     newcurve = curve.Extend(side, extension_type, geometry)
     if newcurve and newcurve.IsValid:
         curve_id = rhutil.coerceguid(curve_id, True)
