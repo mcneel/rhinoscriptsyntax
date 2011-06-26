@@ -537,12 +537,8 @@ def PopupMenu(items, modes=None, point=None, view=None):
         point = rhutil.coerce3dpoint(point)
         view = __viewhelper(view)
         viewport = view.ActiveViewport
-        point2d = viewport.WorldToScreenPort(point)
-        point2d = viewport.ScreenPortToParentView(point2d)
-        screen_point = view.ClientToScreen(point2d)
-        x = int(screen_point.X)
-        y = int(screen_point.Y)
-        screen_point = System.Drawing.Point(x,y)
+        point2d = viewport.WorldToClient(point)
+        screen_point = viewport.ClientToScreen(point2d)
     return Rhino.UI.Dialogs.ShowContextMenu(items, screen_point, modes);
             
 
