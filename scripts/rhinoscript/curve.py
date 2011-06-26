@@ -7,9 +7,9 @@ import System.Guid, System.Array, System.Enum
 def AddArc(plane, radius, angle_degrees):
     """Adds an arc curve to the document
     Parameters:
-      plane = the plane on which the arc will lie. The origin of the plane
-              will be the center point of the arc. The x-axis of the plane
-              defines the 0 angle direction.
+      plane = plane on which the arc will lie. The origin of the plane will be
+        the center point of the arc. x-axis of the plane defines the 0 angle
+        direction.
       radius = radius of the arc
       angle_degrees = interval of arc
     Returns:
@@ -30,7 +30,7 @@ def AddArc3Pt(start, end, point_on_arc):
       start, end = endpoints of the arc
       point_on_arc = a point on the arc
     Returns:
-      id of the new curve object if successful
+      id of the new curve object
     """
     start = rhutil.coerce3dpoint(start, True)
     end = rhutil.coerce3dpoint(end, True)
@@ -46,7 +46,7 @@ def AddArcPtTanPt(start, direction, end):
     """Adds an arc curve, created from a start point, a start direction, and an
     end point, to the document
     Returns:
-      id of the new curve object if successful
+      id of the new curve object
     """
     start = rhutil.coerce3dpoint(start, True)
     direction = rhutil.coerce3dvector(direction, True)
@@ -62,11 +62,11 @@ def AddCircle(plane_or_center, radius):
     """Adds a circle curve to the document
     Parameters:
       plane_or_center = plane on which the circle will lie. If a point is
-          passed, this will be the center of the circle on the active
-          construction plane
+        passed, this will be the center of the circle on the active
+        construction plane
       radius = the radius of the circle
     Returns:
-      id of the new curve object if successful
+      id of the new curve object
     """
     rc = None
     plane = rhutil.coerceplane(plane_or_center, False)
@@ -90,7 +90,7 @@ def AddCircle3Pt(first, second, third):
     Parameters:
       first, second, third = points on the circle
     Returns:
-      id of the new curve object if successful
+      id of the new curve object
     """
     start = rhutil.coerce3dpoint(first, True)
     end = rhutil.coerce3dpoint(second, True)
@@ -106,13 +106,13 @@ def AddCurve(points, degree=3):
     """Adds a control points curve object to the document
     Parameters:
       points = a list of points
-      degree [opt] = degree of the curve
+      degree[opt] = degree of the curve
     Returns:
-      id of the new curve object if successful
+      id of the new curve object
     """
     points = rhutil.coerce3dpointlist(points, True)
     curve = Rhino.Geometry.Curve.CreateControlPointCurve(points, degree)
-    if curve is None: raise Exception("unable to create control point curve from given points")
+    if not curve: raise Exception("unable to create control point curve from given points")
     rc = scriptcontext.doc.Objects.AddCurve(curve)
     if rc==System.Guid.Empty: raise Exception("Unable to add curve to document")
     scriptcontext.doc.Views.Redraw()
@@ -282,8 +282,7 @@ def AddLine(start, end):
     Parameters:
       start, end = end points of the line
     Returns:
-      id of the new curve object if successful
-      None on error
+      id of the new curve object
     """
     start = rhutil.coerce3dpoint(start, True)
     end = rhutil.coerce3dpoint(end, True)
@@ -307,8 +306,8 @@ def AddNurbsCurve(points, knots, degree, weights=None):
     cvcount = len(points)
     knotcount = cvcount + degree - 1
     if len(knots)!=knotcount:
-        raise Exception("The number of elements in knots must equal the number of elements in points plus degree minus 1")
-    if weights is not None and len(weights)!=cvcount:
+        raise Exception("Number of elements in knots must equal the number of elements in points plus degree minus 1")
+    if weights and len(weights)!=cvcount:
         raise Exception("Number of elements in weights should equal the number of elements in points")
     rational = (weights!=None)
     
@@ -1010,14 +1009,13 @@ def CurveDomain(curve_id, segment_index=-1):
     """Returns the domain of a curve object.
     Parameters:
       curve_id = identifier of the curve object
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve.
+      segment_index[opt] = the curve segment if curve_id identifies a polycurve.
     Returns:
-      The domain of the curve if successful. None on error.
+      The domain of the curve
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     dom = curve.Domain
-    if dom: return dom.Min, dom.Max
-    return scriptcontext.errorhandler()
+    return dom.Min, dom.Max
 
 
 def CurveEditPoints(curve_id, return_parameters=False, segment_index=-1):

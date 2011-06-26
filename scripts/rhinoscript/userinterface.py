@@ -4,11 +4,8 @@ import scriptcontext
 import System.Drawing.Color
 import System.Enum
 import System.Array
-import System.Windows.Forms.DialogResult
-import System.Windows.Forms.MessageBoxButtons
-import System.Windows.Forms.MessageBoxIcon
-import System.Windows.Forms.MessageBoxDefaultButton
-import System.Windows.Forms.FolderBrowserDialog
+import System.Windows.Forms
+from view import __viewhelper
 
 
 def BrowseForFolder(folder=None, message=None, title=None):
@@ -513,7 +510,42 @@ def OpenFileName(title=None, filter=None, folder=None, filename=None, extension=
     if filename: fd.FileName = filename
     if extension: fd.DefaultExt = extension
     if fd.ShowDialog()==System.Windows.Forms.DialogResult.OK: return fd.FileName
-    return None
+
+
+def PopupMenu(items, modes=None, point=None, view=None):
+    """Displays a user defined, context-style popup menu. The popup menu can appear
+    almost anywhere, and it can be dismissed by either clicking the left or right
+    mouse buttons
+    Parameters:
+      items = list of strings representing the menu items. An empty string or None
+        will create a separator
+      modes[opt] = List of numbers identifying the display modes. If omitted, all
+        modes are enabled.
+          0 = menu item is enabled
+          1 = menu item is disabled
+          2 = menu item is checked
+          3 = menu item is disabled and checked
+      point[opt] = a 3D point where the menu item will appear. If omitted, the menu
+        will appear at the current cursor position
+      view[opt] = if point is specified, the view in which the point is computed.
+        If omitted, the active view is used
+    Returns:
+      index of the menu item picked or -1 if no menu item was picked
+    """
+    screen_point = System.Windows.Forms.Cursor.Position
+    if point:
+        point = rhutil.coerce3dpoint(point)
+        view = __viewhelper(view)
+        viewport = view.ActiveViewport
+        point2d = viewport.WorldToScreenPort(point)
+        point2d = viewport.ScreenPortToParentView(point2d)
+        screen_point = view.ClientToScreen(point2d)
+        x = int(screen_point.X)
+        y = int(screen_point.Y)
+        screen_point = System.Drawing.Point(x,y)
+    return Rhino.UI.Dialogs.ShowContextMenu(items, screen_point, modes);
+            
+
 
 
 def RealBox(message="", default_number=None, title=""):
