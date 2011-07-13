@@ -204,7 +204,7 @@ def BoundingBox(objects, view_or_plane=None, in_world_coords=True):
     corners = list(bbox.GetCorners())
     if in_world_coords and plane is not None:
         plane_to_world = Rhino.Geometry.Transform.ChangeBasis(plane, Rhino.Geometry.Plane.WorldXY)
-        return [pt.Transform(plane_to_world) for pt in corners]
+        for pt in corners: pt.Transform(plane_to_world)
     return corners
 
 
