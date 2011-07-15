@@ -525,6 +525,29 @@ def LastObject(select=False, include_lights=False, include_grips=False):
     return rc
 
 
+def NextObject(object_id, select=False, include_lights=False, include_grips=False):
+    """Returns the identifier of the next object in the document
+    Parameters:
+      object_id = the identifier of the object from which to get the next object
+      select[opt] = select the object
+      include_lights[opt] = include lights in the potential set
+      include_grips[opt] = include grips in the potential set
+    Returns:
+      identifier of the object on success
+    """
+    current_obj = rhutil.coercerhinoobject(object_id, True)
+    settings = Rhino.DocObjects.ObjectEnumeratorSettings()
+    settings.IncludeLights = include_lights
+    settings.IncludeGrips = include_grips
+    settings.DeletedObjects = False
+    rhobjs = scriptcontext.doc.Objects.GetObjectList(settings)
+    found = False
+    for obj in rhobjs:
+        if found and obj: return obj.Id
+        if obj.Id == current_obj.Id: found = True
+    return None
+
+
 def ObjectsByGroup(group_name, select=False):
     """Returns identifiers of all objects based on the objects' group name
     Parameters:
