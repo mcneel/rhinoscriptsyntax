@@ -372,6 +372,11 @@ def coerce3dpoint(point, raise_on_error=False):
     if type(point) is str:
         point = point.split(',')
         return Rhino.Geometry.Point3d( float(point[0]), float(point[1]), float(point[2]) )
+    if type(point) is System.Guid:
+        rhobj = coercerhinoobject(point, raise_on_error)
+        if rhobj:
+            geom = rhobj.Geometry
+            if isinstance(geom, Rhino.Geometry.Point): return geom.Location
     if raise_on_error: raise ValueError("Could not convert %s to a Point3d" % point)
 
 
