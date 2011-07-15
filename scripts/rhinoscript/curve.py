@@ -1761,14 +1761,18 @@ def FitCurve(curve_id, degree=3, distance_tolerance=-1, angle_tolerance=-1):
       None if not successful, or on error.
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
-    if fit_tolerance is None or fit_tolerance<0:
-        fit_tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+    if distance_tolerance is None or distance_tolerance<0:
+        distance_tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     if angle_tolerance is None or angle_tolerance<0:
         angle_tolerance = scriptcontext.doc.ModelAngleToleranceRadians
-    nc = curve.Fit(degree, fit_tolerance, angle_tolerance)
+    nc = curve.Fit(degree, distance_tolerance, angle_tolerance)
     if nc:
-        attributes = Rhino.DocObjects.ObjectAttributes(id)
-        rc = scriptcontext.doc.Objects.AddCurve(curve, attributes)
+        rhobj = rhutil.coercerhinoobject(curve_id)
+        rc = None
+        if rhobj:
+            rc = scriptcontext.doc.Objects.AddCurve(curve, rhobj.Attributes)
+        else:
+            rc = scriptcontext.doc.Objects.AddCurve(curve)
         if rc==System.Guid.Empty: raise Exception("Unable to add curve to document")
         scriptcontext.doc.Views.Redraw()
         return rc
