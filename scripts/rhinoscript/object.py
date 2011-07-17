@@ -5,61 +5,37 @@ import System.Guid, System.Enum
 from layer import __getlayer
 
 
-def __copyhelper(object_id, xform):
-    object_id = rhutil.coerceguid(object_id, True)
-    rc = scriptcontext.doc.Objects.Transform(object_id, xform, False)
-    if rc!=System.Guid.Empty: return rc
-
-
 def CopyObject(object_id, translation=None):
-    """Copies single object from one location to another, or in-place.
+    """Copies object from one location to another, or in-place.
     Parameters:
-      object_id: String or Guid representing id of object to copy
-      translation [opt]: list of three numbers or Vector3d representing
-                         translation vector to apply
+      object_id: object to copy
+      translation[opt]: translation vector to apply
     Returns:
-      Guid for the copy if successful
+      id for the copy if successful
       None if not able to copy
     """
-    xform = Rhino.Geometry.Transform.Identity
-    if translation:
-        translation = rhutil.coerce3dvector(translation, True)
-        xform = Rhino.Geometry.Transform.Translation(translation.X, translation.Y, translation.Z)
-    rc = __copyhelper(object_id, xform)
-    if not rc: return scriptcontext.errorhandler()
-    scriptcontext.doc.Views.Redraw()
-    return rc
+    rc = CopyObjects(object_id, translation)
+    if rc: return rc[0]
 
 
 def CopyObjects(object_ids, translation=None):
     """Copies one or more objects from one location to another, or in-place.
     Parameters:
-      object_ids: list of Guids for objects to copy
+      object_ids: list of objects to copy
       translation [opt]: list of three numbers or Vector3d representing
                          translation vector to apply to copied set
     Returns:
-      list of Guids (identifiers) for the copies if successful
+      list of identifiers for the copies if successful
     """
-    rc = []
     xform = Rhino.Geometry.Transform.Identity
-    if translation:
-        translation = rhutil.coerce3dvector(translation, True)
-        xform = Rhino.Geometry.Transform.Translation(translation.X, translation.Y, translation.Z)
-    if type(object_ids) is list or type(object_ids) is tuple:
-        for id in object_ids:
-            success = __copyhelper(id, xform)
-            if success: rc.append(success)
-    else:
-        success = __copyhelper(object_ids, xform)
-        if success: rc.append(success)
-    if rc: scriptcontext.doc.Views.Redraw()
+    rc = TransformObjects(object_ids, xf, True)
     return rc
 
 
 def DeleteObject(object_id):
     """Deletes a single object from the document
     Parameters:
-      object_id: String or Guid representing id of object to delete
+      object_id: identifier of object to delete
     Returns:
       True of False indicating success or failure
     """
@@ -380,26 +356,15 @@ def MirrorObjects(object_ids, start_point, end_point, copy=False):
     Returns:
       List of identifiers of the mirrored objects if successful
     """
-    id = rhutil.coerceguid(object_ids, False)
-    if id: object_ids = [id]
-    start_point = rhutil.coerce3dpoint(start_point)
-    end_point = rhutil.coerce3dpoint(end_point)
-    if start_point is None or end_point is None:
-        raise TypeError("could not convert both start and end points to Point3d")
-    rc = []
+    start_point = rhutil.coerce3dpoint(start_point, True)
+    end_point = rhutil.coerce3dpoint(end_point, True)
     vec = end_point-start_point
     if vec.IsTiny(0): raise Exception("start and end points are too close to each other")
     normal = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane().Normal
     vec = Rhino.Geometry.Vector3d.CrossProduct(vec, normal)
     vec.Unitize()
     xf = Rhino.Geometry.Transform.Mirror(start_point, vec)
-    delete_original = not copy
-
-    for object_id in object_ids:
-        object_id = rhutil.coerceguid(object_id, True)
-        id = scriptcontext.doc.Objects.Transform(object_id, xf, delete_original)
-        if id!=System.Guid.Empty: rc.append( id )
-    if rc: scriptcontext.doc.Views.Redraw()
+    rc = TransformObjects(object_ids, xf, copy)
     return rc
 
 
@@ -419,21 +384,14 @@ def MoveObject(object_id, translation):
 def MoveObjects(object_ids, translation):
     """Moves one or more objects
     Parameters:
-      object_ids: List of Strings or Guids. The identifiers objects to move
+      object_ids: The identifiers objects to move
       translation: list of 3 numbers or Vector3d
     Returns:
       List of identifiers of the moved objects if successful
     """
-    id = rhutil.coerceguid(object_ids, False)
-    if id: object_ids = [id]
     translation = rhutil.coerce3dvector(translation, True)
     xf = Rhino.Geometry.Transform.Translation(translation.X, translation.Y, translation.Z)
-    rc = []
-    for id in object_ids:
-        id = rhutil.coerceguid(id, True)
-        id = scriptcontext.doc.Objects.Transform(id, xf, True)
-        if id!=System.Guid.Empty: rc.append(id)
-    if rc: scriptcontext.doc.Views.Redraw()
+    rc = TransformObjects(object_ids, xf)
     return rc
 
 
@@ -924,21 +882,13 @@ def RotateObjects( object_ids, center_point, rotation_angle, axis=None, copy=Fal
     Returns:
       List of identifiers of the rotated objects if successful
     """
-    id = rhutil.coerceguid(object_ids, False)
-    if id: object_ids = [id]
-    rc = []
     center_point = rhutil.coerce3dpoint(center_point, True)
     if not axis:
         axis = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane().Normal
     axis = rhutil.coerce3dvector(axis, True)
     rotation_angle = Rhino.RhinoMath.ToRadians(rotation_angle)
     xf = Rhino.Geometry.Transform.Rotation(rotation_angle, axis, center_point)
-    delete_original = not copy
-    for object_id in object_ids:
-        object_id = rhutil.coerceguid(object_id, True)
-        id = scriptcontext.doc.Objects.Transform(object_id, xf, delete_original)
-        if id!=System.Guid.Empty: rc.append(id)
-    if rc: scriptcontext.doc.Views.Redraw()
+    rc = TransformObjects(object_ids, xf, copy)
     return rc
 
 
@@ -971,25 +921,12 @@ def ScaleObjects(object_ids, origin, scale, copy=False):
       List of identifiers of the scaled objects if successful
       None on error
     """
-    if type(object_ids) is list or type(object_ids) is tuple: pass
-    else: object_ids = [object_ids]
-    rc = []
     origin = rhutil.coerce3dpoint(origin, True)
     scale = rhutil.coerce3dpoint(scale, True)
     plane = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
     plane.Origin = origin
     xf = Rhino.Geometry.Transform.Scale(plane, scale.X, scale.Y, scale.Z)
-    delete_original = not copy
-    for object_id in object_ids:
-        if isinstance(object_id, Rhino.Geometry.GeometryBase):
-            if copy: object_id = object_id.Duplicate()
-            object_id.Transform(xf)
-            rc.append(object_id)
-        else:
-            object_id = rhutil.coerceguid(object_id, True)
-            id = scriptcontext.doc.Objects.Transform(object_id, xf, delete_original)
-            if id!=System.Guid.Empty: rc.append(id)
-    if rc: scriptcontext.doc.Views.Redraw()
+    rc = TransformObjects(object_ids, xf, copy)
     return rc
 
 
@@ -1052,12 +989,7 @@ def ShowObjects(object_ids):
 
 def TransformObject(object_id, matrix, copy=False):
     """Moves, scales, or rotates an object given a 4x4 transformation matrix.
-    The matrix acts on the left. The following table demonstrates the
-    transformation matrix configuration:
-      1  0  0  dX
-      0  1  0  dY
-      0  0  1  dZ
-      0  0  0  1
+    The matrix acts on the left.
     Parameters:
       object = The identifier of the object.
       matrix = The transformation matrix (4x4 array of numbers).
@@ -1070,7 +1002,7 @@ def TransformObject(object_id, matrix, copy=False):
     if rc: return rc[0]
     return scriptcontext.errorhandler()
 
-
+# this is also called by Copy, Scale, Mirror, Move, and Rotate functions defined above
 def TransformObjects(object_ids, matrix, copy=False):
     """Moves, scales, or rotates a list of objects given a 4x4 transformation
     matrix. The matrix acts on the left.
@@ -1079,8 +1011,11 @@ def TransformObjects(object_ids, matrix, copy=False):
       matrix = The transformation matrix (4x4 array of numbers).
       copy[opt] = Copy the objects
     Returns:
-      List of Guids identifying the newly transformed objects
+      List of ids identifying the newly transformed objects
     """
+    added_to_ghdoc = False
+    if rhutil.ContextIsGrasshopper():
+        object_ids, added_to_ghdoc = rhutil.__ghaddobjects(object_ids)
     xform = rhutil.coercexform(matrix, True)
     id = rhutil.coerceguid(object_ids, False)
     if id: object_ids = [id]
@@ -1089,7 +1024,9 @@ def TransformObjects(object_ids, matrix, copy=False):
         object_id = rhutil.coerceguid(object_id, True)
         id = scriptcontext.doc.Objects.Transform(object_id, xform, not copy)
         if id!=System.Guid.Empty: rc.append(id)
-    # TODO: Update group maps. Need RhinoUpdateObjectGroups wrapped for RC
+    if added_to_ghdoc and copy:
+        for object_id in object_ids:
+            scriptcontext.doc.Objects.Delete(object_id, True)
     if rc: scriptcontext.doc.Views.Redraw()
     return rc
 
