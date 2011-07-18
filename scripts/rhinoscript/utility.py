@@ -603,17 +603,3 @@ def coercerhinoobject(object_id, raise_if_bad_input=False, raise_if_missing=Fals
     rc = scriptcontext.doc.Objects.Find(object_id)
     if not rc and raise_if_missing: raise ValueError("%s does not exist in ObjectTable" % object_id)
     return rc
-
-
-def __ghaddobjects( objs ):
-    """Adds items to a grasshopper document and returns their identifiers"""
-    if not ContextIsGrasshopper():
-        raise RuntimeError("GhAddObjects called when not in Grasshopper")
-    if type(scriptcontext.doc) is Rhino.RhinoDoc: return objs, False
-    objects = objs
-    if not hasattr(objs, "__getitem__"):
-        objects = [objs]
-    if objects and coerceguid(objects[0], False):
-        return objs, False
-    ids = [scriptcontext.doc.Objects.__InternalAdd(obj) for obj in objects]
-    return ids, True

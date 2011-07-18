@@ -1013,9 +1013,6 @@ def TransformObjects(object_ids, matrix, copy=False):
     Returns:
       List of ids identifying the newly transformed objects
     """
-    added_to_ghdoc = False
-    if rhutil.ContextIsGrasshopper():
-        object_ids, added_to_ghdoc = rhutil.__ghaddobjects(object_ids)
     xform = rhutil.coercexform(matrix, True)
     id = rhutil.coerceguid(object_ids, False)
     if id: object_ids = [id]
@@ -1024,16 +1021,13 @@ def TransformObjects(object_ids, matrix, copy=False):
         object_id = rhutil.coerceguid(object_id, True)
         id = scriptcontext.doc.Objects.Transform(object_id, xform, not copy)
         if id!=System.Guid.Empty: rc.append(id)
-    if added_to_ghdoc and copy:
-        for object_id in object_ids:
-            scriptcontext.doc.Objects.Delete(object_id, True)
     if rc: scriptcontext.doc.Views.Redraw()
     return rc
 
 
 def UnlockObject(object_id):
-    """Unlocks a single object. Locked objects are visible, and they can be
-    snapped to, but they cannot be selected.
+    """Unlocks an object. Locked objects are visible, and can be snapped to,
+    but they cannot be selected.
     Parameters:
       object_id: The identifier of an object
     Returns:
@@ -1043,8 +1037,8 @@ def UnlockObject(object_id):
 
 
 def UnlockObjects(object_ids):
-    """Unlocks one or more objects. Locked objects are visible, and they can
-    be snapped to, but they cannot be selected.
+    """Unlocks one or more objects. Locked objects are visible, and can be
+    snapped to, but they cannot be selected.
     Parameters:
       object_ids: The identifiers of objects
     Returns:
