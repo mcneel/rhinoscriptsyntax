@@ -4,6 +4,38 @@ import Rhino
 import System.Guid
 from view import __viewhelper
 
+
+def AddAlignedDimension(start_point, end_point, point_on_dimension_line, style=None):
+    """Adds an aligned dimension object to the document. An aligned dimension
+    is a linear dimension lined up with two points
+    Parameters:
+      start_point: first point of dimension
+      end_point: second point of dimension
+      point_on_dimension_line: location point of dimension line
+      style[opt]: name of dimension style
+    Returns:
+      identifier of new dimension on success
+      None on error
+    """
+    start = rhutil.coerce3dpoint(start_point, True)
+    end = rhutil.coerce3dpoint(end_point, True)
+    onpoint = rhutil.coerce3dpoint(point_on_dimension_line, True)
+    plane = Rhino.Geometry.Plane(start, end, onpoint)
+    success, s, t = plane.ClosestParameter(start)
+    start = Rhino.Geometry.Point2d(s,t)
+    success, s, t = plane.ClosestParameter(end)
+    end = Rhino.Geometry.Point2d(s,t)
+    success, s, t = plane.ClosestParameter(onpoint)
+    onpoint = Rhino.Geometry.Point2d(s,t)
+    ldim = Rhino.Geometry.LinearDimension(plane, start, end, onpoint)
+    if not ldim: return scriptcontext.errorhandler()
+    ldim.Aligned = True
+    rc = scriptcontext.doc.Objects.AddLinearDimension(ldim)
+    if rc==System.Guid.Empty: raise Exception("unable to add dimension to document")
+    scriptcontext.doc.Views.Redraw()
+    return rc
+
+
 def AddDimStyle(dimstyle_name=None):
     """Adds a new dimension style to the document. The new dimension style will
     be initialized with the current default dimension style properties.
@@ -21,15 +53,14 @@ def AddDimStyle(dimstyle_name=None):
 
 
 def AddLeader(points, view=None, text=None):
-    """Adds an annotation leader to the document. Leader objects are planar.
+    """Adds a leader to the document. Leader objects are planar.
     The 3D points passed to this function should be co-planar
     Paramters:
       points = list of (at least 2) 3D points
-      view[opt] = title of a view. If a view title is specified, points will
-        be constrained to the view's construction plane. If a view title is
-        not specified, points will be constrained to a plane fit through the
-        list of points
-      text[opt] = the leader's text string
+      view[opt] = If a view is specified, points will be constrained to the
+        view's construction plane. If a view is not specified, points will be
+        constrained to a plane fit through the list of points
+      text[opt] = leader's text string
     Returns:
       identifier of the new leader on success
       None on error
@@ -89,7 +120,7 @@ def CurrentDimStyle( dimstyle_name=None ):
       None on error
     """
     rc = scriptcontext.doc.DimStyles.CurrentDimensionStyle.Name
-    if dimstyle_name is not None:
+    if dimstyle_name:
         ds = scriptcontext.doc.DimStyles.Find(dimstyle_name, True)
         if ds is None: return scriptcontext.errorhandler()
         scriptcontext.doc.DimStyles.SetCurrentDimensionStyleIndex(ds.Index, False)
@@ -112,11 +143,11 @@ def DeleteDimStyle(dimstyle_name):
 
 
 def __coerceannotation(object_id):
-    id = rhutil.coerceguid(object_id, True)
-    annotation_object = scriptcontext.doc.Objects.Find(id)
+    annotation_object = rhutil.coercerhinoobject(object_id, True)
     if not isinstance(annotation_object, Rhino.DocObjects.AnnotationObjectBase):
         raise ValueError("object_id does not refer to an Annotation")
     return annotation_object
+
 
 def DimensionStyle(object_id, dimstyle_name=None):
     """Returns or modifies the dimension style of a dimension object
@@ -257,7 +288,7 @@ def DimStyleFont(dimstyle, font=None):
     if ds is None: return scriptcontext.errorhandler()
     oldindex = ds.FontIndex
     rc = scriptcontext.doc.Fonts[oldindex].FaceName
-    if font is not None:
+    if font:
         newindex = scriptcontext.doc.Fonts.FindOrCreate(font, False, False)
         ds.FontIndex = newindex
         ds.CommitChanges()
@@ -328,10 +359,7 @@ def DimStyleLinearPrecision(dimstyle, precision=None):
 
 def DimStyleNames(sort=False):
     "Returns the names of all dimension styles in the document"
-    rc = []
-    for i in range(scriptcontext.doc.DimStyles.Count):
-        ds = scriptcontext.doc.DimStyles[i]
-        rc.append(ds.Name)
+    rc = [ds.Name for ds in scriptcontext.doc.DimStyles]
     if sort: rc.sort()
     return rc
 
@@ -610,7 +638,7 @@ def RenameDimStyle(oldstyle, newstyle):
       None on error
     """
     ds = scriptcontext.doc.DimStyles.Find(oldstyle, True)
-    if ds is None: return scriptcontext.errorhandler()
+    if not ds: return scriptcontext.errorhandler()
     ds.Name = newstyle
     if ds.CommitChanges(): return newstyle
     return None
