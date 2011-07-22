@@ -27,7 +27,7 @@ def CopyObjects(object_ids, translation=None):
     Returns:
       list of identifiers for the copies if successful
     """
-    xform = Rhino.Geometry.Transform.Identity
+    xf = Rhino.Geometry.Transform.Identity
     rc = TransformObjects(object_ids, xf, True)
     return rc
 

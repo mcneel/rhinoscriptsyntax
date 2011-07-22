@@ -541,6 +541,7 @@ def coercebrep(id, raise_if_missing=False):
     if brepObj:
         brep = brepObj.Geometry
         if isinstance(brep, Rhino.Geometry.Brep): return brep
+        if isinstance(brep, Rhino.Geometry.Extrusion): return brep.ToBrep(True)
     if raise_if_missing: raise ValueError("unable to convert %s into Brep geometry"%id)
 
 

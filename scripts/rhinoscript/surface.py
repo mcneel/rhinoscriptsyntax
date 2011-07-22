@@ -712,6 +712,33 @@ def ExtractIsoCurve(surface_id, parameter, direction):
     return ids
 
 
+def ExtractSurface(object_id, face_indices, copy=False):
+    """Separates or copies a surface or a copy of a surface from a polysurface
+    Paramters:
+      object_id: polysurface identifier
+      face_indices: one or more numbers representing faces
+      copy[opt]: If True the faces are copied. If False, the faces are extracted
+    Returns:
+      identifiers of extracted surface objects on success
+    """
+    brep = rhutil.coercebrep(object_id, True)
+    if hasattr(face_indices, "__getitem__"): pass
+    else: face_indices = [face_indices]
+    rc = []
+    face_indices = sorted(face_indices, reverse=True)
+    for index in face_indices:
+        face = brep.Faces[index]
+        newbrep = face.DuplicateFace(True)
+        id = scriptcontext.doc.Objects.AddBrep(newbrep)
+        rc.append(id)
+    if not copy:
+        for index in face_indices: brep.Faces.RemoveAt(index)
+        id = rhutil.coerceguid(object_id)
+        scriptcontext.doc.Objects.Replace(id, brep)
+    scriptcontext.doc.Views.Redraw()
+    return rc
+
+
 def ExtrudeCurve(curve_id, path_id):
     """Creates a surface by extruding a curve along a path
     Parameters:
