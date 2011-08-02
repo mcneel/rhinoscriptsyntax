@@ -190,7 +190,7 @@ def BoundingBox(objects, view_or_plane=None, in_world_coords=True):
                 plane = viewport.ConstructionPlane()
                 break
         if plane is None: return scriptcontext.errorhandler()
-        xform = Rhino.Geometry.Transform.ChangeBasis(Rhino.Geometry.Plane.WorldXY, plane)
+    xform = Rhino.Geometry.Transform.ChangeBasis(Rhino.Geometry.Plane.WorldXY, plane)
     bbox = Rhino.Geometry.BoundingBox.Empty
     if type(objects) is list or type(objects) is tuple:
         for object in objects:
