@@ -1622,7 +1622,7 @@ def SurfaceKnots(surface_id):
 
 
 def SurfaceNormal(surface_id, uv_parameter):
-    """Returns a 3D vector that is the normal to a surface at a parameter
+    """Returns 3D vector that is the normal to a surface at a parameter
     Parameters:
       surface_id = the surface's identifier
       uv_parameter = the uv parameter to evaluate
@@ -1632,20 +1632,17 @@ def SurfaceNormal(surface_id, uv_parameter):
     """
     surface = rhutil.coercesurface(surface_id, True)
     normal = surface.NormalAt(uv_parameter[0], uv_parameter[1])
-    #check to see if this is a reversed BrepFace
-    brep = rhutil.coercebrep(surface_id)
-    if brep and brep.Faces[0].OrientationIsReversed: normal.Reverse()
     return normal
 
 
 def SurfaceNormalizedParameter(surface_id, parameter):
-    """Converts a surface parameter to a normalized surface parameter; one that
+    """Converts surface parameter to a normalized surface parameter; one that
     ranges between 0.0 and 1.0 in both the U and V directions
     Parameters:
       surface_id = the surface's identifier
       parameter = the surface parameter to convert
     Returns:
-      the normalized surface parameter if successful
+      normalized surface parameter if successful
       None on error
     """
     surface = rhutil.coercesurface(surface_id, True)
@@ -1661,7 +1658,7 @@ def SurfaceNormalizedParameter(surface_id, parameter):
 
 
 def SurfaceParameter(surface_id, parameter):
-    """Converts a normalized surface parameter to a surface parameter; or
+    """Converts normalized surface parameter to a surface parameter; or
     within the surface's domain
     Parameters:
       surface_id = the surface's identifier
