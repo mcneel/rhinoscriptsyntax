@@ -27,8 +27,12 @@ def CopyObjects(object_ids, translation=None):
     Returns:
       list of identifiers for the copies if successful
     """
-    xf = Rhino.Geometry.Transform.Identity
-    rc = TransformObjects(object_ids, xf, True)
+    if translation:
+        translation = rhutil.coerce3dvector(translation, True)
+        translation = Rhino.Geometry.Transform.Translation(translation)
+    else:
+        translation = Rhino.Geometry.Transform.Identity
+    rc = TransformObjects(object_ids, translation, True)
     return rc
 
 
@@ -390,7 +394,7 @@ def MoveObjects(object_ids, translation):
       List of identifiers of the moved objects if successful
     """
     translation = rhutil.coerce3dvector(translation, True)
-    xf = Rhino.Geometry.Transform.Translation(translation.X, translation.Y, translation.Z)
+    xf = Rhino.Geometry.Transform.Translation(translation)
     rc = TransformObjects(object_ids, xf)
     return rc
 
