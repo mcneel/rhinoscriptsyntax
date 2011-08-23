@@ -527,6 +527,10 @@ def coercecolor(c, raise_if_bad_input=False):
 
 def coerceline(line, raise_if_bad_input=False):
     if type(line) is Rhino.Geometry.Line: return line
+    guid = coerceguid(line, False)
+    if guid: line = scriptcontext.doc.Objects.Find(guid).Geometry
+    if isinstance(line, Rhino.Geometry.Curve) and line.IsLinear:
+        return Rhino.Geometry.Line(line.PointAtStart, line.PointAtEnd)
     points = coerce3dpointlist(line, raise_if_bad_input)
     if points and len(points)>1: return Rhino.Geometry.Line(points[0], points[1])
     if raise_if_bad_input: raise TypeError("%s can not be converted to a Line"%line)
