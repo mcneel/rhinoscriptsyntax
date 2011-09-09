@@ -24,7 +24,7 @@ def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
             modelviews = scriptcontext.doc.Views.GetViewList(True, False)
             rc = None
             for item in modelviews:
-                if item.Name == views:
+                if item.ActiveViewport.Name == views:
                     id = item.ActiveViewportID
                     rc = AddClippingPlane(plane, u_magnitude, v_magnitude, id)
                     break
@@ -36,7 +36,7 @@ def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
                 modelviews = scriptcontext.doc.Views.GetViewList(True,False)
                 for viewname in views:
                     for item in modelviews:
-                        if item.Name==viewname:
+                        if item.ActiveViewport.Name==viewname:
                             viewlist.append(item.ActiveViewportID)
                             break
     else:
