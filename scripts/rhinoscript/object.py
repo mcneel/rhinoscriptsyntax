@@ -729,6 +729,66 @@ def ObjectName(object_id, name=None):
     return rc
 
 
+def ObjectPrintColor(object_ids, color=None):
+    """Returns or modifies the print color of an object
+    Parameters:
+      object_ids = identifiers of object(s)
+      color[opt] = new print color. If omitted, the current color is returned.
+    Returns:
+      If color is not specified, the object's current print color
+      If color is specified, the object's previous print color
+      If object_ids is a list or tuple, the number of objects modified
+    """
+    id = rhutil.coerceguid(object_ids, False)
+    if id:
+        rhino_object = rhutil.coercerhinoobject(id, True, True)
+        rc = rhino_object.Attributes.PlotColor
+        if color:
+            rhino_object.Attributes.PlotColorSource = Rhino.DocObjects.ObjectPlotColorSource.PlotColorFromObject
+            rhino_object.Attributes.PlotColor = rs.coercecolor(color, True)
+            rhino_object.CommitChanges()
+            scriptcontext.doc.Views.Redraw()
+        return rc
+    for id in object_ids:
+        color = rhutil.coercecolor(color, True)
+        rhino_object = rhutil.coercerhinoobject(id, True, True)
+        rhino_object.Attributes.PlotColorSource = Rhino.DocObjects.ObjectPlotColorSource.PlotColorFromObject
+        rhino_object.Attributes.PlotColor = color
+        rhino_object.CommitChanges()
+    scriptcontext.doc.Views.Redraw()
+    return len(object_ids)
+
+
+def ObjectPrintColorSource(object_ids, source=None):
+    """Returns or modifies the print color source of an object
+    Parameters:
+      object_ids = identifiers of object(s)
+      source[opt] = new print color source
+        0 = print color by layer
+        1 = print color by object
+        3 = print color by parent
+    Returns:
+      If source is not specified, the object's current print color source
+      If source is specified, the object's previous print color source
+      If object_ids is a list or tuple, the number of objects modified
+    """
+    id = rhutil.coerceguid(object_ids, False)
+    if id:
+        rhino_object = rhutil.coercerhinoobject(id, True, True)
+        rc = int(rhino_object.Attributes.PlotColorSource)
+        if source is not None:
+            rhino_object.Attributes.PlotColorSource = System.Enum.ToObject(Rhino.DocObjects.ObjectPlotColorSource, source)
+            rhino_object.CommitChanges()
+            scriptcontext.doc.Views.Redraw()
+        return rc
+    for id in object_ids:
+        rhino_object = rhutil.coercerhinoobject(id, True, True)
+        rhino_object.Attributes.PlotColorSource = System.Enum.ToObject(Rhino.DocObjects.ObjectPlotColorSource, source)
+        rhino_object.CommitChanges()
+    scriptcontext.doc.Views.Redraw()
+    return len(object_ids)
+
+
 def ObjectPrintWidth(object_ids, width=None):
     """Returns or modifies the print width of an object
     Parameters:
@@ -776,7 +836,7 @@ def ObjectPrintWidthSource(object_ids, source=None):
     id = rhutil.coerceguid(object_ids, False)
     if id:
         rhino_object = rhutil.coercerhinoobject(id, True, True)
-        rc = int(rhino_object.Attributes.PlotWeight)
+        rc = int(rhino_object.Attributes.PlotWeightSource)
         if source is not None:
             rhino_object.Attributes.PlotWeightSource = System.Enum.ToObject(Rhino.DocObjects.ObjectPlotWeightSource, source)
             rhino_object.CommitChanges()

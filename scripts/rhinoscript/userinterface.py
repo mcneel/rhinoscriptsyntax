@@ -297,7 +297,10 @@ def GetPoints(draw_lines=False, in_plane=False, message1=None, message2=None, ma
     gp = Rhino.Input.Custom.GetPoint()
     if message1: gp.SetCommandPrompt(message1)
     gp.EnableDrawLineFromPoint( draw_lines )
-    if in_plane: gp.ConstrainToConstructionPlane(True)
+    if in_plane:
+        gp.ConstrainToConstructionPlane(True)
+        plane = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
+        gp.Constrain(plane, False)
     getres = gp.Get()
     if gp.CommandResult()!=Rhino.Commands.Result.Success: return None
     prevPoint = gp.Point()
