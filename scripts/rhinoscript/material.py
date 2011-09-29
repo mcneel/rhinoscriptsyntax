@@ -41,7 +41,7 @@ def AddMaterialToObject(object_id):
         attr = rhino_object.Attributes
     material_index = attr.MaterialIndex
     if material_index>-1: return material_index
-    material_index = scriptcontext.doc.Materials.AddMaterial()
+    material_index = scriptcontext.doc.Materials.Add()
     attr.MaterialIndex = material_index
     scriptcontext.doc.Objects.ModifyAttributes(rhino_object, attr, True)
     return material_index
