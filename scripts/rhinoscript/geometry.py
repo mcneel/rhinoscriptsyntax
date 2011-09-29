@@ -55,7 +55,7 @@ def AddPoint(point, y=None, z=None):
     Returns:
       Guid for the object that was added to the doc
     """
-    if y and z: point = Rhino.Geometry.Point3d(point,y,z)
+    if y is not None and z is not None: point = Rhino.Geometry.Point3d(point,y,z)
     point = rhutil.coerce3dpoint(point, True)
     rc = scriptcontext.doc.Objects.AddPoint(point)
     if rc==System.Guid.Empty: raise Exception("unable to add point to document")
