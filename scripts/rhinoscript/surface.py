@@ -969,10 +969,13 @@ def IsPointInSurface(object_id, point):
     point = rhutil.coerce3dpoint(point, True)
     if object_id==None or point==None: return scriptcontext.errorhandler()
     obj = scriptcontext.doc.Objects.Find(object_id)
-    if type(obj)!=Rhino.DocObjects.BrepObject:
-        return scriptcontext.errorhandler()
     tolerance = Rhino.RhinoMath.SqrtEpsilon
-    return obj.BrepGeometry.IsPointInside(point, tolerance, False)
+    brep = None
+    if type(obj)==Rhino.DocObjects.ExtrusionObject:
+        brep = obj.ExtrusionGeometry.ToBrep(False)
+    if type(obj)==Rhino.DocObjects.BrepObject:
+        brep = obj.BrepGeometry
+    return brep.IsPointInside(point, tolerance, False)
 
 
 def IsPointOnSurface(object_id, point):
