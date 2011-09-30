@@ -991,7 +991,7 @@ def IsPointOnSurface(object_id, point):
     rc, u, v = surf.ClosestPoint(point)
     if rc:
         srf_pt = surf.PointAt(u,v)
-        if srf_pt.DistanceTo(point)>Rhino.RhinoMath.SqrtEpsilon:
+        if srf_pt.DistanceTo(point)>scriptcontext.doc.ModelAbsoluteTolerance:
             rc = False
         else:
             rc = surf.IsPointOnFace(u,v) != Rhino.Geometry.PointFaceRelation.Exterior
