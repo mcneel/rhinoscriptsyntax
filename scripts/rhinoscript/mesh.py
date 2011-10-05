@@ -725,7 +725,7 @@ def PullCurveToMesh(mesh_id, curve_id):
       None on error
     """
     mesh = rhutil.coercemesh(mesh_id, True)
-    curve = rhutil.coercecurve(curve_id, True)
+    curve = rhutil.coercecurve(curve_id, -1, True)
     tol = scriptcontext.doc.ModelAbsoluteTolerance
     polyline = curve.PullToMesh(mesh, tol)
     if not polyline: return scriptcontext.errorhandler()

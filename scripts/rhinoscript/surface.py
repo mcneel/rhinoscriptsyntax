@@ -748,8 +748,8 @@ def ExtrudeCurve(curve_id, path_id):
       identifier of new surface on success
       None on error
     """
-    curve1 = rhutil.coercecurve(curve_id, True)
-    curve2 = rhutil.coercecurve(path_id, True)
+    curve1 = rhutil.coercecurve(curve_id, -1, True)
+    curve2 = rhutil.coercecurve(path_id, -1, True)
     srf = Rhino.Geometry.SumSurface.Create(curve1, curve2)
     rc = scriptcontext.doc.Objects.AddSurface(srf)
     if rc==System.Guid.Empty: return scriptcontext.errorhandler()
@@ -766,7 +766,7 @@ def ExtrudeCurvePoint(curve_id, point):
       identifier of new surface on success
       None on error
     """
-    curve = rhutil.coercecurve(curve_id, True)
+    curve = rhutil.coercecurve(curve_id, -1, True)
     point = rhutil.coerce3dpoint(point, True)
     srf = Rhino.Geometry.Surface.CreateExtrusionToPoint(curve, point)
     rc = scriptcontext.doc.Objects.AddSurface(srf)
