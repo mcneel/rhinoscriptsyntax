@@ -1255,12 +1255,8 @@ def CurvePerpFrame(curve_id, parameter):
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     parameter = float(parameter)
-    params = (parameter, parameter+0.05)
-    if parameter>0.9: params = (parameter-0.05, parameter)
-    planes = curve.GetPerpendicularFrames(params)
-    if planes is None or len(planes)<2: return scriptcontext.errorhandler()
-    if parameter>0.9: return planes[1]
-    return planes[0]
+    rc, plane = curve.PerpendicularFrameAt(parameter)
+    if rc: return plane
 
 
 def CurvePlane(curve_id, segment_index=-1):
