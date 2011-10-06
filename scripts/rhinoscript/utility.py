@@ -8,27 +8,14 @@ import string
 
 
 def ContextIsRhino():
-    """Returns True if the script is currently being executed in the context
-    of a normal script in Rhino
-    """
+    """Return True if the script is being executed in the context of Rhino"""
     return scriptcontext.id == 1
 
 
 def ContextIsGrasshopper():
-    """Returns True if the script is currently being executed in a grasshopper
-    component
-    """
+    """Return True if the script is being executed in a grasshopper component"""
     return scriptcontext.id == 2
 
-
-#should work all of the time unless we can't find the standard lib
-__cfparse = None
-try:
-    import ConfigParser
-except ImportError:
-    __cfparse = None
-else:
-    __cfparse = ConfigParser
 
 def Angle(point1, point2, plane=True):
     """Measures the angle between two points
@@ -102,7 +89,7 @@ def ClipboardText(text=None):
     Returns:
       if text is not specified, the current text in the clipboard
       if text is specified, the previous text in the clipboard
-      None if not successful, or on error
+      None if not successful
     """
     rc = None
     if System.Windows.Forms.Clipboard.ContainsText():
@@ -114,7 +101,7 @@ def ClipboardText(text=None):
 
 
 def ColorAdjustLuma(rgb, luma, scale=False):
-    """Changes the luminance of a red-green-blue value. Hue and saturation are
+    """Change the luminance of a red-green-blue value. Hue and saturation are
     not affected
     Parameters:
       rgb = initial rgb value
@@ -124,27 +111,23 @@ def ColorAdjustLuma(rgb, luma, scale=False):
           current luminance. If False, luma specified the absolute luminance.
     Returns:
       modified rgb value if successful
-      None on error
     """
     rgb = coercecolor(rgb, True)
     hsl = Rhino.Display.ColorHSL(rgb)
     luma = luma / 1000.0
     if scale: luma = hsl.L + luma
     hsl.L = luma
-    rgb = hsl.ToArgbColor()
-    return rgb.ToArgb()
+    return hsl.ToArgbColor()
 
 
 def ColorBlueValue(rgb):
     "Retrieves intensity value for the blue component of an RGB color"
-    rgb = coercecolor(rgb, True)
-    return rgb.B
+    return coercecolor(rgb, True).B
 
 
 def ColorGreenValue(rgb):
     "Retrieves intensity value for the green component of an RGB color"
-    rgb = coercecolor(rgb, True)
-    return rgb.G
+    return coercecolor(rgb, True).G
 
 
 def ColorHLSToRGB(hls):
@@ -153,23 +136,18 @@ def ColorHLSToRGB(hls):
         hls = Rhino.Display.ColorHSL(hls[0]/240.0, hls[2]/240.0, hls[1]/240.0)
     elif len(hls)==4:
         hls = Rhino.Display.ColorHSL(hls[3]/240.0, hls[0]/240.0, hls[2]/240.0, hls[1]/240.0)
-    else:
-        return scriptcontext.errorhandler()
-    rgb = hls.ToArgbColor()
-    return rgb.ToArgb()
+    return hls.ToArgbColor()
 
 
 def ColorRedValue(rgb):
     "Retrieves intensity value for the red component of an RGB color"
-    rgb = coercecolor(rgb, True)
-    return rgb.R
+    return coercecolor(rgb, True).R
 
 
 def ColorRGBToHLS(rgb):
     "Converts colors from RGB to HLS"
     rgb = coercecolor(rgb, True)
-    hls = Rhino.Display.ColorHSL(rgb)
-    return (hls.H, hls.S, hls.L, hls.A)
+    return Rhino.Display.ColorHSL(rgb)
 
 
 def CullDuplicatePoints(points, tolerance=-1):
@@ -181,7 +159,7 @@ def CullDuplicatePoints(points, tolerance=-1):
         is used.
     Returns:
       list of 3D points with duplicates removed if successful.
-      None if not successful or on error.
+      None if not successful
     """
     points = coerce3dpointlist(points, True)
     if tolerance is None or tolerance < 0:
@@ -190,29 +168,23 @@ def CullDuplicatePoints(points, tolerance=-1):
 
 
 def Distance(point1, point2):
-    """Measures the distance between two 3D points, or between a 3D point and
-    an array of 3-D points.
+    """Measures distance between two 3D points, or between a 3D point and
+    an array of 3D points.
     Parameters:
       point1 = The first 3D point.
       point2 = The second 3D point or list of 3-D points.
     Returns:
       If point2 is a 3D point then the distance if successful.
       If point2 is a list of points, then an list of distances if successful.
-      None if not successful, or on error.
+      None if not successful
     """
     from_pt = coerce3dpoint(point1, True)
     to_pt = coerce3dpoint(point2)
-    if to_pt:
-        vec = to_pt - from_pt
-        return vec.Length
+    if to_pt: return (to_pt - from_pt).Length
     # check if we have a list of points
     to_pt = coerce3dpointlist(point2, True)
-    distances = []
-    for point in to_pt:
-        vec = point - from_pt
-        distances.append(vec.Length)
-    if len(distances)==0: return scriptcontext.errorhandler()
-    return distances
+    distances = [(point - from_pt).Length for point in to_pt]
+    if distances: return distances
 
 
 def GetSettings(filename, section=None, entry=None):
@@ -225,9 +197,9 @@ def GetSettings(filename, section=None, entry=None):
       If section is not specified, a list containing all section names
       If entry is not specified, a list containing all entry names for a given section
       If section and entry are specied, a value for entry
-      None if not successful or on error
+      None if not successful
     """
-    if __cfparse is None: return scriptcontext.errorhandler()
+    import ConfigParser
     try:
         cp = ConfigParser.ConfigParser()
         cp.read(filename)
@@ -266,8 +238,7 @@ def Polar(point, angle_degrees, distance, plane=None):
 
 def Sleep(milliseconds):
     "Suspends execution of a running script for the specified interval"
-    sec = milliseconds / 1000.0
-    time.sleep(sec)
+    time.sleep( milliseconds / 1000.0 )
     Rhino.RhinoApp.Wait() #keep the message pump alive
     
 
@@ -318,19 +289,12 @@ def SortPoints(points, ascending=True, order=0):
         if rc==0: rc = cmp(a.Y, b.Y)
         if rc==0: rc = cmp(a.X, b.X)
         return rc
-    
-    sortfunc = __cmpXYZ
-    if order==1: sortfunc = __cmpXZY
-    elif order==2: sortfunc = __cmpYXZ
-    elif order==3: sortfunc = __cmpYZX
-    elif order==4: sortfunc = __cmpZXY
-    elif order==5: sortfunc = __cmpZYX
-    reverse = not ascending
-    return sorted(points, sortfunc, None, reverse)
+    sortfunc = (__cmpXYZ, __cmpXZY, __cmpYXZ, __cmpYZX, __cmpZXY, __cmpZYX)[order]
+    return sorted(points, sortfunc, None, not ascending)
 
 
 def Str2Pt(point):
-    "converts a formatted string value into a 3-D point value"
+    "convert a formatted string value into a 3D point value"
     return coerce3dpoint(point, True)
 
 
@@ -342,7 +306,7 @@ def clamp(lowvalue, highvalue, value):
 
 
 def fxrange(start, stop, step):
-    "a float version of the xrange function"
+    "float version of the xrange function"
     if step==0: raise ValueError("step must not equal 0")
     x = start
     if start<stop:
@@ -358,7 +322,7 @@ def fxrange(start, stop, step):
 
 
 def frange(start, stop, step):
-    "a float version of the range function"
+    "float version of the range function"
     return [x for x in fxrange(start, stop, step)]
 
 
@@ -497,6 +461,7 @@ def coerceguid(id, raise_exception=False):
             pass
     if (type(id) is list or type(id) is tuple) and len(id)==1:
         return coerceguid(id[0], raise_exception)
+    if type(id) is Rhino.DocObjects.ObjRef: return id.ObjectId
     if raise_exception: raise TypeError("Parameter must be a Guid or string representing a Guid")
 
 
@@ -508,8 +473,7 @@ def coerceguidlist(ids):
     for id in ids:
         id = coerceguid(id)
         if id: rc.append(id)
-    if len(rc)==0: return None
-    return rc
+    if rc: return rc
 
 
 def coerceboundingbox(bbox, raise_on_bad_input=False):
@@ -539,19 +503,6 @@ def coerceline(line, raise_if_bad_input=False):
     if raise_if_bad_input: raise TypeError("%s can not be converted to a Line"%line)
 
 
-def coercebrep(id, raise_if_missing=False):
-    "attempt to get polysurface geometry from the document with a given id"
-    if isinstance(id, Rhino.Geometry.Brep): return id
-    if type(id) is Rhino.DocObjects.ObjRef: return id.Brep()
-    id = coerceguid(id, True)
-    brepObj = scriptcontext.doc.Objects.Find(id)
-    if brepObj:
-        brep = brepObj.Geometry
-        if isinstance(brep, Rhino.Geometry.Brep): return brep
-        if isinstance(brep, Rhino.Geometry.Extrusion): return brep.ToBrep(True)
-    if raise_if_missing: raise ValueError("unable to convert %s into Brep geometry"%id)
-
-
 def coercegeometry(id, raise_if_missing=False):
     "attempt to get GeometryBase class from given input"
     if isinstance(id, Rhino.Geometry.GeometryBase): return id
@@ -561,6 +512,14 @@ def coercegeometry(id, raise_if_missing=False):
     rhobj = scriptcontext.doc.Objects.Find(id)
     if rhobj: return rhobj.Geometry
     if raise_if_missing: raise ValueError("unable to convert %s into geometry"%id)
+
+
+def coercebrep(id, raise_if_missing=False):
+    "attempt to get polysurface geometry from the document with a given id"
+    geom = coercegeometry(id, False)
+    if isinstance(geom, Rhino.Geometry.Brep): return geom
+    if isinstance(brep, Rhino.Geometry.Extrusion): return geom.ToBrep(True)
+    if raise_if_missing: raise ValueError("unable to convert %s into Brep geometry"%id)
 
 
 def coercecurve(id, segment_index=-1, raise_if_missing=False):
