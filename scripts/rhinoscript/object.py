@@ -745,7 +745,7 @@ def ObjectPrintColor(object_ids, color=None):
         rc = rhino_object.Attributes.PlotColor
         if color:
             rhino_object.Attributes.PlotColorSource = Rhino.DocObjects.ObjectPlotColorSource.PlotColorFromObject
-            rhino_object.Attributes.PlotColor = rs.coercecolor(color, True)
+            rhino_object.Attributes.PlotColor = rhutil.coercecolor(color, True)
             rhino_object.CommitChanges()
             scriptcontext.doc.Views.Redraw()
         return rc
