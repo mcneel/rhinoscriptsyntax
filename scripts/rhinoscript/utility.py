@@ -518,7 +518,7 @@ def coercebrep(id, raise_if_missing=False):
     "attempt to get polysurface geometry from the document with a given id"
     geom = coercegeometry(id, False)
     if isinstance(geom, Rhino.Geometry.Brep): return geom
-    if isinstance(brep, Rhino.Geometry.Extrusion): return geom.ToBrep(True)
+    if isinstance(geom, Rhino.Geometry.Extrusion): return geom.ToBrep(True)
     if raise_if_missing: raise ValueError("unable to convert %s into Brep geometry"%id)
 
 

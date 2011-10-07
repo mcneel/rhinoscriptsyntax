@@ -63,7 +63,7 @@ def GetUserText(object_id, key=None, attached_to_geometry=False):
 
 
 def IsDocumentData():
-    """Verifies the current document contains  user data
+    """Verifies the current document contains user data
     Returns:
       True or False indicating the presence of Script user data
     """
@@ -80,8 +80,8 @@ def IsUserText(object_id):
     """
     obj = rhutil.coercerhinoobject(object_id, True, True)
     rc = 0
-    if obj.Attributes.UserStringCount>0: rc = rc|1
-    if obj.Geometry.UserStringCount>0: rc = rc|2
+    if obj.Attributes.UserStringCount: rc = rc|1
+    if obj.Geometry.UserStringCount: rc = rc|2
     return rc
 
 
@@ -109,5 +109,7 @@ def SetUserText(object_id, key, value=None, attach_to_geometry=False):
       True or False indicating success or failure 
     """
     obj = rhutil.coercerhinoobject(object_id, True, True)
+    if type(key) is not str: key = str(key)
+    if value and type(value) is not str: value = str(value)
     if attach_to_geometry: return obj.Geometry.SetUserString(key, value)
     return obj.Attributes.SetUserString(key, value)

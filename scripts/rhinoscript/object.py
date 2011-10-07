@@ -32,8 +32,7 @@ def CopyObjects(object_ids, translation=None):
         translation = Rhino.Geometry.Transform.Translation(translation)
     else:
         translation = Rhino.Geometry.Transform.Identity
-    rc = TransformObjects(object_ids, translation, True)
-    return rc
+    return TransformObjects(object_ids, translation, True)
 
 
 def DeleteObject(object_id):
@@ -81,22 +80,17 @@ def FlashObject(object_ids, style=True):
 
 
 def HideObject(object_id):
-    """Hides a single object. Hidden objects are not visible, cannot be snapped
-    to and cannot be selected
+    """Hides a single object
     Parameters:
       object_id: String or Guid representing id of object to hide
     Returns:
       True of False indicating success or failure
     """
-    id = rhutil.coerceguid(object_id, True)
-    rc = scriptcontext.doc.Objects.Hide(id, False)
-    scriptcontext.doc.Views.Redraw()
-    return rc
+    return HideObjects(object_id)==1
 
 
 def HideObjects(object_ids):
-    """Hides one or more objects. Hidden objects are not visible, cannot be
-    snapped to and cannot be selected
+    """Hides one or more objects
     Parameters:
       object_ids: identifiers of objects to hide
     Returns:
@@ -691,11 +685,10 @@ def ObjectMaterialSource(object_ids, source=None):
 
 
 def ObjectName(object_id, name=None):
-    """Returns or modifies the user-definable name of an object
+    """Returns or modifies the name of an object
     Parameters:
       object_id = id or ids of object(s)
-      name[opt] = the new object name. If omitted, the current object name
-        is returned.
+      name[opt] = the new object name. If omitted, the current name is returned
     Returns:
       If name is not specified, the current object name
       If name is specified, the previous object name
@@ -712,8 +705,7 @@ def ObjectName(object_id, name=None):
         if len(rhino_objects)==1:
             rhino_object = rhino_objects[0]
             rhino_objects = None
-    if name is None:
-        #get the name
+    if name is None: #get the name
         if rhino_objects: raise Exception("name required when object_id represents multiple objects")
         return rhino_object.Name
     if rhino_objects:
@@ -723,9 +715,9 @@ def ObjectName(object_id, name=None):
             scriptcontext.doc.Objects.ModifyAttributes(rh_obj, attr, True)
         return len(rhino_objects)
     rc = rhino_object.Name
-    attr = rhino_object.Attributes
-    attr.Name = name
-    scriptcontext.doc.Objects.ModifyAttributes(rhino_object, attr, True)
+    if not type(name) is str: name = str(name)
+    rhino_object.Attributes.Name = name
+    rhino_object.CommitChanges()
     return rc
 
 

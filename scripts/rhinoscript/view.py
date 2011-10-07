@@ -53,14 +53,12 @@ def AddLayout(title=None, size=None):
       title[opt] = title of new layout
       size[opt] = width and height of paper for the new layout
     Returns:
-      id of new layout on success
-      None on error
+      id of new layout
     """
     page = None
     if size is None: page = scriptcontext.doc.Views.AddPageView(title)
     else: page = scriptcontext.doc.Views.AddPageView(title, size[0], size[1])
-    if page is None: return scriptcontext.errorhandler()
-    return page.MainViewport.Id
+    if page: return page.MainViewport.Id
 
 
 def AddNamedCPlane(cplane_name, view=None):
@@ -941,7 +939,7 @@ def ZoomBoundingBox(bounding_box, view=None, all=False):
 
 
 def ZoomExtents(view=None, all=False):
-    """Zooms to the extents of visible objects in the specified view
+    """Zooms to extents of visible objects in the specified view
     Parameters:
       view:[opt] title or id of the view. If omitted, current active view is used
       all:[opt] zoom extents in all views
@@ -957,7 +955,7 @@ def ZoomExtents(view=None, all=False):
 
 
 def ZoomSelected(view=None, all=False):
-    """Zooms to the extents of selected objects in the specified view
+    """Zooms to extents of selected objects in the specified view
     Parameters:
       view: [opt] title or id of the view. If omitted, current active view is used
       all: [opt] zoom extents in all views
