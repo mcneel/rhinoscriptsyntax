@@ -1493,6 +1493,7 @@ def DivideCurve(curve_id, segments, create_points=False, return_points=True):
         if create_points:
             for point in outputpoints:
                 if point.IsValid: scriptcontext.doc.Objects.AddPoint(point)
+            scriptcontext.doc.Views.Redraw()
     return rc
 
 
