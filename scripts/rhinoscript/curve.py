@@ -665,12 +665,13 @@ def CurveBooleanDifference(curve_id_0, curve_id_1):
     curve1 = rhutil.coercecurve(curve_id_1, -1, True)
     out_curves = Rhino.Geometry.Curve.CreateBooleanDifference(curve0, curve1)
     curves = []
-    for curve in out_curves:
-        if curve and curve.IsValid:
-            rc = scriptcontext.doc.Objects.AddCurve(curve)
-            curve.Dispose()
-            if rc==System.Guid.Empty: raise Exception("unable to add curve to document")
-            curves.append(rc)
+    if out_curves:
+        for curve in out_curves:
+            if curve and curve.IsValid:
+                rc = scriptcontext.doc.Objects.AddCurve(curve)
+                curve.Dispose()
+                if rc==System.Guid.Empty: raise Exception("unable to add curve to document")
+                curves.append(rc)
     scriptcontext.doc.Views.Redraw()
     return curves
 
@@ -686,22 +687,22 @@ def CurveBooleanIntersection(curve_id_0, curve_id_1):
     """
     curve0 = rhutil.coercecurve(curve_id_0, -1, True)
     curve1 = rhutil.coercecurve(curve_id_1, -1, True)
-    
     out_curves = Rhino.Geometry.Curve.CreateBooleanIntersection(curve0, curve1)
     curves = []
-    for curve in out_curves:
-        if curve and curve.IsValid:
-            rc = scriptcontext.doc.Objects.AddCurve(curve)
-            curve.Dispose()
-            if rc==System.Guid.Empty: raise Exception("unable to add curve to document")
-            curves.append(rc)
+    if out_curves:
+        for curve in out_curves:
+            if curve and curve.IsValid:
+                rc = scriptcontext.doc.Objects.AddCurve(curve)
+                curve.Dispose()
+                if rc==System.Guid.Empty: raise Exception("unable to add curve to document")
+                curves.append(rc)
     scriptcontext.doc.Views.Redraw()
     return curves
 
 
 def CurveBooleanUnion(curve_id):
-    """Calculates the union of two or more closed, planar curves and
-    adds the results to the document. Note, curves must be coplanar.
+    """Calculate the union of two or more closed, planar curves and
+    add the results to the document. Note, curves must be coplanar.
     Parameters:
       curve_id = list of two or more close planar curves identifiers
     Returns:
@@ -711,13 +712,14 @@ def CurveBooleanUnion(curve_id):
     if len(in_curves)<2: raise ValueException("curve_id must have at least 2 curves")
     out_curves = Rhino.Geometry.Curve.CreateBooleanUnion(in_curves)
     curves = []
-    for curve in out_curves:
-        if curve and curve.IsValid:
-            rc = scriptcontext.doc.Objects.AddCurve(curve)
-            curve.Dispose()
-            if rc==System.Guid.Empty: raise Exception("unable to add curve to document")
-            curves.append(rc)
-    scriptcontext.doc.Views.Redraw()
+    if out_curves:
+        for curve in out_curves:
+            if curve and curve.IsValid:
+                rc = scriptcontext.doc.Objects.AddCurve(curve)
+                curve.Dispose()
+                if rc==System.Guid.Empty: raise Exception("unable to add curve to document")
+                curves.append(rc)
+        scriptcontext.doc.Views.Redraw()
     return curves
 
 
@@ -2083,11 +2085,7 @@ def OffsetCurve(object_id, direction, distance, normal=None, style=1):
       normal[opt] = normal of the plane in which the offset will occur.
           If omitted, the normal of the active construction plane will be used
       style[opt] = the corner style
-          0 = None
-          1 = Sharp
-          2 = Round
-          3 = Smooth
-          4 = Chamfer
+          0 = None, 1 = Sharp, 2 = Round, 3 = Smooth, 4 = Chamfer
     Returns:
       List of ids for the new curves on success
       None on error
