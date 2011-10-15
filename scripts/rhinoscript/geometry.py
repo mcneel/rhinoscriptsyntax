@@ -172,7 +172,10 @@ def BoundingBox(objects, view_or_plane=None, in_world_coords=True):
       None on error
     """
     def __objectbbox(object, xform):
-        geom = rhutil.coercegeometry(object, True)
+        geom = rhutil.coercegeometry(object, False)
+        if not geom:
+            pt = rhutil.coerce3dpoint(object, True)
+            return Rhino.Geometry.BoundingBox(pt,pt)
         if xform: return geom.GetBoundingBox(xform)
         return geom.GetBoundingBox(True)
 

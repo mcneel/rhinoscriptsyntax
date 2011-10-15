@@ -508,9 +508,10 @@ def coercegeometry(id, raise_if_missing=False):
     if isinstance(id, Rhino.Geometry.GeometryBase): return id
     if type(id) is Rhino.DocObjects.ObjRef: return id.Geometry()
     if isinstance(id, Rhino.DocObjects.RhinoObject): return id.Geometry
-    id = coerceguid(id, True)
-    rhobj = scriptcontext.doc.Objects.Find(id)
-    if rhobj: return rhobj.Geometry
+    id = coerceguid(id, raise_if_missing)
+    if id:
+        rhobj = scriptcontext.doc.Objects.Find(id)
+        if rhobj: return rhobj.Geometry
     if raise_if_missing: raise ValueError("unable to convert %s into geometry"%id)
 
 
