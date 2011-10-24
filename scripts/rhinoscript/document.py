@@ -1,6 +1,7 @@
 import scriptcontext
 import Rhino
-import System.Enum
+import System.Enum, System.Drawing.Size
+import utility as rhutil
 
 def CreatePreviewImage(filename, view=None, size=None, flags=0, wireframe=False):
     """Creates a bitmap preview image of the current model
@@ -61,8 +62,7 @@ def DocumentPath():
 
 def EnableRedraw(enable=True):
     """Enables or disables screen redrawing
-    Returns:
-      previous screen redrawing state
+    Returns: previous screen redrawing state
     """
     old = scriptcontext.doc.Views.RedrawEnabled
     if old!=enable: scriptcontext.doc.Views.RedrawEnabled = enable
@@ -115,6 +115,88 @@ def Redraw():
     scriptcontext.doc.Views.Redraw()
 
 
+def RenderAntialias(style=None):
+    """Returns or sets render antialias style
+    Parameters:
+      style[opt] = level of antialiasing (0=none, 1=normal, 2=best)
+    Returns:
+      if style is not specified, the current antialias style
+      if style is specified, the previous antialias style
+    """
+    rc = scriptcontext.doc.RenderSettings.AntialiasLevel
+    if style==0 or style==1 or style==2:
+        settings = scriptcontext.doc.RenderSettings
+        settings.AntialiasLevel = style
+        scriptcontext.doc.RenderSettings = settings
+    return rc
+
+
+def RenderColor(item, color=None):
+    """Returns or sets the render ambient light or background color
+    Parameters:
+      item = 0=ambient light color, 1=background color
+      color[opt] = the new color value. If omitted, the curren item color is returned
+    Returns:
+      if color is not specified, the current item color
+      if color is specified, the previous item color
+    """
+    if item!=0 and item!=1: raise ValueError("item must be 0 or 1")
+    if item==0: rc = scriptcontext.doc.RenderSettings.AmbientLight
+    else: rc = scriptcontext.doc.RenderSettings.BackgroundColorTop
+    if color is not None:
+        color = rhutil.coercecolor(color, True)
+        settings = scriptcontext.doc.RenderSettings
+        if item==0: settings.AmbientLight = color
+        else: settings.BackgroundColorTop = color
+        scriptcontext.doc.RenderSettings = settings
+        scriptcontext.doc.Views.Redraw()
+    return rc
+
+
+def RenderResolution(resolution=None):
+    """Returns or sets the render resolution
+    Parameters:
+      resolution[opt] = width and height of render
+    Returns:
+      if resolution is not specified, the current resolution width,height
+      if resolution is specified, the previous resolution width, height
+    """
+    rc = scriptcontext.doc.RenderSettings.ImageSize
+    if resolution:
+        settings = scriptcontext.doc.RenderSettings
+        settings.ImageSize = System.Drawing.Size(resolution[0], resolution[1])
+        scriptcontext.doc.RenderSettings = settings
+    return rc.Width, rc.Height
+
+
+def RenderSettings(settings=None):
+    """Returns or sets render settings
+    Parameters:
+      settings[opt] = render settings to modify.
+        0=none,
+        1=create shadows,
+        2=use lights on layers that are off,
+        4=render curves and isocurves,
+        8=render dimensions and text
+    Returns:
+      if settings are not specified, the current render settings
+      if settings are specified, the previous render settings
+    """
+    rc = 0
+    rendersettings = scriptcontext.doc.RenderSettings
+    if rendersettings.ShadowmapLevel: rc+=1
+    if rendersettings.UseHiddenLights: rc+=2
+    if rendersettings.RenderCurves: rc+=4
+    if rendersettings.RenderAnnotations: rc+=8
+    if settings is not None:
+        rendersettings.ShadowmapLevel = (settings & 1)
+        rendersettings.UseHiddenLights = (settings & 2)==2
+        rendersettings.RenderCurves = (settings & 4)==4
+        rendersettings.RenderAnnotations = (settings & 8)==8
+        scriptcontext.doc.RenderSettings = rendersettings
+    return rc
+
+
 def UnitAbsoluteTolerance(tolerance=None, in_model_units=True):
     """Resturns or sets the document's absolute tolerance. Absolute tolerance
     is measured in drawing units. See Rhino's document properties command
@@ -127,7 +209,6 @@ def UnitAbsoluteTolerance(tolerance=None, in_model_units=True):
       if tolerance is not specified, the current absolute tolerance
       if tolerance is specified, the previous absolute tolerance
     """
-    rc = 0
     if in_model_units:
         rc = scriptcontext.doc.ModelAbsoluteTolerance
         if tolerance is not None:
@@ -151,7 +232,6 @@ def UnitAngleTolerance(angle_tolerance_degrees=None, in_model_units=True):
       if angle_tolerance_degrees is not specified, the current angle tolerance
       if angle_tolerance_degrees is specified, the previous angle tolerance
     """
-    rc = 0
     if in_model_units:
         rc = scriptcontext.doc.ModelAngleToleranceDegrees
         if angle_tolerance_degrees is not None:
@@ -175,7 +255,6 @@ def UnitRelativeTolerance(relative_tolerance=None, in_model_units=True):
       if relative_tolerance is not specified, the current tolerance in percent
       if relative_tolerance is specified, the previous tolerance in percent
     """
-    rc = 0
     if in_model_units:
         rc = scriptcontext.doc.ModelRelativeTolerance
         if relative_tolerance is not None:
@@ -273,7 +352,6 @@ def UnitSystem(unit_system=None, scale=False, in_model_units=True):
     """
     if (unit_system is not None and (unit_system<1 or unit_system>25)):
         raise ValueError("unit_system value of %s is not valid"%unit_system)
-    rc = None
     if in_model_units:
         rc = int(scriptcontext.doc.ModelUnitSystem)
         if unit_system is not None:

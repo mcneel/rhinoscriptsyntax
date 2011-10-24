@@ -63,14 +63,21 @@ def AddPoint(point, y=None, z=None):
     return rc
 
 
-def AddPointCloud(points):
+def AddPointCloud(points, colors=None):
     """Adds point cloud object to the document
     Parameters:
       points = list of values where every multiple of three represents a point
+      colors[opt] = list of colors to apply to each point
     Returns:
       identifier of point cloud on success
     """
     points = rhutil.coerce3dpointlist(points, True)
+    if colors and len(colors)==len(points):
+        pc = Rhino.Geometry.PointCloud()
+        for i in range(len(points)):
+            color = rhutil.coercecolor(colors[i],True)
+            pc.Add(points[i],color)
+        points = pc
     rc = scriptcontext.doc.Objects.AddPointCloud(points)
     if rc==System.Guid.Empty: raise Exception("unable to add point cloud to document")
     scriptcontext.doc.Views.Redraw()

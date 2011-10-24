@@ -488,6 +488,26 @@ def Planar(enable=None):
     return rc
 
 
+def PlugIns(types=0, status=0):
+    """Returns a list of registered Rhino plug-ins
+    Parameters:
+      types[opt] = type of plug-ins to return. 0=all, 1=render, 2=file export,
+        4=file import, 8=digitizer, 16=utility
+      status[opt] = 0=both loaded and unloaded, 1=loaded, 2=unloaded
+    """
+    filter = Rhino.PlugIns.PlugInType.None
+    if types&1: filter |= Rhino.PlugIns.PlugInType.Render
+    if types&2: filter |= Rhino.PlugIns.PlugInType.FileExport
+    if types&4: filter |= Rhino.PlugIns.PlugInType.FileImport
+    if types&8: filter |= Rhino.PlugIns.PlugInType.Digitiger
+    if types&16: filter |= Rhino.PlugIns.PlugInType.Utility
+    if types==0: filter = Rhino.PlugIns.PlugInType.Any
+    loaded = (status==0 or status==1)
+    unloaded = (status==0 or status==2)
+    names = Rhino.PlugIns.PlugIn.GetInstalledPlugInNames(filter, loaded, unloaded)
+    return list(names)
+
+
 def ProjectOsnaps(enable=None):
     """Enables or disables object snap projection
     Parameters:
