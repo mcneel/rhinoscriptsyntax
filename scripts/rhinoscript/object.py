@@ -232,7 +232,7 @@ def IsObjectSelectable(object_id):
       True or False
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
-    return rhobj.IsSelectable()
+    return rhobj.IsSelectable(True,False,False,False)
 
 
 def IsObjectSelected(object_id):
