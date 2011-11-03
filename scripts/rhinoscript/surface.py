@@ -6,7 +6,7 @@ import utility as rhutil
 import object as rhobject
 
 def AddBox(corners):
-    """Adds a new box shaped polysurface to the document
+    """Adds a box shaped polysurface to the document
     Parameters:
       corners = 8 3D points that define the corners of the box. Points need to
         be in counter-clockwise order starting with the bottom rectangle of the box
@@ -1595,11 +1595,9 @@ def SurfaceKnotCount(surface_id):
       surface_id = the surface's identifier
     Returns:
       (U count, V count) on success
-      None on error
     """
     surface = rhutil.coercesurface(surface_id, True)
     ns = surface.ToNurbsSurface()
-    if ns is None: return scriptcontext.errorhandler()
     return ns.KnotsU.Count, ns.KnotsV.Count
 
 
@@ -1631,11 +1629,9 @@ def SurfaceNormal(surface_id, uv_parameter):
       uv_parameter = the uv parameter to evaluate
     Returns:
       Normal vector on success
-      None on error
     """
     surface = rhutil.coercesurface(surface_id, True)
-    normal = surface.NormalAt(uv_parameter[0], uv_parameter[1])
-    return normal
+    return surface.NormalAt(uv_parameter[0], uv_parameter[1])
 
 
 def SurfaceNormalizedParameter(surface_id, parameter):
@@ -1668,7 +1664,6 @@ def SurfaceParameter(surface_id, parameter):
       parameter = the normalized parameter to convert
     Returns:
       surface parameter as tuple on success
-      None on error
     """
     surface = rhutil.coercesurface(surface_id, True)
     x = surface.Domain(0).ParameterAt(parameter[0])
@@ -1681,11 +1676,9 @@ def SurfacePointCount(surface_id):
       surface_id = the surface's identifier
     Returns:
       (U count, V count) on success
-      None on error
     """
     surface = rhutil.coercesurface(surface_id, True)
     ns = surface.ToNurbsSurface()
-    if ns is None: return scriptcontext.errorhandler()
     return ns.Points.CountU, ns.Points.CountV
 
 
@@ -1703,11 +1696,9 @@ def SurfacePoints(surface_id, return_all=True):
     surface = rhutil.coercesurface(surface_id, True)
     ns = surface.ToNurbsSurface()
     if ns is None: return scriptcontext.errorhandler()
-    ucount = ns.Points.CountU
-    vcount = ns.Points.CountV
     rc = []
-    for u in range(ucount):
-        for v in range(vcount):
+    for u in range(ns.Points.CountU):
+        for v in range(ns.Points.CountV):
             pt = ns.Points.GetControlPoint(u,v)
             rc.append(pt.Location)
     return rc
@@ -1731,7 +1722,7 @@ def SurfaceTorus(surface_id):
 
 
 def SurfaceVolume(object_id):
-    """Calculates the volume of a closed surface or polysurface
+    """Calculates volume of a closed surface or polysurface
     Parameters:
       object_id = the surface's identifier
     Returns:
@@ -1739,12 +1730,11 @@ def SurfaceVolume(object_id):
       None on error
     """
     vmp = __GetMassProperties(object_id, False)
-    if vmp is None: return scriptcontext.errorhandler()
-    return vmp.Volume, vmp.VolumeError
+    if vmp: return vmp.Volume, vmp.VolumeError
 
 
 def SurfaceVolumeCentroid(object_id):
-    """Calculates the volume centroid of a closed surface or polysurface
+    """Calculates volume centroid of a closed surface or polysurface
     Parameters:
       object_id = the surface's identifier
     Returns:
@@ -1752,12 +1742,11 @@ def SurfaceVolumeCentroid(object_id):
       None on error
     """
     vmp = __GetMassProperties(object_id, False)
-    if vmp is None: return scriptcontext.errorhandler()
-    return vmp.Centroid, vmp.CentroidError
+    if vmp: return vmp.Centroid, vmp.CentroidError
 
 
 def SurfaceVolumeMoments(surface_id):
-    """Calculates the volume moments of inertia of a surface or polysurface object.
+    """Calculates volume moments of inertia of a surface or polysurface object.
     For more information, see Rhino help for "Mass Properties calculation details"
     Parameters:
       surface_id = the surface's identifier
@@ -1769,9 +1758,9 @@ def SurfaceVolumeMoments(surface_id):
 
 
 def SurfaceWeights(object_id):
-    """Returns list of weight values that are assigned to the control points of
-    a surface. The number of weights returned will be equal to the number of
-    control points in the U and V directions.
+    """Returns list of weight values assigned to the control points of a surface.
+    The number of weights returned will be equal to the number of control points
+    in the U and V directions.
     Parameters:
       object_id = the surface's identifier
     Returns:
@@ -1781,11 +1770,27 @@ def SurfaceWeights(object_id):
     surface = rhutil.coercesurface(object_id, True)
     ns = surface.ToNurbsSurface()
     if ns is None: return scriptcontext.errorhandler()
-    ucount = ns.Points.CountU
-    vcount = ns.Points.CountV
     rc = []
-    for u in range(ucount):
-        for v in range(vcount):
+    for u in range(ns.Points.CountU):
+        for v in range(ns.Points.CountV):
             pt = ns.Points.GetControlPoint(u,v)
             rc.append(pt.Weight)
+    return rc
+
+
+def UnrollSurface(surface_id, explode=False):
+    """Flattens a developable surface or polysurface
+    Parameters:
+      surface_id = the surface's identifier
+      explode[opt] = If True, the resulting surfaces ar not joined
+    Returns:
+      List of unrolled surface ids
+    """
+    brep = rhutil.coercebrep(surface_id, True)
+    unroll = Rhino.Geometry.Unroller(brep)
+    unroll.ExplodeOutput = explode
+    breps, curves, points, dots = unroll.PerformUnroll()
+    if not breps: return None
+    rc = [scriptcontext.doc.Objects.AddBrep(brep) for brep in breps]
+    scriptcontext.doc.Views.Redraw()
     return rc
