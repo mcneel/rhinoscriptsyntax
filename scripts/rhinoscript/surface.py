@@ -1335,17 +1335,16 @@ def SplitBrep(brep_id, cutter_id, delete_input=False):
 
 
 def SurfaceArea(object_id):
-    """Calculates the area of a surface or polysurface object. The results are
+    """Calculate the area of a surface or polysurface object. The results are
     based on the current drawing units
     Parameters:
       object_id = the surface's identifier
     Returns:
-      list of area inforation on success (area, absolute error bound)
+      list of area information on success (area, absolute error bound)
       None on error
     """
     amp = __GetMassProperties(object_id, True)
-    if amp is None: return scriptcontext.errorhandler()
-    return amp.Area, amp.AreaError
+    if amp: return amp.Area, amp.AreaError
 
 
 def SurfaceAreaCentroid(object_id):
@@ -1778,19 +1777,39 @@ def SurfaceWeights(object_id):
     return rc
 
 
-def UnrollSurface(surface_id, explode=False):
+def UnrollSurface(surface_id, explode=False, following_geometry=None):
     """Flattens a developable surface or polysurface
     Parameters:
       surface_id = the surface's identifier
       explode[opt] = If True, the resulting surfaces ar not joined
+      following_geometry[opt] = List of curves, dots, and points which
+        should be unrolled with the surface
     Returns:
       List of unrolled surface ids
+      if following_geometry is not Nonw, a tuple where item 1
+        is the list of unrolled surface ids and item 2 is the
+        list of unrolled following geometry
     """
     brep = rhutil.coercebrep(surface_id, True)
     unroll = Rhino.Geometry.Unroller(brep)
     unroll.ExplodeOutput = explode
+    if following_geometry:
+        for id in following_geometry:
+            geom = rhutil.coercegeometry(id)
+            unroll.AddFollowingGeometry(geom)
     breps, curves, points, dots = unroll.PerformUnroll()
     if not breps: return None
     rc = [scriptcontext.doc.Objects.AddBrep(brep) for brep in breps]
+    new_following = []
+    for curve in curves:
+        id = scriptcontext.doc.Objects.AddCurve(curve)
+        new_following.append(id)
+    for point in points:
+        id = scriptcontext.doc.Objects.AddPoint(point)
+        new_following.append(id)
+    for dot in dots:
+        id = scriptcontext.doc.Objects.AddTextDot(dot)
+        new_following.append(id)
     scriptcontext.doc.Views.Redraw()
+    if following_geometry: return rc, new_following
     return rc

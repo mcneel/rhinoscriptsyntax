@@ -111,8 +111,6 @@ def ExplodeHatch(hatch_id, delete=False):
       None on error
     """
     rhobj = rhutil.coercerhinoobject(hatch_id, True, True)
-    if not isinstance(rhobj, Rhino.DocObjects.HatchObject):
-        return scriptcontext.errorhandler()
     pieces = rhobj.HatchGeometry.Explode()
     if not pieces: return scriptcontext.errorhandler()
     attr = rhobj.Attributes
@@ -124,6 +122,7 @@ def ExplodeHatch(hatch_id, delete=False):
         elif isinstance(piece, Rhino.Geometry.Brep):
             id = scriptcontext.doc.Objects.AddBrep(piece, attr)
         if id: rc.append(id)
+    if delete: scriptcontext.doc.Objects.Delete(rhobj)
     return rc
 
 
@@ -177,8 +176,7 @@ def HatchPatternFillType(hatch_pattern):
     """
     index = scriptcontext.doc.HatchPatterns.Find(hatch_pattern, True)
     if index<0: return scriptcontext.errorhandler()
-    rc = scriptcontext.doc.HatchPatterns[index].FillType
-    return int(rc)
+    return int(scriptcontext.doc.HatchPatterns[index].FillType)
 
 
 def HatchPatternNames():

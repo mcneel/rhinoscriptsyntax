@@ -219,6 +219,23 @@ def BoundingBox(objects, view_or_plane=None, in_world_coords=True):
     return corners
 
 
+def ExplodeText(text_id, delete=False):
+    """Creates outline curves for a given text entity
+    Parameters:
+      text_id: identifier of Text object to explode
+      delete[opt]: delete the text object after the curves have been created
+    Returns:
+      list of outline curves
+    """
+    rhobj = rhutil.coercerhinoobject(text_id, True, True)
+    curves = rhobj.Geometry.Explode()
+    attr = rhobj.Attributes
+    rc = [scriptcontext.doc.Objects.AddCurve(curve,attr) for curve in curves]
+    if delete: scriptcontext.doc.Objects.Delete(rhobj,True)
+    scriptcontext.doc.Views.Redraw()
+    return rc
+
+
 def IsClippingPlane(object_id):
     """Verifies that an object is a clipping plane object
     Parameters:
