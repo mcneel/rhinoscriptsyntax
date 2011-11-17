@@ -2059,6 +2059,25 @@ def MakeCurveNonPeriodic(curve_id, delete_input=False):
     return rc
 
 
+def MeanCurve(curve0, curve1, tolerance=None):
+    """Creates an average curve from two curves
+    Parameters:
+      curve0, curve1 = identifiers of two curves
+      tolerance[opt] = angle tolerance used to match kinks between curves
+    Returns:
+      id of the new or modified curve if successful
+      None on error
+    """
+    curve0 = rhutil.coercecurve(curve0, -1, True)
+    curve1 = rhutil.coercecurve(curve1, -1, True)
+    if tolerance is None: tolerance=Rhino.RhinoMath.UnsetValue
+    crv = Rhino.Geometry.Curve.CreateMeanCurve(curve0,curve1,tolerance)
+    if crv:
+        rc = scriptcontext.doc.Objects.AddCurve(crv)
+        scriptcontext.doc.Views.Redraw()
+        return rc
+
+
 def MeshPolyline(polyline_id):
     """Creates a polygon mesh object based on a closed polyline curve object.
     The newly created mesh object is added to the document
@@ -2070,7 +2089,7 @@ def MeshPolyline(polyline_id):
     """
     curve = rhutil.coercecurve(polyline_id, -1, True)
     mesh = Rhino.Geometry.Mesh.CreateFromPlanarBoundary(curve)
-    if mesh is None: return scriptcontext.errorhandler()
+    if not mesh: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddMesh(mesh)
     scriptcontext.doc.Views.Redraw()
     return rc

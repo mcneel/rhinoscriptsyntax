@@ -339,7 +339,7 @@ def LayerPrintWidth(layer, width=None):
     return rc
 
 
-def LayerVisible(layer, visible=False, force_visible=False):
+def LayerVisible(layer, visible=None, force_visible=False):
     """Returns or changes the visible property of a layer.
     Parameters:
       layer = name of existing layer
