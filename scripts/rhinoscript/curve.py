@@ -854,7 +854,7 @@ def CurveCurvature(curve_id, parameter):
     return point, tangent, center, radius, cv
 
 
-def CurveCurveIntersection(curveA, curveB, tolerance=-1):
+def CurveCurveIntersection(curveA, curveB=None, tolerance=-1):
     """Calculates the intersection of two curve objects.
     Parameters:
       curveA = The identifier of the first curve object.
@@ -893,10 +893,13 @@ def CurveCurveIntersection(curveA, curveB, tolerance=-1):
                          second curve parameter range.
     """
     curveA = rhutil.coercecurve(curveA, -1, True)
-    curveB = rhutil.coercecurve(curveB, -1, True)
+    if curveB: curveB = rhutil.coercecurve(curveB, -1, True)
     if tolerance is None or tolerance<0.0:
         tolerance = scriptcontext.doc.ModelAbsoluteTolerance
-    rc = Rhino.Geometry.Intersect.Intersection.CurveCurve(curveA, curveB, tolerance, 0.0)
+    if curveB:
+        rc = Rhino.Geometry.Intersect.Intersection.CurveCurve(curveA, curveB, tolerance, 0.0)
+    else:
+        rc = Rhino.Geometry.Intersect.Intersection.CurveSelf(curveA, tolerance)
     events = []
     if rc:
         for i in xrange(rc.Count):
