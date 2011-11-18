@@ -186,24 +186,14 @@ def ExplodeBlockInstance(object_id):
     Parameters:
       object_id = The identifier of an existing block insertion object  
     Returns:
-      list of identifiers for the newly exploded objects on success
+      identifiers for the newly exploded objects on success
     """
     instance = __InstanceObjectFromId(object_id, True)
-    subobjects = instance.GetSubObjects()
-    persistSelect = (instance.IsSelected(False)>=2)
-    instance.Select(False, True)
-    rc = []
-    for item in subobjects:
-        id = scriptcontext.doc.Objects.AddObject(item)
-        if id!=System.Guid.Empty:
-            rc.append(id)
-            if persistSelect:
-                rhobj = scriptcontext.doc.Objects.Find(id)
-                rhobj.Select(True, True)
+    rc = scriptcontext.doc.Objects.AddExplodedInstancePieces(instance)
     if rc:
-        scriptcontext.doc.Objects.Delete(instance)
+        scriptcontext.doc.Objects.Delete(instance, True)
         scriptcontext.doc.Views.Redraw()
-    return rc
+        return rc
 
 
 def InsertBlock( block_name, insertion_point, scale=(1,1,1), angle_degrees=0, rotation_normal=(0,0,1) ):
