@@ -509,7 +509,7 @@ def ObjectLayer(object_id, layer=None):
         layer = __getlayer(layer, True)
         index = layer.LayerIndex
         for id in object_id:
-            obj = rhutil.coercerhinoobject(object_id, True, True)
+            obj = rhutil.coercerhinoobject(id, True, True)
             obj.Attributes.LayerIndex = index
             obj.CommitChanges()
         scriptcontext.doc.Views.Redraw()
