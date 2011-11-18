@@ -117,7 +117,7 @@ def LineSphereIntersection(line, sphere_center, sphere_radius):
       list of intersection points if successful
     """
     line = rhutil.coerceline(line, True)
-    sphere_plane = rhutil.coerceplane(sphere_plane, True)
+    sphere_center = rhutil.coerce3dpoint(sphere_center, True)
     sphere = Rhino.Geometry.Sphere(sphere_center, sphere_radius)
     rc, pt1, pt2 = Rhino.Geometry.Intersect.Intersection.LineSphere(line, sphere)
     if rc==Rhino.Geometry.Intersect.LineSphereIntersection.None: return []
