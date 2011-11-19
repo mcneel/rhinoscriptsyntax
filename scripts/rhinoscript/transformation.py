@@ -282,7 +282,7 @@ def XformTranslation(vector):
     return Rhino.Geometry.Transform.Translation(vector)
 
 
-def XformWorldtoCplane(point, plane):
+def XformWorldToCPlane(point, plane):
     """Transforms a point from world coordinates to construction plane coordinates.
     Parameters:
       point = A 3D point in world coordinates.
