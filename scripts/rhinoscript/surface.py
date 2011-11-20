@@ -15,7 +15,7 @@ def AddBox(corners):
     """
     box = rhutil.coerce3dpointlist(corners, True)
     brep = Rhino.Geometry.Brep.CreateFromBox(box)
-    if brep is None: raise ValueError("unable to create brep from box")
+    if not brep: raise ValueError("unable to create brep from box")
     rc = scriptcontext.doc.Objects.AddBrep(brep)
     if rc==System.Guid.Empty: raise Exception("unable to add brep to document")
     scriptcontext.doc.Views.Redraw()
@@ -1716,8 +1716,7 @@ def SurfaceTorus(surface_id):
     """
     surface = rhutil.coercesurface(surface_id, True)
     rc, torus = surface.TryGetTorus()
-    if not rc: return scriptcontext.errorhandler()
-    return torus.Plane, torus.MajorRadius, torus.MinorRadius
+    if rc: return torus.Plane, torus.MajorRadius, torus.MinorRadius
 
 
 def SurfaceVolume(object_id):
@@ -1774,6 +1773,38 @@ def SurfaceWeights(object_id):
         for v in range(ns.Points.CountV):
             pt = ns.Points.GetControlPoint(u,v)
             rc.append(pt.Weight)
+    return rc
+
+
+def TrimBrep(object_id, cutter, tolerance=None):
+    """Trims a surface using an oriented cutter
+    Parameters:
+      object_id = surface or polysurface identifier
+      cutter = surface, polysurface, or plane performing the trim
+      tolerance[opt] = trimming tolerance. If omitted, the document's absolute
+        tolerance is used
+    Returns:
+      identifiers of retained components on success
+    """
+    brep = rhutil.coercebrep(object_id, True)
+    brep_cutter = rhutil.coercebrep(cutter, False)
+    if brep_cutter: cutter = brep_cutter
+    else: cutter = rhutil.coerceplane(cutter, True)
+    if tolerance is None: tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+    breps = brep.Trim(cutter, tolerance)
+    rhobj = rhutil.coercerhinoobject(object_id)
+    if rhobj:
+        attr = rhobj.Attributes
+        rc = []
+        for i in range(len(breps)):
+            if i==0:
+                scriptcontext.doc.Objects.Replace(rhobj.Id, breps[i])
+                rc.append(rhobj.Id)
+            else:
+                rc.append(scriptcontext.doc.Objects.AddBrep(breps[i], attr))
+    else:
+        rc = [scriptcontext.doc.Objects.AddBrep(brep) for brep in breps]
+    scriptcontext.doc.Views.Redraw()
     return rc
 
 
