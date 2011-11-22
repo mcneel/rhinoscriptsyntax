@@ -57,14 +57,11 @@ def PointAdd(point1, point2):
       point1, point2 = the points to add
     Returns:
       the resulting 3D point if successful
-      None on error
     """
     point1 = rhutil.coerce3dpoint(point1, True)
     point2 = rhutil.coerce3dpoint(point2, True)
     return point1+point2
 
-
-#[skipping PointArrayBoundingBox]
 
 def PointArrayClosestPoint(points, test_point):
     """Finds the point in a list of 3D points that is closest to a test point
@@ -77,8 +74,7 @@ def PointArrayClosestPoint(points, test_point):
     points = rhutil.coerce3dpointlist(points, True)
     test_point = rhutil.coerce3dpoint(test_point, True)
     index = Rhino.Collections.Point3dList.ClosestIndexInList(points, test_point)
-    if index<0: return scriptcontext.errorhandler()
-    return index
+    if index>=0: return index
 
 
 def PointArrayTransform(points, xform):
@@ -91,8 +87,7 @@ def PointArrayTransform(points, xform):
     """
     points = rhutil.coerce3dpointlist(points, True)
     xform = rhutil.coercexform(xform, True)
-    rc = [xform*point for point in points]
-    return rc
+    return [xform*point for point in points]
 
 
 def PointClosestObject(point, object_ids):
@@ -145,8 +140,7 @@ def PointClosestObject(point, object_ids):
             if closest is None or distance<closest[0]:
                 closest = distance, id, mesh_closest
             continue
-    if not closest: return scriptcontext.errorhandler()
-    return closest[1], closest[2]
+    if closest: return closest[1], closest[2]
 
 
 def PointCompare(point1, point2, tolerance=None):
@@ -265,8 +259,7 @@ def ProjectPointToSurface(points, surface_ids, direction):
     if id: surface_ids = [id]
     breps = [rhutil.coercebrep(id, True) for id in surface_ids]
     tolerance = scriptcontext.doc.ModelAbsoluteTolerance
-    rc = Rhino.Geometry.Intersect.Intersection.ProjectPointsToBreps(breps, pts, direction, tolerance)
-    return rc
+    return Rhino.Geometry.Intersect.Intersection.ProjectPointsToBreps(breps, pts, direction, tolerance)
 
 
 def PullPoints(object_id, points):
@@ -422,8 +415,7 @@ def VectorRotate(vector, angle_degrees, axis):
     axis = rhutil.coerce3dvector(axis, True)
     angle_radians = Rhino.RhinoMath.ToRadians(angle_degrees)
     rc = Rhino.Geometry.Vector3d(vector.X, vector.Y, vector.Z)
-    if not rc.Rotate(angle_radians, axis): return scriptcontext.errorhandler()
-    return rc
+    if rc.Rotate(angle_radians, axis): return rc
 
 
 def VectorScale(vector, scale):
@@ -444,7 +436,7 @@ def VectorSubtract(vector1, vector2):
       vector1 = the vector to subtract from
       vector2 = the vector to subtract
     Returns:
-      the resulting 3D vector if successful
+      the resulting 3D vector
     """
     vector1 = rhutil.coerce3dvector(vector1, True)
     vector2 = rhutil.coerce3dvector(vector2, True)
@@ -474,5 +466,4 @@ def VectorUnitize(vector):
     """
     vector = rhutil.coerce3dvector(vector, True)
     rc = Rhino.Geometry.Vector3d(vector.X, vector.Y, vector.Z)
-    if not rc.Unitize(): return scriptcontext.errorhandler()
-    return rc
+    if rc.Unitize(): return rc

@@ -33,7 +33,6 @@ def IntersectPlanes(plane1, plane2, plane3):
     plane3 = rhutil.coerceplane(plane3, True)
     rc, point = Rhino.Geometry.Intersect.Intersection.PlanePlanePlane(plane1, plane2, plane3)
     if rc: return point
-    return scriptcontext.errorhandler()
 
 
 def MovePlane(plane, origin):
@@ -70,11 +69,9 @@ def PlaneClosestPoint(plane, point, return_point=True):
     point = rhutil.coerce3dpoint(point, True)
     if return_point:
         return plane.ClosestPoint(point)
-        if rc.IsValid: return rc
     else:
         rc, s, t = plane.ClosestParameter(point)
         if rc: return s, t
-    return scriptcontext.errorhandler()
 
 
 def PlaneEquation(plane):
@@ -97,7 +94,6 @@ def PlaneFitFromPoints(points):
     points = rhutil.coerce3dpointlist(points, True)
     rc, plane = Rhino.Geometry.Plane.FitPlaneToPoints(points)
     if rc==Rhino.Geometry.PlaneFitResult.Success: return plane
-    return scriptcontext.errorhandler()
 
 
 def PlaneFromFrame(origin, x_axis, y_axis):
@@ -111,7 +107,6 @@ def PlaneFromFrame(origin, x_axis, y_axis):
                have to be perpendicular to x_axis.
     Returns:
       The plane if successful. 
-      None if not successful
     """
     origin = rhutil.coerce3dpoint(origin, True)
     x_axis = rhutil.coerce3dvector(x_axis, True)
@@ -127,18 +122,15 @@ def PlaneFromNormal(origin, normal, xaxis=None):
       xaxis[opt] = optional vector defining the plane's x-axis
     Returns:
       The plane if successful.
-      None if not successful, or on error.  
     """
     origin = rhutil.coerce3dpoint(origin, True)
     normal = rhutil.coerce3dvector(normal, True)
     rc = Rhino.Geometry.Plane(origin, normal)
     if xaxis:
-        xaxis = rhutil.coerce3dpoint(xaxis, True)
-        projected_start = rc.ClosestPoint(Rhino.Geometry.Point3d(0,0,0))
-        projected_end = rc.ClosestPoint(xaxis)
-        xaxis = projected_end - projected_start
-        if xaxis.IsValid and not xaxis.IsParallelTo(rc.YAxis):
-            rc = Rhino.Geometry.Plane(origin, xaxis, rc.YAxis)
+        xaxis = rhutil.coerce3dvector(xaxis, True)
+        xaxis.Unitize()
+        yaxis = Rhino.Geometry.Vector3d.CrossProduct(rc.Normal, xaxis)
+        rc = Rhino.Geometry.Plane(origin, xaxis, yaxis)
     return rc
 
 
@@ -153,7 +145,6 @@ def PlaneFromPoints(origin, x, y):
     y = rhutil.coerce3dpoint(y, True)
     plane = Rhino.Geometry.Plane(origin, x, y)
     if plane.IsValid: return plane
-    return scriptcontext.errorhandler()
 
 
 def PlanePlaneIntersection(plane1, plane2):
@@ -168,7 +159,6 @@ def PlanePlaneIntersection(plane1, plane2):
     plane2 = rhutil.coerceplane(plane2, True)
     rc, line = Rhino.Geometry.Intersect.Intersection.PlanePlane(plane1, plane2)
     if rc: return line.From, line.To
-    return scriptcontext.errorhandler()
 
 
 def PlaneSphereIntersection(plane, sphere_plane, sphere_radius):
@@ -190,38 +180,34 @@ def PlaneSphereIntersection(plane, sphere_plane, sphere_radius):
         return 0, circle.Center
     if rc==Rhino.Geometry.Intersect.PlaneSphereIntersection.Circle:
         return 1, circle.Plane, circle.Radius
-    return scriptcontext.errorhandler()
 
 
 def PlaneTransform(plane, xform):
     """Transforms a plane
     Parameters:
-      plane = OnPlane or On3dmConstructionPlane
-      xform = 
+      plane = Plane to transform
+      xform = Transformation to apply
     """
     plane = rhutil.coerceplane(plane, True)
     xform = rhutil.coercexform(xform, True)
     rc = Rhino.Geometry.Plane(plane)
     if rc.Transform(xform): return rc
-    return scriptcontext.errorhandler()
 
 
 def RotatePlane(plane, angle_degrees, axis):
     """Rotates a plane
     Parameters:
-      plane = OnPlane or On3dmConstructionPlane
+      plane = Plane to rotate
       angle_degrees = rotation angle in degrees
-      axis = On3dVector or list of three numbers
+      axis = Vector3d or list of three numbers
     Returns:
       rotated plane on success
-      None on error
     """
     plane = rhutil.coerceplane(plane, True)
     axis = rhutil.coerce3dvector(axis, True)
     angle_radians = math.radians(angle_degrees)
     rc = Rhino.Geometry.Plane(plane)
     if rc.Rotate(angle_radians, axis): return rc
-    return scriptcontext.errorhandler()
 
 
 def WorldXYPlane():
