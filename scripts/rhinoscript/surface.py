@@ -384,12 +384,11 @@ def AddSrfControlPtGrid(count, points, degree=(3,3)):
     """
     points = rhutil.coerce3dpointlist(points, True)
     surf = Rhino.Geometry.NurbsSurface.CreateFromPoints(points, count[0], count[1], degree[0], degree[1])
-    if surf is None: return scritpcontext.errorhandler()
+    if not surf: return scriptcontext.errorhandler()
     id = scriptcontext.doc.Objects.AddSurface(surf)
     if id!=System.Guid.Empty:
         scriptcontext.doc.Views.Redraw()
         return id
-    return scriptcontext.errorhandler()
 
 
 def AddSrfPt(points):
@@ -411,6 +410,26 @@ def AddSrfPt(points):
     if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
+
+
+def AddSrfPtGrid(count, points, degree=(3,3), closed=(False,False)):
+    """Creates a surface from a grid of points
+    Parameters:
+      count = tuple of two numbers defining number of points in the u,v directions
+      points = list of 3D points
+      degree[opt] = two numbers defining degree of the surface in the u,v directions
+      closed[opt] = two booleans defining if the surface is closed in the u,v directions
+    Returns:
+      The identifier of the new object if successful.
+      None if not successful, or on error.
+    """
+    points = rhutil.coerce3dpointlist(points, True)
+    surf = Rhino.Geometry.NurbsSurface.CreateThroughPoints(points, count[0], count[1], degree[0], degree[1], closed[0], closed[1])
+    if not surf: return scriptcontext.errorhandler()
+    id = scriptcontext.doc.Objects.AddSurface(surf)
+    if id!=System.Guid.Empty:
+        scriptcontext.doc.Views.Redraw()
+        return id
 
 
 def AddTorus(base, major_radius, minor_radius, direction=None):
