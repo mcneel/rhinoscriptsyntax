@@ -269,6 +269,7 @@ def AddInterpCurve(points, degree=3, knotstyle=0, start_tangent=None, end_tangen
     start_tangent = rhutil.coerce3dvector(start_tangent, True)
     if not end_tangent: end_tangent = Rhino.Geometry.Vector3d.Unset
     end_tangent = rhutil.coerce3dvector(end_tangent, True)
+    knotstyle = System.Enum.ToObject(Rhino.Geometry.CurveKnotStyle, knotstyle)
     curve = Rhino.Geometry.Curve.CreateInterpolatedCurve(points, degree, knotstyle, start_tangent, end_tangent)
     if not curve: raise Exception("unable to CreateInterpolatedCurve")
     rc = scriptcontext.doc.Objects.AddCurve(curve)
@@ -2180,8 +2181,8 @@ def PlanarClosedCurveContainment(curve_a, curve_b, plane=None, tolerance=None):
         plane = rhutil.coerceplane(plane)
     else:
         plane = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
-    rc = Rhino.Geometry.Curve.PlanarClosedCurveContainmentTest(curve_a, curve_b, plane, tolerance)
-    return rc
+    rc = Rhino.Geometry.Curve.PlanarClosedCurveRelationship(curve_a, curve_b, plane, tolerance)
+    return int(rc)
 
 
 def PointInPlanarClosedCurve(point, curve, plane=None, tolerance=None):
