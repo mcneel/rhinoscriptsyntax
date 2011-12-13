@@ -584,7 +584,7 @@ def SaveFileName(title=None, filter=None, folder=None, filename=None, extension=
     return None
 
 
-def StringBox(default_string=None, message=None, title=None):
+def StringBox(message=None, default_value=None, title=None):
     "Displays a dialog box prompting the user to enter a string value."
-    rc, text = Rhino.UI.Dialogs.ShowEditBox(title, message, default_string, False)
+    rc, text = Rhino.UI.Dialogs.ShowEditBox(title, message, default_value, False)
     return text
