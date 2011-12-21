@@ -74,6 +74,31 @@ def PlaneClosestPoint(plane, point, return_point=True):
         if rc: return s, t
 
 
+def PlaneCurveIntersection(plane, curve, tolerance=None):
+    "Intersect an infinite plane and a curve object"
+    plane = rhutil.coerceplane(plane, True)
+    curve = rhutil.coercecurve(curve, True)
+    if tolerance is None: tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+    intersections = Rhino.Geometry.Intersect.Intersection.CurvePlane(curve, plane, tolerance)
+    if intersections:
+        rc = []
+        for intersection in intersections:
+            a = 1
+            if intersection.IsOverlap: a = 2
+            b = intersection.PointA
+            c = intersection.PointA2
+            d = intersection.PointB
+            e = intersection.PointB2
+            f = intersection.ParameterA
+            g = intersection.ParameterB
+            h = intersection.OverlapA[0]
+            i = intersection.OverlapA[1]
+            j = intersection.OverlapB[0]
+            k = intersection.OverlapB[1]
+            rc.append( (a,b,c,d,e,f,g,h,i,j,k) )
+    return rc
+
+
 def PlaneEquation(plane):
     """Returns the equation of a plane as a tuple of four numbers. The standard
     equation of a plane with a non-zero vector is Ax+By+Cz+D=0
