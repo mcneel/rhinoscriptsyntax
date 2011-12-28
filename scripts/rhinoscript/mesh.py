@@ -2,7 +2,7 @@ import scriptcontext
 import utility as rhutil
 import Rhino
 import System.Guid, System.Array, System.Drawing.Color
-
+from view import __viewhelper
 
 def AddMesh(vertices, face_vertices, vertex_normals=None, texture_coordinates=None, vertex_colors=None):
     """Adds a mesh object to the document
@@ -294,6 +294,7 @@ def MeshBooleanIntersection(input0, input1, delete_input=True):
     scriptcontext.doc.Views.Redraw()
     return rc
 
+
 def MeshBooleanSplit(input0, input1, delete_input=True):
     """Performs a boolean split operation on two sets of input meshes
     Parameters:
@@ -549,6 +550,29 @@ def MeshOffset(mesh_id, distance):
     if offsetmesh is None: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddMesh(offsetmesh)
     if rc==System.Guid.Empty: raise Exception("unable to add mesh to document")
+    scriptcontext.doc.Views.Redraw()
+    return rc
+
+
+def MeshOutline(object_ids, view=None):
+    """Creates polyline curve outlines of mesh objects
+    Parameters:
+      objects_ids = identifiers of meshes to outline
+      view(opt) = view to use for outline direction
+    Returns:
+      list of polyline curve id on success
+    """
+    viewport = __viewhelper(view).MainViewport
+    meshes = []
+    mesh = rhutil.coercemesh(object_ids, False)
+    if mesh: meshes.append(mesh)
+    else: meshes = [rhutil.coercemesh(id,True) for id in object_ids]
+    rc = []
+    for mesh in meshes:
+        polylines = mesh.GetOutlines(viewport)
+        for polyline in polylines:
+            id = scriptcontext.doc.Objects.AddPolyline(polyline)
+            rc.append(id)
     scriptcontext.doc.Views.Redraw()
     return rc
 

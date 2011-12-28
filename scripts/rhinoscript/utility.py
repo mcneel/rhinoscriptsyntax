@@ -557,11 +557,12 @@ def coercemesh(object_id, raise_if_missing=False):
     "attempt to get mesh geometry from the document with a given id"
     if type(object_id) is Rhino.DocObjects.ObjRef: return object_id.Mesh()
     if isinstance(object_id, Rhino.Geometry.Mesh): return object_id
-    object_id = coerceguid(object_id, True)
-    meshObj = scriptcontext.doc.Objects.Find(object_id)
-    if meshObj:
-        mesh = meshObj.Geometry
-        if isinstance(mesh, Rhino.Geometry.Mesh): return mesh
+    object_id = coerceguid(object_id, raise_if_missing)
+    if object_id: 
+        meshObj = scriptcontext.doc.Objects.Find(object_id)
+        if meshObj:
+            mesh = meshObj.Geometry
+            if isinstance(mesh, Rhino.Geometry.Mesh): return mesh
     if raise_if_missing: raise ValueError("unable to convert %s into Mesh geometry"%object_id)
 
 
