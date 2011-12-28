@@ -2160,7 +2160,7 @@ def OffsetCurveOnSurface(curve_id, surface_id, distance_or_parameter):
 def PlanarClosedCurveContainment(curve_a, curve_b, plane=None, tolerance=None):
     """Determines the relationship between the regions bounded by two coplanar
     simple closed curves
-    Paramters:
+    Parameters:
       curve_a, curve_b = identifiers of two planar, closed curves
       plane[opt] = test plane. If omitted, the currently active construction
         plane is used
@@ -2183,6 +2183,27 @@ def PlanarClosedCurveContainment(curve_a, curve_b, plane=None, tolerance=None):
         plane = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
     rc = Rhino.Geometry.Curve.PlanarClosedCurveRelationship(curve_a, curve_b, plane, tolerance)
     return int(rc)
+
+
+def PlanarCurveCollision(curve_a, curve_b, plane=None, tolerance=None):
+    """Determines if two coplanar curves intersect
+    Parameters:
+      curve_a, curve_b = identifiers of two planar curves
+      plane[opt] = test plane. If omitted, the currently active construction
+        plane is used
+      tolerance[opt] = if omitted, the document absolute tolerance is used
+    Returns:
+      True if the curves intersect; otherwise False
+    """
+    curve_a = rhutil.coercecurve(curve_a, -1, True)
+    curve_b = rhutil.coercecurve(curve_b, -1, True)
+    if tolerance is None or tolerance<=0:
+        tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+    if plane:
+        plane = rhutil.coerceplane(plane)
+    else:
+        plane = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
+    return Rhino.Geometry.Curve.PlanarCurveCollision(curve_a, curve_b, plane, tolerance)
 
 
 def PointInPlanarClosedCurve(point, curve, plane=None, tolerance=None):

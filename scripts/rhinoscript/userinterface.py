@@ -141,8 +141,8 @@ def GetColor(color=[0,0,0]):
     """
     color = rhutil.coercecolor(color)
     if color is None: color = System.Drawing.Color.Black
-    rc, color = Rhino.Input.RhinoGet.GetColor("Select color", True, color)
-    if rc==Rhino.Commands.Result.Success: return color.R, color.G, color.B
+    rc, color = Rhino.UI.Dialogs.ShowColorDialog(color)
+    if rc: return color.R, color.G, color.B
     return scriptcontext.errorhandler()
 
 

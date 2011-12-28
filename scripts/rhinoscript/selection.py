@@ -548,6 +548,18 @@ def NextObject(object_id, select=False, include_lights=False, include_grips=Fals
     return None
 
 
+def NormalObjects(include_lights=False, include_grips=False):
+   """Returns identifiers of all normal objects in the document. Normal objects
+   are visible, can be snapped to, and are independent of selection state"""
+   iter = Rhino.DocObjects.ObjectEnumeratorSettings()
+   iter.NormalObjects = True
+   iter.LockedObjects = False
+   iter.IncludeLights = include_lights
+   iter.IncludeGrips = include_grips
+   rc = [obj.Id for obj in scriptcontext.doc.Objects.GetObjectList(iter)]
+   return rc
+
+
 def ObjectsByGroup(group_name, select=False):
     """Returns identifiers of all objects based on the objects' group name
     Parameters:
