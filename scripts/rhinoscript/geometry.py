@@ -447,7 +447,7 @@ def TextObjectPlane(object_id, plane=None):
     rc = annotation.Plane
     if plane:
         annotation.Plane = rhutil.coerceplane(plane, True)
-        id = rhutil.coerceid(object_id, True)
+        id = rhutil.coerceguid(object_id, True)
         scriptcontext.doc.Objects.Replace(id, annotation)
         scriptcontext.doc.Views.Redraw()
     return rc
