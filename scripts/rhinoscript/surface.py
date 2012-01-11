@@ -992,8 +992,10 @@ def IsPointInSurface(object_id, point):
     brep = None
     if type(obj)==Rhino.DocObjects.ExtrusionObject:
         brep = obj.ExtrusionGeometry.ToBrep(False)
-    if type(obj)==Rhino.DocObjects.BrepObject:
+    elif type(obj)==Rhino.DocObjects.BrepObject:
         brep = obj.BrepGeometry
+    elif hasattr(obj, "Geometry"):
+        brep = obj.Geometry
     return brep.IsPointInside(point, tolerance, False)
 
 
