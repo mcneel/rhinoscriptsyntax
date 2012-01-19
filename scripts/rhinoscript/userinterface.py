@@ -316,6 +316,7 @@ def GetPoints(draw_lines=False, in_plane=False, message1=None, message2=None, ma
         while True:
             if max_points and current_point>=max_points: break
             if draw_lines: gp.DrawLineFromPoint(prevPoint, True)
+            gp.SetBasePoint(prevPoint, True)
             current_point += 1
             getres = gp.Get()
             if getres==Rhino.Input.GetResult.Cancel: break
@@ -513,6 +514,32 @@ def OpenFileName(title=None, filter=None, folder=None, filename=None, extension=
     if filename: fd.FileName = filename
     if extension: fd.DefaultExt = extension
     if fd.ShowDialog()==System.Windows.Forms.DialogResult.OK: return fd.FileName
+
+
+def OpenFileNames(title=None, filter=None, folder=None, filename=None, extension=None):
+    """Displays file open dialog box allowing the user to select one or more file names.
+    Note, this function does not open the file.
+    Parameters:
+      title[opt] = A dialog box title.
+      filter[opt] = A filter string. The filter must be in the following form:
+        "Description1|Filter1|Description2|Filter2||", where "||" terminates filter string.
+        If omitted, the filter (*.*) is used.
+      folder[opt] = A default folder.
+      filename[opt] = a default file name
+      extension[opt] = a default file extension
+    Returns:
+      list of selected file names
+    """
+    fd = Rhino.UI.OpenFileDialog()
+    if title: fd.Title = title
+    if filter: fd.Filter = filter
+    if folder: fd.InitialDirectory = folder
+    if filename: fd.FileName = filename
+    if extension: fd.DefaultExt = extension
+    fd.MultiSelect = True
+    rc = []
+    if fd.ShowDialog()==System.Windows.Forms.DialogResult.OK: rc = fd.FileNames
+    return rc
 
 
 def PopupMenu(items, modes=None, point=None, view=None):
