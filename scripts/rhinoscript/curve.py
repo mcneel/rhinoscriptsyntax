@@ -764,8 +764,9 @@ def CurveClosestObject(curve_id, object_ids):
     each other. Note, this function provides similar functionality to that of
     Rhino's ClosestPt command.
     Parameters:
-      curve_id = identifier of a closed planar curve object
-      object_ids = list of identifiers of one or more closed, planar curves
+      curve_id = identifier of the curve object to test
+      object_ids = list of identifiers of point cloud, curve, surface, or
+        polysurface to test against
     Returns:
       Tuple containing the results of the closest point calculation.
       The elements are as follows:
