@@ -182,6 +182,31 @@ def AddNurbsSurface(point_count, points, knots_u, knots_v, degree, weights=None)
     return id
 
 
+def AddPipe(curve_id, parameters, radii, blend_type=0, cap=0, fit=False):
+    """Creates a single walled surface with a circular profile around a curve
+    Parameters:
+      curve_id = identifier of rail curve
+      parameters, radii = list of radius values at normalized curve parameters
+      blend_type = 0(local) or 1(global)
+      cap = 0(none), 1(flat), 2(round)
+      fit = attempt to fit a single surface
+    Returns:
+      List of identifiers of new objects created
+    """
+    rail = rhutil.coercecurve(curve_id, True)
+    abs_tol = scriptcontext.doc.ModelAbsoluteTolerance
+    ang_tol = scriptcontext.doc.ModelAngleToleranceRadians
+    if type(parameters) is int or type(parameters) is float: parameters = [parameters]
+    if type(radii) is int or type(radii) is float: radii = [radii]
+    parameters = map(float,parameters)
+    radii = map(float,radii)
+    cap = System.Enum.ToObject(Rhino.Geometry.PipeCapMode, cap)
+    breps = Rhino.Geometry.Brep.CreatePipe(rail, parameters, radii, blend_type==0, cap, fit, abs_tol, ang_tol)
+    rc = [scriptcontext.doc.Objects.AddBrep(brep) for brep in breps]
+    scriptcontext.doc.Views.Redraw()
+    return rc
+
+
 def AddPlanarSrf(object_ids):
     """Creates one or more surfaces from planar curves
     Parameters:
@@ -1472,6 +1497,22 @@ def SurfaceCurvature(surface_id, parameter):
     return c.Point, c.Normal, c.Kappa(0), c.Direction(0), c.Kappa(1), c.Direction(1), c.Gaussian, c.Mean
 
 
+def SurfaceCylinder(surface_id):
+    """Returns the definition of a cylinder surface
+    Parameters:
+      surface_id = the surface's identifier
+    Returns:
+      tuple of the cylinder plane, height, radius on success
+      None on error
+    """
+    surface = rhutil.coercesurface(surface_id, True)
+    tol = scriptcontext.doc.ModelAbsoluteTolerance
+    rc, cylinder = surface.TryGetCylinder(tol)
+    if rc:
+        circle = cylinder.CircleAt(0)
+        return circle.Plane, cylinder.TotalHeight, circle.Radius
+
+
 def SurfaceDegree(surface_id, direction=2):
     """Returns the degree of a surface object in the specified direction
     Parameters:
@@ -1827,6 +1868,33 @@ def TrimBrep(object_id, cutter, tolerance=None):
         rc = [scriptcontext.doc.Objects.AddBrep(brep) for brep in breps]
     scriptcontext.doc.Views.Redraw()
     return rc
+
+
+def TrimSurface( surface_id, direction, interval, delete_input=False):
+    """Remove portions of the surface outside of the specified interval
+    Parameters:
+      surface_id = surface identifier
+      direction = 0 or 1 (U or V)
+      interval = interval of the surface to keep
+      delete_input [opt] = should the input surface be deleted
+    Returns:
+      new surface identifier on success
+    """
+    surface = rhutil.coercesurface(surface_id, True)
+    u = surface.Domain(0)
+    v = surface.Domain(1)
+    if direction==0:
+        u[0] = interval[0]
+        u[1] = interval[1]
+    else:
+        v[0] = interval[0]
+        v[1] = interval[1]
+    new_surface = surface.Trim(u,v)
+    if new_surface:
+        rc = scriptcontext.doc.Objects.AddSurface(new_surface)
+        if delete_input: scriptcontext.doc.Objects.Delete(rhutil.coerceguid(surface_id), True)
+        scriptcontext.doc.Views.Redraw()
+        return rc
 
 
 def UnrollSurface(surface_id, explode=False, following_geometry=None):

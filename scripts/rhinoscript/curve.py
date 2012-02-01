@@ -599,7 +599,8 @@ def CurveArea(curve_id):
         1        The absolute (+/-) error bound for the area.
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
-    mp = Rhino.Geometry.AreaMassProperties.Compute(curve)
+    tol = scriptcontext.doc.ModelAbsoluteTolerance
+    mp = Rhino.Geometry.AreaMassProperties.Compute(curve, tol)
     return mp.Area, mp.AreaError
 
 
@@ -617,7 +618,8 @@ def CurveAreaCentroid(curve_id):
                  centroid.
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
-    mp = Rhino.Geometry.AreaMassProperties.Compute(curve)
+    tol = scriptcontext.doc.ModelAbsoluteTolerance
+    mp = Rhino.Geometry.AreaMassProperties.Compute(curve, tol)
     return mp.Centroid, mp.CentroidError
 
 
