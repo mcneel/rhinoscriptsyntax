@@ -171,7 +171,7 @@ def RemoveObjectsFromGroup(object_ids, group_name):
     if not isinstance(group_name, str): group_name = str(group_name)
     index = scriptcontext.doc.Groups.Find(group_name, True)
     if index<0: return scriptcontext.errorhandler()
-    id = rhutil.coerceguid(objects_ids, False)
+    id = rhutil.coerceguid(object_ids, False)
     if id: object_ids = [id]
     objects_removed = 0
     for id in object_ids:
