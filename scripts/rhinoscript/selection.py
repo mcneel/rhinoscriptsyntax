@@ -25,14 +25,15 @@ class filter:
     phantom = 268435456
     clippingplane = 536870912
 
+
 def AllObjects(select=False, include_lights=False, include_grips=False):
-    """Returns the identifiers of all objects in the document.
+    """Returns identifiers of all objects in the document.
     Parameters:
       select[opt] = Select the objects
       include_lights[opt] = Include light objects
       include_grips[opt] = Include grips objects
     Returns:
-      A list of Guids identifying the objects
+      List of Guids identifying the objects
     """
     it = Rhino.DocObjects.ObjectEnumeratorSettings()
     it.IncludeLights = include_lights
@@ -50,7 +51,7 @@ def AllObjects(select=False, include_lights=False, include_grips=False):
 
 
 def FirstObject(select=False, include_lights=False, include_grips=False):
-    """Returns the identifier of the first object in the document. The first
+    """Returns identifier of the first object in the document. The first
     object is the last object created by the user.
     """
     it = Rhino.DocObjects.ObjectEnumeratorSettings()
@@ -455,8 +456,7 @@ def HiddenObjects(include_lights=False, include_grips=False):
     settings.IncludeLights = include_lights
     settings.IncludeGrips = include_grips
     items = scriptcontext.doc.Objects.GetObjectList(settings)
-    rc = [item.Id for item in items]
-    return rc
+    return [item.Id for item in items]
 
 
 def InvertSelectedObjects(include_lights=False, include_grips=False):
@@ -545,19 +545,34 @@ def NextObject(object_id, select=False, include_lights=False, include_grips=Fals
     for obj in rhobjs:
         if found and obj: return obj.Id
         if obj.Id == current_obj.Id: found = True
-    return None
 
 
 def NormalObjects(include_lights=False, include_grips=False):
-   """Returns identifiers of all normal objects in the document. Normal objects
-   are visible, can be snapped to, and are independent of selection state"""
-   iter = Rhino.DocObjects.ObjectEnumeratorSettings()
-   iter.NormalObjects = True
-   iter.LockedObjects = False
-   iter.IncludeLights = include_lights
-   iter.IncludeGrips = include_grips
-   rc = [obj.Id for obj in scriptcontext.doc.Objects.GetObjectList(iter)]
-   return rc
+    """Returns identifiers of all normal objects in the document. Normal objects
+    are visible, can be snapped to, and are independent of selection state"""
+    iter = Rhino.DocObjects.ObjectEnumeratorSettings()
+    iter.NormalObjects = True
+    iter.LockedObjects = False
+    iter.IncludeLights = include_lights
+    iter.IncludeGrips = include_grips
+    return [obj.Id for obj in scriptcontext.doc.Objects.GetObjectList(iter)]
+
+
+def ObjectsByColor(color, select=False, include_lights=False):
+    """Returns identifiers of all objects based on color
+    Parameters:
+      color = color to get objects by
+      select[opt] = select the objects
+      include_lights[opt] = include lights in the set
+    Returns:
+      list of identifiers
+    """
+    color = rhutil.coercecolor(color, True)
+    rhino_objects = scriptcontext.doc.Objects.FindByDrawColor(color, include_lights)
+    if select:
+        for obj in rhino_objects: obj.Select(True)
+        scriptcontext.doc.Views.Redraw()
+    return [obj.Id for obj in rhino_objects]
 
 
 def ObjectsByGroup(group_name, select=False):
@@ -613,8 +628,7 @@ def ObjectsByName(name, select=False, include_lights=False):
     settings.NameFilter = name
     objects = scriptcontext.doc.Objects.GetObjectList(settings)
     ids = [rhobj.Id for rhobj in objects]
-    if not ids: return []
-    if select:
+    if ids and select:
         objects = scriptcontext.doc.Objects.GetObjectList(settings)
         for rhobj in objects: rhobj.Select(True)
         scriptcontext.doc.Views.Redraw()
@@ -702,8 +716,7 @@ def SelectedObjects(include_lights=False, include_grips=False):
       list of Guids identifying the objects
     """
     selobjects = scriptcontext.doc.Objects.GetSelectedObjects(include_lights, include_grips)
-    rc = [obj.Id for obj in selobjects]
-    return rc
+    return [obj.Id for obj in selobjects]
 
 
 def UnselectAllObjects():

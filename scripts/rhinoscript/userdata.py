@@ -39,6 +39,16 @@ def GetDocumentData(section=None, entry=None):
     return scriptcontext.doc.Strings.GetValue(section, entry)
 
 
+def GetDocumentUserText(key=None):
+    """Returns user text that is stored in the document
+    Parameters:
+      key[opt] = key to use for retrieving user text. If empty, all keys are returned
+    """
+    if not key:
+        return [scriptcontext.doc.Strings.GetKey(i) for i in range(scriptcontext.doc.Strings.Count)]
+    return scriptcontext.doc.Strings.GetValue(key)
+
+
 def GetUserText(object_id, key=None, attached_to_geometry=False):
     """Returns user text that is stored on an object.
     Parameters:
@@ -95,6 +105,20 @@ def SetDocumentData(section, entry, value):
       The previous value
     """
     return scriptcontext.doc.Strings.SetString(section, entry, value)
+
+
+def SetDocumentUserText(key, value=None):
+    """Sets or removes user text stored in the document
+    Parameters:
+      key = key name to set
+      value[opt] = The string value to set. If omitted the key/value pair
+        specified by key will be deleted
+    Returns:
+      True or False indicating success
+    """
+    if value: scriptcontext.doc.Strings.SetString(key,value)
+    else: scriptcontext.doc.Strings.Delete(key)
+    return True
 
 
 def SetUserText(object_id, key, value=None, attach_to_geometry=False):
