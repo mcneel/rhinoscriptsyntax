@@ -694,7 +694,7 @@ def MeshVertices(object_id):
     return rc
 
 
-def MeshVolume(object_ids, True):
+def MeshVolume(object_ids):
     """
     Returns the approximate volume of one or more closed mesh objects
     Parameters:
