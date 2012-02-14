@@ -4,7 +4,7 @@ import utility as rhutil
 import math
 import System.Guid
 
-def __InstanceObjectFromId( id, raise_if_missing ):
+def __InstanceObjectFromId(id, raise_if_missing):
     rhobj = rhutil.coercerhinoobject(id, True, raise_if_missing)
     if isinstance(rhobj, Rhino.DocObjects.InstanceObject): return rhobj
     if raise_if_missing: raise ValueError("unable to find InstanceObject")
@@ -16,11 +16,7 @@ def BlockContainerCount(block_name):
     Parameters:
       block_name = the name of an existing block definition
     """
-    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
-    if idef is None: return 0
-    containers = idef.GetContainers()
-    if not containers: return 0
-    return len(containers)
+    return len(BlockContainers(block_name))
 
 
 def BlockContainers(block_name):
@@ -61,20 +57,19 @@ def BlockDescription(block_name, description=None):
     return rc
 
 
-def BlockInstanceCount(block_name,reference_level=0):
+def BlockInstanceCount(block_name,where_to_look=0):
     """Counts number of instances of the block in the document.
     Nested instances are not included in the count.
     Parameters:
       block_name = the name of an existing block definition
-      reference_level [opt] = int :     
+      where_to_look [opt] =
         0 = get top level references in active document.
         1 = get top level and nested references in active document.
         2 = check for references from other instance definitions
-      
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
-    refs = idef.GetReferences(reference_level)
+    refs = idef.GetReferences(where_to_look)
     return len(refs)
 
 
@@ -168,7 +163,6 @@ def BlockPath(block_name):
       block_name = name of an existing block definition
     Returns:
       path to the linked block on success
-      None on error
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
@@ -264,7 +258,7 @@ def IsBlockEmbedded(block_name):
     return (idef.UpdateType==ut.Embedded or idef.UpdateType==ut.LinkedAndEmbedded)
 
 
-def IsBlockInstance( object_id ):
+def IsBlockInstance(object_id):
     """Verifies an object is a block instance
     Parameters:
       object_id = The identifier of an existing block insertion object
@@ -274,7 +268,7 @@ def IsBlockInstance( object_id ):
     return  __InstanceObjectFromId(object_id, False) is not None
 
 
-def IsBlockInUse( block_name, where_to_look=0 ):
+def IsBlockInUse(block_name, where_to_look=0):
     """Verifies that a block definition is being used by an inserted instance
     Parameters:
       block_name = name of an existing block definition
