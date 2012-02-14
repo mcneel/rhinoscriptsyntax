@@ -61,15 +61,20 @@ def BlockDescription(block_name, description=None):
     return rc
 
 
-def BlockInstanceCount(block_name):
+def BlockInstanceCount(block_name,reference_level=0):
     """Counts number of instances of the block in the document.
     Nested instances are not included in the count.
     Parameters:
       block_name = the name of an existing block definition
+      reference_level [opt] = int :     
+        0 = get top level references in active document.
+        1 = get top level and nested references in active document.
+        2 = check for references from other instance definitions
+      
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
-    refs = idef.GetReferences()
+    refs = idef.GetReferences(reference_level)
     return len(refs)
 
 
