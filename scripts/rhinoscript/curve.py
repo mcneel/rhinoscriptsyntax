@@ -58,6 +58,28 @@ def AddArcPtTanPt(start, direction, end):
     return rc
 
 
+def AddBlendCurve(curves, parameters, reverses, continuities):
+    """Makes a curve blend between two curves
+    Parameters:
+      curves = two curves
+      parameters = two curve parameters defining the blend end points
+      reverses = two boolean values specifying to use the natural or opposite direction of the curve
+      continuities = two numbers specifying continuity at end points
+        0 = position, 1 = tangency, 2 = curvature
+    Returns:
+      identifier of new curve on success
+    """
+    crv0 = rhutil.coercecurve(curves[0], -1, True)
+    crv1 = rhutil.coercecurve(curves[1], -1, True)
+    c0 = System.Enum.ToObject(Rhino.Geometry.BlendContinuity, continuities[0])
+    c1 = System.Enum.ToObject(Rhino.Geometry.BlendContinuity, continuities[1])
+    curve = Rhino.Geometry.Curve.CreateBlendCurve(crv0, parameters[0], reverses[0], c0, crv1, parameters[1], reverses[1], c1)
+    rc = scriptcontext.doc.Objects.AddCurve(curve)
+    if rc==System.Guid.Empty: raise Exception("Unable to add curve to document")
+    scriptcontext.doc.Views.Redraw()
+    return rc
+
+
 def AddCircle(plane_or_center, radius):
     """Adds a circle curve to the document
     Parameters:
