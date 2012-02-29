@@ -463,6 +463,7 @@ def coerceguid(id, raise_exception=False):
     if (type(id) is list or type(id) is tuple) and len(id)==1:
         return coerceguid(id[0], raise_exception)
     if type(id) is Rhino.DocObjects.ObjRef: return id.ObjectId
+    if isinstance(id,Rhino.DocObjects.RhinoObject): return id.Id
     if raise_exception: raise TypeError("Parameter must be a Guid or string representing a Guid")
 
 
@@ -568,6 +569,7 @@ def coercemesh(object_id, raise_if_missing=False):
 
 def coercerhinoobject(object_id, raise_if_bad_input=False, raise_if_missing=False):
     "attempt to get RhinoObject from the document with a given id"
+    if isinstance(id,Rhino.DocObjects.RhinoObject): return object_id
     object_id = coerceguid(object_id, raise_if_bad_input)
     if object_id is None: return None
     rc = scriptcontext.doc.Objects.Find(object_id)
