@@ -70,6 +70,35 @@ def GetObjectGrips(message=None, preselect=False, select=False):
     return rc
 
 
+def __neighborgrip(i, object_id, index, direction, enable):
+    rhobj = rhutil.coercerhinoobject(object_id, True, True)
+    grips = rhobj.GetGrips()
+    if not grips or len(grips)<=index: return scriptcontext.errorhandler()
+    grip = grips[index]
+    next_grip=None
+    if direction==0:
+        next_grip = grip.NeighborGrip(i,0,0,False)
+    else:
+        next_grip = grip.NeighborGrip(0,i,0,False)
+    if next_grip and enable:
+        next_grip.Select(True)
+        scriptcontext.doc.Views.Redraw()
+    return next_grip
+
+
+def NextObjectGrip(object_id, index, direction=0, enable=True):
+    """Returns the next grip index from a specified grip index of an object
+    Parameters:
+      object_id = identifier of the object
+      index = zero based grip index from which to get the next grip index
+      direction[opt] = direction to get the next grip index (0=U, 1=V)
+      enable[opt] = if True, the next grip index found will be selected
+    Returns:
+      index of the next grip on success, None on failure
+    """
+    return __neighborgrip(1, object_id, index, direction, enable)
+
+
 def ObjectGripCount(object_id):
     """Returns number of grips owned by an object
     Parameters:
@@ -79,7 +108,6 @@ def ObjectGripCount(object_id):
       None on error  
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
-    if not rhobj.GripsOn: return scriptcontext.errorhandler()
     grips = rhobj.GetGrips()
     if not grips: return scriptcontext.errorhandler()
     return grips.Length
@@ -166,6 +194,19 @@ def ObjectGripsSelected(object_id):
     for grip in grips:
         if grip.IsSelected(False): return True
     return False
+
+
+def PrevObjectGrip(object_id, index, direction=0, enable=True):
+    """Returns the prevoius grip index from a specified grip index of an object
+    Parameters:
+      object_id = identifier of the object
+      index = zero based grip index from which to get the previous grip index
+      direction[opt] = direction to get the next grip index (0=U, 1=V)
+      enable[opt] = if True, the next grip index found will be selected
+    Returns:
+      index of the next grip on success, None on failure
+    """
+    return __neighborgrip(-1, object_id, index, direction, enable)
 
 
 def SelectedObjectGrips(object_id):

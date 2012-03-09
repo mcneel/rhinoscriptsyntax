@@ -45,7 +45,7 @@ def AddMesh(vertices, face_vertices, vertex_normals=None, texture_coordinates=No
         count = len(vertex_colors)
         colors = System.Array.CreateInstance(System.Drawing.Color, count)
         for i, color in enumerate(vertex_colors):
-            colors[i] = System.Drawing.Color.FromArgb(color[0], color[1], color[2])
+            colors[i] = rhutil.coercecolor(color)
         mesh.VertexColors.SetColors(colors)
     rc = scriptcontext.doc.Objects.AddMesh(mesh)
     if rc==System.Guid.Empty: raise Exception("unable to add mesh to document")
