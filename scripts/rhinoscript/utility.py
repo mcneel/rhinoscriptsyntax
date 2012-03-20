@@ -569,7 +569,7 @@ def coercemesh(object_id, raise_if_missing=False):
 
 def coercerhinoobject(object_id, raise_if_bad_input=False, raise_if_missing=False):
     "attempt to get RhinoObject from the document with a given id"
-    if isinstance(id,Rhino.DocObjects.RhinoObject): return object_id
+    if isinstance(object_id, Rhino.DocObjects.RhinoObject): return object_id
     object_id = coerceguid(object_id, raise_if_bad_input)
     if object_id is None: return None
     rc = scriptcontext.doc.Objects.Find(object_id)
