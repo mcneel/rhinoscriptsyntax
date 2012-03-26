@@ -612,6 +612,8 @@ def CapPlanarHoles(surface_id):
     tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     newbrep = brep.CapPlanarHoles(tolerance)
     if newbrep:
+        if newbrep.SolidOrientation == Rhino.Geometry.BrepSolidOrientation.Inward:
+            newbrep.Flip()
         surface_id = rhutil.coerceguid(surface_id)
         if surface_id and scriptcontext.doc.Objects.Replace(surface_id, newbrep):
             scriptcontext.doc.Views.Redraw()
