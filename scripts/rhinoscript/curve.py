@@ -1352,7 +1352,7 @@ def CurveRadius(curve_id, test_point, segment_index=-1):
     rc, t = curve.ClosestPoint(point, 0.0)
     if not rc: return scriptcontext.errorhandler()
     v = curve.CurvatureAt( t )
-    k = v.Length()
+    k = v.Length
     if k>Rhino.RhinoMath.ZeroTolerance: return 1/k
     return scriptcontext.errorhandler()
 
