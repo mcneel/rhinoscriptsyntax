@@ -308,17 +308,30 @@ def clamp(lowvalue, highvalue, value):
 def fxrange(start, stop, step):
     "float version of the xrange function"
     if step==0: raise ValueError("step must not equal 0")
-    x = start
-    if start<stop:
-        if step<0: raise ValueError("step must be greater than 0")
-        while x<=stop:
-            yield x
-            x+=step
-    else:
-        if step>0: raise ValueError("step must be less than 0")
-        while x>=stop:
-            yield x
-            x+=step
+    
+    def oneFloatStep(x,y):
+        """returns the next IEEE double float after x in the direction of y if possible"""
+        # from http://stackoverflow.com/questions/6063755/increment-a-python-floating-point-value-by-the-smallest-possible-amount
+        m, e = math.frexp(x)        
+        if y > x:
+            m += math.ldexp(1.0, -53) # smallest IEEE -754 double that 0.5+epsilon != 0.5
+        else:
+            m -= math.ldexp(1.0, -53) 
+        return math.ldexp(m,e) 
+
+    Range = stop - start
+    Range = oneFloatStep(Range,Range-step) #smallest reduction possible to stop float
+    Range = oneFloatStep(Range,Range-step) #again to be sure
+    
+    stepsToTake = int(Range/step)
+    div=Range/step
+
+    if stepsToTake < 0:   
+        raise ValueError ("the value 'stop={}' cannnot be reached from 'start={}' with 'step={}'.".format(stop,start,step))
+    i=0
+    while i <= stepsToTake:
+        yield start + i*step
+        i += 1
 
 
 def frange(start, stop, step):
