@@ -203,12 +203,12 @@ def XformRotation4(x0, y0, z0, x1, y1, z1):
       The 4x4 transformation matrix.
       None on error.
     """
-    x0 = rhutil.coerce3dveector(x0, True)
-    y0 = rhutil.coerce3dveector(y0, True)
-    z0 = rhutil.coerce3dveector(z0, True)
-    x1 = rhutil.coerce3dveector(x1, True)
-    y1 = rhutil.coerce3dveector(y1, True)
-    z1 = rhutil.coerce3dveector(z1, True)
+    x0 = rhutil.coerce3dvector(x0, True)
+    y0 = rhutil.coerce3dvector(y0, True)
+    z0 = rhutil.coerce3dvector(z0, True)
+    x1 = rhutil.coerce3dvector(x1, True)
+    y1 = rhutil.coerce3dvector(y1, True)
+    z1 = rhutil.coerce3dvector(z1, True)
     xform = Rhino.Geometry.Transform.Rotation(x0,y0,z0,x1,y1,z1)
     if not xform.IsValid: return scriptcontext.errorhandler()
     return xform
