@@ -457,6 +457,49 @@ def AddSrfPtGrid(count, points, degree=(3,3), closed=(False,False)):
         return id
 
 
+def AddSweep1(rail, shapes, closed=False):
+    """Adds a surface created through profile curves that define the surface
+    shape and one curve that defines a surface edge.
+    Parameters:
+      rail = identifier of the rail curve
+      shapes = one or more cross section shape curves
+      closed[opt] = If True, then create a closed surface
+    Returns:
+      List of new surface objects if successful
+      None if not successfule, or on error
+    """
+    rail = rhutil.coercecurve(rail, -1, True)
+    shapes = [rhutil.coercecurve(shape, -1, True) for shape in shapes]
+    tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+    breps = Rhino.Geometry.Brep.CreateFromSweep(rail, shapes, closed, tolerance)
+    if not breps: return scriptcontext.errorhandler()
+    rc = [scriptcontext.doc.Objects.AddBrep(brep) for brep in breps]
+    scriptcontext.doc.Views.Redraw()
+    return rc
+
+
+def AddSweep2(rails, shapes, closed=False):
+    """Adds a surface created through profile curves that define the surface
+    shape and two curves that defines a surface edge.
+    Parameters:
+      rails = identifiers of the two rail curve
+      shapes = one or more cross section shape curves
+      closed[opt] = If True, then create a closed surface
+    Returns:
+      List of new surface objects if successful
+      None if not successfule, or on error
+    """
+    rail1 = rhutil.coercecurve(rails[0], -1, True)
+    rail2 = rhutil.coercecurve(rails[1], -1, True)
+    shapes = [rhutil.coercecurve(shape, -1, True) for shape in shapes]
+    tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+    breps = Rhino.Geometry.Brep.CreateFromSweep(rail1, rail2, shapes, closed, tolerance)
+    if not breps: return scriptcontext.errorhandler()
+    rc = [scriptcontext.doc.Objects.AddBrep(brep) for brep in breps]
+    scriptcontext.doc.Views.Redraw()
+    return rc
+
+
 def AddTorus(base, major_radius, minor_radius, direction=None):
     """Adds a torus shaped revolved surface to the document
     Parameters:
