@@ -281,7 +281,7 @@ def LayerNames(sort=False):
     """
     rc = []
     for layer in scriptcontext.doc.Layers:
-        if not layer.IsDeleted: rc.append(layer.Name)
+        if not layer.IsDeleted: rc.append(layer.FullPath)
     if sort: rc.sort()
     return rc
 
