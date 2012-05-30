@@ -42,7 +42,7 @@ def GetObjectGrip(message=None, preselect=False, select=False):
 
 
 def GetObjectGrips(message=None, preselect=False, select=False):
-    """Prompts the user to pick one or more object grips from one or more objects.
+    """Prompts user to pick one or more object grips from one or more objects.
     Parameters:
       message [opt] = prompt for picking
       preselect [opt] = allow for selection of pre-selected object grips
@@ -58,7 +58,8 @@ def GetObjectGrips(message=None, preselect=False, select=False):
         scriptcontext.doc.Objects.UnselectAll()
         scriptcontext.doc.Views.Redraw()
     getrc, grips = Rhino.Input.RhinoGet.GetGrips(message)
-    if getrc!=Rhino.Commands.Result.Success: return scriptcontext.errorhandler()
+    if getrc!=Rhino.Commands.Result.Success or not grips:
+        return scriptcontext.errorhandler()
     rc = []
     for grip in grips:
         id = grip.OwnerId
