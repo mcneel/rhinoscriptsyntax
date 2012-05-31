@@ -396,17 +396,18 @@ def GetString(message=None, defaultString=None, strings=None):
     return None
 
 
-def ListBox(items, message=None, title=None):
-    """Displays a list of items in a list box dialog.
+def ListBox(items, message=None, title=None, default=None):
+    """Display a list of items in a list box dialog.
     Parameters:
-      items = a list of string
-      message [optional] = a prompt of message
-      title [optional] = a dialog box title
+      items = a list
+      message [opt] = a prompt of message
+      title [opt] = a dialog box title
+      default [opt] = selected item in the list
     Returns:
       The selected item if successful
       None if not successful or on error
     """
-    return Rhino.UI.Dialogs.ShowListBox(title, message, items)
+    return Rhino.UI.Dialogs.ShowListBox(title, message, items, default)
 
 
 def MessageBox(message, buttons=0, title=""):
