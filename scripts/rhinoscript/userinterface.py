@@ -570,24 +570,24 @@ def PopupMenu(items, modes=None, point=None, view=None):
         point2d = viewport.WorldToClient(point)
         screen_point = viewport.ClientToScreen(point2d)
     return Rhino.UI.Dialogs.ShowContextMenu(items, screen_point, modes);
-            
 
 
-
-def RealBox(message="", default_number=None, title=""):
-    """Displays a dialog box prompting the user to enter a number
+def RealBox(message="", default_number=None, title="", minimum=None, maximum=None):
+    """Display a dialog box prompting the user to enter a number
     Returns:
       number on success
       None on error
     """
     if default_number is None: default_number = Rhino.RhinoMath.UnsetValue
-    rc, number = Rhino.UI.Dialogs.ShowNumberBox(title, message, default_number)
+    if minimum is None: minimum = Rhino.RhinoMath.UnsetValue
+    if maximum is None: maximum = Rhino.RhinoMath.UnsetValue
+    rc, number = Rhino.UI.Dialogs.ShowNumberBox(title, message, default_number, minimum, maximum)
     if rc==System.Windows.Forms.DialogResult.OK: return number
     return None
 
 
 def SaveFileName(title=None, filter=None, folder=None, filename=None, extension=None):
-    """Displays a save dialog box allowing the user to enter a file name.
+    """Display a save dialog box allowing the user to enter a file name.
     Note, this function does not save the file.
     Parameters:
       title[opt] = A dialog box title.
@@ -612,6 +612,6 @@ def SaveFileName(title=None, filter=None, folder=None, filename=None, extension=
 
 
 def StringBox(message=None, default_value=None, title=None):
-    "Displays a dialog box prompting the user to enter a string value."
+    "Display a dialog box prompting the user to enter a string value."
     rc, text = Rhino.UI.Dialogs.ShowEditBox(title, message, default_value, False)
     return text
