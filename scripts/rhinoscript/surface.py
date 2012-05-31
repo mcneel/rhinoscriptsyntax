@@ -193,7 +193,7 @@ def AddPipe(curve_id, parameters, radii, blend_type=0, cap=0, fit=False):
     Returns:
       List of identifiers of new objects created
     """
-    rail = rhutil.coercecurve(curve_id, True)
+    rail = rhutil.coercecurve(curve_id, -1, True)
     abs_tol = scriptcontext.doc.ModelAbsoluteTolerance
     ang_tol = scriptcontext.doc.ModelAngleToleranceRadians
     if type(parameters) is int or type(parameters) is float: parameters = [parameters]
