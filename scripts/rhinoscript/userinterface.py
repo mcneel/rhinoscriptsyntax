@@ -615,4 +615,5 @@ def SaveFileName(title=None, filter=None, folder=None, filename=None, extension=
 def StringBox(message=None, default_value=None, title=None):
     "Display a dialog box prompting the user to enter a string value."
     rc, text = Rhino.UI.Dialogs.ShowEditBox(title, message, default_value, False)
+    if rc!=System.Windows.Forms.DialogResult.OK: return None
     return text
