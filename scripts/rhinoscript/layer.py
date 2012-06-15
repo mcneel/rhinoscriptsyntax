@@ -8,6 +8,9 @@ def __getlayer(name_or_id, raise_if_missing):
     if not name_or_id: raise TypeError("Parameter must be a string or Guid")
     id = rhutil.coerceguid(name_or_id)
     if id: name_or_id = id
+    else:
+        layer = scriptcontext.doc.Layers.FindByFullPath(name_or_id, True)
+        if layer>=0: return scriptcontext.doc.Layers[layer]
     layer = scriptcontext.doc.Layers.Find(name_or_id, True)
     if layer>=0: return scriptcontext.doc.Layers[layer]
     if raise_if_missing: raise ValueError("%s does not exist in LayerTable" % name_or_id)
@@ -25,7 +28,7 @@ def AddLayer(name=None, color=None, visible=True, locked=False, parent=None):
       parent[opt]: name of the new layer's parent layer. If omitted, the new
           layer will not have a parent layer.
     Returns:
-      The name of the new layer if successful.
+      The full name of the new layer if successful.
     """
     layer = Rhino.DocObjects.Layer.GetDefaultLayerProperties()
     if name:
@@ -39,7 +42,7 @@ def AddLayer(name=None, color=None, visible=True, locked=False, parent=None):
         parent = __getlayer(parent, True)
         layer.ParentLayerId = parent.Id
     index = scriptcontext.doc.Layers.Add(layer)
-    return scriptcontext.doc.Layers[index].Name
+    return scriptcontext.doc.Layers[index].FullPath
 
 
 def CurrentLayer(layer=None):
@@ -47,10 +50,10 @@ def CurrentLayer(layer=None):
     Parameters:
       layer[opt] = the name or Guid of an existing layer to make current
     Returns:
-      If a layer name is not specified, the name of the current layer
-      If a layer name is specified, the name of the previous current layer
+      If a layer name is not specified, the full name of the current layer
+      If a layer name is specified, the full name of the previous current layer
     """
-    rc = scriptcontext.doc.Layers.CurrentLayer.Name
+    rc = scriptcontext.doc.Layers.CurrentLayer.FullPath
     if layer:
         layer = __getlayer(layer, True)
         scriptcontext.doc.Layers.SetCurrentLayerIndex(layer.LayerIndex, True)
@@ -193,7 +196,7 @@ def LayerChildren(layer):
     """
     layer = __getlayer(layer, True)
     children = layer.GetChildren()
-    if children: return [child.Name for child in children]
+    if children: return [child.FullPath for child in children]
     return [] #empty list
 
 
@@ -378,7 +381,7 @@ def ParentLayer(layer, parent=None):
         oldparentlayer = scriptcontext.doc.Layers.Find(parent_id, False)
         if oldparentlayer is not None:
             oldparentlayer = scriptcontext.doc.Layers[oldparentlayer]
-            oldparent = oldparentlayer.Name
+            oldparent = oldparentlayer.FullPath
     if parent is None: return oldparent
     if parent=="":
         layer.ParentLayerId = System.Guid.Empty

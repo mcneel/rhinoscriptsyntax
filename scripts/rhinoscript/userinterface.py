@@ -185,7 +185,7 @@ def GetLayer(title="Select Layer", layer=None, show_new_button=False, show_set_c
     rc = Rhino.UI.Dialogs.ShowSelectLayerDialog(layer_index, title, show_new_button, show_set_current, True)
     if rc[0]!=System.Windows.Forms.DialogResult.OK: return None
     layer = scriptcontext.doc.Layers[rc[1]]
-    return layer.Name
+    return layer.FullPath
 
 
 def GetPoint(message=None, base_point=None, distance=None, in_plane=False):
