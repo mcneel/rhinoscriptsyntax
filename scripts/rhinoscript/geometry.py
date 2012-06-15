@@ -300,7 +300,7 @@ def PointCloudCount(object_id):
       None on error
     """
     pc = rhutil.coercegeometry(object_id, True)
-    if isinstance(pc, Rhino.Geometry.PointCloud): return pc.PointCount
+    if isinstance(pc, Rhino.Geometry.PointCloud): return pc.Count
     return scriptcontext.errorhandler()
 
 
