@@ -2,9 +2,9 @@
 __all__ = ["application", "block", "curve", "dimension", "document", "geometry",
            "grips", "group", "hatch", "layer", "line", "linetype", "light",
            "mesh", "object", "plane", "pointvector", "selection", "surface",
-           "transformation", "userdata", "userinterface", "utility", "view"]
+           "toolbar", "transformation", "userdata", "userinterface", "utility", "view"]
 
 
 import application, block, curve, dimension, document, geometry, grips, group
 import hatch, layer, line, linetype, light, mesh, object, plane, pointvector
-import selection, surface, transformation, userdata, userinterface, utility, view
+import selection, surface, toolbar, transformation, userdata, userinterface, utility, view
