@@ -133,7 +133,7 @@ def BlockNames( sort=False ):
 
 
 def BlockObjectCount(block_name):
-    """Returns the number of objects that make up a block definition
+    """Returns number of objects that make up a block definition
     Parameters:
       block_name = name of an existing block definition
     """
@@ -143,7 +143,7 @@ def BlockObjectCount(block_name):
 
 
 def BlockObjects(block_name):
-    """Returns the identifiers of the objects that make up a block definition
+    """Returns identifiers of the objects that make up a block definition
     Parameters:
       block_name = name of an existing block definition
     Returns:
@@ -156,7 +156,7 @@ def BlockObjects(block_name):
 
 
 def BlockPath(block_name):
-    """Returns the path to the source of a linked or embedded block definition.
+    """Returns path to the source of a linked or embedded block definition.
     A linked or embedded block definition is a block definition that was
     inserted from an external file.
     Parameters:
@@ -176,7 +176,11 @@ def DeleteBlock(block_name):
     Returns:
       True or False indicating success or failure  
     """
-    return scriptcontext.doc.InstanceDefinitions.Delete(index, True, False)
+    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
+    if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
+    rc = scriptcontext.doc.InstanceDefinitions.Delete(idef.Index, True, False)
+    scriptcontext.doc.Views.Redraw()
+    return rc
 
 
 def ExplodeBlockInstance(object_id):
