@@ -2113,7 +2113,7 @@ def MeanCurve(curve0, curve1, tolerance=None):
 
 def MeshPolyline(polyline_id):
     """Creates a polygon mesh object based on a closed polyline curve object.
-    The newly created mesh object is added to the document
+    The created mesh object is added to the document
     Parameters:
       polyline_id = identifier of the polyline curve object
     Returns:
@@ -2121,7 +2121,9 @@ def MeshPolyline(polyline_id):
       None on error
     """
     curve = rhutil.coercecurve(polyline_id, -1, True)
-    mesh = Rhino.Geometry.Mesh.CreateFromPlanarBoundary(curve)
+    ispolyline, polyline = curve.TryGetPolyline()
+    if not ispolyline: return scriptcontext.errorhandler()
+    mesh = Rhino.Geometry.Mesh.CreateFromClosedPolyline(polyline)
     if not mesh: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddMesh(mesh)
     scriptcontext.doc.Views.Redraw()
