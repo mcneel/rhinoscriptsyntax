@@ -942,12 +942,12 @@ def IntersectBreps(brep1, brep2, tolerance=None):
     """Intersects a brep object with another brep object. Note, unlike the
     SurfaceSurfaceIntersection function this function works on trimmed surfaces.
     Parameters:
-      brep1 = The first brep object's identifier.
-      brep2 = The second  brep object's identifier.
-      tolerance = The distance tolerance at segment midpoints. If omitted,
+      brep1 = identifier of first brep object
+      brep2 = identifier of second brep object
+      tolerance = Distance tolerance at segment midpoints. If omitted,
                   the current absolute tolerance is used.
     Returns:
-      A list of Guids identifying the newly created intersection curve and
+      List of Guids identifying the newly created intersection curve and
       point objects if successful.
       None if not successful, or on error.
     """
@@ -980,8 +980,9 @@ def IntersectBreps(brep1, brep2, tolerance=None):
         rc = scriptcontext.doc.Objects.AddPoint(point)
         if rc==System.Guid.Empty: return scriptcontext.errorhandler()
         ids.append(rc)
-    if ids: scriptcontext.doc.Views.Redraw()
-    return ids
+    if ids:
+        scriptcontext.doc.Views.Redraw()
+        return ids
 
 
 def IntersectSpheres(sphere_plane0, sphere_radius0, sphere_plane1, sphere_radius1):

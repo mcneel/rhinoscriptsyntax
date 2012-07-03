@@ -757,7 +757,7 @@ def CurveBrepIntersect(curve_id, brep_id, tolerance=None):
     Parameters:
       curve_id = identifier of a curve object
       brep_id = identifier of a brep object
-      tolerance [opt] = The distance tolerance at segment midpoints.
+      tolerance [opt] = distance tolerance at segment midpoints.
                         If omitted, the current absolute tolerance is used.
     Returns:
       List of identifiers for the newly created intersection curve and
@@ -782,6 +782,7 @@ def CurveBrepIntersect(curve_id, brep_id, tolerance=None):
         if point and point.IsValid:
             rc = scriptcontext.doc.Objects.AddPoint(point)
             points.append(rc)
+    if not curves and not points: return None
     scriptcontext.doc.Views.Redraw()
     return curves, points
 
@@ -884,15 +885,15 @@ def CurveCurvature(curve_id, parameter):
 
 
 def CurveCurveIntersection(curveA, curveB=None, tolerance=-1):
-    """Calculates the intersection of two curve objects.
+    """Calculates intersection of two curve objects.
     Parameters:
-      curveA = The identifier of the first curve object.
-      curveB = The identifier of the second curve object. If omitted, then a
+      curveA = identifier of the first curve object.
+      curveB = identifier of the second curve object. If omitted, then a
                self-intersection test will be performed on curveA.
-      tolerance [opt] = The absolute tolerance in drawing units. If omitted,
+      tolerance [opt] = absolute tolerance in drawing units. If omitted,
                         the document's current absolute tolerance is used.
     Returns:
-      A  list of tuples of intersection information if successful.
+      List of tuples of intersection information if successful.
       The list will contain one or more of the following elements:
         Element Type     Description
         [n][0]  Number   The intersection event type, either Point (1) or Overlap (2).
@@ -929,8 +930,8 @@ def CurveCurveIntersection(curveA, curveB=None, tolerance=-1):
         rc = Rhino.Geometry.Intersect.Intersection.CurveCurve(curveA, curveB, tolerance, 0.0)
     else:
         rc = Rhino.Geometry.Intersect.Intersection.CurveSelf(curveA, tolerance)
-    events = []
     if rc:
+        events = []
         for i in xrange(rc.Count):
             event_type = 1
             if( rc[i].IsOverlap ): event_type = 2
@@ -938,7 +939,7 @@ def CurveCurveIntersection(curveA, curveB=None, tolerance=-1):
             ob = rc[i].OverlapB
             element = (event_type, rc[i].PointA, rc[i].PointA2, rc[i].PointB, rc[i].PointB2, oa[0], oa[1], ob[0], ob[1])
             events.append(element)
-    return events
+        return events
 
 
 def CurveDegree(curve_id, segment_index=-1):
@@ -1400,7 +1401,7 @@ def CurveStartPoint(curve_id, segment_index=-1, point=None):
 
 
 def CurveSurfaceIntersection(curve_id, surface_id, tolerance=-1, angle_tolerance=-1):
-    """Calculates the intersection of a curve object with a surface object.
+    """Calculates intersection of a curve object with a surface object.
     Note, this function works on the untrimmed portion of the surface.
     Parameters:
       curve_id = The identifier of the first curve object.
@@ -1408,11 +1409,11 @@ def CurveSurfaceIntersection(curve_id, surface_id, tolerance=-1, angle_tolerance
           the a self-intersection test will be performed on curve.
       tolerance [opt] = The absolute tolerance in drawing units. If omitted, 
           the document's current absolute tolerance is used.
-      angle_tolerance [opt] = The angle tolerance in degrees. The angle
+      angle_tolerance [opt] = angle tolerance in degrees. The angle
           tolerance is used to determine when the curve is tangent to the
           surface. If omitted, the document's current angle tolerance is used.
     Returns:
-      A two-dimensional list of intersection information if successful.
+      Two-dimensional list of intersection information if successful.
       The list will contain one or more of the following elements:
         Element Type     Description
         (n, 0)  Number   The intersection event type, either Point(1) or Overlap(2).
@@ -1456,16 +1457,16 @@ def CurveSurfaceIntersection(curve_id, surface_id, tolerance=-1, angle_tolerance
     else:
         angle_tolerance = math.radians(angle_tolerance)
     rc = Rhino.Geometry.Intersect.Intersection.CurveSurface(curve, surface, tolerance, angle_tolerance)
-    events = []
     if rc:
-      for i in xrange(rc.Count):
-          event_type = 2 if rc[i].IsOverlap else 1
-          item = rc[i]
-          oa = item.OverlapA
-          u,v = item.SurfaceOverlapParameter()
-          e = (event_type, item.PointA, item.PointA2, item.PointB, item.PointB2, oa[0], oa[1], u[0], u[1], v[0], v[1])
-          events.append(e)
-    return events
+        events = []
+        for i in xrange(rc.Count):
+            event_type = 2 if rc[i].IsOverlap else 1
+            item = rc[i]
+            oa = item.OverlapA
+            u,v = item.SurfaceOverlapParameter()
+            e = (event_type, item.PointA, item.PointA2, item.PointB, item.PointB2, oa[0], oa[1], u[0], u[1], v[0], v[1])
+            events.append(e)
+        return events
 
 
 def CurveTangent(curve_id, parameter, segment_index=-1):

@@ -96,7 +96,7 @@ def PlaneCurveIntersection(plane, curve, tolerance=None):
             j = intersection.OverlapB[0]
             k = intersection.OverlapB[1]
             rc.append( (a,b,c,d,e,f,g,h,i,j,k) )
-    return rc
+        return rc
 
 
 def PlaneEquation(plane):
