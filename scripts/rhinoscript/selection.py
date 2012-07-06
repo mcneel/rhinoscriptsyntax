@@ -24,6 +24,7 @@ class filter:
     cage = 134217728
     phantom = 268435456
     clippingplane = 536870912
+    extrusion = 1073741824
 
 
 def AllObjects(select=False, include_lights=False, include_grips=False):
@@ -103,18 +104,20 @@ def __FilterHelper(filter):
         geometry_filter |= Rhino.DocObjects.ObjectType.Detail
     if filter & 536870912:
         geometry_filter |= Rhino.DocObjects.ObjectType.ClipPlane
+    if filter & 1073741824:
+        geometry_filter |= Rhino.DocObjects.ObjectType.Extrusion
     return geometry_filter
 
 
 def GetCurveObject(message=None, preselect=False, select=False):
-    """Prompts the user to pick or select a single curve object
+    """Prompts user to pick or select a single curve object
     Parameters:
       message[opt] = a prompt or message.
-      preselect[opt] =  Allow for the selection of pre-selected objects.
-      select[opt] = Select the picked objects.  If False, the objects that
+      preselect[opt] = Allow for the selection of pre-selected objects.
+      select[opt] = Select the picked objects. If False, objects that
         are picked are not selected.
     Returns:
-      A tuple containing the following information
+      Tuple containing the following information
         element 0 = identifier of the curve object
         element 1 = True if the curve was preselected, otherwise False
         element 2 = selection method (see help)
@@ -155,7 +158,7 @@ def GetCurveObject(message=None, preselect=False, select=False):
 
 
 def GetObject(message=None, filter=0, preselect=False, select=False, custom_filter=None, subobjects=False):
-    """Prompts the user to pick, or select, a single object.
+    """Prompts user to pick, or select, a single object.
     Parameters:
       message[opt] = a prompt or message.
       filter[opt] = The type(s) of geometry (points, curves, surfaces, meshes,...)
@@ -214,7 +217,7 @@ class __CustomGetObjectEx(Rhino.Input.Custom.GetObject):
         return False
 
 def GetObjectEx(message=None, filter=0, preselect=False, select=False, objects=None):
-    """Prompts the user to pick, or select a single object
+    """Prompts user to pick, or select a single object
     Parameters:
       message[opt] = a prompt or message.
       filter[opt] = The type(s) of geometry (points, curves, surfaces, meshes,...)
@@ -226,7 +229,7 @@ def GetObjectEx(message=None, filter=0, preselect=False, select=False, objects=N
       objects[opt] = list of object identifiers specifying objects that are
           allowed to be selected
     Returns:
-      A tuple of information containing the following information
+      Tuple of information containing the following information
         element 0 = identifier of the object
         element 1 = True if the object was preselected, otherwise False
         element 2 = selection method (see help)
@@ -268,8 +271,8 @@ def GetObjectEx(message=None, filter=0, preselect=False, select=False, objects=N
     return id, presel, selmethod, point, viewname
 
 
-def GetObjects(message=None, filter=0, group=True, preselect=False, select=False, custom_filter=None):
-    """Prompts the user to pick or select one or more objects.
+def GetObjects(message=None, filter=0, group=True, preselect=False, select=False, objects=None, minimum_count=1, maximum_count=0, custom_filter=None):
+    """Prompts user to pick or select one or more objects.
     Parameters:
       message[opt] = a prompt or message.
       filter[opt] = The type(s) of geometry (points, curves, surfaces, meshes,...)
@@ -281,17 +284,21 @@ def GetObjects(message=None, filter=0, group=True, preselect=False, select=False
       preselect[opt] =  Allow for the selection of pre-selected objects.
       select[opt] = Select the picked objects.  If False, the objects that are
           picked are not selected.
+      objects[opt] = list of objects that are allowed to be selected
+      mimimum_count, maximum_count[out] = limits on number of objects allowed to be selected
     Returns
-      list of Guids identifying the picked object
+      list of Guids identifying the picked objects
     """
     if not preselect:
         scriptcontext.doc.Objects.UnselectAll()
         scriptcontext.doc.Views.Redraw()
 
+    objects = rhutil.coerceguidlist(objects)
     class CustomGetObject(Rhino.Input.Custom.GetObject):
         def __init__(self, filter_function):
             self.m_filter_function = filter_function
         def CustomGeometryFilter( self, rhino_object, geometry, component_index ):
+            if objects and not rhino_object.Id in objects: return False
             rc = True
             if self.m_filter_function is not None:
                 try:
@@ -306,7 +313,7 @@ def GetObjects(message=None, filter=0, group=True, preselect=False, select=False
     go.SubObjectSelect = False
     go.GroupSelect = group
     go.AcceptNothing(True)
-    if go.GetMultiple(1,0)!=Rhino.Input.GetResult.Object: return None
+    if go.GetMultiple(minimum_count,maximum_count)!=Rhino.Input.GetResult.Object: return None
     if not select:
         scriptcontext.doc.Objects.UnselectAll()
         scriptcontext.doc.Views.Redraw()
@@ -322,7 +329,7 @@ def GetObjects(message=None, filter=0, group=True, preselect=False, select=False
 
 
 def GetObjectsEx(message=None, filter=0, group=True, preselect=False, select=False, objects=None):
-    """Prompts the user to pick, or select one or more objects
+    """Prompts user to pick, or select one or more objects
     Parameters:
       message[opt] = a prompt or message.
       filter[opt] = The type(s) of geometry (points, curves, surfaces, meshes,...)
