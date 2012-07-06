@@ -1290,6 +1290,31 @@ def OffsetSurface(surface_id, distance, tolerance=None):
     return rc
 
 
+def PullCurve(surface, curve, delete_input=False):
+    """Pulls a curve object to a surface object
+    Parameters:
+      surface = the surface's identifier
+      curve = the curve's identifier
+      delete_input[opt] = should the input items be deleted
+    Returns:
+      list of new curves if successful
+      None on error
+    """
+    delete_ids = []
+    if delete_input:
+        delete_ids.append(rhutil.coercerhinoobject(surface, True, True))
+        delete_ids.append(rhutil.coercerhinoobject(curve, True, True))
+    brep = rhutil.coercebrep(surface, True)
+    curve = rhutil.coercecurve(curve, True)
+    tol = scriptcontext.doc.ModelAbsoluteTolerance
+    curves = Rhino.Geometry.Curve.PullToBrepFace(curve, brep.Faces[0], tol)
+    rc = [scriptcontext.doc.Objects.AddCurve(curve) for curve in curves]
+    if rc:
+        if delete_ids: scriptcontext.doc.Objects.Delete(delete_ids, True)
+        scriptcontext.doc.Views.Redraw()
+        return rc
+
+
 def RebuildSurface(object_id, degree=(3,3), pointcount=(10,10)):
     """Rebuilds a surface to a given degree and control point count. For more
     information see the Rhino help file for the Rebuild command
