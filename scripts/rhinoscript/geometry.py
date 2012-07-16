@@ -297,11 +297,77 @@ def PointCloudCount(object_id):
       object_id: the point cloud object's identifier
     Returns:
       number of points if successful
-      None on error
     """
     pc = rhutil.coercegeometry(object_id, True)
     if isinstance(pc, Rhino.Geometry.PointCloud): return pc.Count
-    return scriptcontext.errorhandler()
+
+
+def PointCloudHasHiddenPoints(object_id):
+    """Verifies that a point cloud has hidden points
+    Parameters:
+      object_id: the point cloud object's identifier
+    Returns:
+      True if cloud has hidden points, otherwise False
+    """
+    pc = rhutil.coercegeometry(object_id, True)
+    if isinstance(pc, Rhino.Geometry.PointCloud): return pc.HiddenPointCount>0
+
+
+def PointCloudHasPointColors(object_id):
+    """Verifies that a point cloud has point colors
+    Parameters:
+      object_id: the point cloud object's identifier
+    Returns:
+      True if cloud has point colors, otherwise False
+    """
+    pc = rhutil.coercegeometry(object_id, True)
+    if isinstance(pc, Rhino.Geometry.PointCloud): return pc.ContainsColors
+
+
+def PointCloudHidePoints(object_id, hidden=[]):
+    """Returns or modifies the hidden points of a point cloud object
+    Parameters:
+      object_id: the point cloud object's identifier
+      hidden: list of hidden values if you want to hide certain points
+    Returns:
+      List of point cloud hidden states
+    """
+    pc = rhutil.coercegeometry(object_id, True)
+    if isinstance(pc, Rhino.Geometry.PointCloud):
+        rc = None
+        if pc.ContainsHiddenFlags: rc = [item.Hidden for item in pc]
+        if hidden is None:
+            pc.ClearHiddenFlags()
+        elif len(hidden)==pc.Count:
+            for i in range(pc.Count): pc[i].Hidden = hidden[i]
+        rhobj = rhutil.coercerhinoobject(object_id)
+        if rhobj:
+            rhobj.CommitChanges()
+            scriptcontext.doc.Views.Redraw()
+        return rc
+
+
+def PointCloudPointColors(object_id, colors=[]):
+    """Returns or modifies the point colors of a point cloud object
+    Parameters:
+      object_id: the point cloud object's identifier
+      colors: list of color values if you want to adjust colors
+    Returns:
+      List of point cloud colors
+    """
+    pc = rhutil.coercegeometry(object_id, True)
+    if isinstance(pc, Rhino.Geometry.PointCloud):
+        rc = None
+        if pc.ContainsColors: rc = [item.Color for item in pc]
+        if colors is None:
+            pc.ClearColors()
+        elif len(colors)==pc.Count:
+            for i in range(pc.Count): pc[i].Color = rhutil.coercecolor(colors[i])
+        rhobj = rhutil.coercerhinoobject(object_id)
+        if rhobj:
+            rhobj.CommitChanges()
+            scriptcontext.doc.Views.Redraw()
+        return rc
 
 
 def PointCloudPoints(object_id):
@@ -310,11 +376,9 @@ def PointCloudPoints(object_id):
       object_id: the point cloud object's identifier
     Returns:
       list of points if successful
-      None on error
     """
     pc = rhutil.coercegeometry(object_id, True)
     if isinstance(pc, Rhino.Geometry.PointCloud): return pc.GetPoints()
-    return scriptcontext.errorhandler()
 
 
 def PointCoordinates(object_id, point=None):
@@ -325,7 +389,6 @@ def PointCoordinates(object_id, point=None):
     Returns:
       If point is not specified, the current 3-D point location
       If point is specified, the previous 3-D point location
-      None if not successful, or on error
     """
     point_geometry = rhutil.coercegeometry(object_id, True)
     if isinstance(point_geometry, Rhino.Geometry.Point):
@@ -336,7 +399,6 @@ def PointCoordinates(object_id, point=None):
             scriptcontext.doc.Objects.Replace(id, point)
             scriptcontext.doc.Views.Redraw()
         return rc
-    return scriptcontext.errorhandler()
 
 
 def TextDotPoint(object_id, point=None):
@@ -358,7 +420,6 @@ def TextDotPoint(object_id, point=None):
             scriptcontext.doc.Objects.Replace(id, textdot)
             scriptcontext.doc.Views.Redraw()
         return rc
-    return scriptcontext.errorhandler()
 
 
 def TextDotText(object_id, text=None):
@@ -381,7 +442,6 @@ def TextDotText(object_id, text=None):
             scriptcontext.doc.Objects.Replace(id, textdot)
             scriptcontext.doc.Views.Redraw()
         return rc
-    return scriptcontext.errorhandler()
 
 
 def TextObjectFont(object_id, font=None):
