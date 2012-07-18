@@ -1978,7 +1978,10 @@ def IsLine(object_id, segment_index=-1):
       True or False indicating success or failure
     """
     curve = rhutil.coercecurve(object_id, segment_index, True)
-    return isinstance(curve, Rhino.Geometry.LineCurve)
+    if isinstance(curve, Rhino.Geometry.LineCurve): return True
+    rc, polyline = curve.TryGetPolyline()
+    if rc and polyline.Count==2: return True
+    return False
 
 
 def IsPointOnCurve(object_id, point, segment_index=-1):
