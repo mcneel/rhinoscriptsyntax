@@ -183,7 +183,7 @@ def IsMeshManifold(object_id):
 
 
 def IsPointOnMesh(object_id, point):
-    """Verifies that a point is on a mesh
+    """Verifies a point is on a mesh
     Parameters:
       object_id = identifier of a mesh object
       point = test point
@@ -195,12 +195,32 @@ def IsPointOnMesh(object_id, point):
     return face>=0
 
 
+def JoinMeshes(object_ids, delete_input=False):
+    """Joins two or or more mesh objects together
+    Parameters:
+      object_ids = identifiers of two or more mesh objects
+      delete_input[opt] = delete input after joining
+    Returns:
+      identifier of newly created mesh on success
+    """
+    meshes = [rhutil.coercemesh(id,True) for id in object_ids]
+    joined_mesh = Rhino.Geometry.Mesh()
+    for mesh in meshes: joined_mesh.Append(mesh)
+    rc = scriptcontext.doc.Objects.AddMesh(joined_mesh)
+    if delete_input:
+        for id in object_ids:
+            guid = rhutil.coerceguid(id)
+            scriptcontext.doc.Objects.Delete(guid,True)
+    scriptcontext.doc.Views.Redraw()
+    return rc
+
+
 def MeshArea(object_ids):
-    """Returns the approximate area of one or more mesh objects
+    """Returns approximate area of one or more mesh objects
     Parameters:
       object_ids = identifiers of one or more mesh objects
     Returns:
-      a list containing 3 numbers if successful where
+      list containing 3 numbers if successful where
         element[0] = number of meshes used in calculation
         element[1] = total area of all meshes
         element[2] = the error estimate
@@ -238,7 +258,7 @@ def MeshAreaCentroid(object_id):
 
 
 def MeshBooleanDifference(input0, input1, delete_input=True):
-    """Performs a boolean difference operation on two sets of input meshes
+    """Performs boolean difference operation on two sets of input meshes
     Parameters:
       input0, input1 = identifiers of meshes
       delete_input[opt] = delete the input meshes
@@ -267,7 +287,7 @@ def MeshBooleanDifference(input0, input1, delete_input=True):
 
 
 def MeshBooleanIntersection(input0, input1, delete_input=True):
-    """Performs a boolean intersection operation on two sets of input meshes
+    """Performs boolean intersection operation on two sets of input meshes
     Parameters:
       input0, input1 = identifiers of meshes
       delete_input[opt] = delete the input meshes
@@ -296,7 +316,7 @@ def MeshBooleanIntersection(input0, input1, delete_input=True):
 
 
 def MeshBooleanSplit(input0, input1, delete_input=True):
-    """Performs a boolean split operation on two sets of input meshes
+    """Performs boolean split operation on two sets of input meshes
     Parameters:
       input0, input1 = identifiers of meshes
       delete_input[opt] = delete the input meshes
@@ -326,7 +346,7 @@ def MeshBooleanSplit(input0, input1, delete_input=True):
 
 
 def MeshBooleanUnion(mesh_ids, delete_input=True):
-    """Performs a boolean union operation on a set of input meshes
+    """Performs boolean union operation on a set of input meshes
     Parameters:
       mesh_ids = identifiers of meshes
       delete_input[opt] = delete the input meshes
@@ -371,8 +391,6 @@ def MeshClosestPoint(object_id, point, maximum_distance=None):
     return closest_point, face
 
 
-# [skipping for now] MeshContourPoints
-
 def MeshFaceCenters(mesh_id):
     """Returns the center of each face of the mesh object
     Parameters:
@@ -381,13 +399,11 @@ def MeshFaceCenters(mesh_id):
       list of 3d points defining the center of each face
     """
     mesh = rhutil.coercemesh(mesh_id, True)
-    count = mesh.Faces.Count
-    rc = [mesh.Faces.GetFaceCenter(i) for i in range(count)]
-    return rc
+    return [mesh.Faces.GetFaceCenter(i) for i in range(mesh.Faces.Count)]
 
 
 def MeshFaceCount(object_id):
-    """Returns the total face count of a mesh object
+    """Returns total face count of a mesh object
     Parameters:
       object_id = identifier of a mesh object
     """
@@ -400,7 +416,7 @@ def MeshFaceNormals(mesh_id):
     Paramters:
       mesh_id = identifier of a mesh object
     Returns:
-      A list of 3D vectors that define the face unit normals of the mesh
+      List of 3D vectors that define the face unit normals of the mesh
       None on error    
     """
     mesh = rhutil.coercemesh(mesh_id, True)
@@ -414,7 +430,7 @@ def MeshFaceNormals(mesh_id):
 
 
 def MeshFaces(object_id, face_type=True):
-    """Returns the face vertices of a mesh
+    """Returns face vertices of a mesh
     Parameters:
       object_id = identifier of a mesh object
       face_type[opt] = The face type to be returned. True = both triangles
