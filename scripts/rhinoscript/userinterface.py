@@ -9,7 +9,7 @@ from view import __viewhelper
 
 
 def BrowseForFolder(folder=None, message=None, title=None):
-    """Displays the browse-for-folder dialog allowing the user to select a folder
+    """Display browse-for-folder dialog allowing the user to select a folder
     Parameters:
       folder[opt] = a default folder
       message[opt] = a prompt or message
@@ -169,13 +169,13 @@ def GetInteger(message=None, number=None, minimum=None, maximum=None):
 
 
 def GetLayer(title="Select Layer", layer=None, show_new_button=False, show_set_current=False):
-    """Displays a dialog box prompting the user to select a layer
+    """Displays dialog box prompting the user to select a layer
     Parameters:
       title[opt] = dialog box title
-      layer[opt] = name of a layer to preseclt. If omitted, the current layer will be preselected
+      layer[opt] = name of a layer to preselect. If omitted, the current layer will be preselected
       show_new_button, show_set_current[opt] = Optional buttons to show on the dialog
     Returns:
-      name of the selected layer if successful
+      name of selected layer if successful
       None on error
     """
     layer_index = scriptcontext.doc.Layers.CurrentLayerIndex
@@ -186,6 +186,66 @@ def GetLayer(title="Select Layer", layer=None, show_new_button=False, show_set_c
     if rc[0]!=System.Windows.Forms.DialogResult.OK: return None
     layer = scriptcontext.doc.Layers[rc[1]]
     return layer.FullPath
+
+
+def GetMeshFaces(object_id, message="", min_count=1, max_count=0):
+    """Prompts the user to pick one or more mesh faces
+    Parameters:
+      object_id = the mesh object's identifier
+      message[opt] = a prompt of message
+      min_count[opt] = the minimum number of faces to select
+      max_count[opt] = the maximum number of faces to select. If 0, the user must
+        press enter to finish selection. If -1, selection stops as soon as there
+        are at least min_count faces selected.
+    Returns:
+      list of mesh face indices on success
+      None on error
+    """
+    scriptcontext.doc.Objects.UnselectAll()
+    scriptcontext.doc.Views.Redraw()
+    object_id = rhutil.coerceguid(object_id, True)
+    def FilterById( rhino_object, geometry, component_index ):
+        return object_id == rhino_object.Id
+    go = Rhino.Input.Custom.GetObject()
+    go.SetCustomGeometryFilter(FilterById)
+    if message: go.SetCommandPrompt(message)
+    go.GeometryFilter = Rhino.DocObjects.ObjectType.MeshFace
+    go.AcceptNothing(True)
+    if go.GetMultiple(min_count,max_count)!=Rhino.Input.GetResult.Object: return None
+    objrefs = go.Objects()
+    rc = [item.GeometryComponentIndex.Index for item in objrefs]
+    go.Dispose()
+    return rc
+
+
+def GetMeshVertices(object_id, message="", min_count=1, max_count=0):
+    """Prompts the user to pick one or more mesh vertices
+    Parameters:
+      object_id = the mesh object's identifier
+      message[opt] = a prompt of message
+      min_count[opt] = the minimum number of vertices to select
+      max_count[opt] = the maximum number of vertices to select. If 0, the user must
+        press enter to finish selection. If -1, selection stops as soon as there
+        are at least min_count vertices selected.
+    Returns:
+      list of mesh vertex indices on success
+      None on error
+    """
+    scriptcontext.doc.Objects.UnselectAll()
+    scriptcontext.doc.Views.Redraw()
+    object_id = rhutil.coerceguid(object_id, True)
+    class CustomGetObject(Rhino.Input.Custom.GetObject):
+        def CustomGeometryFilter( self, rhino_object, geometry, component_index ):
+            return object_id == rhino_object.Id
+    go = CustomGetObject()
+    if message: go.SetCommandPrompt(message)
+    go.GeometryFilter = Rhino.DocObjects.ObjectType.MeshVertex
+    go.AcceptNothing(True)
+    if go.GetMultiple(min_count,max_count)!=Rhino.Input.GetResult.Object: return None
+    objrefs = go.Objects()
+    rc = [item.GeometryComponentIndex.Index for item in objrefs]
+    go.Dispose()
+    return rc
 
 
 def GetPoint(message=None, base_point=None, distance=None, in_plane=False):
