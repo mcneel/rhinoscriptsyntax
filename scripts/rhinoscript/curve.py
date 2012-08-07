@@ -1045,12 +1045,10 @@ def CurveDomain(curve_id, segment_index=-1):
     Parameters:
       curve_id = identifier of the curve object
       segment_index[opt] = the curve segment if curve_id identifies a polycurve.
-    Returns:
-      The domain of the curve
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     dom = curve.Domain
-    return dom.Min, dom.Max
+    return [dom.Min, dom.Max]
 
 
 def CurveEditPoints(curve_id, return_parameters=False, segment_index=-1):
@@ -1062,7 +1060,7 @@ def CurveEditPoints(curve_id, return_parameters=False, segment_index=-1):
         If False, return as a list of 3d points
       segment_index[opt] = the curve segment is curve_id identifies a polycurve
     Returns:
-      a list of curve parameters of 3d points on success
+      curve parameters of 3d points on success
       None on error
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
