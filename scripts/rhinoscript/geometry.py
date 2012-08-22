@@ -332,7 +332,9 @@ def PointCloudHidePoints(object_id, hidden=[]):
     Returns:
       List of point cloud hidden states
     """
-    pc = rhutil.coercegeometry(object_id, True)
+    rhobj = rhutil.coercerhinoobject(object_id)
+    if rhobj: pc = rhobj.Geometry
+    else: pc = rhutil.coercegeometry(object_id, True)
     if isinstance(pc, Rhino.Geometry.PointCloud):
         rc = None
         if pc.ContainsHiddenFlags: rc = [item.Hidden for item in pc]
@@ -340,7 +342,6 @@ def PointCloudHidePoints(object_id, hidden=[]):
             pc.ClearHiddenFlags()
         elif len(hidden)==pc.Count:
             for i in range(pc.Count): pc[i].Hidden = hidden[i]
-        rhobj = rhutil.coercerhinoobject(object_id)
         if rhobj:
             rhobj.CommitChanges()
             scriptcontext.doc.Views.Redraw()
@@ -355,7 +356,9 @@ def PointCloudPointColors(object_id, colors=[]):
     Returns:
       List of point cloud colors
     """
-    pc = rhutil.coercegeometry(object_id, True)
+    rhobj = rhutil.coercerhinoobject(object_id)
+    if rhobj: pc = rhobj.Geometry
+    else: pc = rhutil.coercegeometry(object_id, True)
     if isinstance(pc, Rhino.Geometry.PointCloud):
         rc = None
         if pc.ContainsColors: rc = [item.Color for item in pc]
@@ -363,7 +366,6 @@ def PointCloudPointColors(object_id, colors=[]):
             pc.ClearColors()
         elif len(colors)==pc.Count:
             for i in range(pc.Count): pc[i].Color = rhutil.coercecolor(colors[i])
-        rhobj = rhutil.coercerhinoobject(object_id)
         if rhobj:
             rhobj.CommitChanges()
             scriptcontext.doc.Views.Redraw()
