@@ -67,7 +67,7 @@ def FirstObject(select=False, include_lights=False, include_grips=False):
 
 
 def __FilterHelper(filter):
-    geometry_filter = Rhino.DocObjects.ObjectType.None
+    geometry_filter = Rhino.DocObjects.ObjectType.AnyObject
     if filter & 1:
         geometry_filter |= Rhino.DocObjects.ObjectType.Point
     if filter & 16384:
