@@ -642,10 +642,10 @@ def ObjectsByName(name, select=False, include_lights=False):
     return ids
    
 
-def ObjectsByType(type, select=False):
+def ObjectsByType(geometry_type, select=False):
     """Returns identifiers of all objects based on the objects' geometry type.
     Parameters:
-      type = The type(s) of geometry objects (points, curves, surfaces,
+      geometry_type = The type(s) of geometry objects (points, curves, surfaces,
              meshes, etc.) that can be selected. Object types can be
              added together to filter several different kinds of geometry.
               Value        Description
@@ -676,7 +676,9 @@ def ObjectsByType(type, select=False):
     bLights = False
     bGrips = False
     bPhantoms = False
-    geometry_filter = __FilterHelper(type)
+    geometry_filter = __FilterHelper(geometry_type)
+    if type(geometry_type) is int and geometry_type==0:
+        geometry_filter = Rhino.DocObjects.ObjectType.AnyObject
     if geometry_filter & Rhino.DocObjects.ObjectType.Surface: bSurface = True
     if geometry_filter & Rhino.DocObjects.ObjectType.Brep: bPolySurface = True
     if geometry_filter & Rhino.DocObjects.ObjectType.Light: bLights = True
