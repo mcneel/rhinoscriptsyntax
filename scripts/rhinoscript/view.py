@@ -442,7 +442,7 @@ def RestoreNamedView(named_view, view=None, restore_bitmap=False):
       None on error
     """
     view = __viewhelper(view)
-    index = scriptcontext.doc.NamedViews.Find(named_view)
+    index = scriptcontext.doc.NamedViews.FindByName(named_view)
     if index<0: return scriptcontext.errorhandler()
     viewinfo = scriptcontext.doc.NamedViews[index]
     if view.MainViewport.PushViewInfo(viewinfo, restore_bitmap):
