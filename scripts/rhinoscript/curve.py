@@ -309,7 +309,9 @@ def AddLine(start, end):
     """
     start = rhutil.coerce3dpoint(start, True)
     end = rhutil.coerce3dpoint(end, True)
-    rc = scriptcontext.doc.Objects.AddLine(start, end)
+    # hack fix until next beta is released
+    attr = Rhino.RhinoDoc.ActiveDoc.CreateDefaultAttributes()
+    rc = scriptcontext.doc.Objects.AddLine(start, end, attr)
     if rc==System.Guid.Empty: raise Exception("Unable to add line to document")
     scriptcontext.doc.Views.Redraw()
     return rc
