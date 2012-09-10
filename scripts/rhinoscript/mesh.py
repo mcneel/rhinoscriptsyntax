@@ -577,6 +577,7 @@ def MeshOutline(object_ids, view=None):
       view(opt) = view to use for outline direction
     Returns:
       list of polyline curve id on success
+      None on error
     """
     viewport = __viewhelper(view).MainViewport
     meshes = []
@@ -586,6 +587,7 @@ def MeshOutline(object_ids, view=None):
     rc = []
     for mesh in meshes:
         polylines = mesh.GetOutlines(viewport)
+        if not polylines: return
         for polyline in polylines:
             id = scriptcontext.doc.Objects.AddPolyline(polyline)
             rc.append(id)
