@@ -586,6 +586,7 @@ def MeshOutline(object_ids, view=None):
     rc = []
     for mesh in meshes:
         polylines = mesh.GetOutlines(viewport)
+        if not polylines: continue
         for polyline in polylines:
             id = scriptcontext.doc.Objects.AddPolyline(polyline)
             rc.append(id)
