@@ -40,17 +40,16 @@ def GetDocumentData(section=None, entry=None):
 
 
 def GetDocumentUserText(key=None):
-    """Returns user text that is stored in the document
+    """Returns user text stored in the document
     Parameters:
       key[opt] = key to use for retrieving user text. If empty, all keys are returned
     """
-    if not key:
-        return [scriptcontext.doc.Strings.GetKey(i) for i in range(scriptcontext.doc.Strings.Count)]
-    return scriptcontext.doc.Strings.GetValue(key)
+    if key: return scriptcontext.doc.Strings.GetValue(key)
+    return [scriptcontext.doc.Strings.GetKey(i) for i in range(scriptcontext.doc.Strings.Count)]
 
 
 def GetUserText(object_id, key=None, attached_to_geometry=False):
-    """Returns user text that is stored on an object.
+    """Returns user text stored on an object.
     Parameters:
       object_id = the object's identifies
       key[opt] = the key name. If omitted all key names for an object are returned
@@ -64,12 +63,9 @@ def GetUserText(object_id, key=None, attached_to_geometry=False):
     if attached_to_geometry: source = obj.Geometry
     else: source = obj.Attributes
     rc = None
-    if key:
-        return source.GetUserString(key)
-    else:
-        userstrings = source.GetUserStrings()
-        rc = [userstrings.GetKey(i) for i in range(userstrings.Count)]
-        return rc
+    if key: return source.GetUserString(key)
+    userstrings = source.GetUserStrings()
+    return [userstrings.GetKey(i) for i in range(userstrings.Count)]
 
 
 def IsDocumentData():

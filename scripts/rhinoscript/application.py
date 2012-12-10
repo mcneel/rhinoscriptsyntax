@@ -9,7 +9,7 @@ import utility as rhutil
 
 
 def AddAlias(alias, macro):
-    """Adds a new command alias to Rhino. Command aliases can be added manually by
+    """Adds new command alias to Rhino. Command aliases can be added manually by
     using Rhino's Options command and modifying the contents of the Aliases tab.
     Parameters:
       alias = name of new command alias. Cannot match command names or existing
@@ -21,7 +21,7 @@ def AddAlias(alias, macro):
     return Rhino.ApplicationSettings.CommandAliasList.Add(alias, macro)
 
 
-def AddSearchPath( folder, index=-1 ):
+def AddSearchPath(folder, index=-1):
     """Add new path to Rhino's search path list. Search paths can be added by
     using Rhino's Options command and modifying the contents of the files tab.
     Parameters:
@@ -38,7 +38,7 @@ def AliasCount():
     return Rhino.ApplicationSettings.CommandAliasList.Count
 
 
-def AliasMacro( alias, macro=None ):
+def AliasMacro(alias, macro=None):
     """Returns or modifies the macro of a command alias.
     Parameters:
       alias = The name of an existing command alias.
@@ -60,7 +60,7 @@ def AliasNames():
     return Rhino.ApplicationSettings.CommandAliasList.Names
 
 
-def AppearanceColor( item, color=None ):
+def AppearanceColor(item, color=None):
     """Returns or modifies an application interface item's color.
     Parameters:
       item = Item number to either query or modify
@@ -86,22 +86,21 @@ def AppearanceColor( item, color=None ):
     rc = None
     color = rhutil.coercecolor(color)
     appearance = Rhino.ApplicationSettings.AppearanceSettings
-    grid = Rhino.ApplicationSettings.GridSettings
     if item==0:
         rc = appearance.ViewportBackgroundColor
         if color: appearance.ViewportBackgroundColor = color
     elif item==1:
-        rc = grid.ThickLineColor
-        if color: grid.ThickLineColor = color
+        rc = appearance.GridThickLineColor
+        if color: appearance.GridThickLineColor = color
     elif item==2:
-        rc = grid.ThinLineColor
-        if color: grid.ThinLineColor = color
+        rc = appearance.GridThinLineColor
+        if color: appearance.GridThinLineColor = color
     elif item==3:
-        rc = grid.XAxisLineColor
-        if color: grid.XAxisLineColor = color
+        rc = appearance.GridXAxisLineColor
+        if color: appearance.GridXAxisLineColor = color
     elif item==4:
-        rc = grid.YAxisLineColor
-        if color: grid.YAxisLineColor = color
+        rc = appearance.GridYAxisLineColor
+        if color: appearance.GridYAxisLineColor = color
     elif item==5:
         rc = appearance.SelectedObjectColor
         if color: appearance.SelectedObjectColor = color
@@ -130,10 +129,11 @@ def AppearanceColor( item, color=None ):
         rc = appearance.CommandPromptHypertextColor
         if color: appearance.CommandPromptHypertextColor = color
     if rc is None: raise ValueError("item is out of range")
+    scriptcontext.doc.Views.Redraw()
     return rc
 
 
-def AutosaveFile( filename=None ):
+def AutosaveFile(filename=None):
     """Returns or changes the file name used by Rhino's automatic file saving
     Parameters:
       filename [opt] = name of the new autosave file
@@ -146,7 +146,7 @@ def AutosaveFile( filename=None ):
     return rc
 
 
-def AutosaveInterval( minutes=None ):
+def AutosaveInterval(minutes=None):
     """Returns or changes how often the document will be saved when Rhino's
     automatic file saving mechanism is enabled
     Parameters:
@@ -224,7 +224,7 @@ def CommandHistory():
     return Rhino.RhinoApp.CommandHistoryWindowText
 
 
-def DeleteAlias( alias ):
+def DeleteAlias(alias):
     """Deletes an existing alias from Rhino.
     Parameters:
       alias = the name of an existing alias
@@ -234,7 +234,7 @@ def DeleteAlias( alias ):
     return Rhino.ApplicationSettings.CommandAliasList.Delete(alias)
 
 
-def DeleteSearchPath( folder ):
+def DeleteSearchPath(folder):
     """Removes existing path from Rhino's search path list. Search path items
     can be removed manually by using Rhino's options command and modifying the
     contents of the files tab
@@ -251,7 +251,7 @@ def DisplayOleAlerts( enable ):
     Rhino.Runtime.HostUtils.DisplayOleAlerts( enable )
 
 
-def EdgeAnalysisColor( color=None ):
+def EdgeAnalysisColor(color=None):
     """Returns or modifies edge analysis color displayed by the ShowEdges command
     Parameters:
       color [opt] = the new color
@@ -266,7 +266,7 @@ def EdgeAnalysisColor( color=None ):
     return rc
 
 
-def EdgeAnalysisMode( mode=None ):
+def EdgeAnalysisMode(mode=None):
     """Returns or modifies edge analysis mode displayed by the ShowEdges command
     Parameters:
       mode [opt] = the new display mode. The available modes are
@@ -282,7 +282,7 @@ def EdgeAnalysisMode( mode=None ):
     return rc
 
 
-def EnableAutosave( enable=True ):
+def EnableAutosave(enable=True):
     """Enables or disables Rhino's automatic file saving mechanism
     Parameters:
       enable = the autosave state
@@ -318,7 +318,7 @@ def FindFile(filename):
     return Rhino.ApplicationSettings.FileSettings.FindFile(filename)
 
 
-def GetPlugInObject( plug_in ):
+def GetPlugInObject(plug_in):
     """Returns a scriptable object from a specified plug-in. Not all plug-ins
     contain scriptable objects. Check with the manufacturer of your plug-in
     to see if they support this capability.
@@ -629,13 +629,13 @@ def StatusBarProgressMeterUpdate(position, absolute=True):
 
 
 def StatusBarProgressMeterHide():
-    "Hide the progres meter"
+    "Hide the progress meter"
     Rhino.UI.StatusBar.HideProgressMeter()
 
 
 def TemplateFile(filename=None):
-    """Returns or sets Rhino's default template file. This is the template
-    file used when Rhino starts.
+    """Returns or sets Rhino's default template file. This is the file used
+    when Rhino starts.
     Parameters:
       filename[opt] = The name of the new default template file (must exist)
     Returns:
@@ -666,7 +666,7 @@ def WindowHandle():
 
 
 def WorkingFolder(folder=None):
-    """Returns or sets Rhino's working directory, or folder.
+    """Returns or sets Rhino's working folder (directory).
     The working folder is the default folder for all file operations.
     Parameters:
       folder[opt] = the new working folder

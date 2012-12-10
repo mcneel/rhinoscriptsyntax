@@ -1265,7 +1265,7 @@ def MakeSurfacePeriodic(surface_id, direction, delete_input=False):
     return id
 
 
-def OffsetSurface(surface_id, distance, tolerance=None):
+def OffsetSurface(surface_id, distance, tolerance=None, both_sides=False, create_solid=False):
     """Offsets a trimmed or untrimmed surface by a distance. The offset surface
     will be added to Rhino.
     Parameters:
@@ -1273,6 +1273,8 @@ def OffsetSurface(surface_id, distance, tolerance=None):
       distance = the distance to offset
       tolerance [opt] = The offset tolerance. Use 0.0 to make a loose offset. Otherwise, the
         document's absolute tolerance is usually sufficient.
+      both_sides [opt] = Offset to both sides of the input surface
+      create_solid [opt] = Make a solid object
     Returns:
       identifier of the new object if successful
       None on error
@@ -1282,7 +1284,7 @@ def OffsetSurface(surface_id, distance, tolerance=None):
     if brep.IsSurface: face = brep.Faces[0]
     if face is None: return scriptcontext.errorhandler()
     if tolerance is None: tolerance = scriptcontext.doc.ModelAbsoluteTolerance
-    newbrep = Rhino.Geometry.Brep.CreateFromOffsetFace(face, distance, tolerance, False, False)
+    newbrep = Rhino.Geometry.Brep.CreateFromOffsetFace(face, distance, tolerance, both_sides, create_solid)
     if newbrep is None: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddBrep(newbrep)
     if rc==System.Guid.Empty: return scriptcontext.errorhandler()
