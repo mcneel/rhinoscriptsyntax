@@ -164,7 +164,7 @@ def CullDuplicatePoints(points, tolerance=-1):
     points = coerce3dpointlist(points, True)
     if tolerance is None or tolerance < 0:
         tolerance = Rhino.RhinoMath.ZeroTolerance
-    return Rhino.Geometry.Point3d.CullDuplicates(points, tolerance)
+    return list(Rhino.Geometry.Point3d.CullDuplicates(points, tolerance))
 
 
 def Distance(point1, point2):
@@ -254,7 +254,7 @@ def SortPointList(points, tolerance=None):
     """
     points = coerce3dpointlist(points, True)
     if tolerance is None: tolerance = Rhino.RhinoMath.ZeroTolerance
-    return Rhino.Geometry.Point3d.SortAndCullPointList(points, tolerance)
+    return list(Rhino.Geometry.Point3d.SortAndCullPointList(points, tolerance))
 
 
 def SortPoints(points, ascending=True, order=0):
