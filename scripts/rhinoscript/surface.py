@@ -1047,11 +1047,14 @@ def IsPlaneSurface(object_id):
     return False
     
 
-def IsPointInSurface(object_id, point):
+def IsPointInSurface(object_id, point, strictly_in=False, tolerance=None):
     """Verifies that a point is inside a closed surface or polysurface
     Parameters:
       object_id: the object's identifier
       point: list of three numbers or Point3d. The test, or sampling point
+      strictly_in[opt]: If true, the test point must be inside by at least tolerance
+      tolerance[opt]: distance tolerance used for intersection and determining
+        strict inclusion. If omitted, Rhino's internal tolerance is used
     Returns:
       True if successful, otherwise False
     """
@@ -1059,7 +1062,7 @@ def IsPointInSurface(object_id, point):
     point = rhutil.coerce3dpoint(point, True)
     if object_id==None or point==None: return scriptcontext.errorhandler()
     obj = scriptcontext.doc.Objects.Find(object_id)
-    tolerance = Rhino.RhinoMath.SqrtEpsilon
+    if tolerance is None: tolerance = Rhino.RhinoMath.SqrtEpsilon
     brep = None
     if type(obj)==Rhino.DocObjects.ExtrusionObject:
         brep = obj.ExtrusionGeometry.ToBrep(False)
@@ -1067,7 +1070,7 @@ def IsPointInSurface(object_id, point):
         brep = obj.BrepGeometry
     elif hasattr(obj, "Geometry"):
         brep = obj.Geometry
-    return brep.IsPointInside(point, tolerance, False)
+    return brep.IsPointInside(point, tolerance, strictly_in)
 
 
 def IsPointOnSurface(object_id, point):

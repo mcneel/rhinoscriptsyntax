@@ -642,7 +642,7 @@ def ObjectsByName(name, select=False, include_lights=False):
     return ids
    
 
-def ObjectsByType(geometry_type, select=False):
+def ObjectsByType(geometry_type, select=False, state=0):
     """Returns identifiers of all objects based on the objects' geometry type.
     Parameters:
       geometry_type = The type(s) of geometry objects (points, curves, surfaces,
@@ -668,6 +668,7 @@ def ObjectsByType(geometry_type, select=False):
                268435456   Phantom
                536870912   Clipping plane
       select[opt] = Select the objects
+      state[opt] = Object state. See help
     Returns:
       A list of Guids identifying the objects.
     """
@@ -692,6 +693,12 @@ def ObjectsByType(geometry_type, select=False):
     it.IncludeLights = bLights
     it.IncludeGrips = bGrips
     it.IncludePhantoms = bPhantoms
+    if state:
+        it.NormalObjects = False
+        it.LockedObjects = False
+    if state & 1: it.NormalObjects = True
+    if state & 2: it.LockedObjects = True
+    if state & 4: it.HiddenObjects = True
 
     object_ids = []
     e = scriptcontext.doc.Objects.GetObjectList(it)
