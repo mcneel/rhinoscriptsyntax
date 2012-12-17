@@ -27,7 +27,6 @@ def BrowseForFolder(folder=None, message=None, title=None):
         dlg.Description = message
     if dlg.ShowDialog()==System.Windows.Forms.DialogResult.OK:
         return dlg.SelectedPath
-    return None
 
 
 def CheckListBox(items, message=None, title=None):
@@ -128,7 +127,6 @@ def GetBox(mode=0, base_point=None, prompt1=None, prompt2=None, prompt3=None):
     if base_point is None: base_point = Rhino.Geometry.Point3d.Unset
     rc, box = Rhino.Input.RhinoGet.GetBox(mode, base_point, prompt1, prompt2, prompt3)
     if rc==Rhino.Commands.Result.Success: return tuple(box.GetCorners())
-    return None
 
 
 def GetColor(color=[0,0,0]):
@@ -186,6 +184,29 @@ def GetLayer(title="Select Layer", layer=None, show_new_button=False, show_set_c
     if rc[0]!=System.Windows.Forms.DialogResult.OK: return None
     layer = scriptcontext.doc.Layers[rc[1]]
     return layer.FullPath
+
+
+def GetLine(mode=0, point=None, message1=None, message2=None, message3=None):
+    """Prompts the user to pick points that define a line
+    Parameters:
+      mode[opt] = line definition mode. See help file for details
+      point[opt] = optional starting point
+      message1, message2, message3 = optional prompts
+    Returns:
+      Tuple of two points on success
+      None on error
+    """
+    gl = Rhino.Input.Custom.GetLine()
+    if mode==0: gl.EnableAllVariations(True)
+    else: gl.GetLineMode = System.Enum.ToObject( Rhino.Input.Custom.GetLineMode, mode-1 )
+    if point:
+        point = rhutil.coerce3dpoint(point)
+        gl.SetFirstPoint(point)
+    if message1: gl.FirstPointPrompt = message1
+    if message2: gl.MidPointPrompt = message2
+    if message3: gl.SecondPointPromp = message3
+    rc, line = gl.Get()
+    if rc==Rhino.Commands.Result.Success: return line.From, line.To
 
 
 def GetMeshFaces(object_id, message="", min_count=1, max_count=0):
@@ -310,7 +331,6 @@ def GetPointOnMesh(mesh_id, message=None):
     if not message: message = "Point"
     cmdrc, point = Rhino.Input.RhinoGet.GetPointOnMesh(mesh_id, message, False)
     if cmdrc==Rhino.Commands.Result.Success: return point
-    return None
 
 
 def GetPointOnSurface(surface_id, message=None):
@@ -453,7 +473,6 @@ def GetString(message=None, defaultString=None, strings=None):
         if( result == Rhino.Input.GetResult.Option ):
             return gs.Option().EnglishName
         return gs.StringResult()
-    return None
 
 
 def ListBox(items, message=None, title=None, default=None):
@@ -549,8 +568,7 @@ def PropertyListBox(items, values, message=None, title=None):
       None on error
     """
     values = [str(v) for v in values]
-    rc = Rhino.UI.Dialogs.ShowPropertyListBox(title, message, items, values)
-    return rc
+    return Rhino.UI.Dialogs.ShowPropertyListBox(title, message, items, values)
 
 
 def OpenFileName(title=None, filter=None, folder=None, filename=None, extension=None):
@@ -644,7 +662,6 @@ def RealBox(message="", default_number=None, title="", minimum=None, maximum=Non
     if maximum is None: maximum = Rhino.RhinoMath.UnsetValue
     rc, number = Rhino.UI.Dialogs.ShowNumberBox(title, message, default_number, minimum, maximum)
     if rc==System.Windows.Forms.DialogResult.OK: return number
-    return None
 
 
 def SaveFileName(title=None, filter=None, folder=None, filename=None, extension=None):
@@ -669,7 +686,6 @@ def SaveFileName(title=None, filter=None, folder=None, filename=None, extension=
     if filename: fd.FileName = filename
     if extension: fd.DefaultExt = extension
     if fd.ShowDialog()==System.Windows.Forms.DialogResult.OK: return fd.FileName
-    return None
 
 
 def StringBox(message=None, default_value=None, title=None):
