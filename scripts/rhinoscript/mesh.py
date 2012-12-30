@@ -620,10 +620,31 @@ def MeshQuadsToTriangles(object_id):
             scriptcontext.doc.Views.Redraw()
     return rc
 
-# [skipping for now] MeshTextureCoordinates
+
+def MeshToNurb(object_id, trimmed_triangles=True, delete_input=False):
+    """Duplicates each polygon in a mesh with a NURBS surface. The resulting
+    surfaces are then joined into a polysurface and added to the document
+    Parameters:
+      object_id = identifier of a mesh object
+      trimmed_triangles[opt] = if True, triangles in the mesh will be
+        represented by a trimmed plane
+      delete_input[opt] = delete input object
+    Returns:
+      list of identifiers for the new breps on success
+    """
+    mesh = rhutil.coercemesh(object_id, True)
+    pieces = mesh.SplitDisjointPieces()
+    breps = [Rhino.Geometry.Brep.CreateFromMesh(piece,trimmed_triangles) for piece in pieces]
+    rhobj = rhutil.coercerhinoobject(object_id, True, True)
+    attr = rhobj.Attributes
+    ids = [scriptcontext.doc.Objects.AddBrep(brep, attr) for brep in breps]
+    if delete_input: scriptcontext.doc.Objects.Delete(rhobj, True)
+    scriptcontext.doc.Views.Redraw()
+    return ids
+
 
 def MeshTriangleCount(object_id):
-    """Returns the number of triangular faces of a mesh object
+    """Returns number of triangular faces of a mesh
     Parameters:
       object_id = identifier of a mesh object
     """
@@ -632,7 +653,7 @@ def MeshTriangleCount(object_id):
 
 
 def MeshVertexColors(mesh_id, colors=0):
-    """Returns of modifies the vertex colors of a mesh object
+    """Returns of modifies vertex colors of a mesh
     Parameters:
       mesh_id = identifier of a mesh object
       colors[opt] = A list of color values. Note, for each vertex, there must
@@ -661,7 +682,7 @@ def MeshVertexColors(mesh_id, colors=0):
 
 
 def MeshVertexCount(object_id):
-    """Returns the vertex count of a mesh object
+    """Returns the vertex count of a mesh
     Parameters:
       object_id = identifier of a mesh object
     """
@@ -683,7 +704,7 @@ def MeshVertexFaces(mesh_id, vertex_index):
 
 
 def MeshVertexNormals(mesh_id):
-    """Returns the vertex unit normal for each vertex of a mesh object
+    """Returns the vertex unit normal for each vertex of a mesh
     Parameters:
       mesh_id = identifier of a mesh object
     Returns:
@@ -696,7 +717,7 @@ def MeshVertexNormals(mesh_id):
 
 
 def MeshVertices(object_id):
-    """Returns the vertices of a mesh object
+    """Returns the vertices of a mesh
     Parameters:
       object_id = identifier of a mesh object
     Returns:
@@ -713,11 +734,11 @@ def MeshVertices(object_id):
 
 def MeshVolume(object_ids):
     """
-    Returns the approximate volume of one or more closed mesh objects
+    Returns the approximate volume of one or more closed meshes
     Parameters:
       object_ids = identifiers of one or more mesh objects
     Returns:
-      a tuple containing 3 numbers if successful where
+      tuple containing 3 numbers if successful where
         element[0] = number of meshes used in volume calculation
         element[1] = total volume of all meshes
         element[2] = the error estimate
@@ -740,7 +761,7 @@ def MeshVolume(object_ids):
 
 
 def MeshVolumeCentroid(object_id):
-    """Calculates the volume centroid of a mesh object
+    """Calculates the volume centroid of a mesh
     Parameters:
       object_id = identifier of a mesh object
     Returns:
@@ -754,13 +775,12 @@ def MeshVolumeCentroid(object_id):
 
 
 def PullCurveToMesh(mesh_id, curve_id):
-    """Pulls a curve object to a mesh object. The function makes a polyline
-    approximation of the input curve and get the closest point on the mesh
-    for each point on the polyline. Then it "connects the points" so that
-    you have a polyline on the mesh
+    """Pulls a curve to a mesh. The function makes a polyline approximation of
+    the input curve and gets the closest point on the mesh for each point on
+    the polyline. Then it "connects the points" to create a polyline on the mesh
     Paramters:
-      mesh_id = identifier of mesh object that pulls
-      curve_id = identifier of curve object to pull
+      mesh_id = identifier of mesh that pulls
+      curve_id = identifier of curve to pull
     Returns:
       Guid of new curve on success
       None on error
@@ -777,7 +797,7 @@ def PullCurveToMesh(mesh_id, curve_id):
 
 
 def SplitDisjointMesh(object_id, delete_input=False):
-    """Splits up a mesh object into its unconnected pieces
+    """Splits up a mesh into its unconnected pieces
     Parameters:
       object_id = identifier of a mesh object
       delete_input [opt] = delete the input object
