@@ -1686,10 +1686,10 @@ def ExtendCurve(curve_id, extension_type, side, boundary_object_ids):
 
 
 def ExtendCurveLength(curve_id, extension_type, side, length):
-    """Extends a non-closed curve object by a line, arc, or smooth extension
-    for a specified distance
+    """Extends a non-closed curve by a line, arc, or smooth extension for a
+    specified distance
     Parameters:
-      curve_id: identifier of curve to extend
+      curve_id: curve to extend
       extension_type: 0 = line, 1 = arc, 2 = smooth
       side: 0=extend from start of the curve, 1=extend from end of the curve
       length: distance to extend
@@ -1707,8 +1707,9 @@ def ExtendCurveLength(curve_id, extension_type, side, length):
     elif side==1: side = Rhino.Geometry.CurveEnd.End
     elif side==2: side = Rhino.Geometry.CurveEnd.Both
     else: raise ValueError("side must be 0, 1, or 2")
-    
-    newcurve = curve.Extend(side, length, extension_type)
+    newcurve = None
+    if length<0: newcurve = curve.Trim(side, -length)
+    else: newcurve = curve.Extend(side, length, extension_type)
     if newcurve and newcurve.IsValid:
         curve_id = rhutil.coerceguid(curve_id, True)
         if scriptcontext.doc.Objects.Replace(curve_id, newcurve):
@@ -1718,9 +1719,9 @@ def ExtendCurveLength(curve_id, extension_type, side, length):
 
 
 def ExtendCurvePoint(curve_id, side, point):
-    """Extends a non-closed curve object by smooth extension to a point
+    """Extends a non-closed curve by smooth extension to a point
     Parameters:
-      curve_id: identifier of curve to extend
+      curve_id: curve to extend
       side: 0=extend from start of the curve, 1=extend from end of the curve
       point: point to extend to
     Returns:
@@ -1746,12 +1747,12 @@ def ExtendCurvePoint(curve_id, side, point):
 
 
 def FairCurve(curve_id, tolerance=1.0):
-    """Fairs a curve object. Fair works best on degree 3 (cubic) curves. Fair
-    attempts to remove large curvature variations while limiting the geometry
-    changes to be no more than the specified tolerance. Sometimes several
-    applications of this method are necessary to remove nasty curvature problems.
+    """Fairs a curve. Fair works best on degree 3 (cubic) curves. Fair attempts
+    to remove large curvature variations while limiting the geometry changes to
+    be no more than the specified tolerance. Sometimes several applications of
+    this method are necessary to remove nasty curvature problems.
     Parameters:
-      curve_id = identifier of the curve object
+      curve_id = curve to fair
       tolerance[opt] = fairing tolerance
     Returns:
       True or False indicating success or failure
@@ -2024,7 +2025,7 @@ def IsPolyline( object_id, segment_index=-1 ):
 def JoinCurves(object_ids, delete_input=False, tolerance=None):
     """Joins multiple curves together to form one or more curves or polycurves
     Parameters:
-      object_ids = list of identifiers of multiple curve objects
+      object_ids = list of multiple curves
       delete_input[opt] = delete input objects after joining
       tolerance[opt] = join tolerance. If omitted, 2.1 * document absolute
           tolerance is used
@@ -2385,11 +2386,11 @@ def SplitCurve(curve_id, parameter, delete_input=True):
     """Splits, or divides, a curve at a specified parameter. The parameter must
     be in the interior of the curve's domain
     Parameters:
-      curve_id = identifier of the curve object
+      curve_id = the curve to split
       parameter = one or more parameters to split the curve at
       delete_input[opt] = delete the input curve
     Returns:
-      list of new curve ids on success
+      list of new curves on success
       None on error
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
@@ -2409,7 +2410,7 @@ def SplitCurve(curve_id, parameter, delete_input=True):
 def TrimCurve(curve_id, interval, delete_input=True):
     """Trims a curve by removing portions of the curve outside a specified interval
     Paramters:
-      curve_id = identifier of the curve object
+      curve_id = the curve to trim
       interval = two numbers indentifying the interval to keep. Portions of
         the curve before domain[0] and after domain[1] will be removed. If the
         input curve is open, the interval must be increasing. If the input
