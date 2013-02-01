@@ -1305,17 +1305,15 @@ def PullCurve(surface, curve, delete_input=False):
       list of new curves if successful
       None on error
     """
-    delete_ids = []
-    if delete_input:
-        delete_ids.append(rhutil.coercerhinoobject(surface, True, True))
-        delete_ids.append(rhutil.coercerhinoobject(curve, True, True))
+    crvobj = rhutil.coercerhinoobject(curve, True, True)
     brep = rhutil.coercebrep(surface, True)
     curve = rhutil.coercecurve(curve, True)
     tol = scriptcontext.doc.ModelAbsoluteTolerance
     curves = Rhino.Geometry.Curve.PullToBrepFace(curve, brep.Faces[0], tol)
     rc = [scriptcontext.doc.Objects.AddCurve(curve) for curve in curves]
     if rc:
-        if delete_ids: scriptcontext.doc.Objects.Delete(delete_ids, True)
+        if delete_input and crvobj:
+            scriptcontext.doc.Objects.Delete(crvobj, True)
         scriptcontext.doc.Views.Redraw()
         return rc
 
