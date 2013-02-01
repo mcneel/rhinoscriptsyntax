@@ -147,7 +147,8 @@ def ColorRedValue(rgb):
 def ColorRGBToHLS(rgb):
     "Converts colors from RGB to HLS"
     rgb = coercecolor(rgb, True)
-    return Rhino.Display.ColorHSL(rgb)
+    hsl = Rhino.Display.ColorHSL(rgb)
+    return hsl.H, hsl.S, hsl.L
 
 
 def CullDuplicatePoints(points, tolerance=-1):

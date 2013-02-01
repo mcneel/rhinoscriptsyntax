@@ -10,6 +10,44 @@ def __InstanceObjectFromId(id, raise_if_missing):
     if raise_if_missing: raise ValueError("unable to find InstanceObject")
 
 
+def AddBlock(object_ids, base_point, name=None, delete_input=False):
+    """Adds a new block definition to the document
+    Parameters:
+      object_ids = objects that will be included in the block
+      base_point = 3D base point for the block definition
+      name(opt) = name of the block definition. If omitted a name will be
+        automatically generated
+      delete_input(opt) = if True, the object_ids will be deleted
+    Returns:
+      name of new block definition on success
+    """
+    base_point = rhutil.coerce3dpoint(base_point, True)
+    if not name:
+        name = scriptcontext.doc.InstanceDefinitions.GetUnusedInstanceDefinitionName()
+    found = scriptcontext.doc.InstanceDefinitions.Find(name, True)
+    objects = []
+    for id in object_ids:
+        obj = rhutil.coercerhinoobject(id, True)
+        if obj.IsReference: return
+        ot = obj.ObjectType
+        if ot==Rhino.DocObjects.ObjectType.Light: return
+        if ot==Rhino.DocObjects.ObjectType.Grip: return
+        if ot==Rhino.DocObjects.ObjectType.Phantom: return
+        if ot==Rhino.DocObjects.ObjectType.InstanceReference and found:
+            uses, nesting = obj.UsesDefinition(found.Index)
+            if uses: return
+        objects.append(obj)
+    if objects:
+        geometry = [obj.Geometry for obj in objects]
+        attrs = [obj.Attributes for obj in objects]
+        rc = scriptcontext.doc.InstanceDefinitions.Add(name, "", base_point, geometry, attrs)
+        if rc>=0:
+            if delete_input:
+                for obj in objects: scriptcontext.doc.Objects.Delete(obj, True)
+            scriptcontext.doc.Views.Redraw()
+            return name
+
+
 def BlockContainerCount(block_name):
     """Returns number of block definitions that contain a specified
     block definition
