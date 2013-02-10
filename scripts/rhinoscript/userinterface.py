@@ -5,6 +5,7 @@ import System.Drawing.Color
 import System.Enum
 import System.Array
 import System.Windows.Forms
+import math
 from view import __viewhelper
 
 
@@ -63,11 +64,30 @@ def ComboListBox(items, message=None, title=None):
 
 
 def EditBox(default_string=None, message=None, title=None):
-    """Displays a dialog box prompting the user to enter a string value. The
+    """Display dialog box prompting the user to enter a string value. The
     string value may span multiple lines
     """
     rc, text = Rhino.UI.Dialogs.ShowEditBox(title, message, default_string, True)
     return text
+
+def GetAngle(point=None, reference_point=None, default_angle_degrees=0, message=None):
+    """Pause for user input of an angle
+    Parameters:
+      point(opt) = starting, or base point
+      reference_point(opt) = if specified, the reference angle is calculated
+        from it and the base point
+      default_angle_degrees(opt) = a default angle value specified
+      message(opt) = a prompt to display
+    Returns:
+      angle in degree if successful, None on error
+    """
+    point = rhutil.coerce3dpoint(point)
+    if not point: point = Rhino.Geometry.Point3d.Unset
+    reference_point = rhutil.coerce3dpoint(reference_point)
+    if not reference_point: reference_point = Rhino.Geometry.Point3d.Unset
+    default_angle = math.radians(default_angle_degrees)
+    rc, angle = Rhino.Input.RhinoGet.GetAngle(message, point, reference_point, default_angle)
+    if rc==Rhino.Commands.Result.Success: return math.degrees(angle)
 
 
 def GetBoolean(message, items, defaults):
