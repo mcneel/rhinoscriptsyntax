@@ -5,8 +5,8 @@ import System.Guid, System.Array
 
 
 def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
-    """Creates a clipping plane which is a plane for visibly clipping away
-    geometry in a specific view. Note, clipping planes are infinite
+    """Create a clipping plane for visibly clipping away geometry in a specific
+    view. Note, clipping planes are infinite
     Parameters:
       plane = the plane
       u_magnitude, v_magnitude = size of the plane
@@ -403,10 +403,52 @@ def PointCoordinates(object_id, point=None):
         return rc
 
 
+def TextDotFont(object_id, fontface=None):
+    """Returns or modified the font of a text dot
+    Parameters:
+      object_id = identifier of a text dot object
+      fontface[opt] = new font face name
+    Returns:
+      If font is not specified, the current text dot font
+      If font is specified, the previous text dot font
+      None on error
+    """
+    textdot = rhutil.coercegeometry(object_id, True)
+    if isinstance(textdot, Rhino.Geometry.TextDot):
+        rc = textdot.FontFace
+        if fontface:
+            textdot.FontFace = fontface
+            id = rhutil.coerceguid(object_id, True)
+            scriptcontext.doc.Objects.Replace(id, textdot)
+            scriptcontext.doc.Views.Redraw()
+        return rc
+
+
+def TextDotHeight(object_id, height=None):
+    """Returns or modified the font height of a text dot
+    Parameters:
+      object_id = identifier of a text dot object
+      height[opt] = new font height
+    Returns:
+      If height is not specified, the current text dot height
+      If height is specified, the previous text dot height
+      None on error
+    """
+    textdot = rhutil.coercegeometry(object_id, True)
+    if isinstance(textdot, Rhino.Geometry.TextDot):
+        rc = textdot.FontHeight
+        if height and height>0:
+            textdot.FontHeight = height
+            id = rhutil.coerceguid(object_id, True)
+            scriptcontext.doc.Objects.Replace(id, textdot)
+            scriptcontext.doc.Views.Redraw()
+        return rc
+
+
 def TextDotPoint(object_id, point=None):
     """Returns or modifies the location, or insertion point, on a text dot object
     Parameters:
-      object_id = The identifier of a text dot object
+      object_id = identifier of a text dot object
       point[opt] = A new 3D point location.
     Returns:
       If point is not specified, the current 3-D text dot location
