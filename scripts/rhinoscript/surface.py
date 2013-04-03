@@ -1307,7 +1307,7 @@ def PullCurve(surface, curve, delete_input=False):
     """
     crvobj = rhutil.coercerhinoobject(curve, True, True)
     brep = rhutil.coercebrep(surface, True)
-    curve = rhutil.coercecurve(curve, True)
+    curve = rhutil.coercecurve(curve, -1, True)
     tol = scriptcontext.doc.ModelAbsoluteTolerance
     curves = Rhino.Geometry.Curve.PullToBrepFace(curve, brep.Faces[0], tol)
     rc = [scriptcontext.doc.Objects.AddCurve(curve) for curve in curves]
