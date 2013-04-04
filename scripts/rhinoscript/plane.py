@@ -77,7 +77,7 @@ def PlaneClosestPoint(plane, point, return_point=True):
 def PlaneCurveIntersection(plane, curve, tolerance=None):
     "Intersect an infinite plane and a curve object"
     plane = rhutil.coerceplane(plane, True)
-    curve = rhutil.coercecurve(curve, True)
+    curve = rhutil.coercecurve(curve, -1, True)
     if tolerance is None: tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     intersections = Rhino.Geometry.Intersect.Intersection.CurvePlane(curve, plane, tolerance)
     if intersections:
