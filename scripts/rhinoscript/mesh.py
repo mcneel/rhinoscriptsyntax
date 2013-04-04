@@ -809,7 +809,7 @@ def SplitDisjointMesh(object_id, delete_input=False):
     rc = [scriptcontext.doc.Objects.AddMesh(piece) for piece in pieces]
     if rc and delete_input:
         id = rhutil.coerceguid(object_id, True)
-        scriptcontext.doc.Objects.Delete(id)
+        scriptcontext.doc.Objects.Delete(id, True)
     scriptcontext.doc.Views.Redraw()
     return rc
 
