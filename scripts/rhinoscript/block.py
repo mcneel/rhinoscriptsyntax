@@ -207,6 +207,13 @@ def BlockPath(block_name):
     return idef.SourceArchive
 
 
+def BlockStatus(block_name):
+    """Returns the status of a linked block. See help for status codes"""
+    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
+    if not idef: return -3
+    return int(idef.ArchiveFileStatus)
+
+
 def DeleteBlock(block_name):
     """Deletes a block definition and all of it's inserted instances.
     Parameters:
