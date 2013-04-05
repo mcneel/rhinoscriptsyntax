@@ -364,10 +364,10 @@ def LayerVisible(layer, visible=None, force_visible=False):
 
 
 def ParentLayer(layer, parent=None):
-    """Return's or modifies the parent layer of a layer
+    """Return or modify the parent layer of a layer
     Parameters:
       layer = name of an existing layer
-      parent[opt] = name of the new parent layer. To remove the parent layer,
+      parent[opt] = name of new parent layer. To remove the parent layer,
         thus making a root-level layer, specify an empty string
     Returns:
       If parent is not specified, the name of the current parent layer
@@ -390,3 +390,14 @@ def ParentLayer(layer, parent=None):
         layer.ParentLayerId = parent.Id
     layer.CommitChanges()
     return oldparent
+
+
+def RenameLayer(oldname, newname):
+    """Renames an existing layer
+    Returns: The new layer name if successful
+    """
+    if oldname and newname:
+        layer = __getlayer(oldname, True)
+        layer.Name = newname
+        layer.CommitChanges()
+        return newname
