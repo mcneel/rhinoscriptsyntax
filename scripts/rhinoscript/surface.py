@@ -210,7 +210,7 @@ def AddPipe(curve_id, parameters, radii, blend_type=0, cap=0, fit=False):
 def AddPlanarSrf(object_ids):
     """Creates one or more surfaces from planar curves
     Parameters:
-      object_ids = identifiers of curves to use for creating planar surfaces
+      object_ids = curves to use for creating planar surfaces
     Returns:
       list of surfaces created on success
       None on error
@@ -219,13 +219,14 @@ def AddPlanarSrf(object_ids):
     if id: object_ids = [id]
     curves = [rhutil.coercecurve(id,-1,True) for id in object_ids]
     breps = Rhino.Geometry.Brep.CreatePlanarBreps(curves)
-    rc = [scriptcontext.doc.Objects.AddBrep(brep) for brep in breps]
-    scriptcontext.doc.Views.Redraw()
-    return rc
+    if breps:
+        rc = [scriptcontext.doc.Objects.AddBrep(brep) for brep in breps]
+        scriptcontext.doc.Views.Redraw()
+        return rc
 
 
 def AddPlaneSurface(plane, u_dir, v_dir):
-    """Creates a plane surface and adds it to the document.
+    """Create a plane surface and add it to the document.
     Parameters:
       plane = The plane.
       u_dir = The magnitude in the U direction.
@@ -253,7 +254,7 @@ def AddLoftSrf(object_ids, start=None, end=None, loft_type=0, simplify_method=0,
     - seams of closed curves are not adjusted. Use CurveSeam to adjust the seam
       of closed curves
     Parameters:
-      object_ids = ordered list of object identifiers for the curves to loft through
+      object_ids = ordered list of the curves to loft through
       start [opt] = starting point of the loft
       end [opt] = ending point of the loft
       loft_type [opt] = type of loft. Possible options are:
@@ -279,7 +280,7 @@ def AddLoftSrf(object_ids, start=None, end=None, loft_type=0, simplify_method=0,
         style=2 is specified and this argument is omitted, then the document's
         absolute tolerance us used for refitting.
     Returns:
-      An array containing the identifiers of the new surface objects if successful
+      Array containing the identifiers of the new surface objects if successful
       None on error
     """
     if loft_type<0 or loft_type>5: raise ValueError("loft_type must be 0-4")
@@ -321,7 +322,7 @@ def AddLoftSrf(object_ids, start=None, end=None, loft_type=0, simplify_method=0,
 
 
 def AddRevSrf(curve_id, axis, start_angle=0.0, end_angle=360.0):
-    """Creates a surface by revolving a curve around an axis
+    """Create a surface by revolving a curve around an axis
     Parameters:
       curve_id = identifier of profile curve
       axis = line for the rail revolve axis
@@ -342,7 +343,7 @@ def AddRevSrf(curve_id, axis, start_angle=0.0, end_angle=360.0):
 
 
 def AddSphere(center_or_plane, radius):
-    """Adds a spherical surface to the document
+    """Add a spherical surface to the document
     Parameters:
       center_or_plane = center point of the sphere. If a plane is input,
         the origin of the plane will be the center of the sphere
