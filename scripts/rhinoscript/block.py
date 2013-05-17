@@ -91,7 +91,7 @@ def BlockDescription(block_name, description=None):
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
     rc = idef.Description
-    if description: table.Modify( idef, idef.Name, description )
+    if description: scriptcontext.doc.InstanceDefinitions.Modify( idef, idef.Name, description, True )
     return rc
 
 
