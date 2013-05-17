@@ -294,6 +294,16 @@ def EnableAutosave(enable=True):
     return rc
 
 
+def EnablePlugIn(plugin, enable=None):
+    """Enables or disables a Rhino plug-in"""
+    id = rhutil.coerceguid(plugin)
+    if not id: id = Rhino.PlugIns.PlugIn.IdFromName(plugin)
+    rc, loadSilent = Rhino.PlugIns.PlugIn.GetLoadProtection(id)
+    if enable is not None:
+        Rhino.PlugIns.PlugIn.SetLoadProtection(id, enable)
+    return loadSilent
+
+
 def ExeFolder():
     "Returns the full path to Rhino's executable folder."
     return Rhino.ApplicationSettings.FileSettings.ExecutableFolder
@@ -366,6 +376,15 @@ def IsCommand(command_name):
       command_name = the command name to test
     """
     return rhcommand.IsCommand(command_name)
+
+
+def IsPlugIn(plugin):
+    "Verifies that a plug-in is registered"
+    id = rhutil.coerceguid(plugin)
+    if not id: id = Rhino.PlugIns.PlugIn.IdFromName(plugin)
+    if id:
+        rc, loaded, loadprot = Rhino.PlugIns.PlugIn.PlugInExists(id)
+        return rc
 
 
 def IsRunningOnWindows():
@@ -486,6 +505,12 @@ def Planar(enable=None):
     rc = modelaid.Planar
     if enable is not None: modelaid.Planar = enable
     return rc
+
+
+def PlugInId(plugin):
+    "Returns the identifier of a plug-in given the plug-in name"
+    id = Rhino.PlugIns.PlugIn.IdFromName(plugin)
+    if id!=System.Guid.Empty: return id
 
 
 def PlugIns(types=0, status=0):
