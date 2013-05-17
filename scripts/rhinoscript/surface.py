@@ -1972,7 +1972,7 @@ def TrimSurface( surface_id, direction, interval, delete_input=False):
         return rc
 
 
-def UnrollSurface(surface_id, explode=False, following_geometry=None):
+def UnrollSurface(surface_id, explode=False, following_geometry=None, absolute_tolerance=None, relative_tolerance=None):
     """Flattens a developable surface or polysurface
     Parameters:
       surface_id = the surface's identifier
@@ -1981,13 +1981,17 @@ def UnrollSurface(surface_id, explode=False, following_geometry=None):
         should be unrolled with the surface
     Returns:
       List of unrolled surface ids
-      if following_geometry is not Nonw, a tuple where item 1
+      if following_geometry is not None, a tuple where item 1
         is the list of unrolled surface ids and item 2 is the
         list of unrolled following geometry
     """
     brep = rhutil.coercebrep(surface_id, True)
     unroll = Rhino.Geometry.Unroller(brep)
     unroll.ExplodeOutput = explode
+    if relative_tolerance is None: relative_tolerance = scriptcontext.doc.ModelRelativeTolerance
+    if absolute_tolerance is None: absolute_tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+    unroll.AbsoluteTolerance = absolute_tolerance
+    unroll.RelativeTolerance = relative_tolerance
     if following_geometry:
         for id in following_geometry:
             geom = rhutil.coercegeometry(id)
