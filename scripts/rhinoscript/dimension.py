@@ -403,9 +403,9 @@ def DimStyleOffset(dimstyle, offset=None):
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     if ds is None: return scriptcontext.errorhandler()
-    rc = ds.ExtensionLineExtension
+    rc = ds.ExtensionLineOffset
     if offset is not None:
-        ds.ExtensionLineExtension = offset
+        ds.ExtensionLineOffset = offset
         ds.CommitChanges()
         scriptcontext.doc.Views.Redraw()
     return rc
