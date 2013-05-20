@@ -866,7 +866,7 @@ def ExtrudeCurvePoint(curve_id, point):
 
 
 def ExtrudeCurveStraight(curve_id, start_point, end_point):
-    """Creates a surface by extruding a curve along two points that define a line
+    """Create surface by extruding a curve along two points that define a line
     Parameters:
       curve_id = identifier of the curve to extrude
       start_point, end_point = 3D points
@@ -883,6 +883,24 @@ def ExtrudeCurveStraight(curve_id, start_point, end_point):
     if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
+
+
+def ExtrudeSurface(surface, curve, cap=True):
+    """Create surface by extruding along a path curve
+    Parameters:
+      surface = identifier of the surface to extrude
+      curve = identifier of the path curve
+      cap[opt] = extrusion is capped at both ends
+    Returns:
+      identifier of new surface on success
+    """
+    brep = rhutil.coercebrep(surface, True)
+    curve = rhutil.coercecurve(curve, -1, True)
+    newbrep = brep.Faces[0].CreateExtrusion(curve, cap)
+    if newbrep:
+        rc = scriptcontext.doc.Objects.AddBrep(newbrep)
+        scriptcontext.doc.Views.Redraw()
+        return rc
 
 
 def FilletSurfaces(surface0, surface1, radius, uvparam0=None, uvparam1=None):
