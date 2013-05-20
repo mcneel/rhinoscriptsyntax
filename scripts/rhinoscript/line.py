@@ -7,7 +7,7 @@ def LineClosestPoint(line, testpoint):
     "Finds the point on an infinite line that is closest to a test point"
     line = rhutil.coerceline(line, True)
     testpoint = rhutil.coerce3dpoint(testpoint, True)
-    return line.ClosestPoint(testpoint, True)
+    return line.ClosestPoint(testpoint, False)
 
 
 def LineCylinderIntersection(line, cylinder_plane, cylinder_height, cylinder_radius):
