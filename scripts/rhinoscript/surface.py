@@ -140,6 +140,23 @@ def AddEdgeSrf(curve_ids):
     return id
 
 
+def AddNetworkSrf(curves, continuity=1, edge_tolerance=0, interior_tolerance=0, angle_tolerance=0):
+    """Creates a surface from a network of crossing curves
+    Parameters:
+      curves = curves from which to create the surface
+      continuity[opt] = how the edges match the input geometry
+        0=loose, 1=position, 2=tangency, 3=curvature
+    Returns:
+      identifier of new object if successful
+    """
+    curves = [rhutil.coercecurve(curve, -1, True) for curve in curves]
+    surf, err = Rhino.Geometry.NurbsSurface.CreateNetworkSurface(curves, continuity, edge_tolerance, interior_tolerance, angle_tolerance)
+    if surf:
+        rc = scriptcontext.doc.Objects.AddSurface(surf)
+        scriptcontext.doc.Views.Redraw()
+        return rc
+
+
 def AddNurbsSurface(point_count, points, knots_u, knots_v, degree, weights=None):
     """Adds a NURBS surface object to the document
     Parameters:
