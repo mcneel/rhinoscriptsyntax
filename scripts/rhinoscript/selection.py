@@ -42,6 +42,7 @@ def AllObjects(select=False, include_lights=False, include_grips=False):
     it.NormalObjects = True
     it.LockedObjects = True
     it.HiddenObjects = True
+    it.ReferenceObjects = True
     e = scriptcontext.doc.Objects.GetObjectList(it)
     object_ids = []
     for object in e:
@@ -462,6 +463,7 @@ def HiddenObjects(include_lights=False, include_grips=False):
     settings.HiddenObjects = True
     settings.IncludeLights = include_lights
     settings.IncludeGrips = include_grips
+    settings.ReferenceObjects = True
     items = scriptcontext.doc.Objects.GetObjectList(settings)
     return [item.Id for item in items]
 
@@ -474,6 +476,7 @@ def InvertSelectedObjects(include_lights=False, include_grips=False):
     settings.IncludeLights = include_lights
     settings.IncludeGrips = include_grips
     settings.IncludePhantoms = True
+    settings.ReferenceObjects = True
     rhobjs = scriptcontext.doc.Objects.GetObjectList(settings)
     rc = []
     for obj in rhobjs:
@@ -633,6 +636,7 @@ def ObjectsByName(name, select=False, include_lights=False):
     settings.IncludePhantoms = True
     settings.IncludeLights = include_lights
     settings.NameFilter = name
+    settings.ReferenceObjects = True
     objects = scriptcontext.doc.Objects.GetObjectList(settings)
     ids = [rhobj.Id for rhobj in objects]
     if ids and select:
