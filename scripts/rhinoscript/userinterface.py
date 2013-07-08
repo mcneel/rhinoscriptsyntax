@@ -164,6 +164,43 @@ def GetColor(color=[0,0,0]):
     return scriptcontext.errorhandler()
 
 
+def GetEdgeCurves(message=None, min_count=1, max_count=0, select=False):
+    """Prompts the user to pick one or more surface or polysurface edge curves
+    Parameters:
+      message [optional] = A prompt or message.
+      min_count [optional] = minimum number of edges to select.
+      max_count [optional] = maximum number of edges to select.
+      select [optional] = Select the duplicated edge curves.
+    Returns:
+      List of (curve id, parent id, selection point)
+      None if not successful
+    """
+    if min_count<0 or (max_count>0 and min_count>max_count): return
+    if not message: message = "Select Edges"
+    go = Rhino.Input.Custom.GetObject()
+    go.SetCommandPrompt(message)
+    go.GeometryFilter = Rhino.DocObjects.ObjectType.Curve
+    go.GeometryAttributeFilter = Rhino.Input.Custom.GeometryAttributeFilter.EdgeCurve
+    go.EnablePreSelect(False, True)
+    rc = go.GetMultiple(min_count, max_count)
+    if rc!=Rhino.Input.GetResult.Object: return
+    rc = []
+    for i in range(go.ObjectCount):
+        edge = go.Object(i).Edge()
+        if not edge: continue
+        edge = edge.Duplicate()
+        curve_id = scriptcontext.doc.Objects.AddCurve(edge)
+        parent_id = go.Object(i).ObjectId
+        pt = go.Object(i).SelectionPoint()
+        rc.append( (curve_id, parent_id, pt) )
+    if select:
+        for item in rc:
+            rhobj = scriptcontext.doc.Objects.Find(item[0])
+            rhobj.Select(True)
+        scriptcontext.doc.Views.Redraw()
+    return rc        
+
+
 def GetInteger(message=None, number=None, minimum=None, maximum=None):
     """Pauses for user input of a whole number.
     Parameters:
