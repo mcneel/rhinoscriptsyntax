@@ -264,15 +264,20 @@ def LayerLocked(layer, locked=None):
     return rc
 
 
-def LayerMaterialIndex( layer ):
-    """Returns the material index of a layer. A material index of -1 indicates
-    that no material has been assigned to the layer. Thus, the layer will use
-    Rhino's default layer material
+def LayerMaterialIndex(layer,index=None):
+    """Returns or changes the material index of a layer. A material index of -1
+    indicates that no material has been assigned to the layer. Thus, the layer
+    will use Rhino's default layer material
     Parameters:
       layer = name of existing layer
     """
     layer = __getlayer(layer, True)
-    return layer.RenderMaterialIndex
+    rc = layer.RenderMaterialIndex
+    if index is not None and index>=-1:
+        layer.RenderMaterialIndex = index
+        layer.CommitChanges()
+        scriptcontext.doc.Views.Redraw()
+    return rc
 
 
 def LayerNames(sort=False):
