@@ -392,6 +392,21 @@ def ParentLayer(layer, parent=None):
     return oldparent
 
 
+def PurgeLayer(layer):
+    """Removes an existing layer from the document. The layer will be removed
+    even if it contains geometry objects. The layer to be removed cannot be the
+    current layer
+    empty.
+    Parameters:
+      layer = the name or id of an existing empty layer
+    Returns:
+      True or False indicating success or failure
+    """
+    layer = __getlayer(layer, True)
+    rc = scriptcontext.doc.Layers.Purge( layer.LayerIndex, True)
+    scriptcontext.doc.Views.Redraw()
+    return rc
+
 def RenameLayer(oldname, newname):
     """Renames an existing layer
     Returns: The new layer name if successful
