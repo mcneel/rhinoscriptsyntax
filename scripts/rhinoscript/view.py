@@ -17,7 +17,7 @@ def __viewhelper(view):
 
 
 def AddDetail(layout_id, corner1, corner2, title=None, projection=1):
-    """Adds new detail view to an existing layout view
+    """Add new detail view to an existing layout view
     Parameters:
       layout_id = identifier of an existing layout
       corner1, corner2 = 2d corners of the detail in the layout's unit system
@@ -713,7 +713,7 @@ def ViewCameraUp(view=None, up_vector=None):
 
 
 def ViewCPlane(view=None, plane=None):
-    """Returns or sets the specified view's construction plane
+    """Return or set a view's construction plane
     Parameters:
       view:[opt] title or id of the view. If omitted, current active view is used.
       plane:[opt] the new construction plane if setting
@@ -729,9 +729,57 @@ def ViewCPlane(view=None, plane=None):
         view.Redraw()
     return cplane
 
+def ViewDisplayMode(view=None, mode=None, return_name=True):
+    """Return or set a view display mode
+    Paramters:
+      view: [opt] Title or id of a view. If omitted, active view is used
+      mode: [opt] Name or id of a display mode
+      return_name: [opt] If true, return display mode name. If False, display mode id
+    Returns:
+      If mode is specified, the previous mode
+      If mode is not specified, the current mode
+    """
+    view = __viewhelper(view)
+    current = view.ActiveViewport.DisplayMode
+    if return_name: rc = current.EnglishName
+    else: rc = current.Id
+    if mode:
+        mode_id = rhutil.coerceguid(mode)
+        if mode_id:
+            desc = Rhino.Display.DisplayModeDescription.GetDisplayMode(mode_id)
+        else:
+            desc = Rhino.Display.DisplayModeDescription.FindByName(mode)
+        if desc: view.ActiveViewport.DisplayMode = desc
+        scriptcontext.doc.Views.Redraw()
+    return rc
+
+
+def ViewDisplayModeId(name):
+    """Return id of a display mode given it's name"""
+    desc = Rhino.Display.DisplayModeDescription.FindByName(name)
+    if desc: return desc.Id
+
+
+def ViewDisplayModeName(mode_id):
+    """Return name of a display mode given it's id"""
+    mode_id = rhutil.coerceguid(mode_id, True)
+    desc = Rhino.Display.DisplayModeDescription.GetDisplayMode(mode_id)
+    if desc: return desc.EnglishName
+
+
+def ViewDisplayModes(return_names=True):
+    """Return list of display modes
+    Paramters:
+      return_name: [opt] If True, return mode names. If False, return ids
+    """
+    modes = Rhino.Display.DisplayModeDescription.GetDisplayModes()
+    if return_names:
+        return [mode.EnglishName for mode in modes]
+    return [mode.Id for mode in modes]
+
 
 def ViewNames(return_names=True, view_type=0):
-    """Returns the names, or titles, or identifiers of all views in the document
+    """Return the names, titles, or identifiers of all views in the document
     Parameters:
       return_names: [opt] if True then the names of the views are returned.
         If False, then the identifiers of the views are returned
@@ -743,16 +791,14 @@ def ViewNames(return_names=True, view_type=0):
       list of the view names or identifiers on success
       None on error
     """
-    standardviews = view_type!=1
-    pageviews = view_type>0
-    views = scriptcontext.doc.Views.GetViewList(standardviews, pageviews)
+    views = scriptcontext.doc.Views.GetViewList(view_type!=1, view_type>0)
     if views is None: return scriptcontext.errorhandler()
     if return_names: return [view.MainViewport.Name for view in views]
     return [view.MainViewport.Id for view in views]
 
 
 def ViewNearCorners(view=None):
-    """Returns the 3d corners of a view's near clipping plane rectangle. Useful
+    """Return 3d corners of a view's near clipping plane rectangle. Useful
     in determining the "real world" size of a parallel-projected view
     Parameters:
       view:[opt] title or id of the view. If omitted, current active view is used
@@ -765,8 +811,7 @@ def ViewNearCorners(view=None):
 
 
 def ViewProjection(view=None, mode=None):
-    """Returns or sets a view's projection mode. A view's projection mode can be
-    either parallel or perspective
+    """Return or set a view's projection mode.
     Parameters:
       view:[opt] title or id of the view. If omitted, current active view is used
       mode:[opt] the projection mode (1=parallel, 2=perspective)
@@ -781,7 +826,7 @@ def ViewProjection(view=None, mode=None):
     if mode is None or mode==rc: return rc
     if mode==1: viewport.ChangeToParallelProjection(True)
     elif mode==2: viewport.ChangeToPerspectiveProjection(True, 50)
-    else: return None
+    else: return
     view.Redraw()
     return rc
 
@@ -931,11 +976,10 @@ def ZoomBoundingBox(bounding_box, view=None, all=False):
       if all:
           views = scriptcontext.doc.Views.GetViewList(True, True)
           for view in views: view.ActiveViewport.ZoomBoundingBox(bbox)
-          scriptcontext.doc.Views.Redraw()
       else:
           view = __viewhelper(view)
           view.ActiveViewport.ZoomBoundingBox(bbox)
-          view.Redraw()
+      scriptcontext.doc.Views.Redraw()
 
 
 def ZoomExtents(view=None, all=False):
@@ -947,24 +991,22 @@ def ZoomExtents(view=None, all=False):
     if all:
         views = scriptcontext.doc.Views.GetViewList(True, True)
         for view in views: view.ActiveViewport.ZoomExtents()
-        scriptcontext.doc.Views.Redraw()
     else:
         view = __viewhelper(view)
         view.ActiveViewport.ZoomExtents()
-        view.Redraw()
+    scriptcontext.doc.Views.Redraw()
 
 
 def ZoomSelected(view=None, all=False):
-    """Zooms to extents of selected objects in the specified view
+    """Zoom to extents of selected objects in a view
     Parameters:
-      view: [opt] title or id of the view. If omitted, current active view is used
+      view: [opt] title or id of the view. If omitted, active view is used
       all: [opt] zoom extents in all views
     """
     if all:
         views = scriptcontext.doc.Views.GetViewList(True, True)
         for view in views: view.ActiveViewport.ZoomExtentsSelected()
-        scriptcontext.doc.Views.Redraw()
     else:
         view = __viewhelper(view)
         view.ActiveViewport.ZoomExtentsSelected()
-        view.Redraw()
+    scriptcontext.doc.Views.Redraw()
