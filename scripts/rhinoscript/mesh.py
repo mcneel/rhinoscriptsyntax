@@ -5,7 +5,7 @@ import System.Guid, System.Array, System.Drawing.Color
 from view import __viewhelper
 
 def AddMesh(vertices, face_vertices, vertex_normals=None, texture_coordinates=None, vertex_colors=None):
-    """Adds a mesh object to the document
+    """Add a mesh object to the document
     Parameters:
       vertices = list of 3D points defining the vertices of the mesh
       face_vertices = list containing lists of 3 or 4 numbers that define the
@@ -14,9 +14,9 @@ def AddMesh(vertices, face_vertices, vertex_normals=None, texture_coordinates=No
       vertex_normals[opt] = list of 3D vectors defining the vertex normals of
         the mesh. Note, for every vertex, there must be a corresponding vertex
         normal
-      texture_coordinates[opt] = list of 2D texture coordinates. Note, for
-        every vertex, there must be a corresponding texture coordinate
-      vertex_colors[opt] = a list of color values. Note, for every vertex,
+      texture_coordinates[opt] = list of 2D texture coordinates. For every
+        vertex, there must be a corresponding texture coordinate
+      vertex_colors[opt] = a list of color values. For every vertex,
         there must be a corresponding vertex color
     Returns:
       Identifier of the new object if successful
@@ -39,7 +39,7 @@ def AddMesh(vertices, face_vertices, vertex_normals=None, texture_coordinates=No
         count = len(texture_coordinates)
         tcs = System.Array.CreateInstance(Rhino.Geometry.Point2f, count)
         for i, tc in enumerate(texture_coordinates):
-            tcs[i] = Rhino.Geometry.Point2f(tc[0], tc[1], tc[2])
+            tcs[i] = Rhino.Geometry.Point2f(tc[0], tc[1])
         mesh.TextureCoordinates.SetTextureCoordinates(tcs)
     if vertex_colors:
         count = len(vertex_colors)
