@@ -224,8 +224,19 @@ def CommandHistory():
     return Rhino.RhinoApp.CommandHistoryWindowText
 
 
+def DefaultRenderer(renderer=None):
+    "Returns or changes the default render plug-in"
+    id = Rhino.Render.Utilities.DefaultRenderPlugInId
+    plugins = Rhino.PlugIns.PlugIn.GetInstalledPlugIns()
+    rc = plugins[id]
+    if renderer:
+        id = Rhino.PlugIns.PlugIn.IdFromName(renderer)
+        Rhino.Render.Utilities.SetDefaultRenderPlugIn(id)
+    return rc
+
+
 def DeleteAlias(alias):
-    """Deletes an existing alias from Rhino.
+    """Delete an existing alias from Rhino.
     Parameters:
       alias = the name of an existing alias
     Returns:
