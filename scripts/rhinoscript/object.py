@@ -3,6 +3,7 @@ import Rhino
 import utility as rhutil
 import System.Guid, System.Enum
 from layer import __getlayer
+from view import __viewhelper
 
 
 def CopyObject(object_id, translation=None):
@@ -266,15 +267,18 @@ def IsObjectSolid(object_id):
 def IsObjectValid(object_id):
     """Verifies that an object's geometry is valid and without error
     Parameters:
-      object_id: String or Guid. The identifier of an object
+      object_id: The identifier of an object
     Returns:
       True if the object is valid
-      False if the object is not valid
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     return rhobj.IsValid
 
-# [skipping for now] IsVisibleInView
+def IsVisibleInView(object_id, view=None):
+    """Verifies an object is visible in a view"""
+    rhobj = rhutil.coercerhinoobject(object_id, True, True)
+    return rhobj.IsActiveInViewport(__viewhelper(view).MainViewport)
+
 
 def LockObject(object_id):
     """Locks a single object. Locked objects are visible, and they can be

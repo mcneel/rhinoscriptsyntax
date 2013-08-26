@@ -3,6 +3,7 @@ import Rhino
 import utility as rhutil
 import application as rhapp
 from layer import __getlayer
+from view import __viewhelper
 
 
 class filter:
@@ -747,3 +748,32 @@ def UnselectAllObjects():
     rc = scriptcontext.doc.Objects.UnselectAll()
     if rc>0: scriptcontext.doc.Views.Redraw()
     return rc
+
+
+def VisibleObjects(view=None, select=False, include_lights=False, include_grips=False):
+    """Returns the identifiers of all objects that are visible in a specified view
+    Parameters:
+      view [opt] = the view to use. If omitted, the current active view is used
+      select [opt] = Select the objects
+      include_lights [opt] = include light objects
+      include_grips [opt] = include grip objects
+    Returns:
+      list of Guids identifying the objects
+    """
+    it = Rhino.DocObjects.ObjectEnumeratorSettings()
+    it.DeletedObjects = False
+    it.ActiveObjects = True
+    it.ReferenceObjects = True
+    it.IncludeLights = include_lights
+    it.IncludeGrips = include_grips
+    it.VisibleFilter = True
+    it.ViewportFilter = __viewhelper(view).MainViewport
+
+    object_ids = []
+    e = scriptcontext.doc.Objects.GetObjectList(it)
+    for object in e:
+        if select: object.Select(True)
+        object_ids.append(object.Id)
+
+    if object_ids and select: scriptcontext.doc.Views.Redraw()
+    return object_ids
