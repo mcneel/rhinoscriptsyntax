@@ -110,6 +110,8 @@ def GetBoolean(message, items, defaults):
     go.SetCommandPrompt( message )
     if type(defaults) is list or type(defaults) is tuple: pass
     else: defaults = [defaults]
+    # special case for single list. Wrap items into a list
+    if len(items)==3 and len(defaults)==1: items = [items]
     count = len(items)
     if count<1 or count!=len(defaults): return scriptcontext.errorhandler()
     toggles = []
