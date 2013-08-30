@@ -845,8 +845,8 @@ def ViewRadius(view=None, radius=None):
     if not viewport.IsParallelProjection: return scriptcontext.errorhandler()
     fr = viewport.GetFrustum()
     frus_right = fr[2]
-    frus_left = fr[1]
-    old_radius = min(frus_left, frus_right)
+    frus_top = fr[4]
+    old_radius = min(frus_top, frus_right)
     if radius is None: return old_radius
     magnification_factor = radius / old_radius
     d = 1.0 / magnification_factor
