@@ -57,7 +57,7 @@ def AliasMacro(alias, macro=None):
 
 def AliasNames():
     "Returns a list of command alias names."
-    return Rhino.ApplicationSettings.CommandAliasList.Names
+    return Rhino.ApplicationSettings.CommandAliasList.GetNames()
 
 
 def AppearanceColor(item, color=None):
