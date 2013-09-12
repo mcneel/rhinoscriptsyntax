@@ -374,7 +374,7 @@ def AddPolyline(points, replace_id=None):
 
 
 def AddRectangle(plane, width, height):
-    """Adds a rectangular curve to the document
+    """Add a rectangular curve to the document
     Paramters:
       plane = plane on which the rectangle will lie
       width, height = width and height of rectangle as measured along the plane's
@@ -391,8 +391,33 @@ def AddRectangle(plane, width, height):
     return rc
 
 
+def AddSpiral(point0, point1, pitch, turns, radius0, radius1=None):
+    """Adds a spiral or helical curve to the document
+    Parameters:
+      point0 = helix axis start point or center of spiral
+      point1 = helix axis end point or point normal on spiral plane
+      pitch = distance between turns. If 0, then a spiral. If > 0 then the
+              distance between helix "threads"
+      turns = number of turns
+      radius0, radius1 = starting and ending radius
+    Returns:
+      id of new curve on success
+    """
+    if radius1 is None: radius1 = radius0
+    point0 = rhutil.coerce3dpoint(point0, True)
+    point1 = rhutil.coerce3dpoint(point1, True)
+    dir = point1 - point0
+    plane = Rhino.Geometry.Plane(point0, dir)
+    point2 = point0 + plane.XAxis
+    curve = Rhino.Geometry.NurbsCurve.CreateSpiral(point0, dir, point2, pitch, turns, radius0, radius1)
+    rc = scriptcontext.doc.Objects.AddCurve(curve)
+    if rc==System.Guid.Empty: raise Exception("Unable to add curve to document")
+    scriptcontext.doc.Views.Redraw()
+    return rc
+
+
 def AddSubCrv(curve_id, param0, param1):
-    """Adds a curve object based on a portion, or interval of an existing curve
+    """Add a curve object based on a portion, or interval of an existing curve
     object. Similar in operation to Rhino's SubCrv command
     Parameters:
       curve_id = identifier of a closed planar curve object
