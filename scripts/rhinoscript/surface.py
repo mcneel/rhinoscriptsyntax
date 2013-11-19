@@ -974,6 +974,41 @@ def FlipSurface(surface_id, flip=None):
     return old_reverse
 
 
+def ReverseSurface(surface_id, direction):
+    """Reverses U or V directions of a surface, or swaps (transposes) U and V directions.
+    Note, unlike the RhinoScript version, this function only works on untrimmed surfaces.
+    Parameters:
+      surface_id = identifier of a surfaceobject
+      direction
+      	1 = reverse U, 2 = reverse V, 4 = transpose U and V (values can be combined)
+    Returns:
+      Boolean indicating success or failure
+      None on error
+    """
+    brep = rhutil.coercebrep(surface_id, True)
+    if not brep.IsSurface: return scriptcontext.errorhandler()
+    if direction == 0: return True
+    face = brep.Faces[0].UnderlyingSurface()
+    if direction & 1:
+        face = face.Reverse(0)
+	if not face: return False
+    if direction & 2:
+        face = face.Reverse(1)
+	if not face: return False
+    if direction & 4:
+        face = face.Transpose()
+	if not face: return False
+    newindex = brep.AddSurface(face)
+    if newindex == -1: return scriptcontext.errorhandler()
+    if not brep.Faces[0].ChangeSurface(newindex): return scriptcontext.errorhandler()
+    if not brep.Faces[0].RebuildEdges(scriptcontext.doc.ModelAbsoluteTolerance, False, False):
+        return scriptcontext.errorhandler()
+    brep.CullUnusedSurfaces()
+    scriptcontext.doc.Objects.Replace(surface_id, brep)
+    scriptcontext.doc.Views.Redraw()
+    return True
+
+
 def IntersectBreps(brep1, brep2, tolerance=None):
     """Intersects a brep object with another brep object. Note, unlike the
     SurfaceSurfaceIntersection function this function works on trimmed surfaces.
