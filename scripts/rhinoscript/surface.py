@@ -980,7 +980,7 @@ def ReverseSurface(surface_id, direction):
     Parameters:
       surface_id = identifier of a surfaceobject
       direction
-      	1 = reverse U, 2 = reverse V, 4 = transpose U and V (values can be combined)
+        1 = reverse U, 2 = reverse V, 4 = transpose U and V (values can be combined)
     Returns:
       Boolean indicating success or failure
       None on error
@@ -991,13 +991,13 @@ def ReverseSurface(surface_id, direction):
     face = brep.Faces[0].UnderlyingSurface()
     if direction & 1:
         face = face.Reverse(0)
-	if not face: return False
+        if not face: return False
     if direction & 2:
         face = face.Reverse(1)
-	if not face: return False
+        if not face: return False
     if direction & 4:
         face = face.Transpose()
-	if not face: return False
+        if not face: return False
     newindex = brep.AddSurface(face)
     if newindex == -1: return scriptcontext.errorhandler()
     if not brep.Faces[0].ChangeSurface(newindex): return scriptcontext.errorhandler()
