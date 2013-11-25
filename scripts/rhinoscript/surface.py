@@ -998,13 +998,9 @@ def ReverseSurface(surface_id, direction):
     if direction & 4:
         face = face.Transpose()
         if not face: return False
-    newindex = brep.AddSurface(face)
-    if newindex == -1: return scriptcontext.errorhandler()
-    if not brep.Faces[0].ChangeSurface(newindex): return scriptcontext.errorhandler()
-    if not brep.Faces[0].RebuildEdges(scriptcontext.doc.ModelAbsoluteTolerance, False, False):
-        return scriptcontext.errorhandler()
-    brep.CullUnusedSurfaces()
-    scriptcontext.doc.Objects.Replace(surface_id, brep)
+    newbrep = Rhino.Geometry.Brep.TryConvertBrep(face)
+    if not newbrep: return scriptcontext.errorhandler()
+    scriptcontext.doc.Objects.Replace(surface_id, newbrep)
     scriptcontext.doc.Views.Redraw()
     return True
 
@@ -1355,7 +1351,7 @@ def OffsetSurface(surface_id, distance, tolerance=None, both_sides=False, create
     """
     brep = rhutil.coercebrep(surface_id, True)
     face = None
-    if brep.IsSurface: face = brep.Faces[0]
+    if brep.Faces.Count == 1: face = brep.Faces[0]
     if face is None: return scriptcontext.errorhandler()
     if tolerance is None: tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     newbrep = Rhino.Geometry.Brep.CreateFromOffsetFace(face, distance, tolerance, both_sides, create_solid)
