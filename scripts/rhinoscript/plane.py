@@ -153,6 +153,7 @@ def PlaneFromNormal(origin, normal, xaxis=None):
     rc = Rhino.Geometry.Plane(origin, normal)
     if xaxis:
         xaxis = rhutil.coerce3dvector(xaxis, True)
+        xaxis = Rhino.Geometry.Vector3d(xaxis)#prevent original xaxis parameter from being unitized too
         xaxis.Unitize()
         yaxis = Rhino.Geometry.Vector3d.CrossProduct(rc.Normal, xaxis)
         rc = Rhino.Geometry.Plane(origin, xaxis, yaxis)
