@@ -523,15 +523,16 @@ def GetString(message=None, defaultString=None, strings=None):
         Note, strings cannot begin with a numeric character
     """
     gs = Rhino.Input.Custom.GetString()
+    gs.AcceptNothing(True)
     if message: gs.SetCommandPrompt(message)
     if defaultString: gs.SetDefaultString(defaultString)
     if strings:
         for s in strings: gs.AddOption(s)
     result = gs.Get()
-    if( gs.CommandResult()==Rhino.Commands.Result.Success ):
-        if( result == Rhino.Input.GetResult.Option ):
-            return gs.Option().EnglishName
-        return gs.StringResult()
+    if result==Rhino.Input.GetResult.Cancel: return None
+    if( result == Rhino.Input.GetResult.Option ):
+        return gs.Option().EnglishName
+    return gs.StringResult()
 
 
 def ListBox(items, message=None, title=None, default=None):
