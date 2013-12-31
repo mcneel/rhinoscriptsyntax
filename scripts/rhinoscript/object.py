@@ -681,6 +681,7 @@ def ObjectMaterialSource(object_ids, source=None):
         return rc
     # else working with multiple objects
     if source is None: raise Exception("source is required when object_ids represents multiple objects")
+    source = System.Enum.ToObject(Rhino.DocObjects.ObjectMaterialSource, source)
     for id in object_ids:
         rhino_object = rhutil.coercerhinoobject(id, True, True)
         rhino_object.Attributes.MaterialSource = source
