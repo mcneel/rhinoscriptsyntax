@@ -578,16 +578,18 @@ def ClosedCurveOrientation(curve_id, direction=(0,0,1)):
     return int(orientation)
 
 
-def ConvertCurveToPolyline(curve_id, angle_tolerance=5.0, tolerance=0.01, delete_input=False):
-    """Converts a curve to a polyline curve
+def ConvertCurveToPolyline(curve_id, angle_tolerance=5.0, tolerance=0.01, delete_input=False, min_edge_length=0, max_edge_length=0):
+    """Convert curve to a polyline curve
     Parameters:
       curve_id = identifier of a curve object
-      angle_tolerance [opt] = The maximum angle between curve
-        tangents at line endpoints. If omitted, the angle tolerance is set to 5.0.
-      tolerance [opt] = The distance tolerance at segment midpoints.
-        If omitted, the tolerance is set to 0.01.
-      delete_input [opt] = Delete the curve object specified by curve_id.
-        If omitted, curve_id will not be deleted.
+      angle_tolerance [opt] = The maximum angle between curve tangents at line
+        endpoints. If omitted, the angle tolerance is set to 5.0.
+      tolerance[opt] = The distance tolerance at segment midpoints. If omitted,
+        the tolerance is set to 0.01.
+      delete_input[opt] = Delete the curve object specified by curve_id. If
+        omitted, curve_id will not be deleted.
+      min_edge_length[opt] = Minimum segment length
+      max_edge_length[opt] = Maximum segment length
     Returns:
       The new curve if successful.
     """
@@ -595,7 +597,7 @@ def ConvertCurveToPolyline(curve_id, angle_tolerance=5.0, tolerance=0.01, delete
     if angle_tolerance<=0: angle_tolerance = 5.0
     angle_tolerance = Rhino.RhinoMath.ToRadians(angle_tolerance)
     if tolerance<=0.0: tolerance = 0.01;
-    polyline_curve = curve.ToPolyline( 0, 0, angle_tolerance, 0.0, 0.0, tolerance, 0.0, 0.0, True)
+    polyline_curve = curve.ToPolyline( 0, 0, angle_tolerance, 0.0, 0.0, tolerance, min_edge_length, max_edge_length, True)
     if not polyline_curve: return scriptcontext.errorhandler()
     id = System.Guid.Empty
     if delete_input:
@@ -1826,9 +1828,9 @@ def FitCurve(curve_id, degree=3, distance_tolerance=-1, angle_tolerance=-1):
         rhobj = rhutil.coercerhinoobject(curve_id)
         rc = None
         if rhobj:
-            rc = scriptcontext.doc.Objects.AddCurve(curve, rhobj.Attributes)
+            rc = scriptcontext.doc.Objects.AddCurve(nc, rhobj.Attributes)
         else:
-            rc = scriptcontext.doc.Objects.AddCurve(curve)
+            rc = scriptcontext.doc.Objects.AddCurve(nc)
         if rc==System.Guid.Empty: raise Exception("Unable to add curve to document")
         scriptcontext.doc.Views.Redraw()
         return rc
