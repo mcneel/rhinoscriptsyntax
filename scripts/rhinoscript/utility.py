@@ -145,10 +145,27 @@ def ColorRedValue(rgb):
 
 
 def ColorRGBToHLS(rgb):
-    "Converts colors from RGB to HLS"
+    "Convert colors from RGB to HLS"
     rgb = coercecolor(rgb, True)
     hsl = Rhino.Display.ColorHSL(rgb)
     return hsl.H, hsl.S, hsl.L
+
+
+def CullDuplicateNumbers(numbers, tolerance=None):
+    count = len(numbers)
+    if count < 2: return numbers
+    if tolerance is None: tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+    numbers = sorted(numbers)
+    d = numbers[0]
+    index = 1
+    for step in range(1,count):
+        test_value = numbers[index]
+        if math.fabs(d-test_value)<=tolerance:
+            numbers.pop(index)
+        else:
+            d = test_value
+            index += 1
+    return numbers
 
 
 def CullDuplicatePoints(points, tolerance=-1):
