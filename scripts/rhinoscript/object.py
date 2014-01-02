@@ -4,6 +4,7 @@ import utility as rhutil
 import System.Guid, System.Enum
 from layer import __getlayer
 from view import __viewhelper
+import math
 
 
 def CopyObject(object_id, translation=None):
@@ -1016,6 +1017,51 @@ def SelectObjects( object_ids):
     rc = 0
     for id in object_ids:
         if SelectObject(id)==True: rc += 1
+    return rc
+
+
+def ShearObject(object_id, origin, reference_point, angle_degrees, copy=False):
+    """Perform a shear transformation on a single object
+    Parameters:
+      object_id: String or Guid. The identifier of an object
+      origin, reference_point: origin/reference point of the shear transformation
+    Returns:
+      Identifier of the sheared object if successful
+      None on error
+    """
+    rc = ShearObjects(object_id, origin, reference_point, angle_degrees, copy)
+    if rc: return rc[0]
+
+
+def ShearObjects(object_ids, origin, reference_point, angle_degrees, copy=False):
+    """Shears one or more objects
+    Parameters:
+      object_ids: The identifiers objects to shear
+      origin, reference_point: origin/reference point of the shear transformation
+    Returns:
+      List of identifiers of the sheared objects if successful
+    """
+    origin = rhutil.coerce3dpoint(origin, True)
+    reference_point = rhutil.coerce3dpoint(reference_point, True)
+    if (origin-reference_point).IsTiny(): return None
+    plane = scriptcontext.doc.Views.ActiveView.MainViewport.ConstructionPlane()
+    frame = Rhino.Geometry.Plane(plane)
+    frame.Origin = origin
+    frame.ZAxis = plane.Normal
+    yaxis = reference_point-origin
+    yaxis.Unitize()
+    frame.YAxis = yaxis
+    xaxis = Rhino.Geometry.Vector3d.CrossProduct(frame.ZAxis, frame.YAxis)
+    xaxis.Unitize()
+    frame.XAxis = xaxis
+
+    world_plane = Rhino.Geometry.Plane.WorldXY
+    cob = Rhino.Geometry.Transform.ChangeBasis(world_plane, frame)
+    shear2d = Rhino.Geometry.Transform.Identity
+    shear2d[0,1] = math.tan(math.radians(angle_degrees))
+    cobinv = Rhino.Geometry.Transform.ChangeBasis(frame, world_plane)
+    xf = cobinv * shear2d * cob
+    rc = TransformObjects(object_ids, xf, copy)
     return rc
 
 
