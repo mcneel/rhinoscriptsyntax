@@ -254,6 +254,16 @@ def Polar(point, angle_degrees, distance, plane=None):
     return rc
 
 
+def SimplifyArray(points):
+    rc = []
+    for point in points:
+        point = coerce3dpoint(point, True)
+        rc.append(point.X)
+        rc.append(point.Y)
+        rc.append(point.Z)
+    return rc
+
+
 def Sleep(milliseconds):
     "Suspends execution of a running script for the specified interval"
     time.sleep( milliseconds / 1000.0 )
