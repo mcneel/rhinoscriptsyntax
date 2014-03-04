@@ -251,7 +251,7 @@ def AddInterpCrvOnSrfUV(surface_id, points):
       id of the new curve object if successful
     """
     surface = rhutil.coercesurface(surface_id, True)
-    points = rhutil.coerce2dpointlist(points, True)
+    points = rhutil.coerce2dpointlist(points)
     tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     curve = surface.InterpolatedCurveOnSurfaceUV(points, tolerance)
     if not curve: raise Exception("unable to create InterpolatedCurveOnSurfaceUV")
