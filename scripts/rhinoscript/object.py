@@ -531,6 +531,20 @@ def ObjectLayer(object_id, layer=None):
         scriptcontext.doc.Views.Redraw()
     return rc
 
+def ObjectLayerFullPath (object_id):
+    """Returns the full path of the layer of an object including parent Layers
+    Parameters:
+      object_id = the identifier of the object
+    Returns:
+      The object's current layer full Path, 
+      Children and Parents a separated by '::'
+    """
+    obj = rhutil.coercerhinoobject(object_id, True, True)
+    if obj is None: return scriptcontext.errorhandler()
+    index = obj.Attributes.LayerIndex
+    rc = scriptcontext.doc.Layers[index].FullPath
+    return rc
+
 
 def ObjectLayout(object_id, layout=None, return_name=True):
     """Returns or changes the layout or model space of an object
