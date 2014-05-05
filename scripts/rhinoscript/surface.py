@@ -535,7 +535,7 @@ def AddTorus(base, major_radius, minor_radius, direction=None):
         baseplane = rhutil.coerceplane(base, True)
         if direction!=None: return scriptcontext.errorhandler()
     if baseplane is None:
-        direction = rhutil.coerce3dpoint(direction, True)
+        direction = rhutil.coerce3dpoint(direction, False)
         if direction: direction = direction-basepoint
         else: direction = Rhino.Geometry.Vector3d.ZAxis
         baseplane = Rhino.Geometry.Plane(basepoint, direction)
