@@ -522,7 +522,7 @@ def ObjectLayer(object_id, layer=None):
     obj = rhutil.coercerhinoobject(object_id, True, True)
     if obj is None: return scriptcontext.errorhandler()
     index = obj.Attributes.LayerIndex
-    rc = scriptcontext.doc.Layers[index].Name
+    rc = scriptcontext.doc.Layers[index].FullPath
     if layer:
         layer = __getlayer(layer, True)
         index = layer.LayerIndex
