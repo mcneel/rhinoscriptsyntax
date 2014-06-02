@@ -708,16 +708,20 @@ def DuplicateEdgeCurves(object_id, select=False):
     return curves
 
 
-def DuplicateSurfaceBorder(surface_id):
-    """Creates a curve that duplicates a surface or polysurface border
+def DuplicateSurfaceBorder(surface_id, type=0):
+    """Create curves that duplicate a surface or polysurface border
     Parameters:
       surface_id = identifier of a surface
+      type[opt] = the border curves to return (0=both exterior and interior,
+          1=exterior, 2=interior
     Returns:
       list of curve ids on success
       None on error
     """
     brep = rhutil.coercebrep(surface_id, True)
-    curves = brep.DuplicateEdgeCurves(True)
+    inner = type==0 or type==2
+    outer = type==0 or type==1
+    curves = brep.DuplicateNakedEdgeCurves(outer, inner)
     if curves is None: return scriptcontext.errorhandler()
     tolerance = scriptcontext.doc.ModelAbsoluteTolerance * 2.1
     curves = Rhino.Geometry.Curve.JoinCurves(curves, tolerance)
@@ -972,42 +976,6 @@ def FlipSurface(surface_id, flip=None):
         if surface_id: scriptcontext.doc.Objects.Replace(surface_id, brep)
         scriptcontext.doc.Views.Redraw()
     return old_reverse
-
-
-def ReverseSurface(surface_id, direction):
-    """Reverses U or V directions of a surface, or swaps (transposes) U and V directions.
-    Note, unlike the RhinoScript version, this function only works on untrimmed surfaces.
-    Parameters:
-      surface_id = identifier of a surfaceobject
-      direction
-        1 = reverse U, 2 = reverse V, 4 = transpose U and V (values can be combined)
-    Returns:
-      Boolean indicating success or failure
-      None on error
-    """
-    brep = rhutil.coercebrep(surface_id, True)
-    if not brep.IsSurface: return scriptcontext.errorhandler()
-    if direction == 0: return True
-    flipped = brep.Faces[0].OrientationIsReversed
-    face = brep.Faces[0].UnderlyingSurface()
-    if direction & 1:
-        face = face.Reverse(0)
-        flipped = not flipped
-        if not face: return False
-    if direction & 2:
-        face = face.Reverse(1)
-        flipped = not flipped
-        if not face: return False
-    if direction & 4:
-        face = face.Transpose()
-        flipped = not flipped
-        if not face: return False
-    newbrep = Rhino.Geometry.Brep.TryConvertBrep(face)
-    if not newbrep: return scriptcontext.errorhandler()
-    if flipped: newbrep.Flip()
-    scriptcontext.doc.Objects.Replace(surface_id, newbrep)
-    scriptcontext.doc.Views.Redraw()
-    return True
 
 
 def IntersectBreps(brep1, brep2, tolerance=None):
@@ -1356,7 +1324,7 @@ def OffsetSurface(surface_id, distance, tolerance=None, both_sides=False, create
     """
     brep = rhutil.coercebrep(surface_id, True)
     face = None
-    if brep.Faces.Count == 1: face = brep.Faces[0]
+    if brep.IsSurface: face = brep.Faces[0]
     if face is None: return scriptcontext.errorhandler()
     if tolerance is None: tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     newbrep = Rhino.Geometry.Brep.CreateFromOffsetFace(face, distance, tolerance, both_sides, create_solid)
@@ -1407,6 +1375,31 @@ def RebuildSurface(object_id, degree=(3,3), pointcount=(10,10)):
     rc = scriptcontext.doc.Objects.Replace(object_id, newsurf)
     if rc: scriptcontext.doc.Views.Redraw()
     return rc
+
+
+def ReverseSurface(surface_id, direction):
+    """Reverses U or V directions of a surface, or swaps (transposes) U and V
+    directions.
+    Parameters:
+      surface_id = identifier of a surface object
+      direction
+        1 = reverse U, 2 = reverse V, 4 = transpose U and V (values can be combined)
+    Returns:
+      Boolean indicating success or failure
+      None on error
+    """
+    brep = rhutil.coercebrep(surface_id, True)
+    if not brep.Faces.Count==1: return scriptcontext.errorhandler()
+    face = brep.Faces[0]
+    if direction & 1:
+        face.Reverse(0, True)
+    if direction & 2:
+        face.Reverse(1, True)
+    if direction & 4:
+        face.Transpose(True)
+    scriptcontext.doc.Objects.Replace(surface_id, brep)
+    scriptcontext.doc.Views.Redraw()
+    return True
 
 
 def ShootRay(surface_ids, start_point, direction, reflections=10):

@@ -137,18 +137,17 @@ def AddText(text, point_or_plane, height=1.0, font="Arial", font_style=0, justif
 
 
 def AddTextDot(text, point):
-    """Adds an annotation text dot to the document.
+    """Add a text dot to the document.
     Parameters:
       text = string in dot
       point = A 3D point identifying the origin point.
     Returns:
       The identifier of the new object if successful
-      None if not successful, or on error
     """
     point = rhutil.coerce3dpoint(point, True)
     if not isinstance(text, str): text = str(text)
     rc = scriptcontext.doc.Objects.AddTextDot(text, point)
-    if id==System.Guid.Empty: raise ValueError("unable to add text dot to document")
+    if rc==System.Guid.Empty: raise ValueError("unable to add text dot to document")
     scriptcontext.doc.Views.Redraw()
     return rc
 

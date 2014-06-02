@@ -266,7 +266,7 @@ def IsObjectSolid(object_id):
 
 
 def IsObjectValid(object_id):
-    """Verifies that an object's geometry is valid and without error
+    """Verifies an object's geometry is valid and without error
     Parameters:
       object_id: The identifier of an object
     Returns:
@@ -275,10 +275,13 @@ def IsObjectValid(object_id):
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     return rhobj.IsValid
 
+
 def IsVisibleInView(object_id, view=None):
     """Verifies an object is visible in a view"""
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
-    return rhobj.IsActiveInViewport(__viewhelper(view).MainViewport)
+    viewport = __viewhelper(view).MainViewport
+    bbox = rhobj.Geometry.GetBoundingBox(True)
+    return rhobj.Visible and viewport.IsVisible(bbox)
 
 
 def LockObject(object_id):
@@ -522,7 +525,7 @@ def ObjectLayer(object_id, layer=None):
     obj = rhutil.coercerhinoobject(object_id, True, True)
     if obj is None: return scriptcontext.errorhandler()
     index = obj.Attributes.LayerIndex
-    rc = scriptcontext.doc.Layers[index].Name
+    rc = scriptcontext.doc.Layers[index].FullPath
     if layer:
         layer = __getlayer(layer, True)
         index = layer.LayerIndex

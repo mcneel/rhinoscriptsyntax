@@ -529,7 +529,6 @@ def MeshMeshIntersection(mesh1, mesh2, tolerance=None):
     if tolerance is None: tolerance = Rhino.RhinoMath.ZeroTolerance
     polylines = Rhino.Geometry.Intersect.Intersection.MeshMeshAccurate(mesh1, mesh2, tolerance)
     if polylines: return list(polylines)
-    return []
 
 
 def MeshNakedEdgePoints(object_id):

@@ -717,6 +717,14 @@ def ObjectsByType(geometry_type, select=False, state=0):
                     if bSurface: bFound = True
                 else:
                     if bPolySurface: bFound = True
+        elif object_type==Rhino.DocObjects.ObjectType.Extrusion and (bSurface or bPolySurface):
+            extrusion = object.Geometry
+            profile_count = extrusion.ProfileCount
+            cap_count = extrusion.CapCount
+            if profile_count==1 and cap_count==0 and bSurface:
+                bFound = True
+            elif profile_count>0 and cap_count>0 and bPolySurface:
+                bFound = True
         elif object_type & geometry_filter:
             bFound = True
 
@@ -751,7 +759,7 @@ def UnselectAllObjects():
 
 
 def VisibleObjects(view=None, select=False, include_lights=False, include_grips=False):
-    """Returns the identifiers of all objects that are visible in a specified view
+    """Return identifiers of all objects that are visible in a specified view
     Parameters:
       view [opt] = the view to use. If omitted, the current active view is used
       select [opt] = Select the objects
@@ -767,13 +775,47 @@ def VisibleObjects(view=None, select=False, include_lights=False, include_grips=
     it.IncludeLights = include_lights
     it.IncludeGrips = include_grips
     it.VisibleFilter = True
-    it.ViewportFilter = __viewhelper(view).MainViewport
+    viewport = __viewhelper(view).MainViewport
+    it.ViewportFilter = viewport
 
     object_ids = []
     e = scriptcontext.doc.Objects.GetObjectList(it)
     for object in e:
-        if select: object.Select(True)
-        object_ids.append(object.Id)
+        bbox = object.Geometry.GetBoundingBox(True)
+        if viewport.IsVisible(bbox):
+            if select: object.Select(True)
+            object_ids.append(object.Id)
 
     if object_ids and select: scriptcontext.doc.Views.Redraw()
     return object_ids
+
+
+def WindowPick(corner1, corner2, view=None, select=False, in_window=True):
+    """Picks objects using either a window or crossing selection
+    Parameters:
+      corner1, corner2 = corners of selection window
+      view[opt] = view to perform the selection in
+      select[opt] = select picked objects
+      in_window[opt] = if False, then a crossing window selection is performed
+    Returns:
+      list of object ids on success
+    """
+    viewport = __viewhelper(view).MainViewport
+    screen1 = Rhino.Geometry.Point2d(rhutil.coerce3dpoint(corner1, True))
+    screen2 = Rhino.Geometry.Point2d(rhutil.coerce3dpoint(corner2, True))
+    xf = viewport.GetTransform(Rhino.DocObjects.CoordinateSystem.World, Rhino.DocObjects.CoordinateSystem.Screen)
+    screen1.Transform(xf)
+    screen2.Transform(xf)
+    objects = None
+    filter = Rhino.DocObjects.ObjectType.AnyObject
+    if in_window:
+        objects = scriptcontext.doc.Objects.FindByWindowRegion(viewport, screen1, screen2, True, filter)
+    else:
+        objects = scriptcontext.doc.Objects.FindByCrossingWindowRegion(viewport, screen1, screen2, True, filter)
+    if objects:
+        rc = []
+        for rhobj in objects:
+            rc.append(rhobj.Id)
+            if select: rhobj.Select(True)
+        if select: scriptcontext.doc.Views.Redraw()
+        return rc

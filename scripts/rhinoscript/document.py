@@ -4,7 +4,7 @@ import System.Enum, System.Drawing.Size
 import utility as rhutil
 
 def CreatePreviewImage(filename, view=None, size=None, flags=0, wireframe=False):
-    """Creates a bitmap preview image of the current model
+    """Create a bitmap preview image of the current model
     Parameters:
       filename = name of the bitmap file to create
       view[opt] = title of the view. If omitted, the active view is used
@@ -112,7 +112,11 @@ def ReadFileVersion():
 
 def Redraw():
     "Redraws all views"
+    old = scriptcontext.doc.Views.RedrawEnabled
+    scriptcontext.doc.Views.RedrawEnabled = True
     scriptcontext.doc.Views.Redraw()
+    Rhino.RhinoApp.Wait()
+    scriptcontext.doc.Views.RedrawEnabled = old
 
 
 def RenderAntialias(style=None):
@@ -221,7 +225,7 @@ def UnitAbsoluteTolerance(tolerance=None, in_model_units=True):
 
 
 def UnitAngleTolerance(angle_tolerance_degrees=None, in_model_units=True):
-    """Returns or sets the document's angle tolerance. Angle tolerance is
+    """Return or set the document's angle tolerance. Angle tolerance is
     measured in degrees. See Rhino's DocumentProperties command
     (Units and Page Units Window) for details
     Parameters:
@@ -243,8 +247,19 @@ def UnitAngleTolerance(angle_tolerance_degrees=None, in_model_units=True):
     return rc
 
 
+def UnitDistanceDisplayPrecision(precision=None, model_units=True):
+    """Return or set the document's distance display precision"""
+    if model_units:
+        rc = scriptcontext.doc.ModelDistanceDisplayPrecision
+        if precision: scriptcontext.doc.ModelDistanceDisplayPrecision = precision
+        return rc
+    rc = scriptcontext.doc.PageDistanceDisplayPrecision
+    if precision: scriptcontext.doc.PageDistanceDisplayPrecision = precision
+    return rc
+
+
 def UnitRelativeTolerance(relative_tolerance=None, in_model_units=True):
-    """Returns or sets the document's relative tolerance. Relative tolerance
+    """Return or set the document's relative tolerance. Relative tolerance
     is measured in percent. See Rhino's DocumentProperties command
     (Units and Page Units Window) for details
     Parameters:
@@ -267,7 +282,7 @@ def UnitRelativeTolerance(relative_tolerance=None, in_model_units=True):
 
 
 def UnitScale(to_system, from_system=None):
-  """Returns the scale factor for changing between unit systems.
+  """Return the scale factor for changing between unit systems.
   Parameters:
     to_system = The unit system to convert to. The unit systems are are:
        0 - No unit system
@@ -299,7 +314,7 @@ def UnitScale(to_system, from_system=None):
     from_system [opt] = the unit system to convert from (see above). If omitted,
         the document's current unit system is used
   Returns:
-    the scale factor for changing between unit systems
+    scale factor for changing between unit systems
   """
   if from_system is None:
       from_system = scriptcontext.doc.ModelUnitSystem
@@ -311,7 +326,7 @@ def UnitScale(to_system, from_system=None):
 
 
 def UnitSystem(unit_system=None, scale=False, in_model_units=True):
-    """Returns or sets the document's units system. See Rhino's DocumentProperties
+    """Return or set the document's unit system. See Rhino's DocumentProperties
     command (Units and Page Units Window) for details
     Parameters:
       unit_system = The unit system to set the document to. The unit systems are:
@@ -346,8 +361,8 @@ def UnitSystem(unit_system=None, scale=False, in_model_units=True):
       in_model_units [opt] = Return or modify the document's model units (True)
           or the document's page units (False). The default is True.
     Returns:
-      if unit_system is no specified, then the current unit system
-      if unit_system is specified, then the previous unit system
+      if unit_system is not specified, the current unit system
+      if unit_system is specified, the previous unit system
       None on error
     """
     if (unit_system is not None and (unit_system<1 or unit_system>25)):
@@ -363,3 +378,8 @@ def UnitSystem(unit_system=None, scale=False, in_model_units=True):
             unit_system = System.Enum.ToObject(Rhino.UnitSystem, unit_system)
             scriptcontext.doc.AdjustPageUnitSystem(unit_system, scale)
     return rc
+
+
+def UnitSystemName(capitalize=False, singular=True, abbreviate=False, model_units=True):
+    """Returns the name of the current unit system"""
+    return scriptcontext.doc.GetUnitSystemName(model_units, capitalize, singular, abbreviate)

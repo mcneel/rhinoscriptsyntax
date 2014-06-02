@@ -867,6 +867,13 @@ def ViewSize(view=None):
     return cr.Width, cr.Height
 
 
+def ViewSpeedTest(view=None, frames=100, freeze=True, direction=0, angle_degrees=5):
+    """Test's Rhino's display performance"""
+    view = __viewhelper(view)
+    angle_radians = math.radians(angle_degrees)
+    return view.SpeedTest(frames, freeze, direction, angle_radians)
+
+
 def ViewTarget(view=None, target=None):
     """Returns or sets the target location of the specified view
     Parameters:

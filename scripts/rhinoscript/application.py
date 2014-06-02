@@ -2,14 +2,14 @@ import scriptcontext
 import Rhino
 import Rhino.ApplicationSettings.ModelAidSettings as modelaid
 import Rhino.Commands.Command as rhcommand
-import System.TimeSpan, System.Enum
+import System.TimeSpan, System.Enum, System.Environment
 import System.Windows.Forms.Screen
 import datetime
 import utility as rhutil
 
 
 def AddAlias(alias, macro):
-    """Adds new command alias to Rhino. Command aliases can be added manually by
+    """Add new command alias to Rhino. Command aliases can be added manually by
     using Rhino's Options command and modifying the contents of the Aliases tab.
     Parameters:
       alias = name of new command alias. Cannot match command names or existing
@@ -318,6 +318,22 @@ def EnablePlugIn(plugin, enable=None):
 def ExeFolder():
     "Returns the full path to Rhino's executable folder."
     return Rhino.ApplicationSettings.FileSettings.ExecutableFolder
+
+
+def ExePlatform():
+    "Returns the platform of the Rhino executable"
+    if System.Environment.Is64BitProcess: return 1
+    return 0
+
+
+def ExeServiceRelease():
+    "Returns the service release number of the Rhino executable"
+    return Rhino.RhinoApp.ExeServiceRelease
+
+
+def ExeVersion():
+    "Returns the major version number of the Rhino executable"
+    return Rhino.RhinoApp.ExeVersion
 
 
 def Exit():

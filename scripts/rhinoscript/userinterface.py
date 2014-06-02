@@ -152,9 +152,9 @@ def GetBox(mode=0, base_point=None, prompt1=None, prompt2=None, prompt3=None):
 
 
 def GetColor(color=[0,0,0]):
-    """Displays the Rhino color picker dialog allowing the user to select an RGB color
+    """Display the Rhino color picker dialog allowing the user to select an RGB color
     Parameters:
-      color [opt] = a default RGB value. If omitted, the default color is black
+      color [opt] = default RGB value. If omitted, the default color is black
     Returns:
       RGB tuple of three numbers on success
       None on error
@@ -166,8 +166,26 @@ def GetColor(color=[0,0,0]):
     return scriptcontext.errorhandler()
 
 
+def GetCursorPos():
+    """Retrieves the cursor's position
+    Returns: tuple containing the following information
+      cursor position in world coordinates
+      cursor position in screen coordinates
+      id of the active viewport
+      cursor position in client coordinates
+    """
+    view = scriptcontext.doc.Views.ActiveView
+    screen_pt = Rhino.UI.MouseCursor.Location
+    client_pt = view.ScreenToClient(screen_pt)
+    viewport = view.ActiveViewport
+    xf = viewport.GetTransform(Rhino.DocObjects.CoordinateSystem.Screen, Rhino.DocObjects.CoordinateSystem.World)
+    world_pt = Rhino.Geometry.Point3d(client_pt.X, client_pt.Y, 0)
+    world_pt.Transform(xf)
+    return world_pt, screen_pt, viewport.Id, client_pt
+
+
 def GetEdgeCurves(message=None, min_count=1, max_count=0, select=False):
-    """Prompts the user to pick one or more surface or polysurface edge curves
+    """Prompt the user to pick one or more surface or polysurface edge curves
     Parameters:
       message [optional] = A prompt or message.
       min_count [optional] = minimum number of edges to select.
@@ -243,6 +261,19 @@ def GetLayer(title="Select Layer", layer=None, show_new_button=False, show_set_c
     if rc[0]!=System.Windows.Forms.DialogResult.OK: return None
     layer = scriptcontext.doc.Layers[rc[1]]
     return layer.FullPath
+
+
+def GetLayers(title="Select Layers", show_new_button=False):
+    """Displays a dialog box prompting the user to select one or more layers
+    Parameters:
+      title[opt] = dialog box title
+      show_new_button[opt] = Optional button to show on the dialog
+    Returns:
+      The names of selected layers if successful
+    """
+    rc, layer_indices = Rhino.UI.Dialogs.ShowSelectMultipleLayersDialog(None, title, show_new_button)
+    if rc==System.Windows.Forms.DialogResult.OK:
+        return [scriptcontext.doc.Layers[index].FullPath for index in layer_indices]
 
 
 def GetLine(mode=0, point=None, message1=None, message2=None, message3=None):
@@ -595,7 +626,7 @@ def MessageBox(message, buttons=0, title=""):
     
     icontype = buttons & 0x00000070
     icon = System.Windows.Forms.MessageBoxIcon.None
-    if icontype==16: icon = System.Windows.Forms.MessageBoxIcon.Exclamation
+    if icontype==16: icon = System.Windows.Forms.MessageBoxIcon.Error
     elif icontype==32: icon = System.Windows.Forms.MessageBoxIcon.Question
     elif icontype==48: icon = System.Windows.Forms.MessageBoxIcon.Warning
     elif icontype==64: icon = System.Windows.Forms.MessageBoxIcon.Information
