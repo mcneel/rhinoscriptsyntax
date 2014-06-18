@@ -378,6 +378,7 @@ def LayerVisible(layer, visible=None, force_visible=False):
         if visible and force_visible:
             scriptcontext.doc.Layers.ForceLayerVisible(layer.Id)
         else:
+            layer.SetPersistentVisibility(False)
             layer.IsVisible = visible
             layer.CommitChanges()
         scriptcontext.doc.Views.Redraw()
