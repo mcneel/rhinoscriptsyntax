@@ -263,6 +263,7 @@ def LayerLocked(layer, locked=None):
     layer = __getlayer(layer, True)
     rc = layer.IsLocked
     if locked!=None and locked!=rc:
+        layer.SetPersistentLocking(True)
         layer.IsLocked = locked
         layer.CommitChanges()
         scriptcontext.doc.Views.Redraw()
