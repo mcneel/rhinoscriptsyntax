@@ -939,8 +939,9 @@ def FilletSurfaces(surface0, surface1, radius, uvparam0=None, uvparam1=None):
     """
     surface0 = rhutil.coercesurface(surface0, True)
     surface1 = rhutil.coercesurface(surface1, True)
-    uvparam0 = rhutil.coerce2dpoint(uvparam0, True)
-    uvparam1 = rhutil.coerce2dpoint(uvparam1, True)
+    if uvparam0 is not None and uvparam1 is not None:   #SR9 error: "Could not convert None to a Point2d"
+        uvparam0 = rhutil.coerce2dpoint(uvparam0, True)
+        uvparam1 = rhutil.coerce2dpoint(uvparam1, True)
     surfaces = None
     tol = scriptcontext.doc.ModelAbsoluteTolerance
     if uvparam0 and uvparam1:
