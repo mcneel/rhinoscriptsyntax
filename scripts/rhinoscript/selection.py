@@ -309,7 +309,7 @@ def GetObjects(message=None, filter=0, group=True, preselect=False, select=False
                     rc = True
             return rc
     go = CustomGetObject(custom_filter)
-    if message: go.SetCommandPrompt(message)
+    go.SetCommandPrompt(message or "Select Objects")
     geometry_filter = __FilterHelper(filter)
     if filter>0: go.GeometryFilter = geometry_filter
     go.SubObjectSelect = False
@@ -361,7 +361,7 @@ def GetObjectsEx(message=None, filter=0, group=True, preselect=False, select=Fal
         ids = [rhutil.coerceguid(id) for id in objects]
         if ids: go = __CustomGetObjectEx(ids)
     if not go: go = Rhino.Input.Custom.GetObject()
-    if message: go.SetCommandPrompt(message)
+    go.SetCommandPrompt(message or "Select Objects")
     geometry_filter = __FilterHelper(filter)
     if filter>0: go.GeometryFilter = geometry_filter
     go.SubObjectSelect = False
