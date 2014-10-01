@@ -151,6 +151,9 @@ def XformPlanarProjection(plane):
 def XformRotation1(initial_plane, final_plane):
     """Returns a rotation transformation that maps initial_plane to final_plane.
     The planes should be right hand orthonormal planes.
+    Parameters:
+      initial_plane = plane to rotate from
+      final_plane = plane to rotate to
     Returns:
       The 4x4 transformation matrix.
       None on error.
@@ -163,7 +166,11 @@ def XformRotation1(initial_plane, final_plane):
 
 
 def XformRotation2(angle_degrees, rotation_axis, center_point):
-    """Returns a rotation transformation
+    """Returns a rotation transformation around an axis
+    Parameters:
+      angle_degrees = rotation angle in degrees
+      rotation_axis = Vector3d: rotation axis
+      center_point = Point3d: rotation center
     Returns:
       The 4x4 transformation matrix.
       None on error.

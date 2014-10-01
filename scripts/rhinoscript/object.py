@@ -641,8 +641,8 @@ def ObjectLinetypeSource(object_ids, source=None):
     return len(object_ids)
 
 
-def ObjectMaterialIndex(object_id):
-    """Returns the material index of an object. Rendering materials are stored in
+def ObjectMaterialIndex(object_id, material_index=None):
+    """Returns or changes the material index of an object. Rendering materials are stored in
     Rhino's rendering material table. The table is conceptually an array. Render
     materials associated with objects and layers are specified by zero based
     indices into this array.
@@ -656,6 +656,10 @@ def ObjectMaterialIndex(object_id):
       None on failure      
     """
     rhino_object = rhutil.coercerhinoobject(object_id, True, True)
+    if material_index is not None and material_index < scriptcontext.doc.Materials.Count:
+      attrs = rhino_object.Attributes
+      attrs.MaterialIndex = material_index
+      scriptcontext.doc.Objects.ModifyAttributes(rhino_object, attrs, True)
     return rhino_object.Attributes.MaterialIndex
 
 

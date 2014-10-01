@@ -68,11 +68,15 @@ def AddLeader(points, view_or_plane=None, text=None):
     points = rhutil.coerce3dpointlist(points)
     if points is None or len(points)<2: raise ValueError("points must have at least two items")
     rc = System.Guid.Empty
+    view = None
+    if text and not isinstance(text, str): 
+        text = str(text)
+
     if not view_or_plane:
-        if text is None:
-            rc = scriptcontext.doc.Objects.AddLeader(points)
+        if len(points) == 2:
+            plane = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
+            rc = scriptcontext.doc.Objects.AddLeader(text, plane, [Rhino.Geometry.Point2d(p.X, p.Y) for p in points])
         else:
-            if not isinstance(text, str): text = str(text)
             rc = scriptcontext.doc.Objects.AddLeader(text, points)
     else:
         plane = rhutil.coerceplane(view_or_plane)
