@@ -250,20 +250,24 @@ def IsObjectSelected(object_id):
 
 
 def IsObjectSolid(object_id):
-    """Verifies that an object is a closed, solid object
+    """Determines if an object is closed, solid
     Parameters:
-      object_id: String or Guid. The identifier of an object
+      object_id: A string or Guid. The identifier of an object
     Returns:
-      True if the object is solid
-      False if the object is not solid
+      True if the object is solid, or a mesh is closed.
+      False otherwise.
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
-    if( isinstance(rhobj, Rhino.DocObjects.BrepObject) or isinstance(rhobj, Rhino.DocObjects.SurfaceObject) ):
-        return rhobj.Geometry.IsSolid
-    if( isinstance(rhobj, Rhino.DocObjects.MeshObject) ):
-        return rhobj.MeshGeometry.IsClosed
+    geom = rhobj.Geometry
+    geometry_type = geom.ObjectType
+    
+    if geometry_type == Rhino.DocObjects.ObjectType.Mesh:
+        return geom.IsClosed
+    if (geometry_type == Rhino.DocObjects.ObjectType.Surface or
+        geometry_type == Rhino.DocObjects.ObjectType.Brep or
+        geometry_type == Rhino.DocObjects.ObjectType.Extrusion):
+        return geom.IsSolid
     return False
-
 
 def IsObjectValid(object_id):
     """Verifies an object's geometry is valid and without error
