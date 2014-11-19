@@ -263,6 +263,7 @@ def LayerLocked(layer, locked=None):
     layer = __getlayer(layer, True)
     rc = layer.IsLocked
     if locked!=None and locked!=rc:
+        layer.SetPersistentLocking(True)
         layer.IsLocked = locked
         layer.CommitChanges()
         scriptcontext.doc.Views.Redraw()
@@ -378,6 +379,7 @@ def LayerVisible(layer, visible=None, force_visible=False):
         if visible and force_visible:
             scriptcontext.doc.Layers.ForceLayerVisible(layer.Id)
         else:
+            layer.SetPersistentVisibility(False)
             layer.IsVisible = visible
             layer.CommitChanges()
         scriptcontext.doc.Views.Redraw()
