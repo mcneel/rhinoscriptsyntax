@@ -1,6 +1,7 @@
 import Rhino
 import utility as rhutil
 import scriptcontext
+import rhinoscriptsyntax
 import System.Drawing.Color
 import System.Enum
 import System.Array
@@ -182,6 +183,54 @@ def GetCursorPos():
     world_pt = Rhino.Geometry.Point3d(client_pt.X, client_pt.Y, 0)
     world_pt.Transform(xf)
     return world_pt, screen_pt, viewport.Id, client_pt
+
+
+def GetDistance(first_pt=None, distance=None, first_pt_msg='First distance point', second_pt_msg='Second distance point'):
+    """Pauses for user input of a distance.
+    Parameters:
+      first_pt [opt] = First distance point
+      distance [opt] = Default distance
+      first_pt_msg [opt] = Prompt for the first distance point
+      second_pt_msg [opt] = Prompt for the second distance point
+    Returns:
+      The distance between the two points if successful.
+      None if not successful, or on error.
+    """
+    if distance is not None and first_pt is None: 
+        raise Exception("The 'first_pt' parameter needs a value if 'distance' is not None.")
+    if distance is not None and not (isinstance(distance, int) or isinstance(distance, float)): return None
+    if first_pt_msg is None or not isinstance(first_pt_msg, str): return None
+    if second_pt_msg is None or not isinstance(second_pt_msg, str): return None
+
+    if first_pt is not None:
+      if first_pt == 0: first_pt = (0,0,0)
+      first_pt = rhutil.coerce3dpoint(first_pt)
+      if first_pt is None: return None
+
+    if first_pt is None:
+      first_pt = rhinoscriptsyntax.GetPoint(first_pt_msg)
+      if first_pt is None: return None
+
+    # cannot use rs.GetPoint for 2nd point because of the need do differentiate 
+    # between the user accepting none vs cancelling to exactly mimic RhinoScript
+    gp = Rhino.Input.Custom.GetPoint()
+    if distance is not None:
+      gp.AcceptNothing(True)
+      second_pt_msg = "{0}<{1}>".format(second_pt_msg, distance)
+    gp.SetCommandPrompt(second_pt_msg)
+    gp.DrawLineFromPoint(first_pt,True)
+    gp.EnableDrawLineFromPoint(True)
+    r = gp.Get()
+    if r not in [Rhino.Input.GetResult.Cancel, Rhino.Input.GetResult.Point,
+      Rhino.Input.GetResult.Nothing]: return scriptcontext.errorHandler()
+    if r == Rhino.Input.GetResult.Cancel: return None
+    if r == Rhino.Input.GetResult.Point:
+      second_pt = gp.Point()
+      distance = second_pt.DistanceTo(first_pt)
+    gp.Dispose()
+
+    print "Distance: {0}".format(distance)
+    return distance
 
 
 def GetEdgeCurves(message=None, min_count=1, max_count=0, select=False):
@@ -660,6 +709,22 @@ def PropertyListBox(items, values, message=None, title=None):
     """
     values = [str(v) for v in values]
     return Rhino.UI.Dialogs.ShowPropertyListBox(title, message, items, values)
+
+
+def MultiListBox(items, message=None, title=None, defaults=None):
+    """Displays a list of items in a multiple-selection list box dialog
+    Parameters:
+      items = a zero-based, one-dimensional array of string items
+      message [opt] = a prompt or message
+      title [opt] = a dialog box title
+      defaults [opt] = either a string representing the pre-selected item in the list or a list if multiple items are pre-selected
+    Returns:
+      a list containing the selected items if succesful
+      None on error
+    """
+    if isinstance(defaults, str):
+      defaults = [defaults]  
+    return Rhino.UI.Dialogs.ShowMultiListBox(title, message, items, defaults)
 
 
 def OpenFileName(title=None, filter=None, folder=None, filename=None, extension=None):

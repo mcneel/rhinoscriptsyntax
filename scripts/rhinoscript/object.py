@@ -269,6 +269,7 @@ def IsObjectSolid(object_id):
         return geom.IsSolid
     return False
 
+
 def IsObjectValid(object_id):
     """Verifies an object's geometry is valid and without error
     Parameters:

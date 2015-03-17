@@ -237,11 +237,10 @@ def ExplodeBlockInstance(object_id):
       identifiers for the newly exploded objects on success
     """
     instance = __InstanceObjectFromId(object_id, True)
-    rc = scriptcontext.doc.Objects.AddExplodedInstancePieces(instance)
-    if rc:
-        scriptcontext.doc.Objects.Delete(instance, True)
-        scriptcontext.doc.Views.Redraw()
-        return rc
+    guids = scriptcontext.doc.Objects.AddExplodedInstancePieces(instance, explodeNestedInstances=False, deleteInstance=True)
+    if guids:
+      scriptcontext.doc.Views.Redraw()
+    return guids
 
 
 def InsertBlock( block_name, insertion_point, scale=(1,1,1), angle_degrees=0, rotation_normal=(0,0,1) ):

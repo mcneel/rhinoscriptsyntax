@@ -30,20 +30,40 @@ def AddLayer(name=None, color=None, visible=True, locked=False, parent=None):
     Returns:
       The full name of the new layer if successful.
     """
-    layer = Rhino.DocObjects.Layer.GetDefaultLayerProperties()
+    names = ['']
     if name:
-        if not isinstance(name, str): name = str(name)
-        layer.Name = name
-    color = rhutil.coercecolor(color)
-    if color: layer.Color = color
-    layer.IsVisible = visible
-    layer.IsLocked = locked
-    if parent:
-        parent = __getlayer(parent, True)
-        layer.ParentLayerId = parent.Id
-    index = scriptcontext.doc.Layers.Add(layer)
-    return scriptcontext.doc.Layers[index].FullPath
+      if not isinstance(name, str): name = str(name)
+      names = [n for n in name.split("::") if name]
+      
+    last_parent_index = -1
+    last_parent = None
+    for idx, name in enumerate(names):
+      layer = Rhino.DocObjects.Layer.GetDefaultLayerProperties()
 
+      if idx is 0:
+        if parent:
+          last_parent = __getlayer(parent, True)
+      else:
+        if last_parent_index <> -1:
+          last_parent = scriptcontext.doc.Layers[last_parent_index]
+
+      if last_parent:
+        layer.ParentLayerId = last_parent.Id
+      if name:
+        layer.Name = name
+        
+      color = rhutil.coercecolor(color)
+      if color: layer.Color = color
+      layer.IsVisible = visible
+      layer.IsLocked = locked
+    
+      last_parent_index = scriptcontext.doc.Layers.Add(layer)
+      if last_parent_index == -1:
+        full_path = layer.Name
+        if last_parent:
+            full_path = last_parent.FullPath + "::" + full_path
+        last_parent_index = scriptcontext.doc.Layers.FindByFullPath(full_path, True)
+    return scriptcontext.doc.Layers[last_parent_index].FullPath
 
 def CurrentLayer(layer=None):
     """Returns or changes the current layer
@@ -283,6 +303,18 @@ def LayerMaterialIndex(layer,index=None):
         layer.CommitChanges()
         scriptcontext.doc.Views.Redraw()
     return rc
+
+
+def LayerId(layer):
+    """Returns the identifier of a layer given the layer's name.
+    Parameters:
+      layer = name of existing layer
+    Returns:
+      String - The layer's identifier if successful.
+      Null - If not successful, or on error.
+    """
+    idx = scriptcontext.doc.Layers.FindByFullPath(layer, True)
+    return str(scriptcontext.doc.Layers[idx].Id) if idx >= 0 else None
 
 
 def LayerName(layer_id, fullpath=True):

@@ -1325,7 +1325,7 @@ def OffsetSurface(surface_id, distance, tolerance=None, both_sides=False, create
     """
     brep = rhutil.coercebrep(surface_id, True)
     face = None
-    if brep.IsSurface: face = brep.Faces[0]
+    if (1 == brep.Faces.Count): face = brep.Faces[0]
     if face is None: return scriptcontext.errorhandler()
     if tolerance is None: tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     newbrep = Rhino.Geometry.Brep.CreateFromOffsetFace(face, distance, tolerance, both_sides, create_solid)

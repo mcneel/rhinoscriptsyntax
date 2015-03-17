@@ -338,7 +338,10 @@ def AddNurbsCurve(points, knots, degree, weights=None):
     for i in xrange(cvcount):
         cp = Rhino.Geometry.ControlPoint()
         cp.Location = points[i]
-        if weights: cp.Weight = weights[i]
+        if weights: 
+            cp.Weight = weights[i]
+        else:
+            cp.Weight = 1.0
         nc.Points[i] = cp
     for i in xrange(knotcount): nc.Knots[i] = knots[i]
     rc = scriptcontext.doc.Objects.AddCurve(nc)

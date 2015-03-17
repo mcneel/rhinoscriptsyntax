@@ -674,8 +674,8 @@ def MeshVertexColors(mesh_id, colors=0):
         colors = [rhutil.coercecolor(c) for c in colors]
         mesh.VertexColors.Clear()
         for c in colors: mesh.VertexColors.Add(c)
-        id = rhutil.coerceguid(mesh_id, True)
-        scriptcontext.doc.Objects.Replace(id, mesh)
+    id = rhutil.coerceguid(mesh_id, True)
+    scriptcontext.doc.Objects.Replace(id, mesh)
     scriptcontext.doc.Views.Redraw()
     return rc
 
