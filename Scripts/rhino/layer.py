@@ -240,7 +240,7 @@ def LayerColor(layer, color=None):
 
 
 def LayerCount():
-    "Return number of layers in the document"
+    "Returns the number of layers in the document"
     return scriptcontext.doc.Layers.ActiveCount
 
 
@@ -250,7 +250,7 @@ def LayerIds():
 
 
 def LayerLinetype(layer, linetype=None):
-    """Return or change the linetype of a layer
+    """Returns or changes the linetype of a layer
     Parameters:
       layer = name of an existing layer
       linetype[opt] = name of a linetype
@@ -329,7 +329,7 @@ def LayerName(layer_id, fullpath=True):
 
 
 def LayerNames(sort=False):
-    """Return names of all layers in the document.
+    """Returns the names of all layers in the document.
     Parameters:
       sort [opt] = return a sorted list of the layer names
     Returns

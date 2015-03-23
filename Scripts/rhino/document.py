@@ -1,6 +1,7 @@
 import scriptcontext
 import Rhino
 import System.Enum, System.Drawing.Size
+import System.IO
 import utility as rhutil
 
 def CreatePreviewImage(filename, view=None, size=None, flags=0, wireframe=False):
@@ -52,12 +53,17 @@ def DocumentModified(modified=None):
 
 def DocumentName():
     "Returns the name of the currently loaded Rhino document (3DM file)"
-    return scriptcontext.doc.Name
+    return scriptcontext.doc.Name or None
 
 
 def DocumentPath():
     "Returns path of the currently loaded Rhino document (3DM file)"
-    return scriptcontext.doc.Path
+    # GetDirectoryName throws an exception if an empty string is passed hence the 'or None'
+    path = System.IO.Path.GetDirectoryName(scriptcontext.doc.Path or None)
+    # add \ or / at the end to be consistent with RhinoScript
+    if path and not path.endswith(str(System.IO.Path.DirectorySeparatorChar)):
+      path += System.IO.Path.DirectorySeparatorChar
+    return path
 
 
 def EnableRedraw(enable=True):
