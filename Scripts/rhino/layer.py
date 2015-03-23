@@ -240,7 +240,7 @@ def LayerColor(layer, color=None):
 
 
 def LayerCount():
-    "Return number of layers in the document"
+    "Returns the number of layers in the document"
     return scriptcontext.doc.Layers.ActiveCount
 
 
@@ -250,7 +250,7 @@ def LayerIds():
 
 
 def LayerLinetype(layer, linetype=None):
-    """Return or change the linetype of a layer
+    """Returns or changes the linetype of a layer
     Parameters:
       layer = name of an existing layer
       linetype[opt] = name of a linetype
@@ -266,7 +266,6 @@ def LayerLinetype(layer, linetype=None):
         index = scriptcontext.doc.Linetypes.Find(linetype, True)
         if index==-1: return scriptcontext.errorhandler()
         layer.LinetypeIndex = index
-        layer.CommitChanges()
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -284,7 +283,6 @@ def LayerLocked(layer, locked=None):
     rc = layer.IsLocked
     if locked!=None and locked!=rc:
         layer.IsLocked = locked
-        layer.CommitChanges()
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -300,7 +298,6 @@ def LayerMaterialIndex(layer,index=None):
     rc = layer.RenderMaterialIndex
     if index is not None and index>=-1:
         layer.RenderMaterialIndex = index
-        layer.CommitChanges()
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -329,7 +326,7 @@ def LayerName(layer_id, fullpath=True):
 
 
 def LayerNames(sort=False):
-    """Return names of all layers in the document.
+    """Returns the names of all layers in the document.
     Parameters:
       sort [opt] = return a sorted list of the layer names
     Returns
@@ -371,7 +368,6 @@ def LayerPrintColor(layer, color=None):
     if color:
         color = rhutil.coercecolor(color)
         layer.PlotColor = color
-        layer.CommitChanges()
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -390,7 +386,6 @@ def LayerPrintWidth(layer, width=None):
     rc = layer.PlotWeight
     if width is not None and width!=rc:
         layer.PlotWeight = width
-        layer.CommitChanges()
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -411,7 +406,6 @@ def LayerVisible(layer, visible=None, force_visible=False):
             scriptcontext.doc.Layers.ForceLayerVisible(layer.Id)
         else:
             layer.IsVisible = visible
-            layer.CommitChanges()
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -441,7 +435,6 @@ def ParentLayer(layer, parent=None):
     else:
         parent = __getlayer(parent, True)
         layer.ParentLayerId = parent.Id
-    layer.CommitChanges()
     return oldparent
 
 
@@ -467,5 +460,4 @@ def RenameLayer(oldname, newname):
     if oldname and newname:
         layer = __getlayer(oldname, True)
         layer.Name = newname
-        layer.CommitChanges()
         return newname

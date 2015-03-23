@@ -1,4 +1,5 @@
 import Rhino
+import Rhino.UI
 import utility as rhutil
 import scriptcontext
 import rhinoscriptsyntax
@@ -65,7 +66,7 @@ def ComboListBox(items, message=None, title=None):
 
 
 def EditBox(default_string=None, message=None, title=None):
-    """Display dialog box prompting the user to enter a string value. The
+    """Display dialog prompting the user to enter a string. The
     string value may span multiple lines
     """
     rc, text = Rhino.UI.Dialogs.ShowEditBox(title, message, default_string, True)
@@ -307,7 +308,7 @@ def GetLayer(title="Select Layer", layer=None, show_new_button=False, show_set_c
         index = scriptcontext.doc.Layers.Find(layer, True)
         if index!=-1: layer_index = index
     rc = Rhino.UI.Dialogs.ShowSelectLayerDialog(layer_index, title, show_new_button, show_set_current, True)
-    if rc[0]!=System.Windows.Forms.DialogResult.OK: return None
+    if rc[0]!=True: return None
     layer = scriptcontext.doc.Layers[rc[1]]
     return layer.FullPath
 
@@ -321,7 +322,7 @@ def GetLayers(title="Select Layers", show_new_button=False):
       The names of selected layers if successful
     """
     rc, layer_indices = Rhino.UI.Dialogs.ShowSelectMultipleLayersDialog(None, title, show_new_button)
-    if rc==System.Windows.Forms.DialogResult.OK:
+    if rc:
         return [scriptcontext.doc.Layers[index].FullPath for index in layer_indices]
 
 
@@ -666,35 +667,39 @@ def MessageBox(message, buttons=0, title=""):
         7      No button was clicked.
     """
     buttontype = buttons & 0x00000007 #111 in binary
-    btn = System.Windows.Forms.MessageBoxButtons.OK
-    if buttontype==1: btn = System.Windows.Forms.MessageBoxButtons.OKCancel
-    elif buttontype==2: btn = System.Windows.Forms.MessageBoxButtons.AbortRetryIgnore
-    elif buttontype==3: btn = System.Windows.Forms.MessageBoxButtons.YesNoCancel
-    elif buttontype==4: btn = System.Windows.Forms.MessageBoxButtons.YesNo
-    elif buttontype==5: btn = System.Windows.Forms.MessageBoxButtons.RetryCancel
+    btn = Rhino.UI.ShowMessageBoxButton.OK
+    if buttontype==1: btn = Rhino.UI.ShowMessageBoxButton.OKCancel
+    elif buttontype==2: btn = Rhino.UI.ShowMessageBoxButton.AbortRetryIgnore
+    elif buttontype==3: btn = Rhino.UI.ShowMessageBoxButton.YesNoCancel
+    elif buttontype==4: btn = Rhino.UI.ShowMessageBoxButton.YesNo
+    elif buttontype==5: btn = Rhino.UI.ShowMessageBoxButton.RetryCancel
     
     icontype = buttons & 0x00000070
-    icon = System.Windows.Forms.MessageBoxIcon.None
-    if icontype==16: icon = System.Windows.Forms.MessageBoxIcon.Error
-    elif icontype==32: icon = System.Windows.Forms.MessageBoxIcon.Question
-    elif icontype==48: icon = System.Windows.Forms.MessageBoxIcon.Warning
-    elif icontype==64: icon = System.Windows.Forms.MessageBoxIcon.Information
+    icon = Rhino.UI.ShowMessageBoxIcon.None
+    if icontype==16: icon = Rhino.UI.ShowMessageBoxIcon.Error
+    elif icontype==32: icon = Rhino.UI.ShowMessageBoxIcon.Question
+    elif icontype==48: icon = Rhino.UI.ShowMessageBoxIcon.Warning
+    elif icontype==64: icon = Rhino.UI.ShowMessageBoxIcon.Information
     
-    defbtntype = buttons & 0x00000300
-    defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button1
-    if defbtntype==256:
-        defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button2
-    elif defbtntype==512:
-        defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button3
+    ### 15 Sep 2014 Alain - default button not supported in new version of RC 
+    ### that isn't tied to Windows.Forms but it probably will so I'm commenting 
+    ### the old code instead of deleting it.
+    #defbtntype = buttons & 0x00000300
+    #defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button1
+    #if defbtntype==256:
+    #    defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button2
+    #elif defbtntype==512:
+    #    defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button3
+
     if not isinstance(message, str): message = str(message)
-    dlg_result = Rhino.UI.Dialogs.ShowMessageBox(message, title, btn, icon, defbtn)
-    if dlg_result==System.Windows.Forms.DialogResult.OK:     return 1
-    if dlg_result==System.Windows.Forms.DialogResult.Cancel: return 2
-    if dlg_result==System.Windows.Forms.DialogResult.Abort:  return 3
-    if dlg_result==System.Windows.Forms.DialogResult.Retry:  return 4
-    if dlg_result==System.Windows.Forms.DialogResult.Ignore: return 5
-    if dlg_result==System.Windows.Forms.DialogResult.Yes:    return 6
-    if dlg_result==System.Windows.Forms.DialogResult.No:     return 7
+    dlg_result = Rhino.UI.Dialogs.ShowMessageBox(message, title, btn, icon)
+    if dlg_result==Rhino.UI.ShowMessageBoxResult.OK:     return 1
+    if dlg_result==Rhino.UI.ShowMessageBoxResult.Cancel: return 2
+    if dlg_result==Rhino.UI.ShowMessageBoxResult.Abort:  return 3
+    if dlg_result==Rhino.UI.ShowMessageBoxResult.Retry:  return 4
+    if dlg_result==Rhino.UI.ShowMessageBoxResult.Ignore: return 5
+    if dlg_result==Rhino.UI.ShowMessageBoxResult.Yes:    return 6
+    if dlg_result==Rhino.UI.ShowMessageBoxResult.No:     return 7
 
 
 def PropertyListBox(items, values, message=None, title=None):
@@ -778,9 +783,8 @@ def OpenFileNames(title=None, filter=None, folder=None, filename=None, extension
 
 
 def PopupMenu(items, modes=None, point=None, view=None):
-    """Displays a user defined, context-style popup menu. The popup menu can appear
-    almost anywhere, and it can be dismissed by either clicking the left or right
-    mouse buttons
+    """Display a context-style popup menu. The popup menu can appear almost
+    anywhere, and can be dismissed by clicking the left or right mouse buttons
     Parameters:
       items = list of strings representing the menu items. An empty string or None
         will create a separator
@@ -817,7 +821,7 @@ def RealBox(message="", default_number=None, title="", minimum=None, maximum=Non
     if minimum is None: minimum = Rhino.RhinoMath.UnsetValue
     if maximum is None: maximum = Rhino.RhinoMath.UnsetValue
     rc, number = Rhino.UI.Dialogs.ShowNumberBox(title, message, default_number, minimum, maximum)
-    if rc==System.Windows.Forms.DialogResult.OK: return number
+    if rc: return number
 
 
 def SaveFileName(title=None, filter=None, folder=None, filename=None, extension=None):
@@ -847,5 +851,4 @@ def SaveFileName(title=None, filter=None, folder=None, filename=None, extension=
 def StringBox(message=None, default_value=None, title=None):
     "Display a dialog box prompting the user to enter a string value."
     rc, text = Rhino.UI.Dialogs.ShowEditBox(title, message, default_value, False)
-    if rc!=System.Windows.Forms.DialogResult.OK: return None
-    return text
+    if rc: return text

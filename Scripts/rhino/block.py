@@ -228,16 +228,17 @@ def DeleteBlock(block_name):
     return rc
 
 
-def ExplodeBlockInstance(object_id):
+def ExplodeBlockInstance(object_id, explode_nested_instances=False):
     """Explodes a block instance into it's geometric components. The
     exploded objects are added to the document
     Parameters:
       object_id = The identifier of an existing block insertion object  
+      explode_nested_instances = By default nested blocks are not exploded.
     Returns:
       identifiers for the newly exploded objects on success
     """
     instance = __InstanceObjectFromId(object_id, True)
-    guids = scriptcontext.doc.Objects.AddExplodedInstancePieces(instance, explodeNestedInstances=False, deleteInstance=True)
+    guids = scriptcontext.doc.Objects.AddExplodedInstancePieces(instance, explodeNestedInstances=explode_nested_instances, deleteInstance=True)
     if guids:
       scriptcontext.doc.Views.Redraw()
     return guids
