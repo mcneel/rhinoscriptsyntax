@@ -653,7 +653,6 @@ def ObjectMaterialIndex(object_id, material_index=None):
     indices into this array.
     Parameters:
       object_id = identifier of an object
-      index = optional. the new material index
     Returns:
       If the return value of ObjectMaterialSource is "material by object", then
       the return value of this function is the index of the object's rendering

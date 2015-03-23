@@ -309,7 +309,7 @@ def GetObjects(message=None, filter=0, group=True, preselect=False, select=False
                     rc = True
             return rc
     go = CustomGetObject(custom_filter)
-    go.SetCommandPrompt(message or "Select objects")
+    go.SetCommandPrompt(message or "Select Objects")
     geometry_filter = __FilterHelper(filter)
     if filter>0: go.GeometryFilter = geometry_filter
     go.SubObjectSelect = False
@@ -361,7 +361,7 @@ def GetObjectsEx(message=None, filter=0, group=True, preselect=False, select=Fal
         ids = [rhutil.coerceguid(id) for id in objects]
         if ids: go = __CustomGetObjectEx(ids)
     if not go: go = Rhino.Input.Custom.GetObject()
-    go.SetCommandPrompt(message or "Select objects")
+    go.SetCommandPrompt(message or "Select Objects")
     geometry_filter = __FilterHelper(filter)
     if filter>0: go.GeometryFilter = geometry_filter
     go.SubObjectSelect = False
@@ -451,24 +451,6 @@ def GetSurfaceObject(message="select surface", preselect=False, select=False):
     return id, prepicked, selmethod, point, uv, name
 
 
-def LockedObjects(include_lights=False, include_grips=False, include_references=False):
-    """Returns identifiers of all locked objects in the document. Locked objects
-    cannot be snapped to, and cannot be selected
-    Parameters:
-      include_lights[opt] = include light objects
-      include_grips[opt] = include grip objects
-    """
-    settings = Rhino.DocObjects.ObjectEnumeratorSettings()
-    settings.ActiveObjects = True
-    settings.NormalObjects = True
-    settings.LockedObjects = True
-    settings.HiddenObjects = True
-    settings.IncludeLights = include_lights
-    settings.IncludeGrips = include_grips
-    settings.ReferenceObjects = include_references
-    return [i.Id for i in scriptcontext.doc.Objects.GetObjectList(settings)
-        if i.IsLocked or (scriptcontext.doc.Layers[i.Attributes.LayerIndex]).IsLocked]
-
 def HiddenObjects(include_lights=False, include_grips=False, include_references=False):
     """Returns identifiers of all hidden objects in the document. Hidden objects
     are not visible, cannot be snapped to, and cannot be selected
@@ -477,15 +459,14 @@ def HiddenObjects(include_lights=False, include_grips=False, include_references=
       include_grips[opt] = include grip objects
     """
     settings = Rhino.DocObjects.ObjectEnumeratorSettings()
-    settings.ActiveObjects = True
-    settings.NormalObjects = True
-    settings.LockedObjects = True
+    settings.NormalObjects = False
+    settings.LockedObjects = False
     settings.HiddenObjects = True
     settings.IncludeLights = include_lights
     settings.IncludeGrips = include_grips
     settings.ReferenceObjects = include_references
-    return [i.Id for i in scriptcontext.doc.Objects.GetObjectList(settings)
-        if i.IsHidden or not (scriptcontext.doc.Layers[i.Attributes.LayerIndex]).IsVisible]
+    items = scriptcontext.doc.Objects.GetObjectList(settings)
+    return [item.Id for item in items]
 
 
 def InvertSelectedObjects(include_lights=False, include_grips=False, include_references=False):
@@ -696,7 +677,6 @@ def ObjectsByType(geometry_type, select=False, state=0):
     Returns:
       A list of Guids identifying the objects.
     """
-    if not state: state = 7
     bSurface = False
     bPolySurface = False
     bLights = False
@@ -718,15 +698,16 @@ def ObjectsByType(geometry_type, select=False, state=0):
     it.IncludeLights = bLights
     it.IncludeGrips = bGrips
     it.IncludePhantoms = bPhantoms
-
-    it.NormalObjects = True
-    it.LockedObjects = True
-    it.HiddenObjects = True
+    if state:
+        it.NormalObjects = False
+        it.LockedObjects = False
+    if state & 1: it.NormalObjects = True
+    if state & 2: it.LockedObjects = True
+    if state & 4: it.HiddenObjects = True
 
     object_ids = []
     e = scriptcontext.doc.Objects.GetObjectList(it)
     for object in e:
-      if state & 1 and object.IsNormal or state & 2 and object.IsLocked or state & 4 and object.IsHidden:
         bFound = False
         object_type = object.ObjectType
         if object_type==Rhino.DocObjects.ObjectType.Brep and (bSurface or bPolySurface):

@@ -300,8 +300,8 @@ def EnableAutosave(enable=True):
     Returns:
       the previous autosave state
     """
-    rc = Rhino.ApplicationSettings.FileSettings.AutoSaveEnabled
-    if rc!=enable: Rhino.ApplicationSettings.FileSettings.AutoSaveEnabled = enable
+    rc = Rhino.ApplicationSettings.FileSettings.AutosaveEnabled
+    if rc!=enable: Rhino.ApplicationSettings.FileSettings.AutosaveEnabled = enable
     return rc
 
 

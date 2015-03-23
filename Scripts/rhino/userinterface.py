@@ -1,8 +1,6 @@
 import Rhino
-import Rhino.UI
 import utility as rhutil
 import scriptcontext
-import rhinoscriptsyntax
 import System.Drawing.Color
 import System.Enum
 import System.Array
@@ -66,7 +64,7 @@ def ComboListBox(items, message=None, title=None):
 
 
 def EditBox(default_string=None, message=None, title=None):
-    """Display dialog prompting the user to enter a string. The
+    """Display dialog box prompting the user to enter a string value. The
     string value may span multiple lines
     """
     rc, text = Rhino.UI.Dialogs.ShowEditBox(title, message, default_string, True)
@@ -186,54 +184,6 @@ def GetCursorPos():
     return world_pt, screen_pt, viewport.Id, client_pt
 
 
-def GetDistance(first_pt=None, distance=None, first_pt_msg='First distance point', second_pt_msg='Second distance point'):
-    """Pauses for user input of a distance.
-    Parameters:
-      first_pt [opt] = First distance point
-      distance [opt] = Default distance
-      first_pt_msg [opt] = Prompt for the first distance point
-      second_pt_msg [opt] = Prompt for the second distance point
-    Returns:
-      The distance between the two points if successful.
-      None if not successful, or on error.
-    """
-    if distance is not None and first_pt is None: 
-        raise Exception("The 'first_pt' parameter needs a value if 'distance' is not None.")
-    if distance is not None and not (isinstance(distance, int) or isinstance(distance, float)): return None
-    if first_pt_msg is None or not isinstance(first_pt_msg, str): return None
-    if second_pt_msg is None or not isinstance(second_pt_msg, str): return None
-
-    if first_pt is not None:
-      if first_pt == 0: first_pt = (0,0,0)
-      first_pt = rhutil.coerce3dpoint(first_pt)
-      if first_pt is None: return None
-
-    if first_pt is None:
-      first_pt = rhinoscriptsyntax.GetPoint(first_pt_msg)
-      if first_pt is None: return None
-
-    # cannot use rs.GetPoint for 2nd point because of the need do differentiate 
-    # between the user accepting none vs cancelling to exactly mimic RhinoScript
-    gp = Rhino.Input.Custom.GetPoint()
-    if distance is not None:
-      gp.AcceptNothing(True)
-      second_pt_msg = "{0}<{1}>".format(second_pt_msg, distance)
-    gp.SetCommandPrompt(second_pt_msg)
-    gp.DrawLineFromPoint(first_pt,True)
-    gp.EnableDrawLineFromPoint(True)
-    r = gp.Get()
-    if r not in [Rhino.Input.GetResult.Cancel, Rhino.Input.GetResult.Point,
-      Rhino.Input.GetResult.Nothing]: return scriptcontext.errorHandler()
-    if r == Rhino.Input.GetResult.Cancel: return None
-    if r == Rhino.Input.GetResult.Point:
-      second_pt = gp.Point()
-      distance = second_pt.DistanceTo(first_pt)
-    gp.Dispose()
-
-    print "Distance: {0}".format(distance)
-    return distance
-
-
 def GetEdgeCurves(message=None, min_count=1, max_count=0, select=False):
     """Prompt the user to pick one or more surface or polysurface edge curves
     Parameters:
@@ -308,7 +258,7 @@ def GetLayer(title="Select Layer", layer=None, show_new_button=False, show_set_c
         index = scriptcontext.doc.Layers.Find(layer, True)
         if index!=-1: layer_index = index
     rc = Rhino.UI.Dialogs.ShowSelectLayerDialog(layer_index, title, show_new_button, show_set_current, True)
-    if rc[0]!=True: return None
+    if rc[0]!=System.Windows.Forms.DialogResult.OK: return None
     layer = scriptcontext.doc.Layers[rc[1]]
     return layer.FullPath
 
@@ -322,7 +272,7 @@ def GetLayers(title="Select Layers", show_new_button=False):
       The names of selected layers if successful
     """
     rc, layer_indices = Rhino.UI.Dialogs.ShowSelectMultipleLayersDialog(None, title, show_new_button)
-    if rc:
+    if rc==System.Windows.Forms.DialogResult.OK:
         return [scriptcontext.doc.Layers[index].FullPath for index in layer_indices]
 
 
@@ -667,39 +617,35 @@ def MessageBox(message, buttons=0, title=""):
         7      No button was clicked.
     """
     buttontype = buttons & 0x00000007 #111 in binary
-    btn = Rhino.UI.ShowMessageBoxButton.OK
-    if buttontype==1: btn = Rhino.UI.ShowMessageBoxButton.OKCancel
-    elif buttontype==2: btn = Rhino.UI.ShowMessageBoxButton.AbortRetryIgnore
-    elif buttontype==3: btn = Rhino.UI.ShowMessageBoxButton.YesNoCancel
-    elif buttontype==4: btn = Rhino.UI.ShowMessageBoxButton.YesNo
-    elif buttontype==5: btn = Rhino.UI.ShowMessageBoxButton.RetryCancel
+    btn = System.Windows.Forms.MessageBoxButtons.OK
+    if buttontype==1: btn = System.Windows.Forms.MessageBoxButtons.OKCancel
+    elif buttontype==2: btn = System.Windows.Forms.MessageBoxButtons.AbortRetryIgnore
+    elif buttontype==3: btn = System.Windows.Forms.MessageBoxButtons.YesNoCancel
+    elif buttontype==4: btn = System.Windows.Forms.MessageBoxButtons.YesNo
+    elif buttontype==5: btn = System.Windows.Forms.MessageBoxButtons.RetryCancel
     
     icontype = buttons & 0x00000070
-    icon = Rhino.UI.ShowMessageBoxIcon.None
-    if icontype==16: icon = Rhino.UI.ShowMessageBoxIcon.Error
-    elif icontype==32: icon = Rhino.UI.ShowMessageBoxIcon.Question
-    elif icontype==48: icon = Rhino.UI.ShowMessageBoxIcon.Warning
-    elif icontype==64: icon = Rhino.UI.ShowMessageBoxIcon.Information
+    icon = System.Windows.Forms.MessageBoxIcon.None
+    if icontype==16: icon = System.Windows.Forms.MessageBoxIcon.Error
+    elif icontype==32: icon = System.Windows.Forms.MessageBoxIcon.Question
+    elif icontype==48: icon = System.Windows.Forms.MessageBoxIcon.Warning
+    elif icontype==64: icon = System.Windows.Forms.MessageBoxIcon.Information
     
-    ### 15 Sep 2014 Alain - default button not supported in new version of RC 
-    ### that isn't tied to Windows.Forms but it probably will so I'm commenting 
-    ### the old code instead of deleting it.
-    #defbtntype = buttons & 0x00000300
-    #defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button1
-    #if defbtntype==256:
-    #    defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button2
-    #elif defbtntype==512:
-    #    defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button3
-
+    defbtntype = buttons & 0x00000300
+    defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button1
+    if defbtntype==256:
+        defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button2
+    elif defbtntype==512:
+        defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button3
     if not isinstance(message, str): message = str(message)
-    dlg_result = Rhino.UI.Dialogs.ShowMessageBox(message, title, btn, icon)
-    if dlg_result==Rhino.UI.ShowMessageBoxResult.OK:     return 1
-    if dlg_result==Rhino.UI.ShowMessageBoxResult.Cancel: return 2
-    if dlg_result==Rhino.UI.ShowMessageBoxResult.Abort:  return 3
-    if dlg_result==Rhino.UI.ShowMessageBoxResult.Retry:  return 4
-    if dlg_result==Rhino.UI.ShowMessageBoxResult.Ignore: return 5
-    if dlg_result==Rhino.UI.ShowMessageBoxResult.Yes:    return 6
-    if dlg_result==Rhino.UI.ShowMessageBoxResult.No:     return 7
+    dlg_result = Rhino.UI.Dialogs.ShowMessageBox(message, title, btn, icon, defbtn)
+    if dlg_result==System.Windows.Forms.DialogResult.OK:     return 1
+    if dlg_result==System.Windows.Forms.DialogResult.Cancel: return 2
+    if dlg_result==System.Windows.Forms.DialogResult.Abort:  return 3
+    if dlg_result==System.Windows.Forms.DialogResult.Retry:  return 4
+    if dlg_result==System.Windows.Forms.DialogResult.Ignore: return 5
+    if dlg_result==System.Windows.Forms.DialogResult.Yes:    return 6
+    if dlg_result==System.Windows.Forms.DialogResult.No:     return 7
 
 
 def PropertyListBox(items, values, message=None, title=None):
@@ -714,22 +660,6 @@ def PropertyListBox(items, values, message=None, title=None):
     """
     values = [str(v) for v in values]
     return Rhino.UI.Dialogs.ShowPropertyListBox(title, message, items, values)
-
-
-def MultiListBox(items, message=None, title=None, defaults=None):
-    """Displays a list of items in a multiple-selection list box dialog
-    Parameters:
-      items = a zero-based, one-dimensional array of string items
-      message [opt] = a prompt or message
-      title [opt] = a dialog box title
-      defaults [opt] = either a string representing the pre-selected item in the list or a list if multiple items are pre-selected
-    Returns:
-      a list containing the selected items if succesful
-      None on error
-    """
-    if isinstance(defaults, str):
-      defaults = [defaults]  
-    return Rhino.UI.Dialogs.ShowMultiListBox(title, message, items, defaults)
 
 
 def OpenFileName(title=None, filter=None, folder=None, filename=None, extension=None):
@@ -783,8 +713,9 @@ def OpenFileNames(title=None, filter=None, folder=None, filename=None, extension
 
 
 def PopupMenu(items, modes=None, point=None, view=None):
-    """Display a context-style popup menu. The popup menu can appear almost
-    anywhere, and can be dismissed by clicking the left or right mouse buttons
+    """Displays a user defined, context-style popup menu. The popup menu can appear
+    almost anywhere, and it can be dismissed by either clicking the left or right
+    mouse buttons
     Parameters:
       items = list of strings representing the menu items. An empty string or None
         will create a separator
@@ -821,7 +752,7 @@ def RealBox(message="", default_number=None, title="", minimum=None, maximum=Non
     if minimum is None: minimum = Rhino.RhinoMath.UnsetValue
     if maximum is None: maximum = Rhino.RhinoMath.UnsetValue
     rc, number = Rhino.UI.Dialogs.ShowNumberBox(title, message, default_number, minimum, maximum)
-    if rc: return number
+    if rc==System.Windows.Forms.DialogResult.OK: return number
 
 
 def SaveFileName(title=None, filter=None, folder=None, filename=None, extension=None):
@@ -851,4 +782,5 @@ def SaveFileName(title=None, filter=None, folder=None, filename=None, extension=
 def StringBox(message=None, default_value=None, title=None):
     "Display a dialog box prompting the user to enter a string value."
     rc, text = Rhino.UI.Dialogs.ShowEditBox(title, message, default_value, False)
-    if rc: return text
+    if rc!=System.Windows.Forms.DialogResult.OK: return None
+    return text
