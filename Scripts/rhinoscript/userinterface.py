@@ -753,7 +753,7 @@ def OpenFileName(title=None, filter=None, folder=None, filename=None, extension=
     if folder: fd.InitialDirectory = folder
     if filename: fd.FileName = filename
     if extension: fd.DefaultExt = extension
-    if fd.ShowDialog()==System.Windows.Forms.DialogResult.OK: return fd.FileName
+    if fd.ShowDialog(): return fd.FileName
 
 
 def OpenFileNames(title=None, filter=None, folder=None, filename=None, extension=None):
@@ -777,9 +777,8 @@ def OpenFileNames(title=None, filter=None, folder=None, filename=None, extension
     if filename: fd.FileName = filename
     if extension: fd.DefaultExt = extension
     fd.MultiSelect = True
-    rc = []
-    if fd.ShowDialog()==System.Windows.Forms.DialogResult.OK: rc = fd.FileNames
-    return rc
+    if fd.ShowDialog(): return fd.FileNames
+    return []
 
 
 def PopupMenu(items, modes=None, point=None, view=None):
@@ -845,7 +844,7 @@ def SaveFileName(title=None, filter=None, folder=None, filename=None, extension=
     if folder: fd.InitialDirectory = folder
     if filename: fd.FileName = filename
     if extension: fd.DefaultExt = extension
-    if fd.ShowDialog()==System.Windows.Forms.DialogResult.OK: return fd.FileName
+    if fd.ShowDialog(): return fd.FileName
 
 
 def StringBox(message=None, default_value=None, title=None):
