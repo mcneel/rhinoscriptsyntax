@@ -1,4 +1,5 @@
 import Rhino
+import Rhino.UI
 import utility as rhutil
 import scriptcontext
 import rhinoscriptsyntax
@@ -320,7 +321,7 @@ def GetLayers(title="Select Layers", show_new_button=False):
       The names of selected layers if successful
     """
     rc, layer_indices = Rhino.UI.Dialogs.ShowSelectMultipleLayersDialog(None, title, show_new_button)
-    if rc==System.Windows.Forms.DialogResult.OK:
+    if rc:
         return [scriptcontext.doc.Layers[index].FullPath for index in layer_indices]
 
 
@@ -788,7 +789,6 @@ def PopupMenu(items, modes=None, point=None, view=None):
     Returns:
       index of the menu item picked or -1 if no menu item was picked
     """
-    import System.Windows.Forms
     screen_point = System.Windows.Forms.Cursor.Position
     if point:
         point = rhutil.coerce3dpoint(point)
