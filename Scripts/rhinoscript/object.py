@@ -1005,7 +1005,7 @@ def ScaleObjects(object_ids, origin, scale, copy=False):
     return rc
 
 
-def SelectObject(object_id):
+def SelectObject(object_id, redraw=True):
     """Selects a single object
     Parameters:
       object_id = the identifier of the object to select
@@ -1014,7 +1014,7 @@ def SelectObject(object_id):
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     rhobj.Select(True)
-    scriptcontext.doc.Views.Redraw()
+    if redraw: scriptcontext.doc.Views.Redraw()
     return True
 
 
@@ -1029,7 +1029,8 @@ def SelectObjects( object_ids):
     if id: object_ids = [id]
     rc = 0
     for id in object_ids:
-        if SelectObject(id)==True: rc += 1
+        if SelectObject(id, False)==True: rc += 1
+    if rc > 0: scriptcontext.doc.Views.Redraw()
     return rc
 
 
