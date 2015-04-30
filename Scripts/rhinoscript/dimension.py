@@ -202,7 +202,7 @@ def DimensionUserText(object_id, usertext=None):
         annotation_object.Geometry.Text = usertext
         annotation_object.CommitChanges()
         scriptcontext.doc.Views.Redraw()
-
+    return rc
 
 def DimensionValue(object_id):
     """Returns the value of a dimension object
