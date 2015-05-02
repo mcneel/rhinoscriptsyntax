@@ -34,3 +34,12 @@ def errorhandler():
     replace the scriptcontext.errorhandler value
     '''
     return None
+
+
+__executing_command = None
+def localize(s, context_id=None):
+    if context_id is None or __executing_command is None:
+        return s
+    import Rhino
+    assembly = __executing_command.PlugIn.Assembly
+    return Rhino.UI.Localization.LocalizeString(s, assembly, context_id)
