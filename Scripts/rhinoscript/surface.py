@@ -2009,8 +2009,9 @@ def TrimSurface( surface_id, direction, interval, delete_input=False):
     """Remove portions of the surface outside of the specified interval
     Parameters:
       surface_id = surface identifier
-      direction = 0 or 1 (U or V)
-      interval = interval of the surface to keep
+      direction = 0(U), 1(V), or 2(U and V)
+      interval = interval of the surface to keep.
+        If both U and V then a list or tuple of 2 intervals
       delete_input [opt] = should the input surface be deleted
     Returns:
       new surface identifier on success
@@ -2021,9 +2022,14 @@ def TrimSurface( surface_id, direction, interval, delete_input=False):
     if direction==0:
         u[0] = interval[0]
         u[1] = interval[1]
-    else:
+    elif direction==1:
         v[0] = interval[0]
         v[1] = interval[1]
+    else:
+        u[0] = interval[0][0]
+        u[1] = interval[0][1]
+        v[0] = interval[1][0]
+        v[1] = interval[1][1]
     new_surface = surface.Trim(u,v)
     if new_surface:
         rc = scriptcontext.doc.Objects.AddSurface(new_surface)
