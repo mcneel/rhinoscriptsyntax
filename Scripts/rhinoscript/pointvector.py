@@ -468,30 +468,6 @@ def VectorUnitize(vector):
     rc = Rhino.Geometry.Vector3d(vector.X, vector.Y, vector.Z)
     if rc.Unitize(): return rc
 
-def VectorTransform(vector, xform):
-    """Transforms a 3D vector
-    Paramters:
-      vector = the vector to transform
-      xform = a valid 4x4 transformation matrix
-    Returns:
-      transformed vector on success
-    """
-    vector = rhutil.coerce3dvector(vector, True)
-    xform = rhutil.coercexform(xform, True)
-    return xform*vector
-
-
-def VectorUnitize(vector):
-    """Unitizes, or normalizes a 3D vector. Note, zero vectors cannot be unitized
-    Parameters:
-      vector = the vector to unitize
-    Returns:
-      unitized vector on success
-      None on error
-    """
-    vector = rhutil.coerce3dvector(vector, True)
-    rc = Rhino.Geometry.Vector3d(vector.X, vector.Y, vector.Z)
-    if rc.Unitize(): return rc
 
 def PointArrayBoundingBox(points, view_or_plane=None, in_world_coords=True):
     """Returns either a world axis-aligned or a construction plane axis-aligned 
