@@ -1921,8 +1921,8 @@ def IsCurveClosable(curve_id, tolerance=None):
 
 
 def IsCurveClosed(object_id):
-    curve = rhutil.coercecurve(object_id, -1, True)
-    return curve.IsClosed
+    curve = rhutil.coercecurve(object_id)
+    return None if not curve else curve.IsClosed
 
 
 def IsCurveInPlane(object_id, plane=None):
