@@ -467,3 +467,75 @@ def VectorUnitize(vector):
     vector = rhutil.coerce3dvector(vector, True)
     rc = Rhino.Geometry.Vector3d(vector.X, vector.Y, vector.Z)
     if rc.Unitize(): return rc
+
+def VectorTransform(vector, xform):
+    """Transforms a 3D vector
+    Paramters:
+      vector = the vector to transform
+      xform = a valid 4x4 transformation matrix
+    Returns:
+      transformed vector on success
+    """
+    vector = rhutil.coerce3dvector(vector, True)
+    xform = rhutil.coercexform(xform, True)
+    return xform*vector
+
+
+def VectorUnitize(vector):
+    """Unitizes, or normalizes a 3D vector. Note, zero vectors cannot be unitized
+    Parameters:
+      vector = the vector to unitize
+    Returns:
+      unitized vector on success
+      None on error
+    """
+    vector = rhutil.coerce3dvector(vector, True)
+    rc = Rhino.Geometry.Vector3d(vector.X, vector.Y, vector.Z)
+    if rc.Unitize(): return rc
+
+def PointArrayBoundingBox(points, view_or_plane=None, in_world_coords=True):
+    """Returns either a world axis-aligned or a construction plane axis-aligned 
+    bounding box of an array of 3-D point locations.
+    Parameters:
+      points = A list of 3-D points
+      view_or_plane[opt] = Title or id of the view that contains the
+          construction plane to which the bounding box should be aligned -or-
+          user defined plane. If omitted, a world axis-aligned bounding box
+          will be calculated
+      in_world_coords[opt] = return the bounding box as world coordinates or
+          construction plane coordinates. Note, this option does not apply to
+          world axis-aligned bounding boxes.
+    Returns:
+      Eight 3D points that define the bounding box. Points returned in counter-
+      clockwise order starting with the bottom rectangle of the box.
+      None on error
+    """
+    points = rhutil.coerce3dpointlist(points)
+    if not points:
+      return None
+    bbox = Rhino.Geometry.BoundingBox(points)
+
+    xform = None
+    plane = rhutil.coerceplane(view_or_plane)
+    if plane is None and view_or_plane:
+        view = view_or_plane
+        modelviews = scriptcontext.doc.Views.GetStandardRhinoViews()
+        for item in modelviews:
+            viewport = item.MainViewport
+            if type(view) is str and viewport.Name==view:
+                plane = viewport.ConstructionPlane()
+                break
+            elif type(view) is System.Guid and viewport.Id==view:
+                plane = viewport.ConstructionPlane()
+                break
+        if plane is None: return scriptcontext.errorhandler()
+    if plane:
+        xform = Rhino.Geometry.Transform.ChangeBasis(Rhino.Geometry.Plane.WorldXY, plane)
+        bbox = xform.TransformBoundingBox(bbox)
+    if not bbox.IsValid: return scriptcontext.errorhandler()
+
+    corners = list(bbox.GetCorners())
+    if in_world_coords and plane is not None:
+        plane_to_world = Rhino.Geometry.Transform.ChangeBasis(plane, Rhino.Geometry.Plane.WorldXY)
+        for pt in corners: pt.Transform(plane_to_world)
+    return corners
