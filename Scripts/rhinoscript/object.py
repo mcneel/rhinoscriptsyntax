@@ -332,7 +332,7 @@ def MatchObjectAttributes(target_ids, source_id=None):
     source_attr = Rhino.DocObjects.ObjectAttributes()
     if source_id:
         source = rhutil.coercerhinoobject(source_id, True, True)
-        source_attr = source.Attributes
+        source_attr = source.Attributes.Duplicate()
     rc = 0
     for id in target_ids:
         id = rhutil.coerceguid(id, True)
