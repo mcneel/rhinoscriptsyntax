@@ -807,7 +807,7 @@ def ViewNearCorners(view=None):
     """
     view = __viewhelper(view)
     rc = view.ActiveViewport.GetNearRect()
-    return rc[0], rc[1], rc[2], rc[3]
+    return rc[0], rc[1], rc[3], rc[2]
 
 
 def ViewProjection(view=None, mode=None):
