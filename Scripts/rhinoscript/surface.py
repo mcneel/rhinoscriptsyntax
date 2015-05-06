@@ -2086,3 +2086,35 @@ def UnrollSurface(surface_id, explode=False, following_geometry=None, absolute_t
     scriptcontext.doc.Views.Redraw()
     if following_geometry: return rc, new_following
     return rc
+
+
+def ChangeSurfaceDegree(object_id, degree):
+  """Changes the degree of a surface object.  For more information see the Rhino help file for the ChangeDegree command.
+  Parameters:
+    object_id = the object's identifier.
+    degree = the new degree in both the U and V directions.
+  Returns:
+    True of False indicating success or failure.
+    None on failure.
+  """
+  object = rhutil.coercerhinoobject(object_id)
+  if not object: return None
+  obj_ref = Rhino.DocObjects.ObjRef(object)
+  
+  surface = obj_ref.Surface()
+  if not surface: return None
+
+  if not isinstance(surface, Rhino.Geometry.NurbsSurface):
+    surface = surface.ToNurbsSurface() # could be a Surface or BrepFace
+
+  max_nurbs_degree = 11
+  if degree[0] < 1 or degree[0] > max_nurbs_degree or \
+      degree[1] < 1 or degree[1] > max_nurbs_degree or \
+      (surface.Degree(0) == degree[0] and surface.Degree(1) == degree[1]):
+    return None
+
+  r = False
+  if surface.IncreaseDegreeU(degree[0]):
+    if surface.IncreaseDegreeV(degree[1]):
+      r = scriptcontext.doc.Objects.Replace(object_id, surface)
+  return r

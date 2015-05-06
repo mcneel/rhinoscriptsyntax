@@ -2469,3 +2469,31 @@ def TrimCurve(curve_id, interval, delete_input=True):
         scriptcontext.doc.Objects.Delete(id, True)
     scriptcontext.doc.Views.Redraw()
     return rc
+
+
+def ChangeCurveDegree(object_id, degree):
+  """Changes the degree of a curve object. For more information see the Rhino help file for the ChangeDegree command.
+  Parameters:
+    object_id = the object's identifier.
+    degree =  the new degree.
+  Returns:
+  Boolean
+   True of False indicating success or failure.
+   None on failure
+  """ 
+  curve = rhutil.coercerhinoobject(object_id)
+  if not curve: return None
+  if not isinstance(curve, Rhino.DocObjects.CurveObject): return None
+
+  curve = curve.CurveGeometry
+  if not isinstance(curve, Rhino.Geometry.NurbsCurve):
+    curve = curve.ToNurbsCurve()
+
+  max_nurbs_degree = 11
+  if degree < 1 or degree > max_nurbs_degree or curve.Degree == degree:
+    return None
+
+  r = False
+  if curve.IncreaseDegree(degree):
+    r = scriptcontext.doc.Objects.Replace(object_id, curve)
+  return r
