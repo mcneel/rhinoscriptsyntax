@@ -1994,15 +1994,23 @@ def TrimBrep(object_id, cutter, tolerance=None):
     else: cutter = rhutil.coerceplane(cutter, True)
     if tolerance is None: tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     breps = brep.Trim(cutter, tolerance)
-    rc = []
-    for i in range(len(breps)):
-        if i==0:
-            scriptcontext.doc.Objects.Replace(object_id, breps[i])
-            rc.append(object_id)
+    if scriptcontext.id == 2: #gh
+        return breps
+    else:
+        rhobj = rhutil.coercerhinoobject(object_id)
+        if rhobj:
+            attr = rhobj.Attributes
+            rc = []
+            for i in range(len(breps)):
+                if i==0:
+                    scriptcontext.doc.Objects.Replace(rhobj.Id, breps[i])
+                    rc.append(rhobj.Id)
+                else:
+                    rc.append(scriptcontext.doc.Objects.AddBrep(breps[i], attr))
         else:
-            rc.append(scriptcontext.doc.Objects.AddBrep(breps[i], attr))
-    scriptcontext.doc.Views.Redraw()
-    return rc
+            rc = [scriptcontext.doc.Objects.AddBrep(brep) for brep in breps]
+        scriptcontext.doc.Views.Redraw()
+        return rc
 
 
 def TrimSurface( surface_id, direction, interval, delete_input=False):
