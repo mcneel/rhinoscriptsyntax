@@ -15,7 +15,12 @@ def DeleteDocumentData(section=None, entry=None):
 
 def DocumentDataCount():
     "Returns the number of user data strings in the current document"
-    return scriptcontext.doc.Strings.Count
+    return scriptcontext.doc.Strings.DocumentDataCount
+
+
+def DocumentUserTextCount():
+    "Returns the number of user text strings in the current document"
+    return scriptcontext.doc.Strings.DocumentUserTextCount
 
 
 def GetDocumentData(section=None, entry=None):
@@ -30,13 +35,12 @@ def GetDocumentData(section=None, entry=None):
     """
     if section is None:
         rc = scriptcontext.doc.Strings.GetSectionNames()
-        if rc: return list(rc)
-        return []
+        return list(rc) if rc else None
     if entry is None:
         rc = scriptcontext.doc.Strings.GetEntryNames(section)
-        if rc: return list(rc)
-        return []
-    return scriptcontext.doc.Strings.GetValue(section, entry)
+        return list(rc) if rc else None
+    val = scriptcontext.doc.Strings.GetValue(section, entry)
+    return val if val else None
 
 
 def GetDocumentUserText(key=None):
@@ -44,8 +48,12 @@ def GetDocumentUserText(key=None):
     Parameters:
       key[opt] = key to use for retrieving user text. If empty, all keys are returned
     """
-    if key: return scriptcontext.doc.Strings.GetValue(key)
-    return [scriptcontext.doc.Strings.GetKey(i) for i in range(scriptcontext.doc.Strings.Count)]
+    if key: 
+      val =  scriptcontext.doc.Strings.GetValue(key)
+      return val if val else None
+    #todo: leaky abstraction: "\\" logic should be inside doc.Strings implementation
+    keys = [scriptcontext.doc.Strings.GetKey(i) for i in range(scriptcontext.doc.Strings.Count) if not "\\" in scriptcontext.doc.Strings.GetKey(i)]
+    return keys if keys else None
 
 
 def GetUserText(object_id, key=None, attached_to_geometry=False):
@@ -73,7 +81,15 @@ def IsDocumentData():
     Returns:
       True or False indicating the presence of Script user data
     """
-    return scriptcontext.doc.Strings.Count>0
+    return scriptcontext.doc.Strings.DocumentDataCount > 0
+
+
+def IsDocumentUserText():
+    """Verifies the current document contains user text
+    Returns:
+      True or False indicating the presence of Script user text
+    """
+    return scriptcontext.doc.Strings.DocumentUserTextCount > 0
 
 
 def IsUserText(object_id):
@@ -100,7 +116,8 @@ def SetDocumentData(section, entry, value):
     Returns:
       The previous value
     """
-    return scriptcontext.doc.Strings.SetString(section, entry, value)
+    val = scriptcontext.doc.Strings.SetString(section, entry, value)
+    return val if val else None
 
 
 def SetDocumentUserText(key, value=None):
