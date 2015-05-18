@@ -198,6 +198,36 @@ def AddNurbsSurface(point_count, points, knots_u, knots_v, degree, weights=None)
     scriptcontext.doc.Views.Redraw()
     return id
 
+def AddPatch(object_ids, uv_spans_tuple_OR_surface_object_id, tolerance=None, trim=True, point_spacing=0.1, flexibility=1.0, surface_pull=1.0, fix_edges=False):
+    geometry = List[Rhino.Geometry.GeometryBase]()
+    u_span = 10
+    v_span = 10
+    rc = None
+    id = rhutil.coerceguid(object_ids, False)
+    if id: object_ids = [id]
+    for object_id in object_ids:
+        rhobj = rhutil.coercerhinoobject(object_id, False, False)
+        if not rhobj: return None
+        geometry.Add( rhobj.Geometry )
+    if not geometry: return None
+    
+    surface = None
+    if uv_spans_tuple_OR_surface_object_id:
+      if type(uv_spans_tuple_OR_surface_object_id) is tuple:
+        u_span = uv_spans_tuple_OR_surface_object_id[0]
+        v_span = uv_spans_tuple_OR_surface_object_id[1]
+      else:
+        surface = rhutil.coercesurface(uv_spans_tuple_OR_surface_object_id, False)
+
+    if not tolerance: tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+    b = System.Array.CreateInstance(bool, 4)
+    for i in range(4): b[i] = fix_edges
+    brep = Rhino.Geometry.Brep.CreatePatch(geometry, surface, u_span, v_span, trim, False, point_spacing, flexibility, surface_pull, b, tolerance)
+    if brep:
+      rc = scriptcontext.doc.Objects.AddBrep(brep)
+      scriptcontext.doc.Views.Redraw()
+    return rc
+
 
 def AddPipe(curve_id, parameters, radii, blend_type=0, cap=0, fit=False):
     """Creates a single walled surface with a circular profile around a curve
