@@ -40,12 +40,16 @@ def AddBlock(object_ids, base_point, name=None, delete_input=False):
     if objects:
         geometry = [obj.Geometry for obj in objects]
         attrs = [obj.Attributes for obj in objects]
-        rc = scriptcontext.doc.InstanceDefinitions.Add(name, "", base_point, geometry, attrs)
+        rc = 0
+        if found:
+          rc = scriptcontext.doc.InstanceDefinitions.ModifyGeometry(found.Index, geometry, attrs)
+        else:
+          rc = scriptcontext.doc.InstanceDefinitions.Add(name, "", base_point, geometry, attrs)
         if rc>=0:
             if delete_input:
                 for obj in objects: scriptcontext.doc.Objects.Delete(obj, True)
             scriptcontext.doc.Views.Redraw()
-            return name
+    return name
 
 
 def BlockContainerCount(block_name):
