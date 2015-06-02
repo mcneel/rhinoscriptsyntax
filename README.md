@@ -11,7 +11,7 @@ Get Involved
 There are many ways to contribute to this project:
 
 * Become active on the RhinoPython discussion forum at http://python.rhino3d.com/
-* Report bugs/wishes to the issue list at https://github.com/mcneel/rhinopython/issues
+* Report bugs/wishes to the issue list at http://mcneel.myjetbrains.com/youtrack/dashboard
 * Directly edit the source code using git. If you need help with this, please let us know.
 
 Using the Source
