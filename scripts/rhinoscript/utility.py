@@ -402,6 +402,7 @@ def coerce3dpointlist(points, raise_on_error=False):
     if isinstance(points, System.Array[Rhino.Geometry.Point3d]):
         return list(points)
     if isinstance(points, Rhino.Collections.Point3dList): return list(points)
+    if isinstance(points, System.Object): return list(points)
     if type(points) is list or type(points) is tuple:
         count = len(points)
         if count>10 and type(points[0]) is Rhino.Geometry.Point3d: return points
