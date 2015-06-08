@@ -258,7 +258,7 @@ def IsObjectSolid(object_id):
       False if the object is not solid
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
-    if( isinstance(rhobj, Rhino.DocObjects.BrepObject) or isinstance(rhobj, Rhino.DocObjects.SurfaceObject) or isinstance(rhobj, Rhino.DocObjects.ExtrusionObject) ):
+    if( isinstance(rhobj, Rhino.DocObjects.BrepObject) or isinstance(rhobj, Rhino.DocObjects.SurfaceObject) ):
         return rhobj.Geometry.IsSolid
     if( isinstance(rhobj, Rhino.DocObjects.MeshObject) ):
         return rhobj.MeshGeometry.IsClosed
