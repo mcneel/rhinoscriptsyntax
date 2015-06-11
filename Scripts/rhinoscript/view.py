@@ -830,7 +830,7 @@ def ViewProjection(view=None, mode=None):
     view.Redraw()
     return rc
 
-def ViewRadius(view=None, radius=None, mode=True):
+def ViewRadius(view=None, radius=None, mode=False):
     """Returns or sets the radius of a parallel-projected view. Useful
     when you need an absolute zoom factor for a parallel-projected view
     Parameters:
