@@ -414,6 +414,8 @@ def coerce3dpointlist(points, raise_on_error=False):
                 pt = Rhino.Geometry.Point3d(points[i*3], points[i*3+1], points[i*3+2])
                 rc.append(pt)
             return rc
+    if hasattr(points, '__iter__'):
+        return [coerce3dpoint(pt, raise_on_error) for pt in points]
     if raise_on_error: raise ValueError("Could not convert %s to a list of points" % points)
 
 
