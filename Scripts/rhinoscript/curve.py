@@ -654,6 +654,7 @@ def CurveArea(curve_id):
     curve = rhutil.coercecurve(curve_id, -1, True)
     tol = scriptcontext.doc.ModelAbsoluteTolerance
     mp = Rhino.Geometry.AreaMassProperties.Compute(curve, tol)
+    if mp == None: return None
     return mp.Area, mp.AreaError
 
 
@@ -673,6 +674,7 @@ def CurveAreaCentroid(curve_id):
     curve = rhutil.coercecurve(curve_id, -1, True)
     tol = scriptcontext.doc.ModelAbsoluteTolerance
     mp = Rhino.Geometry.AreaMassProperties.Compute(curve, tol)
+    if mp == None: return None
     return mp.Centroid, mp.CentroidError
 
 
