@@ -2047,11 +2047,6 @@ def TrimBrep(object_id, cutter, tolerance=None):
     Returns:
       identifiers of retained components on success
     """
-    isGrasshopper = scriptcontext.id == 2
-    if isGrasshopper:
-      if rhutil.coerceguid(object_id, False) or rhutil.coerceguid(cutter, False):
-        raise TypeError("The TrimBrep function cannot accept object IDs from GhPython components because the current scriptcontext references a GrasshopperDocument instead of the active RhinoDoc and the former cannot resolve object IDs.  Give a 'Type Hint' of 'Brep' to script parameters of GhPython components that accept Ids to pass breps instead of guids to the TrimBrep function.")
-
     brep = rhutil.coercebrep(object_id, True)
     brep_cutter = rhutil.coercebrep(cutter, False)
     if brep_cutter: cutter = brep_cutter
@@ -2061,15 +2056,16 @@ def TrimBrep(object_id, cutter, tolerance=None):
     rhid = rhutil.coerceguid(object_id, False)
 
     attrs = None
-    if not isGrasshopper and len(breps) > 1:
-      attrs = (rhutil.coercerhinoobject(rhid)).Attributes if rhid else object_id.Attrtibutes
+    if len(breps) > 1:
+      rho = rhutil.coercerhinoobject(object_id, False)
+      if rho: attrs = rho.Attributes
 
     if rhid:
         rc = []
         for i in range(len(breps)):
             if i==0:
-                scriptcontext.doc.Objects.Replace(rhobj.Id, breps[i])
-                rc.append(rhobj.Id)
+                scriptcontext.doc.Objects.Replace(rhid, breps[i])
+                rc.append(rhid)
             else:
                 rc.append(scriptcontext.doc.Objects.AddBrep(breps[i], attrs))
     else:
