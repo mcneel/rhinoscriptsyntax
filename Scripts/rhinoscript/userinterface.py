@@ -344,7 +344,7 @@ def GetLine(mode=0, point=None, message1=None, message2=None, message3=None):
         gl.SetFirstPoint(point)
     if message1: gl.FirstPointPrompt = message1
     if message2: gl.MidPointPrompt = message2
-    if message3: gl.SecondPointPromp = message3
+    if message3: gl.SecondPointPrompt = message3
     rc, line = gl.Get()
     if rc==Rhino.Commands.Result.Success: return line.From, line.To
 
