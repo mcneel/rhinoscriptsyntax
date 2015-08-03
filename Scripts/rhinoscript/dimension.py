@@ -98,16 +98,29 @@ def AddLeader(points, view_or_plane=None, text=None):
     return rc
 
 
-def AddLinearDimension(start_point, end_point, point_on_dimension_line):
+def AddLinearDimension(plane, start_point, end_point, point_on_dimension_line):
     """Adds a linear dimension to the document
     Returns:
       identifier of the new object on success
       None on error
     """
+    if not plane: 
+      plane = ViewCPlane()
+    else:
+      plane = rhutil.coerceplane(plane, True)
     start = rhutil.coerce3dpoint(start_point, True)
+    plane.Origin = start
     end = rhutil.coerce3dpoint(end_point, True)
     onpoint = rhutil.coerce3dpoint(point_on_dimension_line, True)
-    ldim = Rhino.Geometry.LinearDimension.FromPoints(start, end, onpoint)
+    # Calculate 2d dimension points
+    success, s, t = plane.ClosestParameter(start)
+    start = Rhino.Geometry.Point2d(s,t)
+    success, s, t = plane.ClosestParameter(end)
+    end = Rhino.Geometry.Point2d(s,t)
+    success, s, t = plane.ClosestParameter(onpoint)
+    onpoint = Rhino.Geometry.Point2d(s,t)    
+    # Add the dimension
+    ldim = Rhino.Geometry.LinearDimension(plane, start, end, onpoint)
     if not ldim: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddLinearDimension(ldim)
     if rc==System.Guid.Empty: raise Exception("unable to add dimension to document")
