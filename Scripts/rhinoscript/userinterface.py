@@ -2,7 +2,6 @@ import Rhino
 import Rhino.UI
 import utility as rhutil
 import scriptcontext
-import rhinoscriptsyntax
 import System.Drawing.Color
 import System.Enum
 import System.Array
@@ -209,10 +208,10 @@ def GetDistance(first_pt=None, distance=None, first_pt_msg='First distance point
       if first_pt is None: return None
 
     if first_pt is None:
-      first_pt = rhinoscriptsyntax.GetPoint(first_pt_msg)
+      first_pt = GetPoint(first_pt_msg)
       if first_pt is None: return None
 
-    # cannot use rs.GetPoint for 2nd point because of the need do differentiate 
+    # cannot use GetPoint for 2nd point because of the need do differentiate 
     # between the user accepting none vs cancelling to exactly mimic RhinoScript
     gp = Rhino.Input.Custom.GetPoint()
     if distance is not None:
