@@ -1722,7 +1722,7 @@ def ExtendCurveLength(curve_id, extension_type, side, length):
     Parameters:
       curve_id: curve to extend
       extension_type: 0 = line, 1 = arc, 2 = smooth
-      side: 0=extend from start of the curve, 1=extend from end of the curve
+      side: 0=extend from start of the curve, 1=extend from end of the curve, 2=Extend from both ends
       length: distance to extend
     Returns:
       The identifier of the new object
