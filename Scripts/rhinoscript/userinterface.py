@@ -666,39 +666,39 @@ def MessageBox(message, buttons=0, title=""):
         7      No button was clicked.
     """
     buttontype = buttons & 0x00000007 #111 in binary
-    btn = Rhino.UI.ShowMessageBoxButton.OK
-    if buttontype==1: btn = Rhino.UI.ShowMessageBoxButton.OKCancel
-    elif buttontype==2: btn = Rhino.UI.ShowMessageBoxButton.AbortRetryIgnore
-    elif buttontype==3: btn = Rhino.UI.ShowMessageBoxButton.YesNoCancel
-    elif buttontype==4: btn = Rhino.UI.ShowMessageBoxButton.YesNo
-    elif buttontype==5: btn = Rhino.UI.ShowMessageBoxButton.RetryCancel
+    btn = Rhino.UI.ShowMessageButton.OK
+    if buttontype==1: btn = Rhino.UI.ShowMessageButton.OKCancel
+    elif buttontype==2: btn = Rhino.UI.ShowMessageButton.AbortRetryIgnore
+    elif buttontype==3: btn = Rhino.UI.ShowMessageButton.YesNoCancel
+    elif buttontype==4: btn = Rhino.UI.ShowMessageButton.YesNo
+    elif buttontype==5: btn = Rhino.UI.ShowMessageButton.RetryCancel
     
     icontype = buttons & 0x00000070
-    icon = Rhino.UI.ShowMessageBoxIcon.None
-    if icontype==16: icon = Rhino.UI.ShowMessageBoxIcon.Error
-    elif icontype==32: icon = Rhino.UI.ShowMessageBoxIcon.Question
-    elif icontype==48: icon = Rhino.UI.ShowMessageBoxIcon.Warning
-    elif icontype==64: icon = Rhino.UI.ShowMessageBoxIcon.Information
+    icon = Rhino.UI.ShowMessageIcon.None
+    if icontype==16: icon = Rhino.UI.ShowMessageIcon.Error
+    elif icontype==32: icon = Rhino.UI.ShowMessageIcon.Question
+    elif icontype==48: icon = Rhino.UI.ShowMessageIcon.Warning
+    elif icontype==64: icon = Rhino.UI.ShowMessageIcon.Information
     
     ### 15 Sep 2014 Alain - default button not supported in new version of RC 
     ### that isn't tied to Windows.Forms but it probably will so I'm commenting 
     ### the old code instead of deleting it.
     #defbtntype = buttons & 0x00000300
-    #defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button1
+    #defbtn = System.Windows.Forms.MessageDefaultButton.Button1
     #if defbtntype==256:
-    #    defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button2
+    #    defbtn = System.Windows.Forms.MessageDefaultButton.Button2
     #elif defbtntype==512:
-    #    defbtn = System.Windows.Forms.MessageBoxDefaultButton.Button3
+    #    defbtn = System.Windows.Forms.MessageDefaultButton.Button3
 
     if not isinstance(message, str): message = str(message)
-    dlg_result = Rhino.UI.Dialogs.ShowMessageBox(message, title, btn, icon)
-    if dlg_result==Rhino.UI.ShowMessageBoxResult.OK:     return 1
-    if dlg_result==Rhino.UI.ShowMessageBoxResult.Cancel: return 2
-    if dlg_result==Rhino.UI.ShowMessageBoxResult.Abort:  return 3
-    if dlg_result==Rhino.UI.ShowMessageBoxResult.Retry:  return 4
-    if dlg_result==Rhino.UI.ShowMessageBoxResult.Ignore: return 5
-    if dlg_result==Rhino.UI.ShowMessageBoxResult.Yes:    return 6
-    if dlg_result==Rhino.UI.ShowMessageBoxResult.No:     return 7
+    dlg_result = Rhino.UI.Dialogs.ShowMessage(message, title, btn, icon)
+    if dlg_result==Rhino.UI.ShowMessageResult.OK:     return 1
+    if dlg_result==Rhino.UI.ShowMessageResult.Cancel: return 2
+    if dlg_result==Rhino.UI.ShowMessageResult.Abort:  return 3
+    if dlg_result==Rhino.UI.ShowMessageResult.Retry:  return 4
+    if dlg_result==Rhino.UI.ShowMessageResult.Ignore: return 5
+    if dlg_result==Rhino.UI.ShowMessageResult.Yes:    return 6
+    if dlg_result==Rhino.UI.ShowMessageResult.No:     return 7
 
 
 def PropertyListBox(items, values, message=None, title=None):
