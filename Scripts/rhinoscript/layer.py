@@ -113,13 +113,20 @@ def IsLayer(layer):
     """Verifies the existance of a layer in the document
     Parameter:
       layer = the name or id of a layer to search for
+    Returns:
+      True on success otherwise False
     """
     layer = __getlayer(layer, False)
     return layer is not None
 
 
 def IsLayerChangeable(layer):
-    "Verifies that the objects on a layer can be changed (normal)"
+    """Verifies that the objects on a layer can be changed (normal)
+    Parameters:
+      layer = the name or id of an existing layer
+    Returns:
+      True on success otherwise False
+    """
     layer = __getlayer(layer, True)
     rc = layer.IsVisible and not layer.IsLocked
     return rc
@@ -130,6 +137,8 @@ def IsLayerChildOf(layer, test):
     Parameters:
       layer = the name or id of the layer to test against
       test = the name or id to the layer to test
+    Returns:
+      True on success otherwise False
     """
     layer = __getlayer(layer, True)
     test = __getlayer(test, True)
@@ -137,13 +146,23 @@ def IsLayerChildOf(layer, test):
 
 
 def IsLayerCurrent(layer):
-    "Verifies that a layer is the current layer"
+    """Verifies that a layer is the current layer
+    Parameters:
+      layer the name or id of an existing layer
+    Returns:
+      True on success otherwise False
+    """
     layer = __getlayer(layer, True)
     return layer.LayerIndex == scriptcontext.doc.Layers.CurrentLayerIndex
 
 
 def IsLayerEmpty(layer):
-    "Verifies that an existing layer is empty, or contains no objects"
+    """Verifies that an existing layer is empty, or contains no objects
+    Parameters:
+      layer the name or id of an existing layer
+    Returns:
+      True on success otherwise False
+    """
     layer = __getlayer(layer, True)
     rhobjs = scriptcontext.doc.Objects.FindByLayer(layer)
     if not rhobjs: return True
@@ -153,25 +172,44 @@ def IsLayerEmpty(layer):
 def IsLayerExpanded(layer):
     """Verifies that a layer is expanded. Expanded layers can be viewed in
     Rhino's layer dialog
+    Parameters:
+      layer the name or id of an existing layer
+    Returns:
+      True on success otherwise False
     """
     layer = __getlayer(layer, True)
     return layer.IsExpanded   
 
 
 def IsLayerLocked(layer):
-    "Verifies that a layer is locked."
+    """Verifies that a layer is locked.
+    Parameters:
+      layer the name or id of an existing layer
+    Returns:
+      True on success otherwise False
+    """
     layer = __getlayer(layer, True)
     return layer.IsLocked
 
 
 def IsLayerOn(layer):
-    "Verifies that a layer is on."
+    """Verifies that a layer is on.
+    Parameters:
+      layer the name or id of an existing layer
+    Returns:
+      True on success otherwise False
+    """
     layer = __getlayer(layer, True)
     return layer.IsVisible
 
 
 def IsLayerSelectable(layer):
-    "Verifies that an existing layer is selectable (normal and reference)"
+    """Verifies that an existing layer is selectable (normal and reference)
+    Parameters:
+      layer the name or id of an existing layer
+    Returns:
+      True on success otherwise False
+    """
     layer = __getlayer(layer, True)
     return layer.IsVisible and not layer.IsLocked
 
@@ -181,6 +219,8 @@ def IsLayerParentOf(layer, test):
     Parameters:
       layer = the name or id of the layer to test against
       test = the name or id to the layer to test
+    Returns:
+      True on success otherwise False
     """
     layer = __getlayer(layer, True)
     test = __getlayer(test, True)
@@ -188,19 +228,34 @@ def IsLayerParentOf(layer, test):
 
 
 def IsLayerReference(layer):
-    "Verifies that a layer is from a reference file."
+    """Verifies that a layer is from a reference file.
+    Parameters:
+      layer the name or id of an existing layer
+    Returns:
+      True on success otherwise False
+    """
     layer = __getlayer(layer, True)
     return layer.IsReference
 
 
 def IsLayerVisible(layer):
-    "Verifies that a layer is visible (normal, locked, and reference)"
+    """Verifies that a layer is visible (normal, locked, and reference)
+    Parameters:
+      layer the name or id of an existing layer
+    Returns:
+      True on success otherwise False
+    """
     layer = __getlayer(layer, True)
     return layer.IsVisible
 
 
 def LayerChildCount(layer):
-    "Returns the number of immediate child layers of a layer"
+    """Returns the number of immediate child layers of a layer
+    Parameters:
+      layer the name or id of an existing layer
+    Returns:
+      the number of immediate child layers if successful
+    """
     layer = __getlayer(layer, True)
     children = layer.GetChildren()
     if children: return len(children)
@@ -293,6 +348,9 @@ def LayerMaterialIndex(layer,index=None):
     will use Rhino's default layer material
     Parameters:
       layer = name of existing layer
+      index [opt] = the new material index
+    Returns:
+      a zero-based material index if successful
     """
     layer = __getlayer(layer, True)
     rc = layer.RenderMaterialIndex
@@ -319,6 +377,8 @@ def LayerName(layer_id, fullpath=True):
     Parameters:
       layer_id = layer identifier
       fullpath [opt] = return the full path name or short name
+    Returns:
+      the layer's name if successful otherwise None
     """
     layer = __getlayer(layer_id, True)
     if fullpath: return layer.FullPath
@@ -329,7 +389,7 @@ def LayerNames(sort=False):
     """Returns the names of all layers in the document.
     Parameters:
       sort [opt] = return a sorted list of the layer names
-    Returns
+    Returns:
       list of strings
     """
     rc = []
@@ -455,7 +515,11 @@ def PurgeLayer(layer):
 
 def RenameLayer(oldname, newname):
     """Renames an existing layer
-    Returns: The new layer name if successful
+    Parameters:
+      oldname = original layer name
+      newname = new layer name
+    Returns: 
+      The new layer name if successful otherwise None
     """
     if oldname and newname:
         layer = __getlayer(oldname, True)
