@@ -94,7 +94,7 @@ def HideGroup(group_name):
 
 def IsGroup(group_name):
     """Verifies the existance of a group
-    Paramters:
+    Parameters:
       group_name = the name of the group to check for
     Returns:
       True or False
