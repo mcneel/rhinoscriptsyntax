@@ -66,6 +66,12 @@ def ComboListBox(items, message=None, title=None):
 def EditBox(default_string=None, message=None, title=None):
     """Display dialog prompting the user to enter a string. The
     string value may span multiple lines
+    Parameters:
+      default_string [opt] = a default string value.
+      message [opt] = a prompt message.
+      title [opt] = a dialog box title.
+    Returns:
+      Multiple lines that are separated by carriage return-linefeed combinations if successful, otherwise None.
     """
     rc, text = Rhino.UI.Dialogs.ShowEditBox(title, message, default_string, True)
     return text
@@ -600,6 +606,8 @@ def GetString(message=None, defaultString=None, strings=None):
       defaultString [opt]: a default value
       strings [opt]: list of strings to be displayed as a click-able command options.
         Note, strings cannot begin with a numeric character
+    Returns:
+      The string either input or selected by the user if successful.  If the user presses the Enter key without typing in a string, an empty string "" is returned.  None if not successful, on error, or if the user pressed cancel.
     """
     gs = Rhino.Input.Custom.GetString()
     gs.AcceptNothing(True)
@@ -800,6 +808,12 @@ def PopupMenu(items, modes=None, point=None, view=None):
 
 def RealBox(message="", default_number=None, title="", minimum=None, maximum=None):
     """Display a dialog box prompting the user to enter a number
+    Parameters:
+      message [opt] = a prompt message.
+      default_number [opt] = a default number.
+      title [opt] = a dialog box title.
+      minimum [opt] = a minimum allowable value.
+      maximum [opt] = a maximum allowable value.
     Returns:
       number on success
       None on error
@@ -836,6 +850,13 @@ def SaveFileName(title=None, filter=None, folder=None, filename=None, extension=
 
 
 def StringBox(message=None, default_value=None, title=None):
-    "Display a dialog box prompting the user to enter a string value."
+    """Display a dialog box prompting the user to enter a string value.
+    Parameters:
+      message [opt] = a prompt message
+      default_value [opt] = a default string value
+      title [opt] = a dialog box title
+    Returns:
+      the string value if successful, otherwise None
+    """
     rc, text = Rhino.UI.Dialogs.ShowEditBox(title, message, default_value, False)
     if rc: return text
