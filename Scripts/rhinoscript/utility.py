@@ -67,7 +67,16 @@ def Angle(point1, point2, plane=True):
 
 
 def Angle2(line1, line2):
-    """Measures the angle between two lines"""
+    """Measures the angle between two lines
+    Parameters:
+      line1 = List of 6 numbers or 2 Point3d.
+      line2 = List of 6 numbers or 2 Point3d.
+    Returns:
+      A tuple containing the following elements if successful.
+        0 The angle in degrees.
+        1 The reflex angle in degrees.
+        None If not successful, or on error.
+    """
     line1 = coerceline(line1, True)
     line2 = coerceline(line2, True)
     vec0 = line1.To - line1.From
@@ -121,17 +130,32 @@ def ColorAdjustLuma(rgb, luma, scale=False):
 
 
 def ColorBlueValue(rgb):
-    "Retrieves intensity value for the blue component of an RGB color"
+    """Retrieves intensity value for the blue component of an RGB color
+    Parameters:
+      rgb = the RGB color value
+    Returns:
+      The blue component if successful, otherwise None
+    """
     return coercecolor(rgb, True).B
 
 
 def ColorGreenValue(rgb):
-    "Retrieves intensity value for the green component of an RGB color"
+    """Retrieves intensity value for the green component of an RGB color
+    Parameters:
+      rgb = the RGB color value
+    Returns:
+      The green component if successful, otherwise None
+    """
     return coercecolor(rgb, True).G
 
 
 def ColorHLSToRGB(hls):
-    "Converts colors from hue-lumanence-saturation to RGB"
+    """Converts colors from hue-lumanence-saturation to RGB
+    Parameters:
+      hls = the HLS color value
+    Returns:
+      The RGB color value if successful, otherwise False
+    """
     if len(hls)==3:
         hls = Rhino.Display.ColorHSL(hls[0]/240.0, hls[2]/240.0, hls[1]/240.0)
     elif len(hls)==4:
@@ -140,12 +164,22 @@ def ColorHLSToRGB(hls):
 
 
 def ColorRedValue(rgb):
-    "Retrieves intensity value for the red component of an RGB color"
+    """Retrieves intensity value for the red component of an RGB color
+    Parameters:
+      hls = the HLS color value
+    Returns:
+      The red color value if successful, otherwise False
+    """
     return coercecolor(rgb, True).R
 
 
 def ColorRGBToHLS(rgb):
-    "Convert colors from RGB to HLS"
+    """Convert colors from RGB to HLS
+    Parameters:
+      rgb = the RGB color value
+    Returns:
+      The HLS color value if successful, otherwise False  
+    """
     rgb = coercecolor(rgb, True)
     hsl = Rhino.Display.ColorHSL(rgb)
     return hsl.H, hsl.S, hsl.L
@@ -265,7 +299,12 @@ def SimplifyArray(points):
 
 
 def Sleep(milliseconds):
-    "Suspends execution of a running script for the specified interval"
+    """Suspends execution of a running script for the specified interval
+    Parameters:
+      milliseconds = thousands of a second
+    Returns:
+      None
+    """
     time.sleep( milliseconds / 1000.0 )
     Rhino.RhinoApp.Wait() #keep the message pump alive
     
@@ -286,7 +325,22 @@ def SortPointList(points, tolerance=None):
 
 
 def SortPoints(points, ascending=True, order=0):
-    "Sorts an array of 3D points"
+    """Sorts an array of 3D points
+
+    Component sort order values:
+        Value       Component Sort Order
+        0 (default) X, Y, Z
+        1           X, Z, Y
+        2           Y, X, Z
+        3           Y, Z, X
+        4           Z, X, Y
+        5           Z, Y, X
+    
+    Parameters:
+      points = points to sort
+      ascending [opt] = ascending if ommitted (True) or True, descending if False.
+      order [opt] = the component sort order
+    """
     def __cmpXYZ( a, b ):
         rc = cmp(a.X, b.X)
         if rc==0: rc = cmp(a.Y, b.Y)
@@ -322,7 +376,12 @@ def SortPoints(points, ascending=True, order=0):
 
 
 def Str2Pt(point):
-    "convert a formatted string value into a 3D point value"
+    """convert a formatted string value into a 3D point value
+    Parameters:
+      point =  A string that contains a delimited point like "1,2,3".
+    Returns:
+      error on invalid format
+    """
     return coerce3dpoint(point, True)
 
 
@@ -355,7 +414,13 @@ def frange(start, stop, step):
 
 
 def coerce3dpoint(point, raise_on_error=False):
-    "Convert input into a Rhino.Geometry.Point3d if possible."
+    """Convert input into a Rhino.Geometry.Point3d if possible.
+    Parameters:
+      point = Point3d, Vector3d, Pointh3f, Vector3f, str, uuid
+      raise_on_error [opt] = True or False
+    Returns:
+      a Rhino.Geometry.Point3d
+    """
     if type(point) is Rhino.Geometry.Point3d: return point
     if hasattr(point, "__len__") and len(point)==3 and hasattr(point, "__getitem__"):
         try:
@@ -376,7 +441,13 @@ def coerce3dpoint(point, raise_on_error=False):
 
 
 def coerce2dpoint(point, raise_on_error=False):
-    "Convert input into a Rhino.Geometry.Point2d if possible."
+    """Convert input into a Rhino.Geometry.Point2d if possible.
+    Parameters:
+      point = Point2d, list, tuple, Vector3d, Point3d, str
+      raise_on_error [opt] = True or False
+    Returns:
+      a Rhino.Geometry.Point2d
+    """
     if type(point) is Rhino.Geometry.Point2d: return point
     if type(point) is list or type(point) is tuple:
         length = len(point)
@@ -391,7 +462,13 @@ def coerce2dpoint(point, raise_on_error=False):
 
 
 def coerce3dvector(vector, raise_on_error=False):
-    "Convert input into a Rhino.Geometry.Vector3d if possible."
+    """Convert input into a Rhino.Geometry.Vector3d if possible.
+    Parameters:
+      vector = Vector3d, Point3d, list, Point3f, Vector3f, str, uuid
+      raise_on_error [opt] = True or False
+    Returns:
+      a Rhino.Geometry.Vector3d
+    """
     if type(vector) is Rhino.Geometry.Vector3d: return vector
     point = coerce3dpoint(vector, False)
     if point: return Rhino.Geometry.Vector3d(point.X, point.Y, point.Z)
@@ -446,7 +523,12 @@ def coerce2dpointlist(points):
 
 
 def coerceplane(plane, raise_on_bad_input=False):
-    "Convert input into a Rhino.Geometry.Plane if possible."
+    """Convert input into a Rhino.Geometry.Plane if possible.
+    Parameters:
+      plane = Plane, list, tuple
+    Returns:
+      a Rhino.Geometry.Plane
+    """
     if type(plane) is Rhino.Geometry.Plane: return plane
     if type(plane) is list or type(plane) is tuple:
         length = len(plane)
@@ -470,7 +552,11 @@ def coerceplane(plane, raise_on_bad_input=False):
 
 
 def coercexform(xform, raise_on_bad_input=False):
-    "Convert input into a Rhino.Transform if possible."
+    """Convert input into a Rhino.Transform if possible.
+    Parameters:
+      xform = the xform
+      raise_on_bad_input [opt] = True or False
+    """
     t = type(xform)
     if t is Rhino.Geometry.Transform: return xform
     if( (t is list or t is tuple) and len(xform)==4 and len(xform[0])==4):
@@ -536,7 +622,11 @@ def coerceline(line, raise_if_bad_input=False):
 
 
 def coercegeometry(id, raise_if_missing=False):
-    "attempt to get GeometryBase class from given input"
+    """attempt to get GeometryBase class from given input
+    Parameters:
+      id = geometry identifier
+      raise_if_missing [opt] = True or False
+    """
     if isinstance(id, Rhino.Geometry.GeometryBase): return id
     if type(id) is Rhino.DocObjects.ObjRef: return id.Geometry()
     if isinstance(id, Rhino.DocObjects.RhinoObject): return id.Geometry
@@ -548,7 +638,13 @@ def coercegeometry(id, raise_if_missing=False):
 
 
 def coercebrep(id, raise_if_missing=False):
-    "attempt to get polysurface geometry from the document with a given id"
+    """attempt to get polysurface geometry from the document with a given id
+    Parameters:
+      id = id to be coerced into a brep
+      raise_if_missing [opt] = True or False
+    Returns:
+      a Rhino.Geometry.Brep
+    """
     geom = coercegeometry(id, False)
     if isinstance(geom, Rhino.Geometry.Brep): return geom
     if isinstance(geom, Rhino.Geometry.Extrusion): return geom.ToBrep(True)
@@ -556,7 +652,12 @@ def coercebrep(id, raise_if_missing=False):
 
 
 def coercecurve(id, segment_index=-1, raise_if_missing=False):
-    "attempt to get curve geometry from the document with a given id"
+    """attempt to get curve geometry from the document with a given id
+    Parameters:
+      id = id to be coerced into a curve
+      segment_index [opt] = index of segment to retrieve
+      raise_if_missing [opt] = True or False
+    """
     if isinstance(id, Rhino.Geometry.Curve): return id
     if type(id) is Rhino.DocObjects.ObjRef: return id.Curve()
     id = coerceguid(id, True)
@@ -570,7 +671,13 @@ def coercecurve(id, segment_index=-1, raise_if_missing=False):
 
 
 def coercesurface(object_id, raise_if_missing=False):
-    "attempt to get surface geometry from the document with a given id"
+    """attempt to get surface geometry from the document with a given id
+    Parameters:
+      object_id = the object's identifier
+      raise_if_missing [opt] = True or False
+    Returns:
+      a Rhino.Geometry.Surface
+    """
     if isinstance(object_id, Rhino.Geometry.Surface): return object_id
     if type(object_id) is Rhino.DocObjects.ObjRef: return object_id.Face()
     object_id = coerceguid(object_id, True)
@@ -585,7 +692,13 @@ def coercesurface(object_id, raise_if_missing=False):
 
 
 def coercemesh(object_id, raise_if_missing=False):
-    "attempt to get mesh geometry from the document with a given id"
+    """attempt to get mesh geometry from the document with a given id
+    Parameters:
+      object_id = object identifier
+      raise_if_missing [opt] = True or False
+    Returns:
+      a Rhino.Geometry.Mesh
+    """
     if type(object_id) is Rhino.DocObjects.ObjRef: return object_id.Mesh()
     if isinstance(object_id, Rhino.Geometry.Mesh): return object_id
     object_id = coerceguid(object_id, raise_if_missing)
@@ -598,7 +711,14 @@ def coercemesh(object_id, raise_if_missing=False):
 
 
 def coercerhinoobject(object_id, raise_if_bad_input=False, raise_if_missing=False):
-    "attempt to get RhinoObject from the document with a given id"
+    """attempt to get RhinoObject from the document with a given id
+    Parameters:
+        object_id = object's identifier
+        raise_if_bad_input [opt] = True or False
+        raise_if_missing [opt] = True or False
+    Returns:
+      a RhinoObject
+    """
     if isinstance(object_id, Rhino.DocObjects.RhinoObject): return object_id
     object_id = coerceguid(object_id, raise_if_bad_input)
     if object_id is None: return None
