@@ -12,7 +12,10 @@ def __getlinetype(name_or_id):
 
 def IsLinetype(name_or_id):
     """Verifies the existance of a linetype in the document
-    Returns: True or False
+    Parameters:
+      name_or_id = The name or identifier of an existing linetype.
+    Returns: 
+      True or False
     """
     lt = __getlinetype(name_or_id)
     return lt is not None
@@ -20,7 +23,10 @@ def IsLinetype(name_or_id):
 
 def IsLinetypeReference(name_or_id):
     """Verifies that an existing linetype is from a reference file
-    Returns: True or False
+    Parameters:
+      name_or_id = The name or identifier of an existing linetype. 
+    Returns: 
+      True or False
     """
     lt = __getlinetype(name_or_id)
     if lt is None: raise ValueError("unable to coerce %s into linetype"%name_or_id)
@@ -28,7 +34,12 @@ def IsLinetypeReference(name_or_id):
 
 
 def LinetypeCount():
-    "Returns number of linetypes in the document"
+    """Returns number of linetypes in the document
+    Parameters:
+      None
+    Returns:
+      the number of linetypes in the document
+    """
     return scriptcontext.doc.Linetypes.Count
 
 
