@@ -56,6 +56,12 @@ def AllObjects(select=False, include_lights=False, include_grips=False, include_
 def FirstObject(select=False, include_lights=False, include_grips=False):
     """Returns identifier of the first object in the document. The first
     object is the last object created by the user.
+    Parameters:
+      select [opt] = Select the object.  If omitted (False), the object is not selected.
+      include_lights [opt] = Include light objects.  If omitted (False), light objects are not returned.
+      include_gripts [opt] = Include grips objects.  If omitted (False), grips objects are not returned.
+    Returns:
+      The identifier of the object if successful.
     """
     it = Rhino.DocObjects.ObjectEnumeratorSettings()
     it.IncludeLights = include_lights
@@ -288,7 +294,7 @@ def GetObjects(message=None, filter=0, group=True, preselect=False, select=False
           picked are not selected.
       objects[opt] = list of objects that are allowed to be selected
       mimimum_count, maximum_count[out] = limits on number of objects allowed to be selected
-    Returns
+    Returns:
       list of Guids identifying the picked objects
     """
     if not preselect:
@@ -393,6 +399,9 @@ def GetObjectsEx(message=None, filter=0, group=True, preselect=False, select=Fal
 
 def GetPointCoordinates(message="select points", preselect=False):
     """Prompts the user to select one or more point objects.
+    Parameters:
+      message [opt] = a prompt message.
+      preselect [opt] = Allow for the selection of pre-selected objects.  If omitted (False), pre-selected objects are not accepted.
     Returns:
       list of 3d coordinates on success
     """
@@ -457,6 +466,8 @@ def LockedObjects(include_lights=False, include_grips=False, include_references=
     Parameters:
       include_lights[opt] = include light objects
       include_grips[opt] = include grip objects
+    Returns:
+      A list of Guids identifying the objects if successful.
     """
     settings = Rhino.DocObjects.ObjectEnumeratorSettings()
     settings.ActiveObjects = True
@@ -475,6 +486,8 @@ def HiddenObjects(include_lights=False, include_grips=False, include_references=
     Parameters:
       include_lights[opt] = include light objects
       include_grips[opt] = include grip objects
+    Returns:
+      A list of Guids identifying the objects if successful.
     """
     settings = Rhino.DocObjects.ObjectEnumeratorSettings()
     settings.ActiveObjects = True
@@ -491,6 +504,12 @@ def HiddenObjects(include_lights=False, include_grips=False, include_references=
 def InvertSelectedObjects(include_lights=False, include_grips=False, include_references=False):
     """Inverts the current object selection. The identifiers of the newly
     selected objects are returned
+    Parameters:
+      include_lights [opt] = Include light objects.  If omitted (False), light objects are not returned.
+      include_gripts [opt] = Include grips objects.  If omitted (False), grips objects are not returned.
+      include_references [opt] = Include reference objects.  If omitted (False), reference objects are not returned.
+    Returns:
+      A list of Guids identifying the newly selected objects if successful.
     """
     settings = Rhino.DocObjects.ObjectEnumeratorSettings()
     settings.IncludeLights = include_lights
@@ -514,6 +533,10 @@ def LastCreatedObjects(select=False):
     by scripting a Rhino command using the Command function. It is important to
     call this function immediately after calling the Command function as only the
     most recently created or changed object identifiers will be returned
+    Parameters:
+      select [opt] = Select the object.  If omitted (False), the object is not selected.
+    Returns:
+      A list of Guids identifying the most recently created or changed objects if successful.
     """
     serial_numbers = rhapp.__command_serial_numbers
     if serial_numbers is None: return scriptcontext.errorhandler()
@@ -579,7 +602,13 @@ def NextObject(object_id, select=False, include_lights=False, include_grips=Fals
 
 def NormalObjects(include_lights=False, include_grips=False):
     """Returns identifiers of all normal objects in the document. Normal objects
-    are visible, can be snapped to, and are independent of selection state"""
+    are visible, can be snapped to, and are independent of selection state
+    Parameters:
+      include_lights [opt] = Include light objects.  If omitted (False), light objects are not returned.
+      include_gripts [opt] = Include grips objects.  If omitted (False), grips objects are not returned.
+    Returns:
+      A list of Guids identifying the objects if successful.
+    """
     iter = Rhino.DocObjects.ObjectEnumeratorSettings()
     iter.NormalObjects = True
     iter.LockedObjects = False
