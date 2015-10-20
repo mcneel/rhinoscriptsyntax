@@ -47,6 +47,10 @@ def GetDocumentUserText(key=None):
     """Returns user text stored in the document
     Parameters:
       key[opt] = key to use for retrieving user text. If empty, all keys are returned
+    Returns:
+      If key is specified, then the associated value if successful.
+      If key is not specified, then a list of key names if successful.
+      If not successful, or on error.
     """
     if key: 
       val =  scriptcontext.doc.Strings.GetValue(key)
@@ -94,6 +98,8 @@ def IsDocumentUserText():
 
 def IsUserText(object_id):
     """Verifies that an object contains user text
+    Parameters:
+      object_id = the object's identifier
     Returns:
       0 = no user text
       1 = attribute user text
