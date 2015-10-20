@@ -4,7 +4,13 @@ import scriptcontext
 import math
 
 def DistanceToPlane(plane, point):
-    "Returns the distance from a 3D point to a plane"
+    """Returns the distance from a 3D point to a plane
+    Parameters:
+      plane = the plane
+      point = List of 3 numbers or Point3d
+    Returns:
+      The distance if successful, otherwise None
+    """
     plane = rhutil.coerceplane(plane, True)
     point = rhutil.coerce3dpoint(point, True)
     return plane.DistanceTo(point)
@@ -24,6 +30,10 @@ def EvaluatePlane(plane, parameter):
 
 def IntersectPlanes(plane1, plane2, plane3):
     """Calculates the intersection of three planes
+    Parameters:
+      plane1 = the 1st plane to intersect
+      plane2 = the 2nd plane to intersect
+      plane3 = the 3rd plane to intersect
     Returns:
       Point3d on success
       None on error
@@ -75,7 +85,51 @@ def PlaneClosestPoint(plane, point, return_point=True):
 
 
 def PlaneCurveIntersection(plane, curve, tolerance=None):
-    "Intersect an infinite plane and a curve object"
+    """Intersect an infinite plane and a curve object
+    Parameters:
+      plane = The plane to intersect.
+      curve = The identifier of the curve object
+      torerance [opt] = The intersection tolerance. If omitted, the document's absolute tolerance is used.
+    Returns:
+      A list of intersection information tuple if successful.  The list will contain one or more of the following tuple:
+
+        Element Type        Description
+
+        0       Number      The intersection event type, either Point (1) or Overlap (2).
+
+        1       Point3d     If the event type is Point (1), then the intersection point on the curve.
+                            If the event type is Overlap (2), then intersection start point on the curve.
+
+        2       Point3d     If the event type is Point (1), then the intersection point on the curve.
+                            If the event type is Overlap (2), then intersection end point on the curve.
+
+        3       Point3d     If the event type is Point (1), then the intersection point on the plane.
+                            If the event type is Overlap (2), then intersection start point on the plane.
+
+        4       Point3d     If the event type is Point (1), then the intersection point on the plane.
+
+                            If the event type is Overlap (2), then intersection end point on the plane.
+
+        5       Number      If the event type is Point (1), then the curve parameter.
+                            If the event type is Overlap (2), then the start value of the curve parameter range.
+                            
+        6       Number      If the event type is Point (1), then the curve parameter.
+                            If the event type is Overlap (2),  then the end value of the curve parameter range.
+
+        7       Number      If the event type is Point (1), then the U plane parameter.
+                            If the event type is Overlap (2), then the U plane parameter for curve at (n, 5).
+
+        8       Number      If the event type is Point (1), then the V plane parameter.
+                            If the event type is Overlap (2), then the V plane parameter for curve at (n, 5).
+
+        9       Number      If the event type is Point (1), then the U plane parameter.
+                            If the event type is Overlap (2), then the U plane parameter for curve at (n, 6).
+                            
+        10      Number      If the event type is Point (1), then the V plane parameter.
+                            If the event type is Overlap (2), then the V plane parameter for curve at (n, 6).
+
+      None on error
+    """
     plane = rhutil.coerceplane(plane, True)
     curve = rhutil.coercecurve(curve, -1, True)
     if tolerance is None: tolerance = scriptcontext.doc.ModelAbsoluteTolerance
@@ -102,6 +156,10 @@ def PlaneCurveIntersection(plane, curve, tolerance=None):
 def PlaneEquation(plane):
     """Returns the equation of a plane as a tuple of four numbers. The standard
     equation of a plane with a non-zero vector is Ax+By+Cz+D=0
+    Parameters:
+      plane = the plane
+    Returns:
+      A tuple containing four numbers that represent the coefficients of the equation if successful, otherwise None
     """
     plane = rhutil.coerceplane(plane, True)
     rc = plane.GetPlaneEquation()
@@ -165,6 +223,8 @@ def PlaneFromPoints(origin, x, y):
     Parameters:
       origin = origin point of the plane
       x, y = points on the plane's x and y axes
+    Returns:
+      The plane if successful, otherwise None
     """
     origin = rhutil.coerce3dpoint(origin, True)
     x = rhutil.coerce3dpoint(x, True)
@@ -175,8 +235,9 @@ def PlaneFromPoints(origin, x, y):
 
 def PlanePlaneIntersection(plane1, plane2):
     """Calculates the intersection of two planes
-    Paramters:
-      plane1, plane2 = two planes
+    Parameters:
+      plane1 = the 1st plane to intersect 
+      plane2 = the 2nd plane to intersect
     Returns:
       two 3d points identifying the starting/ending points of the intersection
       None on error
@@ -213,6 +274,8 @@ def PlaneTransform(plane, xform):
     Parameters:
       plane = Plane to transform
       xform = Transformation to apply
+    Returns:
+      the resulting plane if successful, otherwise None
     """
     plane = rhutil.coerceplane(plane, True)
     xform = rhutil.coercexform(xform, True)
