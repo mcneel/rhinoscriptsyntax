@@ -497,7 +497,7 @@ def AddSrfPt(points):
     """Creates a new surface from either 3 or 4 corner points.
     Parameters:
       points = list of either 3 or 4 corner points
-    Returns
+    Returns:
       The identifier of the new object if successful.
       None if not successful, or on error.
     """
@@ -725,6 +725,8 @@ def BrepClosestPoint(object_id, point):
 
 def CapPlanarHoles(surface_id):
     """Caps planar holes in a surface or polysurface
+    Parameters:
+      surface_id = The identifier of the surface or polysurface to cap.
     Returns:
       True or False indicating success or failure
     """
@@ -791,7 +793,13 @@ def DuplicateSurfaceBorder(surface_id, type=0):
 
 
 def EvaluateSurface(surface_id, u, v):
-    "Evaluates a surface at a U,V parameter"
+    """Evaluates a surface at a U,V parameter
+    Parameters:
+      surface_id = the object's identifier.
+      u, v = u, v parameters to evaluate.
+    Returns:
+      a 3-D point if successful, otherwise None
+    """
     surface = rhutil.coercesurface(surface_id, True)
     rc = surface.PointAt(u,v)
     if rc.IsValid: return rc
@@ -884,7 +892,7 @@ def ExtractIsoCurve(surface_id, parameter, direction):
 
 def ExtractSurface(object_id, face_indices, copy=False):
     """Separates or copies a surface or a copy of a surface from a polysurface
-    Paramters:
+    Parameters:
       object_id: polysurface identifier
       face_indices: one or more numbers representing faces
       copy[opt]: If True the faces are copied. If False, the faces are extracted
@@ -1126,13 +1134,23 @@ def IsBrep(object_id):
 
 
 def IsCone(object_id):
-    "Determines if a surface is a portion of a cone"
+    """Determines if a surface is a portion of a cone
+    Parameters:
+      object_id = the surface object's identifier
+    Returns:
+      True if successful, otherwise False
+    """
     surface = rhutil.coercesurface(object_id, True)
     return surface.IsCone()
 
 
 def IsCylinder(object_id):
-    "Determines if a surface is a portion of a cone"
+    """Determines if a surface is a portion of a cone
+    Parameters:
+      object_id = the cylinder object's identifier
+    Returns:
+      True if successful, otherwise False
+    """
     surface = rhutil.coercesurface(object_id, True)
     return surface.IsCylinder()
 
@@ -1140,6 +1158,10 @@ def IsCylinder(object_id):
 def IsPlaneSurface(object_id):
     """Verifies an object is a plane surface. Plane surfaces can be created by
     the Plane command. Note, a plane surface is not a planar NURBS surface
+    Parameters:
+      object_id = the object's identifier
+    Returns:
+      True if successful, otherwise False
     """
     face = rhutil.coercesurface(object_id, True)
     if type(face) is Rhino.Geometry.BrepFace and face.IsSurface:
@@ -1220,7 +1242,12 @@ def IsPolysurfaceClosed(object_id):
 
 
 def IsSphere(object_id):
-    "Determines if a surface is a portion of a sphere"
+    """Determines if a surface is a portion of a sphere
+    Parameters:
+      object_id = the object's identifier
+    Returns:
+      True if successful, otherwise False
+    """
     surface = rhutil.coercesurface(object_id, True)
     return surface.IsSphere()
 
@@ -1283,6 +1310,8 @@ def IsSurfaceRational(surface_id):
     """Verifies a surface object is rational
     Parameters:
       surface_id = the surface's identifier
+    Returns:
+      True if successful, otherwise False
     """
     surface = rhutil.coercesurface(surface_id, True)
     ns = surface.ToNurbsSurface()
@@ -1315,7 +1344,12 @@ def IsSurfaceTrimmed(surface_id):
 
 
 def IsTorus(surface_id):
-    "Determines if a surface is a portion of a torus"
+    """Determines if a surface is a portion of a torus
+    Parameters:
+      surface_id = the surface object's identifier
+    Returns:
+      True if successful, otherwise False
+    """
     surface = rhutil.coercesurface(surface_id, True)
     return surface.IsTorus()
 
@@ -1347,7 +1381,7 @@ def JoinSurfaces(object_ids, delete_input=False):
 
 def MakeSurfacePeriodic(surface_id, direction, delete_input=False):
     """Makes an existing surface a periodic NURBS surface
-    Paramters:
+    Parameters:
       surface_id = the surface's identifier
       direction = The direction to make periodic, either 0=U or 1=V
       delete_input[opt] = delete the input surface
@@ -1853,6 +1887,8 @@ def SurfaceIsocurveDensity(surface_id, density=None):
 def SurfaceKnotCount(surface_id):
     """Returns the control point count of a surface
       surface_id = the surface's identifier
+    Parameters:
+      surface_id = the surface object's identifier
     Returns:
       (U count, V count) on success
     """
@@ -1934,6 +1970,8 @@ def SurfaceParameter(surface_id, parameter):
 def SurfacePointCount(surface_id):
     """Returns the control point count of a surface
       surface_id = the surface's identifier
+    Parameters:
+      surface_id = the surface object's identifier
     Returns:
       (U count, V count) on success
     """
