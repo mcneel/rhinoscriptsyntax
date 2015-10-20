@@ -29,6 +29,9 @@ def AddSearchPath(folder, index=-1):
       index [opt] = Zero-based position in the search path list to insert.
                     If omitted, path will be appended to the end of the
                     search path list.
+    Returns:
+      The index where the item was inserted if success.
+      -1 on failure.
     """
     return Rhino.ApplicationSettings.FileSettings.AddSearchPath(folder, index)
 
@@ -225,7 +228,12 @@ def CommandHistory():
 
 
 def DefaultRenderer(renderer=None):
-    "Returns or changes the default render plug-in"
+    """Returns or changes the default render plug-in
+    Parameters:
+      renderer [opt] = the name of the renderer to set as default renderer
+    Returns:
+      uuid of default renderer
+    """
     id = Rhino.Render.Utilities.DefaultRenderPlugInId
     plugins = Rhino.PlugIns.PlugIn.GetInstalledPlugIns()
     rc = plugins[id]
@@ -258,7 +266,12 @@ def DeleteSearchPath(folder):
 
 
 def DisplayOleAlerts( enable ):
-    "Enables/disables OLE Server Busy/Not Responding dialog boxes"
+    """Enables/disables OLE Server Busy/Not Responding dialog boxes
+    Parameters:
+      enable = whether alerts should be visible (True or False)
+    Returns:
+      None
+    """
     Rhino.Runtime.HostUtils.DisplayOleAlerts( enable )
 
 
@@ -306,7 +319,13 @@ def EnableAutosave(enable=True):
 
 
 def EnablePlugIn(plugin, enable=None):
-    """Enables or disables a Rhino plug-in"""
+    """Enables or disables a Rhino plug-in
+      Parameters:
+        plugin = id of the plugin
+        enable [opt] = load silently if True
+      Returns:
+        True if set to load silently otherwise False
+    """
     id = rhutil.coerceguid(plugin)
     if not id: id = Rhino.PlugIns.PlugIn.IdFromName(plugin)
     rc, loadSilent = Rhino.PlugIns.PlugIn.GetLoadProtection(id)
@@ -391,7 +410,9 @@ def InstallFolder():
 def IsAlias(alias):
     """Verifies that a command alias exists in Rhino
     Parameters:
-      the name of an existing command alias
+      alias = the name of an existing command alias
+    Returns:
+      True or False
     """
     return Rhino.ApplicationSettings.CommandAliasList.IsAlias(alias)
 
@@ -401,12 +422,19 @@ def IsCommand(command_name):
     found in 3rd party plug-ins.
     Parameters:
       command_name = the command name to test
+    Returns:
+      True of False
     """
     return rhcommand.IsCommand(command_name)
 
 
 def IsPlugIn(plugin):
-    "Verifies that a plug-in is registered"
+    """Verifies that a plug-in is registered
+    Parameters:
+      plugin = id of the plug-in
+    Returns:
+      True or False
+    """
     id = rhutil.coerceguid(plugin)
     if not id: id = Rhino.PlugIns.PlugIn.IdFromName(plugin)
     if id:
@@ -535,7 +563,12 @@ def Planar(enable=None):
 
 
 def PlugInId(plugin):
-    "Returns the identifier of a plug-in given the plug-in name"
+    """Returns the identifier of a plug-in given the plug-in name
+    Parameters:
+      plugin = name of the plug-in
+    Returns:
+      the id of the plug-in or None if the plug-in isn't valid
+    """
     id = Rhino.PlugIns.PlugIn.IdFromName(plugin)
     if id!=System.Guid.Empty: return id
 
@@ -543,9 +576,11 @@ def PlugInId(plugin):
 def PlugIns(types=0, status=0):
     """Returns a list of registered Rhino plug-ins
     Parameters:
-      types[opt] = type of plug-ins to return. 0=all, 1=render, 2=file export,
+      types [opt] = type of plug-ins to return. 0=all, 1=render, 2=file export,
         4=file import, 8=digitizer, 16=utility
-      status[opt] = 0=both loaded and unloaded, 1=loaded, 2=unloaded
+      status [opt] = 0=both loaded and unloaded, 1=loaded, 2=unloaded
+    Returns:
+      list of registered Rhino plug-ins
     """
     filter = Rhino.PlugIns.PlugInType.None
     if types&1: filter |= Rhino.PlugIns.PlugInType.Render
@@ -577,6 +612,8 @@ def Prompt(message=None):
     """Change Rhino's command window prompt
     Parameters:
       message [opt] = the new prompt
+    Returns:
+      None
     """
     if message and type(message) is not str:
         strList = [str(item) for item in message]
@@ -619,6 +656,8 @@ def SendKeystrokes(keys=None, add_return=True):
     Parameters:
       keys [opt] = A string of characters to send to the command line.
       add_returns [opt] = Append a return character to the end of the string.
+    Returns:
+      None
     """
     Rhino.RhinoApp.SendKeystrokes(keys, add_return)
 
@@ -638,17 +677,32 @@ def Snap(enable=None):
 
 
 def StatusBarDistance(distance=0):
-    "Sets Rhino's status bar distance pane"
+    """Sets Rhino's status bar distance pane
+    Parameters:
+      distance [opt] = distance to set the status bar
+    Returns:
+      None
+    """
     Rhino.UI.StatusBar.SetDistancePane(distance)
 
 
 def StatusBarMessage(message=None):
-    "Sets Rhino's status bar message pane"
+    """Sets Rhino's status bar message pane
+      Parameters:
+        message [opt] = message value
+      Returns:
+        None
+    """
     Rhino.UI.StatusBar.SetMessagePane(message)
 
 
 def StatusBarPoint(point=None):
-    "Sets Rhino's status bar point coordinate pane"
+    """Sets Rhino's status bar point coordinate pane
+    Parameters:
+      point [opt] = point value
+    Returns:
+      None
+    """
     point = rhutil.coerce3dpoint(point)
     if not point: point = Rhino.Geometry.Point3d(0,0,0)
     Rhino.UI.StatusBar.SetPointPane(point)
