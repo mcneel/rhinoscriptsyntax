@@ -309,7 +309,7 @@ def IsViewCurrent(view):
 def IsViewMaximized(view=None):
     """Verifies that the specified view is maximized (enlarged so as to fill
     the entire Rhino window)
-    Paramters:
+    Parameters:
       view: [opt] title or identifier of the view. If omitted, the current
             view is used
     Returns:
@@ -332,7 +332,7 @@ def IsViewPerspective(view):
 
 def IsViewTitleVisible(view=None):
     """Verifies that the specified view's title window is visible
-    Paramters:
+    Parameters:
       view: [opt] The title or identifier of the view. If omitted, the current
             active view is used
     Returns:
@@ -343,7 +343,12 @@ def IsViewTitleVisible(view=None):
 
 
 def IsWallpaper(view):
-    "Verifies that the specified view contains a wallpaper image"
+    """Verifies that the specified view contains a wallpaper image
+    Parameters:
+      view = view to verify
+    Returns:
+      True or False
+    """
     view = __viewhelper(view)
     return len(view.MainViewport.WallpaperFilename)>0
 
@@ -353,6 +358,8 @@ def MaximizeRestoreView(view=None):
     Parameters:
       view: [opt] the title or identifier of the view. If omitted, the current
             active view is used
+    Returns:
+      None
     """
     view = __viewhelper(view)
     view.Maximized = not view.Maximized
@@ -564,6 +571,8 @@ def ShowViewTitle(view=None, show=True):
     Parameters:
       view:[opt] title or id of the view. If omitted, the current active view is used
       show:[opt] The state to set.
+    Returns:
+      None
     """
     view = __viewhelper(view)
     if view is None: return scriptcontext.errorhandler()
@@ -591,9 +600,10 @@ def ShowWorldAxes(view=None, show=None):
 def TiltView(view=None, direction=0, angle=None):
     """Tilts a view by rotating the camera up vector. See the TiltView command in
     the Rhino help file for more details.
-      view:[opt] title or id of the view. If omitted, the current active view is used
-      direction:[opt] the direction to rotate the view where 0=right, 1=left
-      angle:[opt] the angle to rotate. If omitted, the angle of rotation is
+    Parameters:
+      view [opt] = title or id of the view. If omitted, the current active view is used
+      direction [opt] = the direction to rotate the view where 0=right, 1=left
+      angle [opt] = the angle to rotate. If omitted, the angle of rotation is
         specified by the "Increment in divisions of a circle" parameter specified
         in Options command's View tab
     Returns:
@@ -731,7 +741,7 @@ def ViewCPlane(view=None, plane=None):
 
 def ViewDisplayMode(view=None, mode=None, return_name=True):
     """Return or set a view display mode
-    Paramters:
+    Parameters:
       view: [opt] Title or id of a view. If omitted, active view is used
       mode: [opt] Name or id of a display mode
       return_name: [opt] If true, return display mode name. If False, display mode id
@@ -755,13 +765,23 @@ def ViewDisplayMode(view=None, mode=None, return_name=True):
 
 
 def ViewDisplayModeId(name):
-    """Return id of a display mode given it's name"""
+    """Return id of a display mode given it's name
+    Parameters:
+      name = name of the display mode
+    Returns:
+      The id of the display mode if successful, otherwise None
+    """
     desc = Rhino.Display.DisplayModeDescription.FindByName(name)
     if desc: return desc.Id
 
 
 def ViewDisplayModeName(mode_id):
-    """Return name of a display mode given it's id"""
+    """Return name of a display mode given it's id
+    Parameters:
+      mode_id = The identifier of the display mode obtained from the ViewDisplayModes method.
+    Returns:
+      The name of the display mode if successful, otherwise None
+    """
     mode_id = rhutil.coerceguid(mode_id, True)
     desc = Rhino.Display.DisplayModeDescription.GetDisplayMode(mode_id)
     if desc: return desc.EnglishName
@@ -769,8 +789,10 @@ def ViewDisplayModeName(mode_id):
 
 def ViewDisplayModes(return_names=True):
     """Return list of display modes
-    Paramters:
-      return_name: [opt] If True, return mode names. If False, return ids
+    Parameters:
+      return_name [opt] = If True, return mode names. If False, return ids
+    Returns:
+      A list of strings identifying the display mode names or identifiers if successful
     """
     modes = Rhino.Display.DisplayModeDescription.GetDisplayModes()
     if return_names:
@@ -872,7 +894,16 @@ def ViewSize(view=None):
 
 
 def ViewSpeedTest(view=None, frames=100, freeze=True, direction=0, angle_degrees=5):
-    """Test's Rhino's display performance"""
+    """Test's Rhino's display performance
+    Parameters:
+      view [opt] = The title or identifier of the view.  If omitted, the current active view is used
+      frames [opt] = The number of frames, or times to regenerate the view. If omitted, the view will be regenerated 100 times.
+      freeze [opt] = If True (Default), then Rhino's display list will not be updated with every frame redraw. If False, then Rhino's display list will be updated with every frame redraw.
+      direction [opt] = The direction to rotate the view, where 0 = Right, 1 = Left, 2 = Down, and 3 = Up. The default direction is Right (0).
+      angle_degrees [opt] = The angle to rotate. If omitted, the rotation angle of 5.0 degrees will be used.
+    Returns:
+      The number of seconds it took to regenerate the view frames number of times, if successful, otherwise None.
+    """
     view = __viewhelper(view)
     angle_radians = math.radians(angle_degrees)
     return view.SpeedTest(frames, freeze, direction, angle_radians)
@@ -977,10 +1008,12 @@ def WallpaperHidden(view=None, hidden=None):
 def ZoomBoundingBox(bounding_box, view=None, all=False):
     """Zooms to the extents of a specified bounding box in the specified view
     Parameters:
-      bounding_box: eight points that define the corners of a bounding box
+      bounding_box = eight points that define the corners of a bounding box
         or a BoundingBox class instance
-      view:[opt] title or id of the view. If omitted, current active view is used
-      all:[opt] zoom extents in all views
+      view [opt] = title or id of the view. If omitted, current active view is used
+      all [opt] = zoom extents in all views
+    Returns:
+      None
     """
     bbox = rhutil.coerceboundingbox(bounding_box)
     if bbox:
@@ -996,8 +1029,10 @@ def ZoomBoundingBox(bounding_box, view=None, all=False):
 def ZoomExtents(view=None, all=False):
     """Zooms to extents of visible objects in the specified view
     Parameters:
-      view:[opt] title or id of the view. If omitted, current active view is used
-      all:[opt] zoom extents in all views
+      view [opt] = title or id of the view. If omitted, current active view is used
+      all [opt] = zoom extents in all views
+    Returns:
+      None
     """
     if all:
         views = scriptcontext.doc.Views.GetViewList(True, True)
@@ -1011,8 +1046,10 @@ def ZoomExtents(view=None, all=False):
 def ZoomSelected(view=None, all=False):
     """Zoom to extents of selected objects in a view
     Parameters:
-      view: [opt] title or id of the view. If omitted, active view is used
-      all: [opt] zoom extents in all views
+      view [opt] = title or id of the view. If omitted, active view is used
+      all [opt] = zoom extents in all views
+    Returns:
+      None
     """
     if all:
         views = scriptcontext.doc.Views.GetViewList(True, True)
