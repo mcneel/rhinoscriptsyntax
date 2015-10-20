@@ -58,7 +58,7 @@ def AddPictureFrame(plane, filename, width=0.0, height=0.0, self_illumination=Tr
     embed = If True, then the function adds the image to Rhino's internal bitmap table, thus making the document self-contained.
     use_alpha = If False, the picture frame is created without any transparency texture.  If True, a transparency texture is created with a "mask texture" set to alpha, and an instance of the diffuse texture in the source texture slot.
     make_mesh = If True, the function will make a PictureFrame object from a mesh rather than a plane surface.
-  Reterns:
+  Returns:
     object identifier on success
     None on failure
   """
@@ -174,7 +174,13 @@ def AddTextDot(text, point):
 
 
 def Area(object_id):
-    "Compute the area of a closed curve, hatch, surface, polysurface, or mesh"
+    """Compute the area of a closed curve, hatch, surface, polysurface, or mesh
+    Parameters:
+      object_id = the object's identifier
+    Returns:
+      area if successful
+      None on error
+    """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     mp = Rhino.Geometry.AreaMassProperties.Compute(rhobj.Geometry)
     if mp is None: raise Exception("unable to compute area mass properties")
