@@ -156,7 +156,12 @@ def ExplodeMeshes(mesh_ids, delete=False):
 
 
 def IsMesh(object_id):
-    "Verifies if an object is a mesh"
+    """Verifies if an object is a mesh
+    Parameters:
+      object_id = the object's identifier
+    Returns:
+      True if successfull, otherwise False
+    """
     mesh = rhutil.coercemesh(object_id)
     return mesh is not None
 
@@ -165,6 +170,8 @@ def IsMeshClosed(object_id):
     """Verifies a mesh object is closed
     Parameters:
       object_id = identifier of a mesh object
+    Returns:
+      True if successful, otherwise False.
     """
     mesh = rhutil.coercemesh(object_id, True)
     return mesh.IsClosed
@@ -176,6 +183,8 @@ def IsMeshManifold(object_id):
     that is shared by more than two faces, then that mesh is called non-manifold
     Parameters:
       object_id = identifier of a mesh object
+    Returns:
+      True if successful, otherwise False.
     """
     mesh = rhutil.coercemesh(object_id, True)
     rc = mesh.IsManifold(True)
@@ -187,6 +196,8 @@ def IsPointOnMesh(object_id, point):
     Parameters:
       object_id = identifier of a mesh object
       point = test point
+    Returns:
+      True if successful, otherwise False.  None on error.
     """
     mesh = rhutil.coercemesh(object_id, True)
     point = rhutil.coerce3dpoint(point, True)
@@ -406,6 +417,8 @@ def MeshFaceCount(object_id):
     """Returns total face count of a mesh object
     Parameters:
       object_id = identifier of a mesh object
+    Returns:
+      The number of mesh faces if successful
     """
     mesh = rhutil.coercemesh(object_id, True)
     return mesh.Faces.Count
@@ -413,7 +426,7 @@ def MeshFaceCount(object_id):
 
 def MeshFaceNormals(mesh_id):
     """Returns the face unit normal for each face of a mesh object
-    Paramters:
+    Parameters:
       mesh_id = identifier of a mesh object
     Returns:
       List of 3D vectors that define the face unit normals of the mesh
@@ -465,7 +478,7 @@ def MeshFaces(object_id, face_type=True):
 
 def MeshFaceVertices(object_id):
     """Returns the vertex indices of all faces of a mesh object
-    Paramters:
+    Parameters:
       object_id = identifier of a mesh object
     Returns:
       A list containing tuples of 4 numbers that define the vertex indices for
@@ -484,6 +497,8 @@ def MeshHasFaceNormals(object_id):
     """Verifies a mesh object has face normals
     Parameters:
       object_id = identifier of a mesh object
+    Returns:
+      True if successful, otherwise False.
     """
     mesh = rhutil.coercemesh(object_id, True)
     return mesh.FaceNormals.Count>0
@@ -493,6 +508,8 @@ def MeshHasTextureCoordinates(object_id):
     """Verifies a mesh object has texture coordinates
     Parameters:
       object_id = identifier of a mesh object
+    Returns:
+      True if successful, otherwise False.
     """
     mesh = rhutil.coercemesh(object_id, True)
     return mesh.TextureCoordinates.Count>0
@@ -502,6 +519,8 @@ def MeshHasVertexColors(object_id):
     """Verifies a mesh object has vertex colors
     Parameters:
       object_id = identifier of a mesh object
+    Returns:
+      True if successful, otherwise False.
     """
     mesh = rhutil.coercemesh(object_id, True)
     return mesh.VertexColors.Count>0
@@ -511,6 +530,8 @@ def MeshHasVertexNormals(object_id):
     """Verifies a mesh object has vertex normals
     Parameters:
       object_id = identifier of a mesh object
+    Returns:
+      True if successful, otherwise False.
     """
     mesh = rhutil.coercemesh(object_id, True)
     return mesh.Normals.Count>0
@@ -597,6 +618,8 @@ def MeshQuadCount(object_id):
     """Returns the number of quad faces of a mesh object
     Parameters:
       object_id = identifier of a mesh object
+    Returns:
+      The number of quad mesh faces if successful
     """
     mesh = rhutil.coercemesh(object_id, True)
     return mesh.Faces.QuadCount
@@ -646,6 +669,8 @@ def MeshTriangleCount(object_id):
     """Returns number of triangular faces of a mesh
     Parameters:
       object_id = identifier of a mesh object
+    Returns:
+      The number of triangular mesh faces if successful
     """
     mesh = rhutil.coercemesh(object_id, True)
     return mesh.Faces.TriangleCount
@@ -684,6 +709,8 @@ def MeshVertexCount(object_id):
     """Returns the vertex count of a mesh
     Parameters:
       object_id = identifier of a mesh object
+    Returns:
+      The number of mesh vertices if successful.
     """
     mesh = rhutil.coercemesh(object_id, True)
     return mesh.Vertices.Count
@@ -777,7 +804,7 @@ def PullCurveToMesh(mesh_id, curve_id):
     """Pulls a curve to a mesh. The function makes a polyline approximation of
     the input curve and gets the closest point on the mesh for each point on
     the polyline. Then it "connects the points" to create a polyline on the mesh
-    Paramters:
+    Parameters:
       mesh_id = identifier of mesh that pulls
       curve_id = identifier of curve to pull
     Returns:
