@@ -210,7 +210,7 @@ def PointSubtract(point1, point2):
   
 def PointTransform(point, xform):
     """Transforms a 3D point
-    Paramters:
+    Parameters:
       point = the point to transform
       xform = a valid 4x4 transformation matrix
     Returns:
@@ -298,7 +298,13 @@ def VectorAdd(vector1, vector2):
 
 
 def VectorAngle(vector1, vector2):
-    "Returns the angle, in degrees, between two 3-D vectors"
+    """Returns the angle, in degrees, between two 3-D vectors
+    Parameters:
+      vector1 = List of 3 numbers, Point3d, or Vector3d.  The first 3-D vector.
+      vector2 = List of 3 numbers, Point3d, or Vector3d.  The second 3-D vector.
+    Returns:
+      The angle in degrees if successfull, otherwise None
+    """
     vector1 = rhutil.coerce3dvector(vector1, True)
     vector2 = rhutil.coerce3dvector(vector2, True)
     vector1 = Rhino.Geometry.Vector3d(vector1.X, vector1.Y, vector1.Z)
@@ -374,7 +380,12 @@ def VectorDotProduct(vector1, vector2):
 
 
 def VectorLength(vector):
-    "Returns the length of a 3D vector"
+    """Returns the length of a 3D vector
+    Parameters:
+      vector = List of 3 numbers or Vector3d.  The 3-D vector.
+    Returns:
+      The length of the vector if successful, otherwise None
+    """
     vector = rhutil.coerce3dvector(vector, True)
     return vector.Length
 
@@ -445,7 +456,7 @@ def VectorSubtract(vector1, vector2):
 
 def VectorTransform(vector, xform):
     """Transforms a 3D vector
-    Paramters:
+    Parameters:
       vector = the vector to transform
       xform = a valid 4x4 transformation matrix
     Returns:
