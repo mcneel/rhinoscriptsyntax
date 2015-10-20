@@ -4,7 +4,13 @@ import Rhino
 
 
 def LineClosestPoint(line, testpoint):
-    "Finds the point on an infinite line that is closest to a test point"
+    """Finds the point on an infinite line that is closest to a test point
+    Parameters:
+      line = List of 6 numbers or 2 Point3d.  Two 3-D points identifying the starting and ending points of the line.
+      testpoint = List of 3 numbers or Point3d.  The test point.
+    Returns:
+      the point on the line that is closest to the test point if successfull, otherwise None
+    """
     line = rhutil.coerceline(line, True)
     testpoint = rhutil.coerce3dpoint(testpoint, True)
     return line.ClosestPoint(testpoint, False)
@@ -37,9 +43,13 @@ def LineCylinderIntersection(line, cylinder_plane, cylinder_height, cylinder_rad
 def LineIsFartherThan(line, distance, point_or_line):
     """Determines if the shortest distance from a line to a point or another
     line is greater than a specified distance
+    Parameters:
+      line = List of 6 numbers, 2 Point3d, or Line.
+      distance = the distance
+      point_or_line = the test point or the test line
     Returns:
       True if the shortest distance from the line to the other project is
-      greater than distance, False otherwise
+      greater than distance, False otherwise, and None on error
     """
     line = rhutil.coerceline(line, True)
     test = rhutil.coerceline(point_or_line)
@@ -67,6 +77,12 @@ def LineLineIntersection(lineA, lineB):
 def LineMaxDistanceTo(line, point_or_line):
     """Finds the longest distance between a line as a finite chord, and a point
     or another line
+    Parameters:
+      line = List of 6 numbers, two Point3d, or Line.
+      point_or_line = the test point or test line.
+    Returns:
+      A distance (D) such that if Q is any point on the line and P is any point on the other object, then D >= Rhino.Distance(Q, P).
+      None on error
     """
     line = rhutil.coerceline(line, True)
     test = rhutil.coerceline(point_or_line)
@@ -77,6 +93,12 @@ def LineMaxDistanceTo(line, point_or_line):
 def LineMinDistanceTo(line, point_or_line):
     """Finds the shortest distance between a line as a finite chord, and a point
     or another line
+    Parameters:
+      line = List of 6 numbers, two Point3d, or Line.
+      point_or_line = the test point or test line.
+    Returns:
+      A distance (D) such that if Q is any point on the line and P is any point on the other object, then D <= Rhino.Distance(Q, P).
+      None on error
     """
     line = rhutil.coerceline(line, True)
     test = rhutil.coerceline(point_or_line)
@@ -87,6 +109,10 @@ def LineMinDistanceTo(line, point_or_line):
 def LinePlane(line):
     """Returns a plane that contains the line. The origin of the plane is at the start of
     the line. If possible, a plane parallel to the world XY, YZ, or ZX plane is returned
+    Parameters:
+      line = List of 6 numbers, two Point3d, or Line.
+    Returns:
+      the plane if successful, otherwise None.
     """
     line = rhutil.coerceline(line, True)
     rc, plane = line.TryGetPlane()
@@ -113,8 +139,12 @@ def LinePlaneIntersection(line, plane):
 
 def LineSphereIntersection(line, sphere_center, sphere_radius):
     """Calculates the intersection of a line and a sphere
+    Parameters:
+      line = the line
+      sphere_center = the center point of the sphere
+      sphere_radius = the radius of the sphere
     Returns:
-      list of intersection points if successful
+      list of intersection points if successful, otherwise None
     """
     line = rhutil.coerceline(line, True)
     sphere_center = rhutil.coerce3dpoint(sphere_center, True)
