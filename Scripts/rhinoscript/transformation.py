@@ -7,7 +7,12 @@ import view as rhview
 
 
 def IsXformIdentity(xform):
-    "Verifies a matrix is the identity matrix"
+    """Verifies a matrix is the identity matrix
+    Parameters:
+      xform =  List or Rhino.Geometry.Transform.  A 4x4 transformation matrix.
+    Returns:
+      True or False indicating success or failure.
+    """
     xform = rhutil.coercexform(xform, True)
     return xform==Rhino.Geometry.Transform.Identity
 
@@ -16,13 +21,22 @@ def IsXformSimilarity(xform):
     """Verifies a matrix is a similarity transformation. A similarity
     transformation can be broken into a sequence of dialations, translations,
     rotations, and reflections
+    Parameters:
+      xform = List or Rhino.Geometry.Transform.  A 4x4 transformation matrix.
+    Returns:
+      True if this transformation is an orientation preserving similarity, otherwise False.
     """
     xform = rhutil.coercexform(xform, True)
     return xform.SimilarityType!=Rhino.Geometry.TransformSimilarityType.NotSimilarity
 
 
 def IsXformZero(xform):
-    "verifies that a matrix is a zero transformation matrix"
+    """verifies that a matrix is a zero transformation matrix
+    Parameters:
+      xform = List or Rhino.Geometry.Transform.  A 4x4 transformation matrix.
+    Returns:
+      True or False indicating success or failure.
+    """
     xform = rhutil.coercexform(xform, True)
     for i in range(4):
         for j in range(4):
@@ -31,7 +45,13 @@ def IsXformZero(xform):
 
 
 def XformChangeBasis(initial_plane, final_plane):
-    "Returns a change of basis transformation matrix or None on error"
+    """Returns a change of basis transformation matrix or None on error
+    Parameters:
+      initial_plane = the initial plane
+      final_plane = the final plane
+    Returns:
+      The 4x4 transformation matrix if successful, otherwise None
+    """
     initial_plane = rhutil.coerceplane(initial_plane, True)
     final_plane = rhutil.coerceplane(final_plane, True)
     xform = Rhino.Geometry.Transform.ChangeBasis(initial_plane, final_plane)
@@ -44,6 +64,8 @@ def XformChangeBasis2(x0,y0,z0,x1,y1,z1):
     Parameters:
       x0,y0,z0 = initial basis
       x1,y1,z1 = final basis
+    Returns:
+      The 4x4 transformation matrix if successful, otherwise None
     """
     x0 = rhutil.coerce3dvector(x0, True)
     y0 = rhutil.coerce3dvector(y0, True)
@@ -87,6 +109,10 @@ def XformDeterminant(xform):
     """Returns the determinant of a transformation matrix. If the determinant
     of a transformation matrix is 0, the matrix is said to be singular. Singular
     matrices do not have inverses.
+    Parameters:
+      xform = List or Rhino.Geometry.Transform.  A 4x4 transformation matrix.
+    Returns:
+      The determinant if successful, otherwise None
     """
     xform = rhutil.coercexform(xform, True)
     return xform.Determinant
@@ -95,18 +121,31 @@ def XformDeterminant(xform):
 def XformDiagonal(diagonal_value):
     """Returns a diagonal transformation matrix. Diagonal matrices are 3x3 with
     the bottom row [0,0,0,1]
+    Parameters:
+      diagonal_value = the diagonal value
+    Returns:
+      The 4x4 transformation matrix if successful, otherwise None
     """
     return Rhino.Geometry.Transform(diagonal_value)
 
 
 def XformIdentity():
-    "returns the identity transformation matrix"
+    """returns the identity transformation matrix
+    Parameters:
+      None
+    Returns:
+      The 4x4 transformation matrix
+    """
     return Rhino.Geometry.Transform.Identity
 
 
 def XformInverse(xform):
     """Returns the inverse of a non-singular transformation matrix
-    Returns None on error
+    Parameters:
+      xform = List or Rhino.Geometry.Transform.  A 4x4 transformation matrix.
+    Returns:
+      The inverted 4x4 transformation matrix if successful.
+      None, if matrix is non-singular or on error.
     """
     xform = rhutil.coercexform(xform, True)
     rc, inverse = xform.TryGetInverse()
@@ -129,6 +168,9 @@ def XformMirror(mirror_plane_point, mirror_plane_normal):
 
 def XformMultiply(xform1, xform2):
     """Multiplies two transformation matrices, where result = xform1 * xform2
+    Parameters:
+      xform1 = List or Rhino.Geometry.Transform.  The first 4x4 transformation matrix to multiply.
+      xform2 = List or Rhino.Geometry.Transform.  The second 4x4 transformation matrix to multiply.
     Returns:
       result transformation on success
     """
@@ -139,7 +181,7 @@ def XformMultiply(xform1, xform2):
 
 def XformPlanarProjection(plane):
     """Returns a transformation matrix that projects to a plane.
-    Parameters
+    Parameters:
       plane = The plane to project to.
     Returns:
       The 4x4 transformation matrix.
@@ -203,7 +245,7 @@ def XformRotation3( start_direction, end_direction, center_point ):
 
 def XformRotation4(x0, y0, z0, x1, y1, z1):
     """Returns a rotation transformation.
-    Paramters:
+    Parameters:
       x0,y0,z0 = Vectors defining the initial orthonormal frame
       x1,y1,z1 = Vectors defining the final orthonormal frame
     Returns:
@@ -284,7 +326,12 @@ def XformShear(plane, x, y, z):
 
 
 def XformTranslation(vector):
-    "Creates a translation transformation matrix"
+    """Creates a translation transformation matrix
+    Parameters:
+      vector = List of 3 numbers, Point3d, or Vector3d.  A 3-D translation vector.
+    Returns:
+      The 4x4 transformation matrix is successful, otherwise None
+    """
     vector = rhutil.coerce3dvector(vector, True)
     return Rhino.Geometry.Transform.Translation(vector)
 
