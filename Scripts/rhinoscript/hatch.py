@@ -128,7 +128,7 @@ def ExplodeHatch(hatch_id, delete=False):
 
 def HatchPattern(hatch_id, hatch_pattern=None):
     """Returns or changes a hatch object's hatch pattern
-    Paramters:
+    Parameters:
       hatch_id = identifier of a hatch object
       hatch_pattern[opt] = name of an existing hatch pattern to replace the
           current hatch pattern
@@ -160,6 +160,8 @@ def HatchPatternDescription(hatch_pattern):
     have descriptions
     Parameters:
       hatch_pattern = name of an existing hatch pattern
+    Returns:
+      description of the hatch pattern on success otherwise None
     """
     index = scriptcontext.doc.HatchPatterns.Find(hatch_pattern, True)
     if index<0: return scriptcontext.errorhandler()
@@ -173,6 +175,8 @@ def HatchPatternFillType(hatch_pattern):
         2 = gradient, uses fill color definition
     Parameters:
       hatch_pattern = name of an existing hatch pattern
+    Returns:
+      hatch pattern's fill type if successful otherwise None
     """
     index = scriptcontext.doc.HatchPatterns.Find(hatch_pattern, True)
     if index<0: return scriptcontext.errorhandler()
@@ -236,7 +240,7 @@ def HatchScale(hatch_id, scale=None):
 
 def IsHatch(object_id):
     """Verifies the existence of a hatch object in the document
-    Paramters:
+    Parameters:
       object_id = identifier of an object
     Returns:
       True or False
