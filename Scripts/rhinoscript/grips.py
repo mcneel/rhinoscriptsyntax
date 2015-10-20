@@ -10,6 +10,8 @@ def EnableObjectGrips(object_id, enable=True):
       object_id = identifier of the object
       enable [opt] = if True, the specified object's grips will be turned on.
         Otherwise, they will be turned off
+    Returns:
+      True on success, False on failure
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     if enable!=rhobj.GripsOn:
