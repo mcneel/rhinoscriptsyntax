@@ -74,6 +74,8 @@ def FlashObject(object_ids, style=True):
       object_ids = identifiers of objects to flash
       style[opt] = If True, flash between object color and selection color.
         If False, flash between visible and invisible
+    Returns:
+      None
     """
     id = rhutil.coerceguid(object_ids, False)
     if id: object_ids = [id]
@@ -282,7 +284,13 @@ def IsObjectValid(object_id):
 
 
 def IsVisibleInView(object_id, view=None):
-    """Verifies an object is visible in a view"""
+    """Verifies an object is visible in a view
+    Parameters:
+      object_id = the identifier of an object
+      view = The title of the view.  If omitted, the current active view is used.
+    Returns:
+      True if the object is visible in the specified view, otherwise False.  None on error
+    """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     viewport = __viewhelper(view).MainViewport
     bbox = rhobj.Geometry.GetBoundingBox(True)
@@ -452,7 +460,7 @@ def ObjectColor(object_ids, color=None):
 
 def ObjectColorSource(object_ids, source=None):
     """Returns of modifies the color source of an object.
-    Paramters:
+    Parameters:
       object_ids = single identifier of list of identifiers
       source[opt] = new color source
           0 = color from layer
@@ -489,6 +497,8 @@ def ObjectDescription(object_id):
     """Returns a short text description of an object
     Parameters:
       object_id = identifier of an object
+    Returns:
+      A short text description of the object if successful.
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     return rhobj.ShortDescription(False)
@@ -876,13 +886,23 @@ def ObjectType(object_id):
 
 
 def OrientObject(object_id, reference, target, flags=0):
-    """Orients a single object based on input points
+    """Orients a single object based on input points.  
+
+    If two 3-D points are specified, then this method will function similar to Rhino's Orient command.  If more than two 3-D points are specified, then the function will orient similar to Rhino's Orient3Pt command.
+
+    The orient flags values can be added together to specify multiple options.
+        Value   Description
+        1       Copy object.  The default is not to copy the object.
+        2       Scale object.  The default is not to scale the object.  Note, the scale option only applies if both reference and target contain only two 3-D points.
+
     Parameters:
         object_id = String or Guid. The identifier of an object
-        reference = list of 3-D reference points
+        reference = list of 3-D reference points.
         target = list of 3-D target points
         flags[opt]: 1 = copy object
                     2 = scale object
+    Returns:
+      The identifier of the oriented object if successful.
     """
     object_id = rhutil.coerceguid(object_id, True)
     from_array = rhutil.coerce3dpointlist(reference)
