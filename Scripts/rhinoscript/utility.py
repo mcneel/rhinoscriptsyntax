@@ -8,12 +8,22 @@ import string
 
 
 def ContextIsRhino():
-    """Return True if the script is being executed in the context of Rhino"""
+    """Return True if the script is being executed in the context of Rhino
+    Parameters:
+      None
+    Returns:
+      True if the script is being executed in the context of Rhino
+    """
     return scriptcontext.id == 1
 
 
 def ContextIsGrasshopper():
-    """Return True if the script is being executed in a grasshopper component"""
+    """Return True if the script is being executed in a grasshopper component
+    Parameters:
+      None
+    Returns:
+      True if the script is being executed in a grasshopper component
+    """
     return scriptcontext.id == 2
 
 
@@ -289,6 +299,12 @@ def Polar(point, angle_degrees, distance, plane=None):
 
 
 def SimplifyArray(points):
+    """Flattens an array of 3-D points into a one-dimensional list of real numbers. For example, if you had an array containing three 3-D points, this method would return a one-dimensional array containing nine real numbers.
+    Parameters:
+      points = 
+    Returns:
+      A one-dimensional list containing real numbers, if successful, otherwise None
+    """
     rc = []
     for point in points:
         point = coerce3dpoint(point, True)
@@ -340,6 +356,8 @@ def SortPoints(points, ascending=True, order=0):
       points = points to sort
       ascending [opt] = ascending if ommitted (True) or True, descending if False.
       order [opt] = the component sort order
+    Returns:
+      A list of sorted 3-D points if successful, otherwise None
     """
     def __cmpXYZ( a, b ):
         rc = cmp(a.X, b.X)
