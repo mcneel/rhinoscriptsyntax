@@ -52,12 +52,22 @@ def DocumentModified(modified=None):
 
 
 def DocumentName():
-    "Returns the name of the currently loaded Rhino document (3DM file)"
+    """Returns the name of the currently loaded Rhino document (3DM file)
+    Parameters:
+      None
+    Returns:
+      the name of the currently loaded Rhino document (3DM file)
+    """
     return scriptcontext.doc.Name or None
 
 
 def DocumentPath():
-    "Returns path of the currently loaded Rhino document (3DM file)"
+    """Returns path of the currently loaded Rhino document (3DM file)
+    Parameters:
+      None
+    Returns:
+      the path of the currently loaded Rhino document (3DM file) 
+    """
     # GetDirectoryName throws an exception if an empty string is passed hence the 'or None'
     path = System.IO.Path.GetDirectoryName(scriptcontext.doc.Path or None)
     # add \ or / at the end to be consistent with RhinoScript
@@ -68,7 +78,10 @@ def DocumentPath():
 
 def EnableRedraw(enable=True):
     """Enables or disables screen redrawing
-    Returns: previous screen redrawing state
+    Parameters:
+      enable [opt] = True to enable, False to disable
+    Returns: 
+      previous screen redrawing state
     """
     old = scriptcontext.doc.Views.RedrawEnabled
     if old!=enable: scriptcontext.doc.Views.RedrawEnabled = enable
@@ -90,7 +103,12 @@ def ExtractPreviewImage(filename, modelname=None):
 
 
 def IsDocumentModified():
-    "Verifies that the current document has been modified in some way"
+    """Verifies that the current document has been modified in some way
+    Parameters:
+      None
+    Returns:
+      True or False. None on error
+    """
     return scriptcontext.doc.Modified
 
 
@@ -112,12 +130,21 @@ def ReadFileVersion():
     """Returns the file version of the current document. Use this function to
     determine which version of Rhino last saved the document. Note, this
     function will not return values from referenced or merged files.
+    Parameters:
+      None
+    Returns:
+      the file version of the current document
     """
     return scriptcontext.doc.ReadFileVersion()
 
 
 def Redraw():
-    "Redraws all views"
+    """Redraws all views
+    Parameters:
+      None
+    Returns:
+      None 
+    """
     old = scriptcontext.doc.Views.RedrawEnabled
     scriptcontext.doc.Views.RedrawEnabled = True
     scriptcontext.doc.Views.Redraw()
@@ -254,7 +281,13 @@ def UnitAngleTolerance(angle_tolerance_degrees=None, in_model_units=True):
 
 
 def UnitDistanceDisplayPrecision(precision=None, model_units=True):
-    """Return or set the document's distance display precision"""
+    """Return or set the document's distance display precision
+    Parameters:
+      precision [opt] = The distance display precision.  If the current distance display mode is Decimal, then precision is the number of decimal places.  If the current distance display mode is Fractional (including Feet and Inches), then the denominator = (1/2)^precision.  Use UnitDistanceDisplayMode to get the current distance display mode.
+      model_units [opt] = Return or modify the document's model units (True) or the document's page units (False). The default is True.
+    Returns:
+     If precision is not specified, the current distance display precision if successful. If precision is specified, the previous distance display precision if successful. If not successful, or on error.
+    """
     if model_units:
         rc = scriptcontext.doc.ModelDistanceDisplayPrecision
         if precision: scriptcontext.doc.ModelDistanceDisplayPrecision = precision
@@ -387,5 +420,13 @@ def UnitSystem(unit_system=None, scale=False, in_model_units=True):
 
 
 def UnitSystemName(capitalize=False, singular=True, abbreviate=False, model_units=True):
-    """Returns the name of the current unit system"""
+    """Returns the name of the current unit system
+    Parameters:
+      capitalize [opt] = Capitalize the first character of the units system name (e.g. return "Millimeter" instead of "millimeter"). The default is not to capitalize the first character (false).
+      singular [opt] = Return the singular form of the units system name (e.g. "millimeter" instead of "millimeters"). The default is to return the singular form of the name (true).
+      abbreviate [opt] = Abbreviate the name of the units system (e.g. return "mm" instead of "millimeter"). The default is not to abbreviate the name (false).
+      model_units [opt] = Return the document's model units (True) or the document's page units (False). The default is True.
+    Returns:
+      The name of the current units system if successful. 
+    """
     return scriptcontext.doc.GetUnitSystemName(model_units, capitalize, singular, abbreviate)
