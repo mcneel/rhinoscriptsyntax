@@ -39,9 +39,8 @@ def AddAlignedDimension(start_point, end_point, point_on_dimension_line, style=N
 def AddDimStyle(dimstyle_name=None):
     """Adds a new dimension style to the document. The new dimension style will
     be initialized with the current default dimension style properties.
-    Properties:
-      dimstyle_name[opt] = name of the new dimension style. If omitted, Rhino
-        automatically generates the dimension style name
+    Parameters:
+      dimstyle_name [opt] = name of the new dimension style. If omitted, Rhino automatically generates the dimension style name
     Returns:
       name of the new dimension style on success
       None on error
@@ -55,12 +54,12 @@ def AddDimStyle(dimstyle_name=None):
 def AddLeader(points, view_or_plane=None, text=None):
     """Adds a leader to the document. Leader objects are planar.
     The 3D points passed to this function should be co-planar
-    Paramters:
+    Parameters:
       points = list of (at least 2) 3D points
-      view_or_plane[opt] = If a view is specified, points will be constrained
+      view_or_plane [opt] = If a view is specified, points will be constrained
         to the view's construction plane. If a view is not specified, points
         will be constrained to a plane fit through the list of points
-      text[opt] = leader's text string
+      text [opt] = leader's text string
     Returns:
       identifier of the new leader on success
       None on error
@@ -116,8 +115,7 @@ def AddLinearDimension(start_point, end_point, point_on_dimension_line):
 
 
 def CurrentDimStyle( dimstyle_name=None ):
-    """
-    Returns or changes the current default dimension style
+    """Returns or changes the current default dimension style
     Parameters:
       dimstyle_name[opt] = name of an existing dimension style to make current
     Returns:
@@ -181,6 +179,8 @@ def DimensionText(object_id):
     """Returns the text displayed by a dimension object
     Parameters:
       object_id = identifier of the object
+    Returns:
+      the text displayed by a dimension object
     """
     annotation_object = __coerceannotation(object_id)
     return annotation_object.DisplayText
@@ -256,7 +256,12 @@ def DimStyleArrowSize(dimstyle, size=None):
 
 
 def DimStyleCount():
-    "Returns the number of dimension styles in the document"
+    """Returns the number of dimension styles in the document
+    Parameters:
+      None
+    Returns:
+      the number of dimension styles in the document
+    """
     return scriptcontext.doc.DimStyles.Count
 
 
@@ -364,7 +369,12 @@ def DimStyleLinearPrecision(dimstyle, precision=None):
 
 
 def DimStyleNames(sort=False):
-    "Returns the names of all dimension styles in the document"
+    """Returns the names of all dimension styles in the document
+    Parameters:
+      sort [opt] = sort the list if True, not sorting is the default (False)
+    Returns:
+      the names of all dimension styles in the document
+    """
     rc = [ds.Name for ds in scriptcontext.doc.DimStyles]
     if sort: rc.sort()
     return rc
@@ -525,7 +535,12 @@ def DimStyleTextHeight(dimstyle, height=None):
 
 
 def IsAlignedDimension(object_id):
-    "Verifies an object is an aligned dimension object"
+    """Verifies an object is an aligned dimension object
+    Parameters:
+      object_id = the object's identifier
+    Returns:
+      True or False.  None on error
+    """
     annotation_object = __coerceannotation(object_id)
     id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
@@ -535,7 +550,12 @@ def IsAlignedDimension(object_id):
 
 
 def IsAngularDimension(object_id):
-    "Verifies an object is an angular dimension object"
+    """Verifies an object is an angular dimension object
+    Parameters:
+      object_id = the object's identifier
+    Returns:
+      True or False. None on error
+    """
     id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
     geom = annotation_object.Geometry
@@ -543,7 +563,12 @@ def IsAngularDimension(object_id):
 
 
 def IsDiameterDimension(object_id):
-    "Verifies an object is a diameter dimension object"
+    """Verifies an object is a diameter dimension object
+    Parameters:
+      object_id = the object's identifier
+    Returns:
+      True or False.  None on error
+    """
     id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
     geom = annotation_object.Geometry
@@ -553,7 +578,12 @@ def IsDiameterDimension(object_id):
 
 
 def IsDimension(object_id):
-    "Verifies an object is a dimension object"
+    """Verifies an object is a dimension object
+    Parameters:
+      object_id = the object's identifier
+    Returns:
+      True or False.  None on error
+    """
     id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
     geom = annotation_object.Geometry
@@ -564,6 +594,8 @@ def IsDimStyle(dimstyle):
     """Verifies the existance of a dimension style in the document
     Parameters:
       dimstyle = the name of a dimstyle to test for
+    Returns:
+      True or False. None on error
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     return ds is not None
@@ -573,6 +605,8 @@ def IsDimStyleReference(dimstyle):
     """Verifies that an existing dimension style is from a reference file
     Parameters:
       dimstyle = the name of an existing dimension style
+    Returns:
+      True or False. None on error
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     if ds is None: return scriptcontext.errorhandler()
@@ -580,7 +614,12 @@ def IsDimStyleReference(dimstyle):
 
 
 def IsLeader(object_id):
-    "Verifies an object is a dimension leader object"
+    """Verifies an object is a dimension leader object
+    Parameters:
+      object_id = the object's identifier
+    Returns:
+      True or False. None on error
+    """
     id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
     geom = annotation_object.Geometry
@@ -588,7 +627,12 @@ def IsLeader(object_id):
 
 
 def IsLinearDimension(object_id):
-    "Verifies an object is a linear dimension object"
+    """Verifies an object is a linear dimension object
+    Parameters:
+      object_id = the object's identifier
+    Returns:
+      True or False. None on error
+    """
     id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
     geom = annotation_object.Geometry
@@ -596,7 +640,12 @@ def IsLinearDimension(object_id):
 
 
 def IsOrdinateDimension(object_id):
-    "Verifies an object is an ordinate dimension object"
+    """Verifies an object is an ordinate dimension object
+    Parameters:
+      object_id = the object's identifier
+    Returns:
+      True or False. None on error
+    """
     id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
     geom = annotation_object.Geometry
@@ -604,7 +653,12 @@ def IsOrdinateDimension(object_id):
 
 
 def IsRadialDimension(object_id):
-    "Verifies an object is a radial dimension object"
+    """Verifies an object is a radial dimension object
+    Parameters:
+      object_id = the object's identifier
+    Returns:
+      True or False. None on error
+    """
     id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
     geom = annotation_object.Geometry
