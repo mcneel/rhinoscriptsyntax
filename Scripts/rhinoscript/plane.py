@@ -300,15 +300,30 @@ def RotatePlane(plane, angle_degrees, axis):
 
 
 def WorldXYPlane():
-    "Returns Rhino's world XY plane"
+    """Returns Rhino's world XY plane
+    Parameters:
+      None
+    Returns:
+      Rhino's world XY plane
+    """
     return Rhino.Geometry.Plane.WorldXY
 
 
 def WorldYZPlane():
-    "Returns Rhino's world YZ plane"
+    """Returns Rhino's world YZ plane
+    Parameters:
+      None
+    Returns:
+      Rhino's world YZ plane
+    """
     return Rhino.Geometry.Plane.WorldYZ
 
 
 def WorldZXPlane():
-    "Returns Rhino's world ZX plane"
+    """Returns Rhino's world ZX plane
+    Parameters:
+      None
+    Returns:
+      Rhino's world ZX plane
+    """
     return Rhino.Geometry.Plane.WorldZX
