@@ -196,6 +196,13 @@ def ColorRGBToHLS(rgb):
 
 
 def CullDuplicateNumbers(numbers, tolerance=None):
+    """Removes duplicates from an array of numbers.
+    Parameters:
+      numbers = list or tuple
+      tolerance [opt] = The minimum distance between numbers.  Numbers that fall within this tolerance will be discarded.  If omitted, Rhino's internal zero tolerance is used.
+    Returns:
+      a list of numbers with duplicates removed if successful.
+    """
     count = len(numbers)
     if count < 2: return numbers
     if tolerance is None: tolerance = scriptcontext.doc.ModelAbsoluteTolerance
