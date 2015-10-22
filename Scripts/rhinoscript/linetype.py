@@ -47,7 +47,7 @@ def LinetypeNames(sort=False):
     """Returns names of all linetypes in the document
     Parameters:
       sort[opt] = return a sorted list of the linetype names
-    Returns
+    Returns:
       list of strings if successful
     """
     count = scriptcontext.doc.Linetypes.Count
