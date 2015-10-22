@@ -144,12 +144,22 @@ def ShowToolbar(name, toolbar_group):
 
 
 def ToolbarCollectionCount():
-    """Returns number of currently open toolbar collections"""
+    """Returns number of currently open toolbar collections
+    Parameters:
+      None
+    Returns:
+      the number of currently open toolbar collections
+    """
     return Rhino.RhinoApp.ToolbarFiles.Count
 
 
 def ToolbarCollectionNames():
-    """Returns names of all currently open toolbar collections"""
+    """Returns names of all currently open toolbar collections
+    Parameters:
+      None
+    Returns:
+      the names of all currently open toolbar collections
+    """
     return [tbfile.Name for tbfile in Rhino.RhinoApp.ToolbarFiles]
 
 
