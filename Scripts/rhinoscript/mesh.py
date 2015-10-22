@@ -759,8 +759,7 @@ def MeshVertices(object_id):
 
 
 def MeshVolume(object_ids):
-    """
-    Returns the approximate volume of one or more closed meshes
+    """Returns the approximate volume of one or more closed meshes
     Parameters:
       object_ids = identifiers of one or more mesh objects
     Returns:
