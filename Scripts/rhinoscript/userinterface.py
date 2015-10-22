@@ -175,6 +175,8 @@ def GetColor(color=[0,0,0]):
 
 def GetCursorPos():
     """Retrieves the cursor's position
+    Parameters:
+      None
     Returns: tuple containing the following information
       cursor position in world coordinates
       cursor position in screen coordinates
