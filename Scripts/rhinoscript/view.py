@@ -379,14 +379,24 @@ def NamedCPlane(name):
 
 
 def NamedCPlanes():
-    "Returns the names of all named construction planes in the document"
+    """Returns the names of all named construction planes in the document
+    Parameters:
+      None
+    Returns:
+      the names of all named construction planes in the document
+    """
     count = scriptcontext.doc.NamedConstructionPlanes.Count
     rc = [scriptcontext.doc.NamedConstructionPlanes[i].Name for i in range(count)]
     return rc
 
 
 def NamedViews():
-    "Returns the names of all named views in the document"
+    """Returns the names of all named views in the document
+    Parameters:
+      None
+    Returns:
+      the names of all named views in the document
+    """
     count = scriptcontext.doc.NamedViews.Count
     return [scriptcontext.doc.NamedViews[i].Name for i in range(count)]
 
