@@ -37,7 +37,12 @@ def AddSearchPath(folder, index=-1):
 
 
 def AliasCount():
-    "Returns number of command aliases in Rhino."
+    """Returns number of command aliases in Rhino.
+    Parameters:
+      None
+    Returns:
+      the number of command aliases in Rhino.
+    """
     return Rhino.ApplicationSettings.CommandAliasList.Count
 
 
@@ -59,7 +64,12 @@ def AliasMacro(alias, macro=None):
 
 
 def AliasNames():
-    "Returns a list of command alias names."
+    """Returns a list of command alias names.
+    Parameters:
+      None
+    Returns:
+      a list of command alias names.
+    """
     return Rhino.ApplicationSettings.CommandAliasList.GetNames()
 
 
@@ -166,7 +176,12 @@ def AutosaveInterval(minutes=None):
 
 
 def BuildDate():
-    "Returns the builddate of Rhino"
+    """Returns the build date of Rhino
+    Parameters:
+      None
+    Returns:
+      the build date of Rhino
+    """
     build = Rhino.RhinoApp.BuildDate
     return datetime.date(build.Year, build.Month, build.Day)
 
@@ -174,6 +189,10 @@ def BuildDate():
 def ClearCommandHistory():
     """Clears contents of Rhino's command history window. You can view the
     command history window by using the CommandHistory command in Rhino.
+    Parameters:
+      None
+    Returns:
+      None
     """
     Rhino.RhinoApp.ClearCommandHistoryWindow()
 
@@ -223,7 +242,12 @@ def Command(commandString, echo=True):
 
 
 def CommandHistory():
-    "Returns the contents of Rhino's command history window"
+    """Returns the contents of Rhino's command history window
+    Parameters:
+      None
+    Returns:
+      the contents of Rhino's command history window
+    """
     return Rhino.RhinoApp.CommandHistoryWindowText
 
 
@@ -335,28 +359,53 @@ def EnablePlugIn(plugin, enable=None):
 
 
 def ExeFolder():
-    "Returns the full path to Rhino's executable folder."
+    """Returns the full path to Rhino's executable folder.
+    Parameters:
+      None
+    Returns:
+      the full path to Rhino's executable folder.
+    """
     return Rhino.ApplicationSettings.FileSettings.ExecutableFolder
 
 
 def ExePlatform():
-    "Returns the platform of the Rhino executable"
+    """Returns the platform of the Rhino executable
+    Parameters:
+      None
+    Returns:
+      the platform of the Rhino executable
+    """
     if System.Environment.Is64BitProcess: return 1
     return 0
 
 
 def ExeServiceRelease():
-    "Returns the service release number of the Rhino executable"
+    """Returns the service release number of the Rhino executable
+    Parameters:
+      None
+    Returns:
+      the service release number of the Rhino executable
+    """
     return Rhino.RhinoApp.ExeServiceRelease
 
 
 def ExeVersion():
-    "Returns the major version number of the Rhino executable"
+    """Returns the major version number of the Rhino executable
+    Parameters:
+      None
+    Returns:
+      the major version number of the Rhino executable
+    """
     return Rhino.RhinoApp.ExeVersion
 
 
 def Exit():
-    "Closes the rhino application"
+    """Closes the rhino application
+    Parameters:
+      None
+    Returns:
+      None
+    """
     Rhino.RhinoApp.Exit()
 
 
@@ -403,7 +452,12 @@ def InCommand(ignore_runners=True):
 
 
 def InstallFolder():
-    "The full path to Rhino's installation folder"
+    """The full path to Rhino's installation folder
+    Parameters:
+      None
+    Returns:
+      the full path to Rhino's installation folder
+    """
     return Rhino.ApplicationSettings.FileSettings.InstallFolder
 
 
@@ -443,12 +497,22 @@ def IsPlugIn(plugin):
 
 
 def IsRunningOnWindows():
-    "Returns True if this script is being executed on a Windows platform"
+    """Returns True if this script is being executed on a Windows platform
+    Parameters:
+      None
+    Returns:
+      True or False      
+    """
     return Rhino.Runtime.HostUtils.RunningOnWindows
 
 
 def LastCommandName():
-    "Returns the name of the last executed command"
+    """Returns the name of the last executed command
+    Parameters:
+      None
+    Returns:
+      the name of the last executed command
+    """
     id = rhcommand.LastCommandId
     return rhcommand.LookupCommandName(id, True)
 
@@ -460,6 +524,10 @@ def LastCommandResult():
     2 = nothing (command did nothing, but was not cancelled)
     3 = failure (command failed due to bad input, computational problem...)
     4 = unknown command (the command was not found)
+    Parameters:
+      None
+    Returns:
+      the result code for the last executed command
     """
     return int(rhcommand.LastCommandResult)
 
@@ -476,6 +544,10 @@ def LocaleID():
       1041  Japanese
       1042  Korean
       1045  Polish
+    Parameters:
+      None
+    Returns:
+      the current language used fro the Rhino interface as a locale ID, or LCID.
     """
     return Rhino.ApplicationSettings.AppearanceSettings.LanguageIdentifier
 
@@ -623,6 +695,8 @@ def Prompt(message=None):
 
 def ScreenSize():
     """Returns current width and height, of the screen of the primary monitor.
+    Parameters:
+      None
     Returns:
       Tuple containing two numbers identifying the width and height
     """
@@ -633,6 +707,10 @@ def ScreenSize():
 def SdkVersion():
     """Returns version of the Rhino SDK supported by the executing Rhino.
     Rhino SDK versions are 9 digit numbers in the form of YYYYMMDDn.
+    Parameters:
+      None
+    Returns:
+      the version of the Rhino SDK supported by the executing Rhino
     """
     return Rhino.RhinoApp.SdkVersion
 
@@ -640,6 +718,10 @@ def SdkVersion():
 def SearchPathCount():
     """Returns the number of path items in Rhino's search path list.
     See "Options Files settings" in the Rhino help file for more details.
+    Parameters:
+      None
+    Returns:
+      the number of path items in Rhino's search path list 
     """
     return Rhino.ApplicationSettings.FileSettings.SearchPathCount
 
@@ -647,6 +729,10 @@ def SearchPathCount():
 def SearchPathList():
     """Returns all of the path items in Rhino's search path list.
     See "Options Files settings" in the Rhino help file for more details.
+    Parameters:
+      None
+    Returns:
+      list of search paths  
     """
     return Rhino.ApplicationSettings.FileSettings.GetSearchPaths()
 
@@ -736,7 +822,12 @@ def StatusBarProgressMeterUpdate(position, absolute=True):
 
 
 def StatusBarProgressMeterHide():
-    "Hide the progress meter"
+    """Hide the progress meter
+    Parameters:
+      None
+    Returns:
+      None
+    """
     Rhino.UI.StatusBar.HideProgressMeter()
 
 
@@ -768,7 +859,12 @@ def TemplateFolder(folder=None):
 
 
 def WindowHandle():
-    "Returns the windows handle of Rhino's main window"
+    """Returns the windows handle of Rhino's main window
+    Parameters:
+      None
+    Returns:
+      the windows handle of Rhino's main window   
+    """
     return Rhino.RhinoApp.MainWindowHandle()
 
 
