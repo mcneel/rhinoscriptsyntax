@@ -151,7 +151,12 @@ def HatchPattern(hatch_id, hatch_pattern=None):
 
 
 def HatchPatternCount():
-    "Returns the number of hatch patterns in the document"
+    """Returns the number of hatch patterns in the document
+    Parameters:
+      None
+    Returns:
+      the number of hatch patterns in the document
+    """
     return scriptcontext.doc.HatchPatterns.Count
 
 
@@ -184,7 +189,12 @@ def HatchPatternFillType(hatch_pattern):
 
 
 def HatchPatternNames():
-    "Returns the names of all of the hatch patterns in the document"
+    """Returns the names of all of the hatch patterns in the document
+    Parameters:
+      None
+    Returns:
+      the names of all of the hatch patterns in the document
+    """
     rc = []
     for i in range(scriptcontext.doc.HatchPatterns.Count):
         hatchpattern = scriptcontext.doc.HatchPatterns[i]
