@@ -798,6 +798,8 @@ def SelectedObjects(include_lights=False, include_grips=False):
 
 def UnselectAllObjects():
     """Unselects all objects in the document
+    Parameters:
+      None
     Returns:
       the number of objects that were unselected
     """
