@@ -111,7 +111,7 @@ def ExpandLayer( layer, expand ):
 
 def IsLayer(layer):
     """Verifies the existance of a layer in the document
-    Parameter:
+    Parameters:
       layer = the name or id of a layer to search for
     Returns:
       True on success otherwise False
@@ -295,12 +295,22 @@ def LayerColor(layer, color=None):
 
 
 def LayerCount():
-    "Returns the number of layers in the document"
+    """Returns the number of layers in the document
+    Parameters:
+      None
+    Returns:
+      the number of layers in the document
+    """
     return scriptcontext.doc.Layers.ActiveCount
 
 
 def LayerIds():
-    "Return identifiers of all layers in the document"
+    """Return identifiers of all layers in the document
+    Parameters:
+      None
+    Returns:
+      the identifiers of all layers in the document
+    """
     return [layer.Id for layer in scriptcontext.doc.Layers]
 
 
