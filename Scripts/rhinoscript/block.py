@@ -57,6 +57,8 @@ def BlockContainerCount(block_name):
     block definition
     Parameters:
       block_name = the name of an existing block definition
+    Returns:
+      the number of block definitions that contain a specified block definition
     """
     return len(BlockContainers(block_name))
 
@@ -79,7 +81,12 @@ def BlockContainers(block_name):
 
 
 def BlockCount():
-    "Returns the number of block definitions in the document"
+    """Returns the number of block definitions in the document
+    Parameters:
+      None
+    Returns:
+      the number of block definitions in the document
+    """
     return scriptcontext.doc.InstanceDefinitions.ActiveCount
 
 
@@ -108,6 +115,8 @@ def BlockInstanceCount(block_name,where_to_look=0):
         0 = get top level references in active document.
         1 = get top level and nested references in active document.
         2 = check for references from other instance definitions
+    Returns:
+      the number of instances of the block in the document
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
@@ -133,6 +142,8 @@ def BlockInstanceName(object_id):
     """Returns the block name of a block instance
     Parameters:
       object_id = The identifier of an existing block insertion object
+    Returns:
+      the block name of a block instance
     """
     instance = __InstanceObjectFromId(object_id, True)
     idef = instance.InstanceDefinition
@@ -158,6 +169,9 @@ def BlockInstanceXform(object_id):
     matrix
     Parameters:
       object_id = The identifier of an existing block insertion object  
+    Returns:
+      the location, as a transform matrix, of a block instance relative to the world coordinate
+    system origin
     """
     instance = __InstanceObjectFromId(object_id, True)
     return instance.InstanceXform
@@ -167,6 +181,8 @@ def BlockNames( sort=False ):
     """Returns the names of all block definitions in the document
     Parameters:
       sort = return a sorted list
+    Returns:
+      the names of all block definitions in the document
     """
     ideflist = scriptcontext.doc.InstanceDefinitions.GetList(True)
     rc = [item.Name for item in ideflist]
@@ -178,6 +194,8 @@ def BlockObjectCount(block_name):
     """Returns number of objects that make up a block definition
     Parameters:
       block_name = name of an existing block definition
+    Returns:
+      the number of objects that make up a block definition
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
@@ -212,7 +230,20 @@ def BlockPath(block_name):
 
 
 def BlockStatus(block_name):
-    """Returns the status of a linked block. See help for status codes"""
+    """Returns the status of a linked block
+        Value Description
+        -3    Not a linked block definition.
+        -2    The linked block definition's file could not be opened or could not be read.
+        -1    The linked block definition's file could not be found.
+         0    The linked block definition is up-to-date.
+         1    The linked block definition's file is newer than definition.
+         2    The linked block definition's file is older than definition.
+         3    The linked block definition's file is different than definition.
+    Parameters:
+      None
+    Returns:
+      the status of a linked block
+    """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     if not idef: return -3
     return int(idef.ArchiveFileStatus)
