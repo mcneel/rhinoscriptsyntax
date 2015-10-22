@@ -66,13 +66,22 @@ def DeleteGroup(group_name):
 
 
 def GroupCount():
-    "Returns the number of groups in the document"
+    """Returns the number of groups in the document
+    Parameters:
+      None
+    Returns:
+      the number of groups in the document
+    """
     return scriptcontext.doc.Groups.Count
 
 
 def GroupNames():
     """Returns the names of all the groups in the document
     None if no names exist in the document
+    Parameters:
+      None
+    Returns:
+      the names of all the groups in the document.  None if no names exist in the document
     """
     names = scriptcontext.doc.Groups.GroupNames(True)
     if names is None: return None
