@@ -377,5 +377,10 @@ def XformWorldToScreen(point, view=None, screen_coordinates=False):
 
 
 def XformZero():
-    "Returns a zero transformation matrix"
+    """Returns a zero transformation matrix
+    Parameters:
+      None
+    Returns:
+      a zero transformation matrix
+    """
     return Rhino.Geometry.Transform()
