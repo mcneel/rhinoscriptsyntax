@@ -14,7 +14,12 @@ def DeleteDocumentData(section=None, entry=None):
 
 
 def DocumentDataCount():
-    "Returns the number of user data strings in the current document"
+    """Returns the number of user data strings in the current document
+    Parameters:
+      None
+    Returns:
+      the number of user data strings in the current document
+    """
     return scriptcontext.doc.Strings.Count
 
 
@@ -74,6 +79,8 @@ def GetUserText(object_id, key=None, attached_to_geometry=False):
 
 def IsDocumentData():
     """Verifies the current document contains user data
+    Parameters:
+      None
     Returns:
       True or False indicating the presence of Script user data
     """
