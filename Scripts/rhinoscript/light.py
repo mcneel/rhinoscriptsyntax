@@ -273,7 +273,12 @@ def LightColor(object_id, color=None):
 
 
 def LightCount():
-    "Returns the number of light objects in the document"
+    """Returns the number of light objects in the document
+    Parameters:
+      None
+    Returns:
+      the number of light objects in the document
+    """
     return scriptcontext.doc.Lights.Count
 
 
@@ -342,7 +347,12 @@ def LightName(object_id, name=None):
 
 
 def LightObjects():
-    "Returns list of identifiers of light objects in the document"
+    """Returns list of identifiers of light objects in the document
+    Parameters:
+      None
+    Returns:
+      the list of identifiers of light objects in the document
+    """
     count = scriptcontext.doc.Lights.Count
     rc = []
     for i in range(count):
