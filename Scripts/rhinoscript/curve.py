@@ -45,6 +45,10 @@ def AddArc3Pt(start, end, point_on_arc):
 def AddArcPtTanPt(start, direction, end):
     """Adds an arc curve, created from a start point, a start direction, and an
     end point, to the document
+    Parameters:
+      start = the starting point of the arc
+      direction = the arc direction at start
+      end = the ending point of the arc
     Returns:
       id of the new curve object
     """
@@ -324,6 +328,8 @@ def AddNurbsCurve(points, knots, degree, weights=None):
       degree = degree of the curve. must be greater than of equal to 1
       weights[opt] = weight values for the curve. Number of elements should
           equal the number of elements in points. Values must be greater than 0
+    Returns:
+      the identifier of the new object if successful, otherwise None
     """
     points = rhutil.coerce3dpointlist(points, True)
     cvcount = len(points)
@@ -379,7 +385,7 @@ def AddPolyline(points, replace_id=None):
 
 def AddRectangle(plane, width, height):
     """Add a rectangular curve to the document
-    Paramters:
+    Parameters:
       plane = plane on which the rectangle will lie
       width, height = width and height of rectangle as measured along the plane's
         x and y axes
@@ -1077,7 +1083,9 @@ def CurveDomain(curve_id, segment_index=-1):
     """Returns the domain of a curve object.
     Parameters:
       curve_id = identifier of the curve object
-      segment_index[opt] = the curve segment if curve_id identifies a polycurve.
+      segment_index [opt] = the curve segment if curve_id identifies a polycurve.
+    Returns:
+      the domain of the curve if successful, otherwise None
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     dom = curve.Domain
@@ -1361,6 +1369,11 @@ def CurvePoints(curve_id, segment_index=-1):
     """Returns the control points, or control vertices, of a curve object.
     If the curve is a rational NURBS curve, the euclidean control vertices
     are returned.
+    Parameters:
+      curve_id = the object's identifier
+      segment_index [opt] = if curve_id identifies a polycurve object, then intIndex identifies the curve segment of the polycurve to query
+    Returns:
+      the control points, or control vertices, of a curve object
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     nc = curve.ToNurbsCurve()
@@ -1652,6 +1665,8 @@ def EvaluateCurve(curve_id, t, segment_index=-1):
       curve_id = identifier of the curve object
       t = the parameter to evaluate
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
+    Returns:
+      a 3-D point if successful, otherwise None
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     return curve.PointAt(t)
@@ -1901,7 +1916,12 @@ def IsCircle(curve_id, tolerance=None):
 
 
 def IsCurve(object_id):
-    "Verifies an object is a curve"
+    """Verifies an object is a curve
+    Parameters:
+      object_id = the object's identifier
+    Returns:
+      True or False
+    """
     curve = rhutil.coercecurve(object_id)
     return curve is not None
 
@@ -1923,6 +1943,12 @@ def IsCurveClosable(curve_id, tolerance=None):
 
 
 def IsCurveClosed(object_id):
+    """Verifies an object is a closed curve object
+    Parameters:
+      object_id = the object's identifier
+    Returns:
+      True if succussful otherwise False.  None on error
+    """
     curve = rhutil.coercecurve(object_id)
     return None if not curve else curve.IsClosed
 
@@ -2308,14 +2334,26 @@ def PointInPlanarClosedCurve(point, curve, plane=None, tolerance=None):
 
 
 def PolyCurveCount(curve_id, segment_index=-1):
-    """Returns the number of curve segments that make up a polycurve"""
+    """Returns the number of curve segments that make up a polycurve
+    Parameters:
+      curve_id = the object's identifier
+      segment_index [opt] = if curve_id identifies a polycurve object, then segment_index identifies the curve segment of the polycurve to query.
+    Returns:
+      the number of curve segments in a polycurve if successful, otherwise None
+    """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     if isinstance(curve, Rhino.Geometry.PolyCurve): return curve.SegmentCount
     raise ValueError("curve_id does not reference a polycurve")
 
 
 def PolylineVertices(curve_id, segment_index=-1):
-    "Returns the vertices of a polyline curve on success"
+    """Returns the vertices of a polyline curve on success
+    Parameters:
+      curve_id = the object's identifier
+      segment_index [opt] = if curve_id identifies a polycurve object, then segment_index identifies the curve segment of the polycurve to query.
+    Returns:
+      an  array of Point3d vertex points if successful, otherwise None
+    """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     rc, polyline = curve.TryGetPolyline()
     if rc: return [pt for pt in polyline]
@@ -2399,7 +2437,33 @@ def ReverseCurve(curve_id):
 
 
 def SimplifyCurve(curve_id, flags=0):
-    "Replace a curve with a geometrically equivalent polycurve"
+    """Replace a curve with a geometrically equivalent polycurve.
+    
+    The polycurve will have the following properties:
+     - All the polycurve segments are lines, polylines, arcs, or NURBS curves.
+     - The NURBS curves segments do not have fully multiple interior knots.
+     - Rational NURBS curves do not have constant weights.
+     - Any segment for which IsCurveLinear or IsArc is True is a line, polyline segment, or an arc.
+     - Adjacent co-linear or co-circular segments are combined.
+     - Segments that meet with G1-continuity have there ends tuned up so that they meet with G1-continuity to within machine precision.
+     - If the polycurve is a polyline, a polyline will be created
+
+        flag options
+        Value Description
+        0     Use all methods.
+        1     Do not split NURBS curves at fully multiple knots.
+        2     Do not replace segments with IsCurveLinear = True with line curves.
+        4     Do not replace segments with IsArc = True with arc curves.
+        8     Do not replace rational NURBS curves with constant denominator with an equivalent non-rational NURBS curve.
+        16    Do not adjust curves at G1-joins.
+        32    Do not merge adjacent co-linear lines or co-circular arcs or combine consecutive line segments into a polyline.
+
+    Parameters:
+      curve_id = the object's identifier
+      flags [opt] = the simplification methods to use. By default, all methods are used (flags = 0)
+    Returns:
+      True or False
+    """
     curve = rhutil.coercecurve(curve_id, -1, True)
     _flags = Rhino.Geometry.CurveSimplifyOptions.All
     if( flags&1 ==1 ): _flags = _flags - Rhino.Geometry.CurveSimplifyOptions.SplitAtFullyMultipleKnots
@@ -2446,7 +2510,7 @@ def SplitCurve(curve_id, parameter, delete_input=True):
 
 def TrimCurve(curve_id, interval, delete_input=True):
     """Trims a curve by removing portions of the curve outside a specified interval
-    Paramters:
+    Parameters:
       curve_id = the curve to trim
       interval = two numbers indentifying the interval to keep. Portions of
         the curve before domain[0] and after domain[1] will be removed. If the
@@ -2454,7 +2518,7 @@ def TrimCurve(curve_id, interval, delete_input=True):
         curve is closed and the interval is decreasing, then the portion of
         the curve across the start and end of the curve is returned
       delete_input[opt] = delete the input curve
-    Reutrns:
+    Returns:
       identifier of the new curve on success
       None on failure
     """
