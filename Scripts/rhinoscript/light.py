@@ -17,14 +17,6 @@ def AddDirectionalLight(start_point, end_point):
       end_point: ending point and direction of the light
     Returns:
       identifier of the new object if successful
-    Example:
-      import rhinoscriptsyntax as rs
-      end = rs.GetPoint("End of light vector direction")
-      if end:
-          start = rs.GetPoint("Start of light vector direction", end)
-          if start: rs.AddDirectionalLight( start, end )
-    See Also:
-      IsDirectionalLight
     """
     start = rhutil.coerce3dpoint(start_point, True)
     end = rhutil.coerce3dpoint(end_point, True)
@@ -48,14 +40,6 @@ def AddLinearLight(start_point, end_point, width=None):
     Returns:
       identifier of the new object if successful
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      start = rs.GetPoint("Light origin")
-      if start:
-          end = rs.GetPoint("Light length and direction", start)
-          if end: rs.AddLinearLight(start, end)
-    See Also:
-      IsLinearLight
     """
     start = rhutil.coerce3dpoint(start_point, True)
     end = rhutil.coerce3dpoint(end_point, True)
@@ -92,12 +76,6 @@ def AddPointLight(point):
       point = the 3d location of the point
     Returns:
       identifier of the new object if successful
-    Example:
-      import rhinoscriptsyntax as rs
-      point = rs.GetPoint("Point light location")
-      if point: rs.AddPointLight(point)
-    See Also:
-      IsPointLight
     """
     point = rhutil.coerce3dpoint(point, True)
     light = Rhino.Geometry.Light()
@@ -118,12 +96,6 @@ def AddRectangularLight(origin, width_point, height_point):
       height_point = 3d height and direction point of the light
     Returns:
       identifier of the new object if successful
-    Example:
-      import rhinoscriptsyntax as rs
-      rect = rs.GetRectangle(2)
-      if rect: rs.AddRectangularLight( rect[0], rect[1], rect[3] )
-    See Also:
-      IsRectangularLight
     """
     origin = rhutil.coerce3dpoint(origin, True)
     ptx = rhutil.coerce3dpoint(width_point, True)
@@ -153,17 +125,6 @@ def AddSpotLight(origin, radius, apex_point):
       apex_point = 3d apex point of the light
     Returns:
       identifier of the new object
-    Example:
-      import rhinoscriptsyntax as rs
-      radius = 5.0
-      origin = rs.GetPoint("Base of cone")
-      if origin:
-          apex = rs.GetPoint("End of cone", origin)
-          if apex: rs.AddSpotLight(origin, radius, apex)
-    See Also:
-      IsSpotLight
-      SpotLightHardness
-      SpotLightShadowIntensity
     """
     origin = rhutil.coerce3dpoint(origin, True)
     apex_point = rhutil.coerce3dpoint(apex_point, True)
@@ -190,17 +151,6 @@ def EnableLight(object_id, enable=None):
       if enable is not specified, the current enabled status 
       if enable is specified, the previous enabled status
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      id = rs.GetObject("Select light", rs.filter.light)
-      if id: rs.EnableLight( id, False )
-    See Also:
-      IsLight
-      IsLightEnabled
-      LightColor
-      LightCount
-      LightName
-      LightObjects
     """
     light = __coercelight(object_id, True)
     rc = light.IsEnabled
@@ -218,15 +168,6 @@ def IsDirectionalLight(object_id):
       object_id = the light object's identifier
     Returns:
       True or False
-    Example:
-      import rhinoscriptsyntax as rs
-      id = rs.GetObject("Select a light", rs.filter.light)
-      if rs.IsDirectionalLight(id):
-          print "The object is a directional light."
-      else:
-          print "The object is not a directional light."
-    See Also:
-      AddDirectionalLight
     """
     light = __coercelight(object_id, True)
     return light.IsDirectionalLight
@@ -238,20 +179,6 @@ def IsLight(object_id):
       object_id: the light object's identifier
     Returns:
       True or False
-    Example:
-      import rhinoscriptsyntax as rs
-      id = rs.GetObject("Select a light")
-      if rs.IsLight(id):
-          print "The object is a light."
-      else:
-          print "The object is not a light."
-    See Also:
-      EnableLight
-      IsLightEnabled
-      LightColor
-      LightCount
-      LightName
-      LightObjects
     """
     light = __coercelight(object_id, False)
     return light is not None
@@ -263,20 +190,6 @@ def IsLightEnabled(object_id):
       object_id: the light object's identifier
     Returns:
       True or False
-    Example:
-      import rhinoscriptsyntax as rs
-      id = rs.GetObject("Select a light", rs.filter.light)
-      if rs.IsLightEnabled(id):
-          print "The light is enabled (on)."
-      else:
-          print "The light is disabled (off)."
-    See Also:
-      EnableLight
-      IsLight
-      LightColor
-      LightCount
-      LightName
-      LightObjects
     """
     light = __coercelight(object_id, True)
     return light.IsEnabled
@@ -288,15 +201,6 @@ def IsLightReference(object_id):
       object_id: the light object's identifier
     Returns:
       True or False
-    Example:
-      import rhinoscriptsyntax as rs
-      id = rs.GetObject("Select a light", rs.filter.light)
-      if rs.IsLightReference(id):
-          print "The light is a reference object."
-      else:
-          print "The light is not a reference object."
-    See Also:
-      IsObjectReference
     """
     light = __coercelight(object_id, True)
     return light.IsReference
@@ -308,15 +212,6 @@ def IsLinearLight(object_id):
       object_id = the light object's identifier
     Returns:
       True or False
-    Example:
-      import rhinoscriptsyntax as rs
-      id = rs.GetObject("Select a light", rs.filter.light)
-      if rs.IsLinearLight(id):
-          print "The object is a linear light."
-      else:
-          print "The object is not a linear light."
-    See Also:
-      AddLinearLight
     """
     light = __coercelight(object_id, True)
     return light.IsLinearLight
@@ -328,15 +223,6 @@ def IsPointLight(object_id):
       object_id = the light object's identifier
     Returns:
       True or False
-    Example:
-      import rhinoscriptsyntax as rs
-      id = rs.GetObject("Select a light", rs.filter.light)
-      if rs.IsPointLight(id):
-          print "The object is a point light."
-      else:
-          print "The object is not a point light."
-    See Also:
-      AddPointLight
     """
     light = __coercelight(object_id, True)
     return light.IsPointLight
@@ -348,15 +234,6 @@ def IsRectangularLight(object_id):
       object_id = the light object's identifier
     Returns:
       True or False
-    Example:
-      import rhinoscriptsyntax as rs
-      id = rs.GetObject("Select a light", rs.filter.light)
-      if rs.IsRectangularLight(id):
-          print "The object is a rectangular light."
-      else:
-          print "The object is not a rectangular light."
-    See Also:
-      AddRectangularLight
     """
     light = __coercelight(object_id, True)
     return light.IsRectangularLight
@@ -368,17 +245,6 @@ def IsSpotLight(object_id):
       object_id = the light object's identifier
     Returns:
       True or False
-    Example:
-      import rhinoscriptsyntax as rs
-      id = rs.GetObject("Select a light", rs.filter.light)
-      if rs.IsSpotLight(id):
-          print "The object is a spot light."
-      else:
-          print "The object is not a spot light."
-    See Also:
-      AddSpotLight
-      SpotLightHardness
-      SpotLightShadowIntensity
     """
     light = __coercelight(object_id, True)
     return light.IsSpotLight
@@ -392,17 +258,6 @@ def LightColor(object_id, color=None):
     Returns:
       if color is not specified, the current color 
       if color is specified, the previous color
-    Example:
-      import rhinoscriptsyntax as rs
-      id = rs.GetObject("Select a light", rs.filter.light)
-      if id: rs.LightColor( id, (0,255,255) )
-    See Also:
-      EnableLight
-      IsLight
-      IsLightEnabled
-      LightCount
-      LightName
-      LightObjects
     """
     light = __coercelight(object_id, True)
     rc = light.Diffuse
@@ -423,16 +278,6 @@ def LightCount():
       None
     Returns:
       the number of light objects in the document
-    Example:
-      import rhinoscriptsyntax as rs
-      print "There are", rs.LightCount(), " lights."
-    See Also:
-      EnableLight
-      IsLight
-      IsLightEnabled
-      LightColor
-      LightName
-      LightObjects
     """
     return scriptcontext.doc.Lights.Count
 
@@ -445,13 +290,6 @@ def LightDirection(object_id, direction=None):
     Returns:
       if direction is not specified, the current direction
       if direction is specified, the previous direction
-    Example:
-      import rhinoscriptsyntax as rs
-      id = rs.GetObject("Select a light", rs.filter.light)
-      if id: rs.AddPoint( rs.LightDirection(id) )
-    See Also:
-      IsLight
-      LightLocation
     """
     light = __coercelight(object_id, True)
     rc = light.Direction
@@ -474,13 +312,6 @@ def LightLocation(object_id, location=None):
     Returns:
       if location is not specified, the current location
       if location is specified, the previous location
-    Example:
-      import rhinoscriptsyntax as rs
-      id = rs.GetObject("Select a light", rs.filter.light)
-      if id: rs.AddPoint( rs.LightLocation(id) )
-    See Also:
-      IsLight
-      LightDirection
     """
     light = __coercelight(object_id, True)
     rc = light.Location
@@ -503,19 +334,6 @@ def LightName(object_id, name=None):
     Returns:
       if name is not specified, the current name
       if name is specified, the previous name
-    Example:
-      import rhinoscriptsyntax as rs
-      id = rs.GetObject("Select a light", rs.filter.light)
-      if id:
-          name = rs.GetString("New light name")
-          if name: rs.LightName(id, name)
-    See Also:
-      EnableLight
-      IsLight
-      IsLightEnabled
-      LightColor
-      LightCount
-      LightObjects
     """
     light = __coercelight(object_id, True)
     rc = light.Name
@@ -534,19 +352,6 @@ def LightObjects():
       None
     Returns:
       the list of identifiers of light objects in the document
-    Example:
-      import rhinoscriptsyntax as rs
-      lights = rs.LightObjects()
-      if lights:
-          rs.AddLayer( "Lights" )
-          for light in lights: rs.ObjectLayer( light, "Lights" )
-    See Also:
-      EnableLight
-      IsLight
-      IsLightEnabled
-      LightColor
-      LightCount
-      LightName
     """
     count = scriptcontext.doc.Lights.Count
     rc = []
@@ -563,16 +368,6 @@ def RectangularLightPlane(object_id):
     Returns:
       the plane if successful
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      id = rs.GetObject("Select a rectangular light", rs.filter.light)
-      if id:
-          rc = rs.RectangularLightPlane(id)
-          if rc:
-              plane, extents = rc
-              rs.AddPlaneSurface( plane, extents[0], extents[1] )
-    See Also:
-      IsRectangularLight
     """
     light = __coercelight(object_id, True)
     if light.LightStyle!=Rhino.Geometry.LightStyle.WorldRectangular:
@@ -594,15 +389,6 @@ def SpotLightHardness(object_id, hardness=None):
     Returns:
       if hardness is not specified, the current hardness
       if hardness is specified, the previous hardness
-    Example:
-      import rhinoscriptsyntax as rs
-      id = rs.GetObject("Select a light", rs.filter.light)
-      if id: rs.SpotLightHardness(id, 0.75)
-    See Also:
-      AddSpotLight
-      IsSpotLight
-      SpotLightRadius
-      SpotLightShadowIntensity
     """
     light = __coercelight(object_id, True)
     if light.LightStyle!=Rhino.Geometry.LightStyle.WorldSpot:
@@ -625,15 +411,6 @@ def SpotLightRadius(object_id, radius=None):
     Returns:
       if radius is not specified, the current radius
       if radius is specified, the previous radius
-    Example:
-      import rhinoscriptsyntax as rs
-      id = rs.GetObject("Select a light", rs.filter.light)
-      if id: rs.SpotLightRadius(id, 5.0)
-    See Also:
-      AddSpotLight
-      IsSpotLight
-      SpotLightHardness
-      SpotLightShadowIntensity
     """
     light = __coercelight(object_id, True)
     if light.LightStyle!=Rhino.Geometry.LightStyle.WorldSpot:
@@ -658,15 +435,6 @@ def SpotLightShadowIntensity(object_id, intensity=None):
     Returns:
       if intensity is not specified, the current intensity
       if intensity is specified, the previous intensity
-    Example:
-      import rhinoscriptsyntax as rs
-      id = rs.GetObject("Select a light", rs.filter.light)
-      if id: rs.SpotLightShadowIntensity(id, 0.75)
-    See Also:
-      AddSpotLight
-      IsSpotLight
-      SpotLightHardness
-      SpotLightRadius
     """
     light = __coercelight(object_id, True)
     if light.LightStyle!=Rhino.Geometry.LightStyle.WorldSpot:

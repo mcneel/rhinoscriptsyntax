@@ -11,15 +11,6 @@ def IsVectorParallelTo(vector1, vector2):
       -1 = the vectors are anti-parallel
       0 = the vectors are not parallel
       1 = the vectors are parallel
-    Example:
-      import rhinoscriptsyntax as rs
-      vector1 = (1,0,0)
-      vector2 = (0,1,0)
-      print rs.IsVectorParallelTo( vector1, vector2 )
-    See Also:
-      IsVectorPerpendicularTo
-      IsVectorTiny
-      IsVectorZero
     """
     vector1 = rhutil.coerce3dvector(vector1, True)
     vector2 = rhutil.coerce3dvector(vector2, True)
@@ -32,15 +23,6 @@ def IsVectorPerpendicularTo(vector1, vector2):
       vector1, vector2 = the vectors to compare
     Returns:
       True if vectors are perpendicular, otherwise False
-    Example:
-      import rhinoscriptsyntax as rs
-      vector1 = (1,0,0)
-      vector2 = (0,1,0)
-      print rs.IsVectorPerpendicularTo( vector1, vector2 )
-    See Also:
-      IsVectorParallelTo
-      IsVectorTiny
-      IsVectorZero
     """
     vector1 = rhutil.coerce3dvector(vector1, True)
     vector2 = rhutil.coerce3dvector(vector2, True)
@@ -53,18 +35,6 @@ def IsVectorTiny(vector):
       vector - the vector to check
     Returns:
       True if the vector is tiny, otherwise False
-    Example:
-      import rhinoscriptsyntax as rs
-      pt1 = rs.GetPoint("First point")
-      pt2 = rs.GetPoint("Next point")
-      vector = pt2 - pt1
-      if rs.IsVectorTiny(vector):
-          print "The vector is tiny."
-      else:
-          print "The vector is not tiny."
-    See Also:
-      IsVectorZero
-      VectorCreate
     """
     vector = rhutil.coerce3dvector(vector, True)
     return vector.IsTiny( 1.0e-12 )
@@ -76,18 +46,6 @@ def IsVectorZero(vector):
       vector - the vector to check
     Returns:
       True if the vector is zero, otherwise False
-    Example:
-      import rhinoscriptsyntax as rs
-      pt1 = rs.GetPoint("First point")
-      pt2 = rs.GetPoint("Next point")
-      vector = pt2 - pt1
-      if rs.IsVectorZero(vector):
-          print "The vector is zero."
-      else:
-          print "The vector is not zero."
-    See Also:
-      IsVectorTiny
-      VectorCreate
     """
     vector = rhutil.coerce3dvector(vector, True)
     return vector.IsZero
@@ -99,18 +57,6 @@ def PointAdd(point1, point2):
       point1, point2 = the points to add
     Returns:
       the resulting 3D point if successful
-    Example:
-      import rhinoscriptsyntax as rs
-      point1 = (1,1,1)
-      point2 = (2,2,2)
-      point = rs.PointAdd(point1, point2)
-      print point
-    See Also:
-      PointCompare
-      PointDivide
-      PointScale
-      PointSubtract
-      PointTransform
     """
     point1 = rhutil.coerce3dpoint(point1, True)
     point2 = rhutil.coerce3dpoint(point2, True)
@@ -124,20 +70,6 @@ def PointArrayClosestPoint(points, test_point):
       test_point = the point to compare against
     Returns:
       index of the element in the point list that is closest to the test point
-    Example:
-      import rhinoscriptsyntax as rs
-      cloud = rs.GetObject("Select point cloud")
-      if cloud:
-          point = rs.GetPoint("Point to test")
-          if point:
-              cloud = rs.PointCloudPoints(cloud)
-              index = rs.PointArrayClosestPoint(cloud, point)
-              if index is not None:
-                  point_id = rs.AddPoint(cloud[index])
-                  rs.SelectObject( point_id )
-    See Also:
-      CurveClosestPoint
-      SurfaceClosestPoint
     """
     points = rhutil.coerce3dpointlist(points, True)
     test_point = rhutil.coerce3dpoint(test_point, True)
@@ -152,15 +84,6 @@ def PointArrayTransform(points, xform):
       xform = transformation to apply
     Returns:
       list of transformed points on success
-    Example:
-      import rhinoscriptsyntax as rs
-      obj = rs.GetObject("Select object")
-      points = rs.BoundingBox(obj)
-      xform = rs.XformRotation2(45.0, (0,0,1), (0,0,0))
-      points = rs.PointArrayTransform(points, xform)
-      rs.AddPoints(points)
-    See Also:
-      PointArrayClosestPoint
     """
     points = rhutil.coerce3dpointlist(points, True)
     xform = rhutil.coercexform(xform, True)
@@ -175,18 +98,6 @@ def PointClosestObject(point, object_ids):
     Returns:
       (closest object_id, point on object) on success
       None on failure
-    Example:
-      import rhinoscriptsyntax as rs
-      objs = rs.GetObjects("Select target objects for closest point", 63)
-      if objs:
-          point = rs.GetPoint("Test point")
-          if point:
-              results = rs.PointClosestObject(point, objs)
-              if results:
-                    print "Object id:", results[0]
-                    rs.AddPoint( results[1] )
-    See Also:
-      CurveClosestObject
     """
     object_ids = rhutil.coerceguidlist(object_ids)
     point = rhutil.coerce3dpoint(point, True)
@@ -240,17 +151,6 @@ def PointCompare(point1, point2, tolerance=None):
         Rhino's internal zero tolerance is used
     Returns:
       True or False
-    Example:
-      import rhinoscriptsyntax as rs
-      point1 = (1,1,1)
-      point2 = (2,2,2)
-      print rs.PointCompare(point1, point2)
-    See Also:
-      PointAdd
-      PointDivide
-      PointScale
-      PointSubtract
-      PointTransform
     """
     point1 = rhutil.coerce3dpoint(point1, True)
     point2 = rhutil.coerce3dpoint(point2, True)
@@ -266,15 +166,6 @@ def PointDivide(point, divide):
       divide = a non-zero value to divide
     Returns:
       resulting point
-    Example:
-      import rhinoscriptsyntax as rs
-      print point
-    See Also:
-      PointAdd
-      PointCompare
-      PointScale
-      PointSubtract
-      PointTransform
     """
     point = rhutil.coerce3dpoint(point, True)
     return point/divide
@@ -287,23 +178,6 @@ def PointsAreCoplanar(points, tolerance=1.0e-12):
       tolerance[opt] = tolerance to use when verifying
     Returns:
       True or False
-    Example:
-      import rhinoscriptsyntax as rs
-      def SurfacesAreCoplanar(srf1, srf2):
-          if( not rs.IsSurface(srf1) or not rs.IsSurface(srf2) ): return False
-          pts1 = rs.SurfacePoints(srf1)
-          pts2 = rs.SurfacePoints(srf2)
-          if( pts1==None or pts2==None ): return False
-          pts1.extend(pts2)
-          return rs.PointsAreCoplanar(pts1)
-       
-      x = rs.GetObject( "First surface to test", rs.filter.surface)
-      y = rs.GetObject( "Second surface to test", rs.filter.surface)
-      print SurfacesAreCoplanar(x, y)
-    See Also:
-      IsPoint
-      IsPointCloud
-      PointCoordinates
     """
     points = rhutil.coerce3dpointlist(points, True)
     return Rhino.Geometry.Point3d.ArePointsCoplanar(points, tolerance)
@@ -316,16 +190,6 @@ def PointScale(point, scale):
       scale = scale factor to apply
     Returns:
       resulting point on success
-    Example:
-      import rhinoscriptsyntax as rs
-      point = rs.PointScale([1,0,0], 5)
-      print point
-    See Also:
-      PointAdd
-      PointCompare
-      PointDivide
-      PointSubtract
-      PointTransform
     """
     point = rhutil.coerce3dpoint(point, True)
     return point*scale
@@ -337,18 +201,6 @@ def PointSubtract(point1, point2):
       point1, point2 = the points to subtract
     Returns:
       the resulting 3D point if successful
-    Example:
-      import rhinoscriptsyntax as rs
-      point1 = (1,1,1)
-      point2 = (2,2,2)
-      point = rs.PointSubtract(point1, point2)
-      print point
-    See Also:
-      PointAdd
-      PointCompare
-      PointDivide
-      PointScale
-      PointTransform
     """
     point1 = rhutil.coerce3dpoint(point1, True)
     point2 = rhutil.coerce3dpoint(point2, True)
@@ -363,19 +215,6 @@ def PointTransform(point, xform):
       xform = a valid 4x4 transformation matrix
     Returns:
       transformed vector on success
-    Example:
-      # Translate (move) objects by (10,10,0)
-      import rhinoscriptsyntax as rs
-      point = 5,5,0
-      matrix = rs.XformTranslation((10,10,0))
-      result = rs.PointTransform(point, matrix)
-      print result
-    See Also:
-      PointAdd
-      PointCompare
-      PointDivide
-      PointScale
-      PointSubtract
     """
     point = rhutil.coerce3dpoint(point, True)
     xform = rhutil.coercexform(xform, True)
@@ -390,18 +229,6 @@ def ProjectPointToMesh(points, mesh_ids, direction):
       direction = direction vector to project the points
     Returns:
      list of projected points on success
-    Example:
-      import rhinoscriptsyntax as rs
-      mesh = rs.GetObject("Select mesh to project onto", rs.filter.mesh)
-      objects = rs.GetObjects("Select points to project", rs.filter.point)
-      points = [rs.PointCoordinates(obj) for obj in objects]
-      # project down...
-      results = rs.ProjectPointToMesh(points, mesh, (0,0,-1))
-      rs.AddPoints( results )
-    See Also:
-      ProjectCurveToMesh
-      ProjectCurveToSurface
-      ProjectPointToSurface
     """
     pts = rhutil.coerce3dpointlist(points, False)
     if pts is None:
@@ -423,17 +250,6 @@ def ProjectPointToSurface(points, surface_ids, direction):
       direction = direction vector to project the points
     Returns:
      list of projected points on success
-    Example:
-      import rhinoscriptsyntax as rs
-      surface = rs.GetObject("Select surface to project onto", rs.filter.surface)
-      objects = rs.GetObjects("Select points to project", rs.filter.point)
-      points = [rs.PointCoordinates(obj) for obj in objects]
-      results = rs.ProjectPointToSurface(points, surface, (0,0,-1))
-      rs.AddPoints(results)
-    See Also:
-      ProjectCurveToMesh
-      ProjectCurveToSurface
-      ProjectPointToMesh
     """
     pts = rhutil.coerce3dpointlist(points)
     if pts is None:
@@ -454,15 +270,6 @@ def PullPoints(object_id, points):
       points = list of 3D points
     Returns:
       list of 3D points
-    Example:
-      import rhinoscriptsyntax as rs
-      surface = rs.GetObject("Select surface that pulls", rs.filter.surface)
-      objects = rs.GetObjects("Select points to pull", rs.filter.point)
-      points = [rs.PointCoordinates(obj) for obj in objects]
-      results = rs.PullPoints( surface, points )
-      rs.AddPoints( results )
-    See Also:
-      PullCurve
     """
     id = rhutil.coerceguid(object_id, True)
     points = rhutil.coerce3dpointlist(points, True)
@@ -484,16 +291,6 @@ def VectorAdd(vector1, vector2):
       vector1, vector2 = the vectors to add
     Returns:
       the resulting 3D vector if successful
-    Example:
-      import rhinoscriptsyntax as rs
-      vector1 = (1,0,0)
-      vector2 = (0,1,0)
-      vector = rs.VectorAdd(vector1, vector2)
-      print vector
-    See Also:
-      VectorCreate
-      VectorScale
-      VectorSubtract
     """
     vector1 = rhutil.coerce3dvector(vector1, True)
     vector2 = rhutil.coerce3dvector(vector2, True)
@@ -507,21 +304,6 @@ def VectorAngle(vector1, vector2):
       vector2 = List of 3 numbers, Point3d, or Vector3d.  The second 3-D vector.
     Returns:
       The angle in degrees if successfull, otherwise None
-    Example:
-      import rhinoscriptsyntax as rs
-      s0 = rs.GetObject("Surface 0", rs.filter.surface)
-      s1 = rs.GetObject("Surface 1", rs.filter.surface)
-      du0 = rs.SurfaceDomain(s0, 0)
-      dv0 = rs.SurfaceDomain(s0, 1)
-      du1 = rs.SurfaceDomain(s1, 0)
-      dv1 = rs.SurfaceDomain(s1, 1)
-      n0 = rs.SurfaceNormal(s0, (du0[0], dv0[0]))
-      n1 = rs.SurfaceNormal(s1, (du1[0], dv1[0]))
-      print rs.VectorAngle(n0, n1)
-      print rs.VectorAngle(n0, rs.VectorReverse(n1))
-    See Also:
-      Angle
-      Angle2
     """
     vector1 = rhutil.coerce3dvector(vector1, True)
     vector2 = rhutil.coerce3dvector(vector2, True)
@@ -543,16 +325,6 @@ def VectorCompare(vector1, vector2):
       -1 if vector1 is less than vector2
       0 if vector1 is equal to vector2
       1 if vector1 is greater than vector2
-    Example:
-      import rhinoscriptsyntax as rs
-      vector1 = (1,0,0)
-      vector2 = (0,1,0)
-      rc = rs.VectorCompare(vector1 , vector2)
-      print rc
-    See Also:
-      IsVectorTiny
-      IsVectorZero
-      VectorCreate
     """
     vector1 = rhutil.coerce3dvector(vector1, True)
     vector2 = rhutil.coerce3dvector(vector2, True)
@@ -565,17 +337,6 @@ def VectorCreate(to_point, from_point):
       to_point, from_point = the points defining the vector
     Returns:
       the resulting vector if successful
-    Example:
-      import rhinoscriptsyntax as rs
-      point1 = rs.GetPoint("First point")
-      point2 = rs.GetPoint("Next point")
-      vector = rs.VectorCreate(point2, point1)
-      print vector
-    See Also:
-      IsVectorTiny
-      IsVectorZero
-      VectorCompare
-      VectorUnitize
     """
     to_point = rhutil.coerce3dpoint(to_point, True)
     from_point = rhutil.coerce3dpoint(from_point, True)
@@ -588,15 +349,6 @@ def VectorCrossProduct(vector1, vector2):
       vector1, vector2 = the vectors to perform cross product on
     Returns:
       the resulting vector if successful
-    Example:
-      import rhinoscriptsyntax as rs
-      vector1 = (1,0,0)
-      vector2 = (0,1,0)
-      vector = rs.VectorCrossProduct(vector1, vector2)
-      print vector
-    See Also:
-      VectorDotProduct
-      VectorUnitize
     """
     vector1 = rhutil.coerce3dvector(vector1, True)
     vector2 = rhutil.coerce3dvector(vector2, True)
@@ -610,13 +362,6 @@ def VectorDivide(vector, divide):
       divide = a non-zero value to divide
     Returns:
       resulting vector on success
-    Example:
-      import rhinoscriptsyntax as rs
-      print vector
-    See Also:
-      VectorAdd
-      VectorCreate
-      VectorSubtract
     """
     vector = rhutil.coerce3dvector(vector, True)
     return vector/divide
@@ -628,15 +373,6 @@ def VectorDotProduct(vector1, vector2):
       vector1, vector2 = the vectors to perform the dot product on
     Returns:
       the resulting dot product if successful
-    Example:
-      import rhinoscriptsyntax as rs
-      vector1 = [1,0,0]
-      vector2 = [0,1,0]
-      dblDotProduct = rs.VectorDotProduct(vector1, vector2)
-      print dblDotProduct
-    See Also:
-      VectorCrossProduct
-      VectorUnitize
     """
     vector1 = rhutil.coerce3dvector(vector1, True)
     vector2 = rhutil.coerce3dvector(vector2, True)
@@ -649,17 +385,6 @@ def VectorLength(vector):
       vector = List of 3 numbers or Vector3d.  The 3-D vector.
     Returns:
       The length of the vector if successful, otherwise None
-    Example:
-      import rhinoscriptsyntax as rs
-      point1 = rs.GetPoint("First point")
-      point2 = rs.GetPoint("Next point")
-      vector = rs.VectorCreate(point1, point2)
-      print rs.VectorLength(vector)
-    See Also:
-      VectorAdd
-      VectorCreate
-      VectorSubtract
-      VectorUnitize
     """
     vector = rhutil.coerce3dvector(vector, True)
     return vector.Length
@@ -671,14 +396,6 @@ def VectorMultiply(vector1, vector2):
       vector1, vector2 = the vectors to multiply
     Returns:
       the resulting inner (dot) product if successful
-    Example:
-      import rhinoscriptsyntax as rs
-      product = rs.VectorMultiply( [2,2,2], [3,3,3] )
-      print product
-    See Also:
-      VectorAdd
-      VectorCreate
-      VectorSubtract
     """
     return VectorDotProduct(vector1, vector2)
 
@@ -689,13 +406,6 @@ def VectorReverse(vector):
       vector = the vector to reverse
     Returns:
       reversed vector on success
-    Example:
-      import rhinoscriptsyntax as rs
-      vector = rs.VectorReverse([1,0,0])
-      print vector
-    See Also:
-      VectorCreate
-      VectorUnitize
     """
     vector = rhutil.coerce3dvector(vector, True)
     rc = Rhino.Geometry.Vector3d(vector.X, vector.Y, vector.Z)
@@ -711,13 +421,6 @@ def VectorRotate(vector, angle_degrees, axis):
       axis = axis of rotation
     Returns:
       rotated vector on success
-    Example:
-      import rhinoscriptsyntax as rs
-      vector = rs.VectorRotate([1,0,0], 90.0, [0,0,1])
-      print vector
-    See Also:
-      VectorCreate
-      VectorScale
     """
     vector = rhutil.coerce3dvector(vector, True)
     axis = rhutil.coerce3dvector(axis, True)
@@ -733,13 +436,6 @@ def VectorScale(vector, scale):
       scale = scale factor to apply
     Returns:
       resulting vector on success
-    Example:
-      import rhinoscriptsyntax as rs
-      print vector
-    See Also:
-      VectorAdd
-      VectorCreate
-      VectorSubtract
     """
     vector = rhutil.coerce3dvector(vector, True)
     return vector*scale
@@ -752,16 +448,6 @@ def VectorSubtract(vector1, vector2):
       vector2 = the vector to subtract
     Returns:
       the resulting 3D vector
-    Example:
-      import rhinoscriptsyntax as rs
-      vector1 = [1,0,0]
-      vector2 = [0,1,0]
-      vector = rs.VectorSubtract(vector1, vector2)
-      print vector
-    See Also:
-      VectorAdd
-      VectorCreate
-      VectorScale
     """
     vector1 = rhutil.coerce3dvector(vector1, True)
     vector2 = rhutil.coerce3dvector(vector2, True)
@@ -775,16 +461,6 @@ def VectorTransform(vector, xform):
       xform = a valid 4x4 transformation matrix
     Returns:
       transformed vector on success
-    Example:
-      import rhinoscriptsyntax as rs
-      vector = (1,0,0) #world x-axis
-      xform = rs.XformRotation2(90.0, (0,0,1), (0,0,0))
-      vector = rs.VectorTransform(vector, xform)
-      print vector
-    See Also:
-      IsVectorZero
-      VectorCreate
-      VectorUnitize
     """
     vector = rhutil.coerce3dvector(vector, True)
     xform = rhutil.coercexform(xform, True)
@@ -798,13 +474,6 @@ def VectorUnitize(vector):
     Returns:
       unitized vector on success
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      vector = rs.VectorUnitize( [1.5,-4.1,3.6] )
-      print vector
-    See Also:
-      IsVectorZero
-      VectorCreate
     """
     vector = rhutil.coerce3dvector(vector, True)
     rc = Rhino.Geometry.Vector3d(vector.X, vector.Y, vector.Z)
@@ -827,10 +496,6 @@ def PointArrayBoundingBox(points, view_or_plane=None, in_world_coords=True):
       Eight 3D points that define the bounding box. Points returned in counter-
       clockwise order starting with the bottom rectangle of the box.
       None on error
-    Example:
-      
-    See Also:
-      BoundingBox
     """
     points = rhutil.coerce3dpointlist(points)
     if not points:

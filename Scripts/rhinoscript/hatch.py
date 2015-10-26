@@ -15,17 +15,6 @@ def AddHatch(curve_id, hatch_pattern=None, scale=1.0, rotation=0.0):
     Returns:
       identifier of the newly created hatch on success
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      circle = rs.AddCircle(rs.WorldXYPlane(), 10.0)
-      if rs.IsHatchPattern("Grid"):
-          rs.AddHatch( circle, "Grid" )
-      else:
-          rs.AddHatch( circle, rs.CurrentHatchPattern() )
-    See Also:
-      AddHatches
-      CurrentHatchPattern
-      HatchPatternNames
     """
     rc = AddHatches(curve_id, hatch_pattern, scale, rotation)
     if rc: return rc[0]
@@ -44,18 +33,6 @@ def AddHatches(curve_ids, hatch_pattern=None, scale=1.0, rotation=0.0):
     Returns:
       identifiers of the newly created hatch on success
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      curves = rs.GetObjects("Select closed planar curves", rs.filter.curve)
-      if curves:
-          if rs.IsHatchPattern("Grid"):
-              rs.AddHatches( curves, "Grid" )
-          else:
-              rs.AddHatches( curves, rs.CurrentHatchPattern() )
-    See Also:
-      AddHatch
-      CurrentHatchPattern
-      HatchPatternNames
     """
     id = rhutil.coerceguid(curve_ids, False)
     if id: curve_ids = [id]
@@ -91,16 +68,6 @@ def AddHatchPatterns(filename, replace=False):
     Returns:
       Names of the newly added hatch patterns if successful
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      filename = rs.OpenFileName("Import", "Pattern Files (*.pat)|*.pat||")
-      if filename:
-          patterns = rs.AddHatchPatterns(filename)
-          if patterns:
-              for pattern in patterns: print pattern
-    See Also:
-      HatchPatternCount
-      HatchPatternNames
     """
     patterns = Rhino.DocObjects.HatchPattern.ReadFromFile(filename, True)
     if not patterns: return scriptcontext.errorhandler()
@@ -122,12 +89,6 @@ def CurrentHatchPattern(hatch_pattern=None):
       if hatch_pattern is not specified, the current hatch pattern
       if hatch_pattern is specified, the previous hatch pattern
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      if rs.IsHatchPattern("Hatch2"): rs.CurrentHatchPattern("Hatch2")
-    See Also:
-      HatchPatternCount
-      HatchPatternNames
     """
     rc = scriptcontext.doc.HatchPatterns.CurrentHatchPatternIndex
     if hatch_pattern:
@@ -148,15 +109,6 @@ def ExplodeHatch(hatch_id, delete=False):
     Returns:
       list of identifiers for the newly created objects
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      id = rs.GetObject("Select object")
-      if rs.IsHatch(id): rs.ExplodeHatch(id, True)
-    See Also:
-      IsHatch
-      HatchPattern
-      HatchRotation
-      HatchScale
     """
     rhobj = rhutil.coercerhinoobject(hatch_id, True, True)
     pieces = rhobj.HatchGeometry.Explode()
@@ -184,19 +136,6 @@ def HatchPattern(hatch_id, hatch_pattern=None):
       if hatch_pattern is not specified, the current hatch pattern
       if hatch_pattern is specified, the previous hatch pattern
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      objects = rs.AllObjects()
-      if objects is not None:
-          for obj in objects:
-              if rs.IsHatch(obj) and rs.HatchPattern(obj)=="Solid":
-                  rs.SelectObject(obj)
-    See Also:
-      AddHatch
-      AddHatches
-      HatchRotation
-      HatchScale
-      IsHatch
     """
     hatchobj = rhutil.coercerhinoobject(hatch_id, True, True)
     if not isinstance(hatchobj, Rhino.DocObjects.HatchObject):
@@ -217,11 +156,6 @@ def HatchPatternCount():
       None
     Returns:
       the number of hatch patterns in the document
-    Example:
-      import rhinoscriptsyntax as rs
-      print "There are", rs.HatchPatternCount(), "hatch patterns."
-    See Also:
-      HatchPatternNames
     """
     return scriptcontext.doc.HatchPatterns.Count
 
@@ -233,15 +167,6 @@ def HatchPatternDescription(hatch_pattern):
       hatch_pattern = name of an existing hatch pattern
     Returns:
       description of the hatch pattern on success otherwise None
-    Example:
-      import rhinoscriptsyntax as rs
-      patterns = rs.HatchPatternNames()
-      for pattern in patterns:
-          description = rs.HatchPatternDescription(pattern)
-          if description: print pattern, "-", description
-    See Also:
-      HatchPatternCount
-      HatchPatternNames
     """
     index = scriptcontext.doc.HatchPatterns.Find(hatch_pattern, True)
     if index<0: return scriptcontext.errorhandler()
@@ -257,15 +182,6 @@ def HatchPatternFillType(hatch_pattern):
       hatch_pattern = name of an existing hatch pattern
     Returns:
       hatch pattern's fill type if successful otherwise None
-    Example:
-      import rhinoscriptsyntax as rs
-      patterns = rs.HatchPatternNames()
-      for pattern in patterns:
-          fill = rs.HatchPatternFillType(pattern)
-          print pattern, "-", fill
-    See Also:
-      HatchPatternCount
-      HatchPatternNames
     """
     index = scriptcontext.doc.HatchPatterns.Find(hatch_pattern, True)
     if index<0: return scriptcontext.errorhandler()
@@ -278,15 +194,6 @@ def HatchPatternNames():
       None
     Returns:
       the names of all of the hatch patterns in the document
-    Example:
-      import rhinoscriptsyntax as rs
-      patterns = rs.HatchPatternNames()
-      for pattern in patterns:
-          description = rs.HatchPatternDescription(pattern)
-          if description: print pattern, "-", description
-          else: print pattern
-    See Also:
-      HatchPatternCount
     """
     rc = []
     for i in range(scriptcontext.doc.HatchPatterns.Count):
@@ -305,19 +212,6 @@ def HatchRotation(hatch_id, rotation=None):
       if rotation is not defined, the current rotation angle
       if rotation is specified, the previous rotation angle
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      objects = rs.AllObjects()
-      if objects:
-          for obj in objects:
-              if rs.IsHatch(obj) and rs.HatchRotation(obj)>0:
-                  rs.HatchRotation(obj,0)
-    See Also:
-      AddHatch
-      AddHatches
-      HatchPattern
-      HatchScale
-      IsHatch
     """
     hatchobj = rhutil.coercerhinoobject(hatch_id, True, True)
     if not isinstance(hatchobj, Rhino.DocObjects.HatchObject):
@@ -342,17 +236,6 @@ def HatchScale(hatch_id, scale=None):
       if scale is not defined, the current scale factor
       if scale is defined, the previous scale factor
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      objects = rs.NormalObjects()
-      if objects:
-          for obj in objects:
-              if rs.IsHatch(obj) and rs.HatchScale(obj)>1.0:
-                  rs.HatchScale(obj, 1.0)
-    See Also:
-      HatchPattern
-      HatchRotation
-      IsHatch
     """
     hatchobj = rhutil.coercerhinoobject(hatch_id)
     if not isinstance(hatchobj, Rhino.DocObjects.HatchObject):
@@ -371,15 +254,6 @@ def IsHatch(object_id):
       object_id = identifier of an object
     Returns:
       True or False
-    Example:
-      import rhinoscriptsyntax as rs
-      obj = rs.GetObject("Select object")
-      if rs.IsHatch(obj): print "Object is a hatch"
-      else: print "Object is not a hatch"
-    See Also:
-      HatchPattern
-      HatchRotation
-      HatchScale
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, False)
     return isinstance(rhobj, Rhino.DocObjects.HatchObject)
@@ -391,14 +265,6 @@ def IsHatchPattern(name):
       name = the name of a hatch pattern
     Returns:
       True or False
-    Example:
-      import rhinoscriptsyntax as rs
-      hatch = rs.GetString("Hatch pattern name")
-      if rs.IsHatchPattern(hatch): print "The hatch pattern exists."
-      else: print "The hatch pattern does not exist."
-    See Also:
-      IsHatchPatternCurrent
-      IsHatchPatternReference
     """
     return scriptcontext.doc.HatchPatterns.Find(name, True)>=0
 
@@ -410,18 +276,6 @@ def IsHatchPatternCurrent(hatch_pattern):
     Returns:
       True or False
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      hatch = rs.GetString("Hatch pattern name")
-      if rs.IsHatchPattern(hatch):
-          if rs.IsHatchPatternCurrent(hatch):
-              print "The hatch pattern is current."
-          else:
-              print "The hatch pattern is not current."
-      else: print "The hatch pattern does not exist."
-    See Also:
-      IsHatchPattern
-      IsHatchPatternReference
     """
     index = scriptcontext.doc.HatchPatterns.Find(hatch_pattern, True)
     if index<0: return scriptcontext.errorhandler()
@@ -435,19 +289,6 @@ def IsHatchPatternReference(hatch_pattern):
     Returns:
       True or False
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      hatch = rs.GetString("Hatch pattern name")
-      if rs.IsHatchPattern(hatch):
-          if rs.IsHatchPatternReference(hatch):
-              print "The hatch pattern is reference."
-          else:
-              print "The hatch pattern is not reference."
-      else:
-          print "The hatch pattern does not exist."
-    See Also:
-      IsHatchPattern
-      IsHatchPatternCurrent
     """
     index = scriptcontext.doc.HatchPatterns.Find(hatch_pattern, True)
     if index<0: return scriptcontext.errorhandler()

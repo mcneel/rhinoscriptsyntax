@@ -33,15 +33,6 @@ def AddDetail(layout_id, corner1, corner2, title=None, projection=1):
     Returns:
       identifier of the newly created detial on success
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      layout = rs.AddLayout("Portrait", (8.5,11))
-      if layout:
-          rs.AddDetail(layout, (0.5,0.5), (8,10.5), None, 7)
-    See Also:
-      DeleteNamedView
-      NamedViews
-      RestoreNamedView
     """
     layout_id = rhutil.coerceguid(layout_id, True)
     corner1 = rhutil.coerce2dpoint(corner1, True)
@@ -63,13 +54,6 @@ def AddLayout(title=None, size=None):
       size[opt] = width and height of paper for the new layout
     Returns:
       id of new layout
-    Example:
-      import rhinoscriptsyntax as rs
-      rs.AddLayout("Portrait")
-    See Also:
-      DeleteNamedView
-      NamedViews
-      RestoreNamedView
     """
     page = None
     if size is None: page = scriptcontext.doc.Views.AddPageView(title)
@@ -86,18 +70,6 @@ def AddNamedCPlane(cplane_name, view=None):
     Returns:
       name of the newly created construction plane if successful
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      views = rs.ViewNames()
-      if views:
-          for view in views:
-              name = view + "_cplane"
-              rs.AddNamedCPlane( name, view )
-    See Also:
-      DeleteNamedCPlane
-      NamedCPlane
-      NamedCPlanes
-      RestoreNamedCPlane
     """
     view = __viewhelper(view)
     if not cplane_name: raise ValueError("cplane_name is empty")
@@ -116,17 +88,6 @@ def AddNamedView(name, view=None):
     Returns:
       name fo the newly created named view if successful
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      views = rs.ViewNames()
-      if views:
-          for view in views:
-              name = view + "_view"
-              rs.AddNamedView( name, view )
-    See Also:
-      DeleteNamedView
-      NamedViews
-      RestoreNamedView
     """
     view = __viewhelper(view)
     if not name: raise ValueError("name is empty")
@@ -146,14 +107,6 @@ def CurrentDetail(layout, detail=None, return_name=True):
       if detail is not specified, the title or id of the current detail view
       if detail is specified, the title or id of the previous detail view
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      layout = rs.CurrentView(return_name=False)
-      if rs.IsLayout(layout):
-          rs.CurrentDetail( layout, layout )
-    See Also:
-      IsDetail
-      IsLayout
     """
     layout_id = rhutil.coerceguid(layout)
     page = None
@@ -186,15 +139,6 @@ def CurrentView(view=None, return_name=True):
       if the title is not specified, the title or id of the current view
       if the title is specified, the title or id of the previous current view
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      previous = rs.CurrentView("Perspective")
-      print "The previous current view was ", previous
-      viewId = rs.CurrentView( return_name=False )
-      print "The identifier of the current view is ", viewId
-    See Also:
-      IsViewCurrent
-      ViewNames
     """
     rc = None
     if return_name: rc = scriptcontext.doc.Views.ActiveView.MainViewport.Name
@@ -215,16 +159,6 @@ def DeleteNamedCPlane(name):
       name: name of the construction plane to remove
     Returns:
       True or False indicating success or failure
-    Example:
-      import rhinoscriptsyntax as rs
-      cplanes = rs.NamedCplanes()
-      if cplanes:
-          for cplane in cplanes: rs.DeleteNamedCPlane(cplane)
-    See Also:
-      AddNamedCPlane
-      NamedCPlane
-      NamedCPlanes
-      RestoreNamedCPlane
     """
     return scriptcontext.doc.NamedConstructionPlanes.Delete(name)
 
@@ -235,15 +169,6 @@ def DeleteNamedView(name):
       name: name of the named view to remove
     Returns:
       True or False indicating success or failure
-    Example:
-      import rhinoscriptsyntax as rs
-      views = rs.NamedViews()
-      if views:
-          for view in views: rs.DeleteNamedView(view)
-    See Also:
-      AddNamedView
-      NamedViews
-      RestoreNamedView
     """
     return scriptcontext.doc.NamedViews.Delete(name)
 
@@ -257,13 +182,6 @@ def DetailLock(detail_id, lock=None):
       if lock==None, the current detail projection locked state
       if lock is True or False, the previous detail projection locked state
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      detail = rs.GetObject("select a detail", rs.filter.detail)
-      if detail: rs.DetailLock(detail,True)
-    See Also:
-      IsDetail
-      IsLayout
     """
     detail_id = rhutil.coerceguid(detail_id, True)
     detail = scriptcontext.doc.Objects.Find(detail_id)
@@ -285,13 +203,6 @@ def DetailScale(detail_id, model_length=None, page_length=None):
       current page to model scale ratio if model_length and page_length are both None
       previous page to model scale ratio if model_length and page_length are values
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      detail = rs.GetObject("select a detail", rs.filter.detail)
-      if detail: rs.DetailScale(detail,1,1)
-    See Also:
-      IsDetail
-      IsLayout
     """
     detail_id = rhutil.coerceguid(detail_id, True)
     detail = scriptcontext.doc.Objects.Find(detail_id)
@@ -317,18 +228,6 @@ def IsDetail(layout, detail):
       True if detail is a detail view
       False if detail is not a detail view
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      view = rs.CurrentView()
-      if rs.IsLayout(view):
-          isdetail = rs.IsDetail(view, "Top")
-          if isdetail:
-              print "Top is a detail view."
-          else:
-              print "Top is not a detail view."
-    See Also:
-      IsLayout
-      CurrentDetail
     """
     layout_id = rhutil.coerceguid(layout)
     views = scriptcontext.doc.Views.GetViewList(False, True)
@@ -362,16 +261,6 @@ def IsLayout(layout):
       True if layout is a page layout view
       False is layout is a standard, model view
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      view = rs.CurrentView()
-      if rs.IsLayout(view):
-          print "The current view is a page layout view."
-      else:
-          print "The current view is standard, model view."
-    See Also:
-      IsLayout
-      CurrentDetail
     """
     layout_id = rhutil.coerceguid(layout)
     alllayouts = scriptcontext.doc.Views.GetViewList(False, True)
@@ -393,16 +282,6 @@ def IsView(view):
       view: title or identifier of the view
     Returns:
       True of False indicating success or failure
-    Example:
-      import rhinoscriptsyntax as rs
-      title = "Perspective"
-      result = rs.IsView(title)
-      if result:
-          print "The " + title + " view exists."
-      else:
-          print "The " + title + " view does not exist."
-    See Also:
-      ViewNames
     """
     view_id = rhutil.coerceguid(view)
     if view_id is None and view is None: return False
@@ -420,16 +299,6 @@ def IsViewCurrent(view):
       view: title or identifier of the view
     Returns:
       True of False indicating success or failure
-    Example:
-      import rhinoscriptsyntax as rs
-      title = "Perspective"
-      result = rs.IsViewCurrent(title)
-      if result:
-          print "The " + title + " view is current."
-      else:
-          print "The " + title + " view is not current."
-    See Also:
-      CurrentView
     """
     activeview = scriptcontext.doc.Views.ActiveView
     view_id = rhutil.coerceguid(view)
@@ -445,16 +314,6 @@ def IsViewMaximized(view=None):
             view is used
     Returns:
       True of False
-    Example:
-      import rhinoscriptsyntax as rs
-      title = rs.CurrentView()
-      result = rs.IsViewMaximized(title)
-      if result:
-          print "The " + title + " view is maximized."
-      else:
-          print "The " + title + " view is not maximized."
-    See Also:
-      MaximizeRestoreView
     """
     view = __viewhelper(view)
     return view.Maximized
@@ -466,16 +325,6 @@ def IsViewPerspective(view):
       view: title or identifier of the view
     Returns:
       True of False
-    Example:
-      import rhinoscriptsyntax as rs
-      title = rs.CurrentView()
-      result = rs.IsViewPerspective(title)
-      if result:
-          print "The " + title + " view is set to perspective projection."
-      else:
-          print "The " + title + " view is set to parallel projection."
-    See Also:
-      ViewProjection
     """
     view = __viewhelper(view)
     return view.MainViewport.IsPerspectiveProjection
@@ -488,16 +337,6 @@ def IsViewTitleVisible(view=None):
             active view is used
     Returns:
       True of False
-    Example:
-      import rhinoscriptsyntax as rs
-      title = rs.CurrentView()
-      vis = rs.IsViewTitleVisible(title)
-      if vis:
-          print "The ", title, " view's title is visible."
-      else:
-          print "The ", title, " view's title is not visible."
-    See Also:
-      ShowViewTitle
     """
     view = __viewhelper(view)
     return view.MainViewport.TitleVisible
@@ -509,14 +348,6 @@ def IsWallpaper(view):
       view = view to verify
     Returns:
       True or False
-    Example:
-      import rhinoscriptsyntax as rs
-      view = rs.CurrentView()
-      filename = rs.OpenFileName()
-      if filename and not rs.IsWallpaper(view):
-          rs.Wallpaper(view, filename)
-    See Also:
-      Wallpaper
     """
     view = __viewhelper(view)
     return len(view.MainViewport.WallpaperFilename)>0
@@ -529,13 +360,6 @@ def MaximizeRestoreView(view=None):
             active view is used
     Returns:
       None
-    Example:
-      import rhinoscriptsyntax as rs
-      title = rs.CurrentView()
-      if rs.IsViewMaximized(title):
-          rs.MaximizeRestoreView( title )
-    See Also:
-      IsViewMaximized
     """
     view = __viewhelper(view)
     view.Maximized = not view.Maximized
@@ -548,22 +372,6 @@ def NamedCPlane(name):
     Returns:
       a plane on success
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      names = rs.NamedCPlanes()
-      if names:
-          for name in names:
-              plane = rs.NamedCPlane(name)
-              print "CPlane name:" + name
-              print "CPlane origin:" + plane.Origin
-              print "CPlane x-axis:" + plane.Xaxis
-              print "CPlane y-axis:" + plane.Yaxis
-              print "CPlane z-axis:" + plane.Zaxis
-    See Also:
-      AddNamedCPlane
-      DeleteNamedCPlane
-      NamedCPlanes
-      RestoreNamedCPlane
     """
     index = scriptcontext.doc.NamedConstructionPlanes.Find(name)
     if index<0: return scriptcontext.errorhandler()
@@ -576,16 +384,6 @@ def NamedCPlanes():
       None
     Returns:
       the names of all named construction planes in the document
-    Example:
-      import rhinoscriptsyntax as rs
-      cplanes = rs.NamedCPlanes()
-      if cplanes:
-          for cplane in cplanes: print cplane
-    See Also:
-      AddNamedCPlane
-      DeleteNamedCPlane
-      NamedCPlane
-      RestoreNamedCPlane
     """
     count = scriptcontext.doc.NamedConstructionPlanes.Count
     rc = [scriptcontext.doc.NamedConstructionPlanes[i].Name for i in range(count)]
@@ -598,15 +396,6 @@ def NamedViews():
       None
     Returns:
       the names of all named views in the document
-    Example:
-      import rhinoscriptsyntax as rs
-      views = rs.NamedViews()
-      if views:
-          for view in views: print view
-    See Also:
-      AddNamedView
-      DeleteNamedView
-      RestoreNamedView
     """
     count = scriptcontext.doc.NamedViews.Count
     return [scriptcontext.doc.NamedViews[i].Name for i in range(count)]
@@ -620,12 +409,6 @@ def RenameView(old_title, new_title):
     Returns:
       the view's previous title if successful
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      oldtitle = rs.CurrentView()
-      rs.renameview( oldtitle, "Current" )
-    See Also:
-      ViewNames
     """
     if not old_title or not new_title: return scriptcontext.errorhandler()
     old_id = rhutil.coerceguid(old_title)
@@ -654,15 +437,6 @@ def RestoreNamedCPlane(cplane_name, view=None):
     Returns:
       name of the restored named construction plane if successful
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      cplanes = rs.NamedCplanes()
-      if cplanes: rs.RestoreNamedCPlane( cplanes[0] )
-    See Also:
-      AddNamedCPlane
-      DeleteNamedCPlane
-      NamedCPlane
-      NamedCPlanes
     """
     view = __viewhelper(view)
     index = scriptcontext.doc.NamedConstructionPlanes.Find(cplane_name)
@@ -683,14 +457,6 @@ def RestoreNamedView(named_view, view=None, restore_bitmap=False):
     Returns:
       name of the restored view if successful
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      views = rs.NamedViews()
-      if views: rs.RestoreNamedView(views[0])
-    See Also:
-      AddNamedView
-      DeleteNamedView
-      NamedViews
     """
     view = __viewhelper(view)
     index = scriptcontext.doc.NamedViews.FindByName(named_view)
@@ -714,12 +480,6 @@ def RotateCamera(view=None, direction=0, angle=None):
             specified in Options command's View tab
     Returns:
       True or False indicating success or failure
-    Example:
-      import rhinoscriptsyntax as rs
-      rs.RotateCamera( angle=15 )
-    See Also:
-      RotateView
-      TiltView
     """
     view = __viewhelper(view)
     viewport = view.ActiveViewport
@@ -761,12 +521,6 @@ def RotateView(view=None, direction=0, angle=None):
             Options command's View tab
     Returns:
       True or False indicating success or failure
-    Example:
-      import rhinoscriptsyntax as rs
-      rs.RotateView( angle=90.0 )
-    See Also:
-      RotateCamera
-      TiltView
     """
     view = __viewhelper(view)
     viewport = view.ActiveViewport
@@ -792,14 +546,6 @@ def ShowGrid(view=None, show=None):
     Returns:
       If show is not specified, then the grid display state if successful
       If show is specified, then the previous grid display state if successful
-    Example:
-      import rhinoscriptsyntax as rs
-      view = rs.CurrentView()
-      if rs.ShowGrid(view)==False:
-          rs.ShowGrid( view, True )
-    See Also:
-      ShowGridAxes
-      ShowWorldAxes
     """
     view = __viewhelper(view)
     viewport = view.ActiveViewport
@@ -820,14 +566,6 @@ def ShowGridAxes(view=None, show=None):
     Returns:
       If show is not specified, then the grid axes display state
       If show is specified, then the previous grid axes display state
-    Example:
-      import rhinoscriptsyntax as rs
-      view = rs.CurrentView()
-      if rs.ShowGridAxes(view)==False:
-          rs.ShowGridAxes( view, True )
-    See Also:
-      ShowGrid
-      ShowWorldAxes
     """
     view = __viewhelper(view)
     viewport = view.ActiveViewport
@@ -845,13 +583,6 @@ def ShowViewTitle(view=None, show=True):
       show:[opt] The state to set.
     Returns:
       None
-    Example:
-      import rhinoscriptsyntax as rs
-      view = rs.CurrentView()
-      if rs.IsViewTitleVisible(view)==False:
-          rs.ShowViewTitle( view, True )
-    See Also:
-      IsViewTitleVisible
     """
     view = __viewhelper(view)
     if view is None: return scriptcontext.errorhandler()
@@ -866,14 +597,6 @@ def ShowWorldAxes(view=None, show=None):
     Returns:
       If show is not specified, then the world axes display state
       If show is specified, then the previous world axes display state
-    Example:
-      import rhinoscriptsyntax as rs
-      view = rs.CurrentView()
-      if rs.ShowWorldAxes(view)==False:
-          rs.ShowWorldAxes( view, True )
-    See Also:
-      ShowGrid
-      ShowGridAxes
     """
     view = __viewhelper(view)
     viewport = view.ActiveViewport
@@ -895,11 +618,6 @@ def TiltView(view=None, direction=0, angle=None):
         in Options command's View tab
     Returns:
       True or False indicating success or failure
-    Example:
-      import rhinoscriptsyntax as rs
-      rs.TiltView( angle=15 )
-    See Also:
-      RotateCamera
     """
     view = __viewhelper(view)
     viewport = view.ActiveViewport
@@ -927,14 +645,6 @@ def ViewCamera(view=None, camera_location=None):
       If camera_location is not specified, the current camera location
       If camera_location is specified, the previous camera location
       None on error    
-    Example:
-      import rhinoscriptsyntax as rs
-      view = rs.CurrentView()
-      camera = rs.GetPoint("Select new camera location")
-      if camera: rs.ViewCamera(view,camera)
-    See Also:
-      ViewCameraTarget
-      ViewTarget
     """
     view = __viewhelper(view)
     rc = view.ActiveViewport.CameraLocation
@@ -956,17 +666,6 @@ def ViewCameraLens(view=None, length=None):
     Returns:
       If lens length is not specified, the current lens length
       If lens length is specified, the previous lens length
-    Example:
-      import rhinoscriptsyntax as rs
-      view = rs.CurrentView()
-      if rs.IsViewPerspective(view):
-          length = rs.ViewCameraLens(view, 100)
-    See Also:
-      ViewCameraTarget
-      ViewCPlane
-      ViewDisplayModes
-      ViewProjection
-      ViewSize
     """
     view = __viewhelper(view)
     rc = view.ActiveViewport.Camera35mmLensLength
@@ -983,16 +682,6 @@ def ViewCameraPlane(view=None):
     Returns:
       the view's camera plane if successful
       None on error
-    Example:
-      import rhinocsriptsyntax as rs
-      view = rs.CurrentView()
-      target = rs.ViewTarget(view)
-      camplane = rs.ViewCameraPlane(view)
-      plane = rs.MovePlane(camplane, target)
-      rs.ViewCPlane( view, plane )
-    See Also:
-      ViewCamera
-      ViewTarget
     """
     view = __viewhelper(view)
     rc, frame = view.ActiveViewport.GetCameraFrame()
@@ -1013,16 +702,6 @@ def ViewCameraTarget(view=None, camera=None, target=None):
         the current camera and target locations is returned
       if either camera or target are specified, then the 3d points containing the
         previous camera and target locations is returned
-    Example:
-      import rhinoscriptsyntax as rs
-      view = rs.CurrentView()
-      camera = rs.GetPoint("Select new camera location")
-      target = rs.GetPoint("Select new target location")
-      if camera and target:
-          rs.ViewCameraTarget( view, camera, target )
-    See Also:
-      ViewCamera
-      ViewTarget
     """
     view = __viewhelper(view)
     rc = view.ActiveViewport.CameraLocation, view.ActiveViewport.CameraTarget
@@ -1044,14 +723,6 @@ def ViewCameraUp(view=None, up_vector=None):
     Returns:
       if up_vector is not specified, then the current camera up direction
       if up_vector is specified, then the previous camera up direction
-    Example:
-      import rhinoscriptsyntax as rs
-      view = rs.CurrentView()
-      upVector = rs.ViewCameraUp(view)
-      print up_vector
-    See Also:
-      ViewCamera
-      ViewTarget
     """
     view = __viewhelper(view)
     rc = view.ActiveViewport.CameraUp
@@ -1069,19 +740,6 @@ def ViewCPlane(view=None, plane=None):
     Returns:
       If a construction plane is not specified, the current construction plane
       If a construction plane is specified, the previous construction plane
-    Example:
-      import rhinoscriptsyntax as rs
-      origin = rs.GetPoint("CPlane origin")
-      if origin:
-          plane = rs.ViewCPlane()
-          plane = rs.MovePlane(plane,origin)
-          rs.ViewCPlane(None, plane)
-    See Also:
-      ViewCameraLens
-      ViewCameraTarget
-      ViewDisplayModes
-      ViewProjection
-      ViewSize
     """
     view = __viewhelper(view)
     cplane = view.ActiveViewport.ConstructionPlane()
@@ -1100,14 +758,6 @@ def ViewDisplayMode(view=None, mode=None, return_name=True):
     Returns:
       If mode is specified, the previous mode
       If mode is not specified, the current mode
-    Example:
-      import rhinoscriptsyntax as rs
-      views = rs.ViewNames()
-      for view in views:
-          rs.ViewDisplayMode(view, 'Ghosted')
-    See Also:
-      CurrentView
-      ViewNames
     """
     view = __viewhelper(view)
     current = view.ActiveViewport.DisplayMode
@@ -1130,12 +780,6 @@ def ViewDisplayModeId(name):
       name = name of the display mode
     Returns:
       The id of the display mode if successful, otherwise None
-    Example:
-      import rhinoscriptsyntax as rs
-      modes = rs.ViewDisplayModes(True)
-    See Also:
-      ViewDisplayMode
-      ViewDisplayModes
     """
     desc = Rhino.Display.DisplayModeDescription.FindByName(name)
     if desc: return desc.Id
@@ -1147,12 +791,6 @@ def ViewDisplayModeName(mode_id):
       mode_id = The identifier of the display mode obtained from the ViewDisplayModes method.
     Returns:
       The name of the display mode if successful, otherwise None
-    Example:
-      import rhinoscriptsyntax as rs
-      modes = rs.ViewDisplayModes(False)
-    See Also:
-      ViewDisplayMode
-      ViewDisplayModes
     """
     mode_id = rhutil.coerceguid(mode_id, True)
     desc = Rhino.Display.DisplayModeDescription.GetDisplayMode(mode_id)
@@ -1165,12 +803,6 @@ def ViewDisplayModes(return_names=True):
       return_name [opt] = If True, return mode names. If False, return ids
     Returns:
       A list of strings identifying the display mode names or identifiers if successful
-    Example:
-      import rhinoscriptsyntax as rs
-      modes = rs.ViewDisplayModes(False)
-    See Also:
-      ViewDisplayMode
-      ViewDisplayModeName
     """
     modes = Rhino.Display.DisplayModeDescription.GetDisplayModes()
     if return_names:
@@ -1190,20 +822,6 @@ def ViewNames(return_names=True, view_type=0):
     Returns:
       list of the view names or identifiers on success
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      # Print view names
-      views = rs.ViewNames()
-      if views:
-          for view in views: print view
-      # Print view identifiers
-      view_ids = rs.ViewNames(False)
-      if view_ids:
-          for id in view_ids:
-              print id, " = ", rs.ViewTitle(id)
-    See Also:
-      IsView
-      ViewTitle
     """
     views = scriptcontext.doc.Views.GetViewList(view_type!=1, view_type>0)
     if views is None: return scriptcontext.errorhandler()
@@ -1218,13 +836,6 @@ def ViewNearCorners(view=None):
       view:[opt] title or id of the view. If omitted, current active view is used
     Returns:
       Four Point3d that define the corners of the rectangle (counter-clockwise order)
-    Example:
-      import rhinoscriptsyntax as rs
-      rect = rs.ViewNearCorners()
-      if rect:
-          for i in range(4): rs.AddTextDot( i, rect[i] )
-    See Also:
-      CurrentView
     """
     view = __viewhelper(view)
     rc = view.ActiveViewport.GetNearRect()
@@ -1239,13 +850,6 @@ def ViewProjection(view=None, mode=None):
     Returns:
       if mode is not specified, the current projection mode for the specified view
       if mode is specified, the previous projection mode for the specified view
-    Example:
-      import rhinoscriptsyntax as rs
-      views = rs.ViewNames()
-      if views:
-          for view in views: rs.ViewProjection(view,1)
-    See Also:
-      IsViewPerspective
     """
     view = __viewhelper(view)
     viewport = view.ActiveViewport
@@ -1271,17 +875,6 @@ def ViewRadius(view=None, radius=None, mode=True):
     Returns:
       if radius is not specified, the current view radius for the specified view
       if radius is specified, the previous view radius for the specified view
-    Example:
-      import rhinoscriptsyntax as rs
-      rhParallelView = 1
-      views = rs.ViewNames()
-      if views:
-          for view in views:
-              if rs.ViewProjection(view)==rhParallelView:
-                  rs.ViewRadius(view, 10.0)
-    See Also:
-      IsViewPerspective
-      ViewProjection
     """
     view = __viewhelper(view)
     viewport = view.ActiveViewport
@@ -1304,18 +897,6 @@ def ViewSize(view=None):
       view:[opt] title or id of the view. If omitted, current active view is used
     Returns:
       tuple of two numbers idenfitying width and height
-    Example:
-      import rhinoscriptsyntax as rs
-      size = rs.ViewSize()
-      if size:
-          print "Width: ", size[0], " pixels."
-          print "Height: ", size[1], " pixels."
-    See Also:
-      ViewCameraLens
-      ViewCameraTarget
-      ViewCPlane
-      ViewDisplayModes
-      ViewProjection
     """
     view = __viewhelper(view)
     cr = view.ClientRectangle
@@ -1332,14 +913,6 @@ def ViewSpeedTest(view=None, frames=100, freeze=True, direction=0, angle_degrees
       angle_degrees [opt] = The angle to rotate. If omitted, the rotation angle of 5.0 degrees will be used.
     Returns:
       The number of seconds it took to regenerate the view frames number of times, if successful, otherwise None.
-    Example:
-      import rhinoscriptsyntax as rs
-      view = "Perspective"
-      seconds = rs.ViewSpeedTest(view, 100)
-      if seconds:
-          print "Time to regen viewport 100 times =", seconds, "seconds."
-    See Also:
-      
     """
     view = __viewhelper(view)
     angle_radians = math.radians(angle_degrees)
@@ -1356,14 +929,6 @@ def ViewTarget(view=None, target=None):
       is target is not specified, then the current target location
       is target is specified, then the previous target location
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      view = rs.CurrentView()
-      target = rs.GetPoint("Select new target location")
-      if target: rs.ViewTarget( view, target )
-    See Also:
-      ViewCamera
-      ViewCameraTarget
     """
     view = __viewhelper(view)
     viewport = view.ActiveViewport
@@ -1383,14 +948,6 @@ def ViewTitle(view_id):
     Returns:
       name or title of the view on success
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      view_ids = rs.ViewNames(False)
-      for id in view_ids:
-          print id + " = " + rs.ViewTitle(id)
-    See Also:
-      CurrentView
-      ViewNames
     """
     view_id = rhutil.coerceguid(view_id)
     if view_id is None: return scriptcontext.errorhandler()
@@ -1409,16 +966,6 @@ def Wallpaper(view=None, filename=None):
     Returns:
       If filename is not specified, the current wallpaper bitmap filename
       If filename is specified, the previous wallpaper bitmap filename
-    Example:
-      import rhinoscriptsyntax as rs
-      view = rs.CurrentView()
-      filename = rs.OpenFileName()
-      if filename and not rs.IsWallpaper(view):
-          rs.Wallpaper(view, filename)
-    See Also:
-      IsWallpaper
-      WallpaperGrayScale
-      WallpaperHidden
     """
     view = __viewhelper(view)
     rc = view.ActiveViewport.WallpaperFilename
@@ -1438,13 +985,6 @@ def WallpaperGrayScale(view=None, grayscale=None):
     Returns:
       If grayscale is not specified, the current grayscale display option
       If grayscale is specified, the previous grayscale display option
-    Example:
-      import rhinoscriptsyntax as rs
-      view = rs.CurrentView()
-      if rs.WallpaperGrayScale(view)==False: rs.WallpaperGrayScale(view, True)
-    See Also:
-      Wallpaper
-      WallpaperHidden
     """
     view = __viewhelper(view)
     rc = view.ActiveViewport.WallpaperGrayscale
@@ -1464,13 +1004,6 @@ def WallpaperHidden(view=None, hidden=None):
     Returns:
       If hidden is not specified, the current hidden state
       If hidden is specified, the previous hidden state
-    Example:
-      import rhinoscriptsyntax as rs
-      view = rs.CurrentView()
-      if rs.WallpaperHidden(view) == False: rs.WallpaperHidden(view, True)
-    See Also:
-      Wallpaper
-      WallpaperGrayScale
     """
     view = __viewhelper(view)
     rc = not view.ActiveViewport.WallpaperVisible
@@ -1491,15 +1024,6 @@ def ZoomBoundingBox(bounding_box, view=None, all=False):
       all [opt] = zoom extents in all views
     Returns:
       None
-    Example:
-      import rhinoscriptsyntax as rs
-      obj = rs.GetObject()
-      if obj:
-          bbox = rs.BoundingBox(obj)
-          rs.ZoomBoundingBox( bbox )
-    See Also:
-      ZoomExtents
-      ZoomSelected
     """
     bbox = rhutil.coerceboundingbox(bounding_box)
     if bbox:
@@ -1519,12 +1043,6 @@ def ZoomExtents(view=None, all=False):
       all [opt] = zoom extents in all views
     Returns:
       None
-    Example:
-      import rhinoscriptsyntax as rs
-      rs.ZoomExtents()
-    See Also:
-      ZoomBoundingBox
-      ZoomSelected
     """
     if all:
         views = scriptcontext.doc.Views.GetViewList(True, True)
@@ -1542,13 +1060,6 @@ def ZoomSelected(view=None, all=False):
       all [opt] = zoom extents in all views
     Returns:
       None
-    Example:
-      import rhinocriptsyntax as rs
-      obj = rs.GetObject("Select object", select=True)
-      if obj: rs.ZoomSelected()
-    See Also:
-      ZoomBoundingBox
-      ZoomExtents
     """
     if all:
         views = scriptcontext.doc.Views.GetViewList(True, True)

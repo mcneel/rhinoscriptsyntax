@@ -36,14 +36,6 @@ def AllObjects(select=False, include_lights=False, include_grips=False, include_
       include_grips[opt] = Include grips objects
     Returns:
       List of Guids identifying the objects
-    Example:
-      import rhinoscriptsyntax as rs
-      objs = rs.AllObjects()
-      for obj in objs: print "Object identifier: ", obj
-    See Also:
-      HiddenObjects
-      LockedObjects
-      NormalObjects
     """
     it = Rhino.DocObjects.ObjectEnumeratorSettings()
     it.IncludeLights = include_lights
@@ -70,17 +62,6 @@ def FirstObject(select=False, include_lights=False, include_grips=False):
       include_gripts [opt] = Include grips objects.  If omitted (False), grips objects are not returned.
     Returns:
       The identifier of the object if successful.
-    Example:
-      import rhinoscriptsyntax as rs
-      rs.AddLine( (0,0,0), (5,5,0) )
-      rs.AddLine( (0,0,0), (5,0,0) )
-      rs.AddLine( (0,0,0), (0,5,0) )
-      objectId = rs.FirstObject()
-      print "Object identifier: ", objectId
-      rs.SelectObject(objectId)
-    See Also:
-      LastObject
-      NextObject
     """
     it = Rhino.DocObjects.ObjectEnumeratorSettings()
     it.IncludeLights = include_lights
@@ -152,15 +133,6 @@ def GetCurveObject(message=None, preselect=False, select=False):
         element 4 = the curve parameter of the selection point
         element 5 = name of the view selection was made
       None if no object picked
-    Example:
-      import rhinoscriptsyntax as rs
-      select_result = rs.GetCurveObject("Select curve")
-      if select_result:
-          print "Curve identifier: ", select_result[0]
-    See Also:
-      GetObject
-      GetObjects
-      GetSurfaceObject
     """
     if not preselect:
         scriptcontext.doc.Objects.UnselectAll()
@@ -209,18 +181,6 @@ def GetObject(message=None, filter=0, preselect=False, select=False, custom_filt
     Returns:
       Identifier of the picked object
       None if user did not pick an object
-    Example:
-      import rhinoscriptsyntax as rs
-      objectId = rs.GetObject("Pick any object")
-      if objectId:
-       
-      objectId = rs.GetObject("Pick a curve or surface", rs.filter.curve | rs.filter.surface)
-      if objectId:
-    See Also:
-      GetCurveObject
-      GetObjectEx
-      GetObjects
-      GetSurfaceObject
     """
     if not preselect:
         scriptcontext.doc.Objects.UnselectAll()
@@ -284,27 +244,6 @@ def GetObjectEx(message=None, filter=0, preselect=False, select=False, objects=N
         element 3 = selection point
         element 4 = name of the view selection was made
       None if no object selected
-    Example:
-      import rhinoscriptsyntax as rs
-      obj = rs.GetObjectEx("Select object", 0, True)
-      if obj:
-          print "Object id = ", obj[0]
-          print "Object was preselected = ", obj[1]
-          if obj[2]==0:
-          elif obj[2]==1:
-              print "Selection method = 1 (mouse)"
-              print "Pick point = ", obj[3]
-          elif obj[2]==2:
-              print "Selection method = 2 (window)"
-          elif obj[2]==3:
-              print "Selection method = 3 (crossing)"
-          print "Active view = ", obj[4]
-    See Also:
-      GetCurveObject
-      GetObject
-      GetObjects
-      GetObjectsEx
-      GetSurfaceObject
     """
     if not preselect:
         scriptcontext.doc.Objects.UnselectAll()
@@ -357,14 +296,6 @@ def GetObjects(message=None, filter=0, group=True, preselect=False, select=False
       mimimum_count, maximum_count[out] = limits on number of objects allowed to be selected
     Returns:
       list of Guids identifying the picked objects
-    Example:
-      import rhinoscriptsyntax as rs
-      objectIds = rs.GetObjects("Pick some curves", rs.filter.curve)
-      for id in objectIds: print "Object identifier:", id
-    See Also:
-      GetCurveObject
-      GetObject
-      GetSurfaceObject
     """
     if not preselect:
         scriptcontext.doc.Objects.UnselectAll()
@@ -427,28 +358,6 @@ def GetObjectsEx(message=None, filter=0, group=True, preselect=False, select=Fal
         element 2 = selection method (see help)
         element 3 = selection point
         element 4 = name of the view selection was made
-    Example:
-      import rhinoscriptsyntax as rs
-      objects = rs.GetObjectsEx("Select objects", 0, True)
-      for obj in objects:
-          print "Object id = ", obj[0]
-          print "Object was preselected = ", obj[1]
-          if obj[2]==0:
-              print "Selection method = 0 (non-mouse)"
-          elif obj[2]==1:
-              print "Selection method = 1 (mouse)"
-              print "Pick point = ", obj[3]
-          elif obj[2]==2:
-              print "Selection method = 2 (window)"
-          elif obj[2]==3:
-              print "Selection method = 3 (crossing)"
-          print "Active view = ", obj[4]
-    See Also:
-      GetCurveObject
-      GetObject
-      GetObjectEx
-      GetObjects
-      GetSurfaceObject
     """
     if not preselect:
         scriptcontext.doc.Objects.UnselectAll()
@@ -495,16 +404,6 @@ def GetPointCoordinates(message="select points", preselect=False):
       preselect [opt] = Allow for the selection of pre-selected objects.  If omitted (False), pre-selected objects are not accepted.
     Returns:
       list of 3d coordinates on success
-    Example:
-      import rhinoscriptsyntax as rs
-      points = rs.GetPointCoordinates()
-      for point in points: print point
-    See Also:
-      GetObject
-      GetObjects
-      GetPoint
-      GetPoints
-      PointCoordinates
     """
     ids = GetObjects(message, filter.point, preselect=preselect)
     rc = []
@@ -529,15 +428,6 @@ def GetSurfaceObject(message="select surface", preselect=False, select=False):
         element 4 = u,v surface parameter of the selection point
         element 5 = name of the view in which the selection was made
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      select = rs.GetSurfaceObject("Select surface")
-      if select:
-          print "Surface identifier: ", select[0]
-    See Also:
-      GetCurveObject
-      GetObject
-      GetObjects
     """
     if not preselect:
         scriptcontext.doc.Objects.UnselectAll()
@@ -578,14 +468,6 @@ def LockedObjects(include_lights=False, include_grips=False, include_references=
       include_grips[opt] = include grip objects
     Returns:
       A list of Guids identifying the objects if successful.
-    Example:
-      import rhinoscriptsyntax as  rs
-      objs = rs.LockedObjects()
-      for obj in objs: print "Object  identifier:", obj
-    See Also:
-      AllObjects
-      HiddenObjects
-      NormalObjects
     """
     settings = Rhino.DocObjects.ObjectEnumeratorSettings()
     settings.ActiveObjects = True
@@ -606,14 +488,6 @@ def HiddenObjects(include_lights=False, include_grips=False, include_references=
       include_grips[opt] = include grip objects
     Returns:
       A list of Guids identifying the objects if successful.
-    Example:
-      import rhinoscriptsyntax as rs
-      hidden = rs.HiddenObjects()
-      for obj in hidden: print "Object identifier", obj
-    See Also:
-      AllObjects
-      LockedObjects
-      NormalObjects
     """
     settings = Rhino.DocObjects.ObjectEnumeratorSettings()
     settings.ActiveObjects = True
@@ -636,14 +510,6 @@ def InvertSelectedObjects(include_lights=False, include_grips=False, include_ref
       include_references [opt] = Include reference objects.  If omitted (False), reference objects are not returned.
     Returns:
       A list of Guids identifying the newly selected objects if successful.
-    Example:
-      import rhinoscriptsyntax as rs
-      rs.GetObjects("Select some objects", select=True)
-      objs = rs.InvertSelectedObjects()
-      for id in objs: print "Object identifier:", id
-    See Also:
-      SelectedObjects
-      UnselectAllObjects
     """
     settings = Rhino.DocObjects.ObjectEnumeratorSettings()
     settings.IncludeLights = include_lights
@@ -671,17 +537,6 @@ def LastCreatedObjects(select=False):
       select [opt] = Select the object.  If omitted (False), the object is not selected.
     Returns:
       A list of Guids identifying the most recently created or changed objects if successful.
-    Example:
-      import rhinoscriptsyntax as rs
-      rs.Command( "_-Circle 0,0,0 10" )
-      rs.Command( "_-Circle 10,0,0 10" )
-      rs.Command( "_-Circle 20,0,0 10" )
-      objs = rs.LastCreatedObjects()
-      if objs:
-          # Only the last circle will be selected
-          rs.SelectObjects( objs )
-    See Also:
-      Command
     """
     serial_numbers = rhapp.__command_serial_numbers
     if serial_numbers is None: return scriptcontext.errorhandler()
@@ -707,14 +562,6 @@ def LastObject(select=False, include_lights=False, include_grips=False):
       include_grips[opt] = include grips in the potential set
     Returns:
       identifier of the object on success
-    Example:
-      import rhinoscriptsyntax as rs
-      rs.AddLine((0,0,0), (5,5,0))
-      rs.AddCircle((0,0,0), 5)
-      print "Object identifier: ", rs.LastObject()
-    See Also:
-      FirstObject
-      NextObject
     """
     settings = Rhino.DocObjects.ObjectEnumeratorSettings()
     settings.IncludeLights = include_lights
@@ -740,15 +587,6 @@ def NextObject(object_id, select=False, include_lights=False, include_grips=Fals
       include_grips[opt] = include grips in the potential set
     Returns:
       identifier of the object on success
-    Example:
-      import rhinoscriptsyntax as rs
-      obj = rs.FirstObject()
-      while obj:
-          print "Object identifier:", obj
-          obj = rs.NextObject(obj)
-    See Also:
-      FirstObject
-      LastObject
     """
     current_obj = rhutil.coercerhinoobject(object_id, True)
     settings = Rhino.DocObjects.ObjectEnumeratorSettings()
@@ -770,14 +608,6 @@ def NormalObjects(include_lights=False, include_grips=False):
       include_gripts [opt] = Include grips objects.  If omitted (False), grips objects are not returned.
     Returns:
       A list of Guids identifying the objects if successful.
-    Example:
-      import rhinoscriptsyntax as rs
-      objs = rs.NormalObjects()
-      for obj in objs: print "Object identifier:", obj
-    See Also:
-      AllObjects
-      HiddenObjects
-      LockedObjects
     """
     iter = Rhino.DocObjects.ObjectEnumeratorSettings()
     iter.NormalObjects = True
@@ -795,14 +625,6 @@ def ObjectsByColor(color, select=False, include_lights=False):
       include_lights[opt] = include lights in the set
     Returns:
       list of identifiers
-    Example:
-      import rhinoscriptsyntax as rs
-      obj = rs.GetObject("Pick any object")
-      if obj:
-          color = rs.ObjectColor(obj)
-          rs.ObjectsByColor(color, True)
-    See Also:
-      
     """
     color = rhutil.coercecolor(color, True)
     rhino_objects = scriptcontext.doc.Objects.FindByDrawColor(color, include_lights)
@@ -819,12 +641,6 @@ def ObjectsByGroup(group_name, select=False):
       select [opt] = select the objects
     Returns:
       list of identifiers on success
-    Example:
-      import rhinoscriptsyntax as rs
-      group = rs.GetString("Group to select")
-      if group: rs.ObjectsByGroup( group, True )
-    See Also:
-      
     """
     group_index = scriptcontext.doc.Groups.Find(group_name, True)
     if group_index<0: raise ValueError("%s does not exist in GroupTable"%group_name)
@@ -843,14 +659,6 @@ def ObjectsByLayer(layer_name, select=False):
       select [opt] = select the objects
     Returns:
       list of identifiers
-    Example:
-      import rhinoscriptsyntax as rs
-      obj = rs.GetObject("Pick any object")
-      if obj:
-          layer = rs.ObjectLayer(obj)
-          rs.ObjectsByLayer(layer, True)
-    See Also:
-      
     """
     layer = __getlayer(layer_name, True)
     rhino_objects = scriptcontext.doc.Objects.FindByLayer(layer)
@@ -869,12 +677,6 @@ def ObjectsByName(name, select=False, include_lights=False, include_references=F
       include_lights[opt] = include light objects
     Returns:
       list of identifiers
-    Example:
-      import rhinoscriptsyntax as rs
-      name = rs.GetString("Name to select")
-      if name: rs.ObjectsByName(name,True)
-    See Also:
-      
     """
     settings = Rhino.DocObjects.ObjectEnumeratorSettings()
     settings.HiddenObjects = True
@@ -922,11 +724,6 @@ def ObjectsByType(geometry_type, select=False, state=0):
       state[opt] = Object state. See help
     Returns:
       A list of Guids identifying the objects.
-    Example:
-      import rhinoscriptsyntax as  rs
-      objs = rs.ObjectsByType(4 |  8, True)
-    See Also:
-      
     """
     if not state: state = 7
     bSurface = False
@@ -994,13 +791,6 @@ def SelectedObjects(include_lights=False, include_grips=False):
       include_grips [opt] = include grip objects
     Returns:
       list of Guids identifying the objects
-    Example:
-      import rhinoscriptsyntax as rs
-      objects = rs.SelectedObjects()
-      for obj in objects: print "Object identifier: ", obj
-    See Also:
-      InvertSelectedObjects
-      UnselectAllObjects
     """
     selobjects = scriptcontext.doc.Objects.GetSelectedObjects(include_lights, include_grips)
     return [obj.Id for obj in selobjects]
@@ -1012,13 +802,6 @@ def UnselectAllObjects():
       None
     Returns:
       the number of objects that were unselected
-    Example:
-      import rhinoscriptsyntax as rs
-      count = rs.UnselectAllObjects()
-      print count, " objects were unselected"
-    See Also:
-      InvertSelectedObjects
-      SelectedObjects
     """
     rc = scriptcontext.doc.Objects.UnselectAll()
     if rc>0: scriptcontext.doc.Views.Redraw()
@@ -1034,14 +817,6 @@ def VisibleObjects(view=None, select=False, include_lights=False, include_grips=
       include_grips [opt] = include grip objects
     Returns:
       list of Guids identifying the objects
-    Example:
-      import rhinoscriptsyntax as rs
-      object_ids = rs.VisibleObjects("Top")
-      if object_ids:
-          for id in object_ids: print "Object identifier:", id
-    See Also:
-      IsView
-      IsVisibleInView
     """
     it = Rhino.DocObjects.ObjectEnumeratorSettings()
     it.DeletedObjects = False
@@ -1074,11 +849,6 @@ def WindowPick(corner1, corner2, view=None, select=False, in_window=True):
       in_window[opt] = if False, then a crossing window selection is performed
     Returns:
       list of object ids on success
-    Example:
-      import rhinoscriptsyntax as  rs
-      rs.WindowPick((0,0,0), (0,0,0),  None, True)
-    See Also:
-      
     """
     viewport = __viewhelper(view).MainViewport
     screen1 = Rhino.Geometry.Point2d(rhutil.coerce3dpoint(corner1, True))
