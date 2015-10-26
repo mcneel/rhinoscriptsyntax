@@ -16,6 +16,13 @@ def IsLinetype(name_or_id):
       name_or_id = The name or identifier of an existing linetype.
     Returns: 
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      name = rs.GetString("Linetype name")
+      if rs.IsLinetype(name): print "The linetype exists."
+      else: print "The linetype does not exist"
+    See Also:
+      IsLinetypeReference
     """
     lt = __getlinetype(name_or_id)
     return lt is not None
@@ -27,6 +34,18 @@ def IsLinetypeReference(name_or_id):
       name_or_id = The name or identifier of an existing linetype. 
     Returns: 
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      name = rs.GetString("Linetype name")
+      if rs.IsLinetype(name):
+          if rs.IsLinetypeReference(name):
+              print "The linetype is a reference linetype."
+          else:
+              print "The linetype is not a reference linetype."
+      else:
+          print "The linetype does not exist."
+    See Also:
+      IsLinetype
     """
     lt = __getlinetype(name_or_id)
     if lt is None: raise ValueError("unable to coerce %s into linetype"%name_or_id)
@@ -39,6 +58,12 @@ def LinetypeCount():
       None
     Returns:
       the number of linetypes in the document
+    Example:
+      import rhinoscriptsyntax as rs
+      count = rs.LinetypeCount()
+      print "There are", count, "linetypes."
+    See Also:
+      LinetypeNames
     """
     return scriptcontext.doc.Linetypes.Count
 
@@ -49,6 +74,13 @@ def LinetypeNames(sort=False):
       sort[opt] = return a sorted list of the linetype names
     Returns:
       list of strings if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      names = rs.LinetypeNames()
+      if names:
+          for name in names: print name
+    See Also:
+      LinetypeCount
     """
     count = scriptcontext.doc.Linetypes.Count
     rc = []

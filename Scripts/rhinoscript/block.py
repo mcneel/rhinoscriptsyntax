@@ -20,6 +20,16 @@ def AddBlock(object_ids, base_point, name=None, delete_input=False):
       delete_input(opt) = if True, the object_ids will be deleted
     Returns:
       name of new block definition on success
+    Example:
+      import rhinoscriptsyntax as rs
+      objs = rs.GetObjects("Select objects to define block")
+      if objs:
+          point = rs.GetPoint("Block base point")
+          if point:
+              block = rs.AddBlock(objs, point, None, True)
+              rs.InsertBlock(block, point)
+    See Also:
+      InsertBlock
     """
     base_point = rhutil.coerce3dpoint(base_point, True)
     if not name:
@@ -59,6 +69,15 @@ def BlockContainerCount(block_name):
       block_name = the name of an existing block definition
     Returns:
       the number of block definitions that contain a specified block definition
+    Example:
+      import rhinoscriptscriptsyntax as rs
+      block = rs.GetString("Block name to query")
+      if rs.IsBlock(block):
+          count = rs.BlockContainerCount(block)
+          print "This block is nested in", count, "block(s)."
+    See Also:
+      BlockContainers
+      IsBlock
     """
     return len(BlockContainers(block_name))
 
@@ -70,6 +89,15 @@ def BlockContainers(block_name):
       block_name = the name of an existing block definition
     Returns:
       A list of block definition names
+    Example:
+      import rhinoscriptsyntax as rs
+      blockname = rs.GetString("Block name to query")
+      if rs.IsBlock(blockname):
+          blocks = rs.BlockContainers(blockname)
+          for block in blocks: print block
+    See Also:
+      BlockContainerCount
+      IsBlock
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
@@ -86,6 +114,13 @@ def BlockCount():
       None
     Returns:
       the number of block definitions in the document
+    Example:
+      import rhinoscriptsyntax as rs
+      count = rs.BlockCount()
+      print "There are", count, " blocks."
+    See Also:
+      BlockNames
+      IsBlock
     """
     return scriptcontext.doc.InstanceDefinitions.ActiveCount
 
@@ -98,6 +133,15 @@ def BlockDescription(block_name, description=None):
     Returns:
       if description is not specified, the current description
       if description is specified, the previous description
+    Example:
+      import rhinoscriptsyntax as rs
+      blockname = rs.GetString("Block name to list description")
+      if rs.IsBlock(blockname):
+          desc = rs.BlockDescription(blockname)
+          if desc is None: print "No description"
+          else: print desc
+    See Also:
+      IsBlock
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
@@ -117,6 +161,17 @@ def BlockInstanceCount(block_name,where_to_look=0):
         2 = check for references from other instance definitions
     Returns:
       the number of instances of the block in the document
+    Example:
+      import rhinoscriptsyntax as rs
+      blockname = rs.GetString("Block to count")
+      if rs.IsBlock(blockname):
+          count = rs.BlockInstanceCount(blockname)
+          print count, "block(s) found."
+    See Also:
+      BlockInstanceInsertPoint
+      BlockInstances
+      BlockInstanceXform
+      IsBlockInstance
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
@@ -130,6 +185,16 @@ def BlockInstanceInsertPoint(object_id):
       object_id = The identifier of an existing block insertion object
     Returns:
       list representing 3D point if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      strObject = rs.GetObject("Select block")
+      if rs.IsBlockInstance(strObject):
+          rs.AddPoint( rs.BlockInstanceInsertPoint(strObject) )
+    See Also:
+      BlockInstanceCount
+      BlockInstances
+      BlockInstanceXform
+      IsBlockInstance
     """
     instance = __InstanceObjectFromId(object_id, True)
     xf = instance.InstanceXform
@@ -144,6 +209,16 @@ def BlockInstanceName(object_id):
       object_id = The identifier of an existing block insertion object
     Returns:
       the block name of a block instance
+    Example:
+      import rhinoscriptsyntax as rs
+      strObject = rs.GetObject("Select block")
+      if rs.IsBlockInstance(strObject):
+          print rs.BlockInstanceName(strObject)
+    See Also:
+      BlockInstanceCount
+      BlockInstances
+      BlockInstanceXform
+      IsBlockInstance
     """
     instance = __InstanceObjectFromId(object_id, True)
     idef = instance.InstanceDefinition
@@ -156,6 +231,18 @@ def BlockInstances(block_name):
       block_name = the name of an existing block definition
     Returns:
       list of guids identifying the instances of a block
+    Example:
+      import rhinoscriptsyntax as rs
+      strBlock = rs.GetString("Block to select")
+      if rs.IsBlock(strBlock):
+          arrObjects = rs.BlockInstances(strBlock)
+          if arrobjects:
+              rs.SelectObjects(arrObjects)
+    See Also:
+      BlockInstanceCount
+      BlockInstanceInsertPoint
+      BlockInstanceXform
+      IsBlockInstance
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
@@ -172,6 +259,19 @@ def BlockInstanceXform(object_id):
     Returns:
       the location, as a transform matrix, of a block instance relative to the world coordinate
     system origin
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select block to query")
+      if rs.IsBlockInstance(obj):
+          arrMatrix = rs.BlockInstanceXform(obj)
+          if arrMatrix is not None:
+              pointId = rs.AddPoint([0,0,0])
+              rs.TransformObject( pointId, arrMatrix)
+    See Also:
+      BlockInstanceCount
+      BlockInstanceInsertPoint
+      BlockInstances
+      IsBlockInstance
     """
     instance = __InstanceObjectFromId(object_id, True)
     return instance.InstanceXform
@@ -183,6 +283,13 @@ def BlockNames( sort=False ):
       sort = return a sorted list
     Returns:
       the names of all block definitions in the document
+    Example:
+      import rhinoscriptsyntax as rs
+      names = rs.BlockNames(True)
+      if names:
+    See Also:
+      BlockCount
+      IsBlock
     """
     ideflist = scriptcontext.doc.InstanceDefinitions.GetList(True)
     rc = [item.Name for item in ideflist]
@@ -196,6 +303,14 @@ def BlockObjectCount(block_name):
       block_name = name of an existing block definition
     Returns:
       the number of objects that make up a block definition
+    Example:
+      import rhinoscriptsyntax as rs
+      count = rs.BlockObjectCount()
+      print "There are", count, " blocks."
+    See Also:
+      BlockNames
+      BlockObjects
+      IsBlock
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
@@ -208,6 +323,17 @@ def BlockObjects(block_name):
       block_name = name of an existing block definition
     Returns:
       list of identifiers on success
+    Example:
+      import rhinoscriptsyntax as rs
+      strBlock = rs.GetString("Block name to list identifiers")
+      if rs.IsBlock(strBlock):
+          objects = rs.BlockObjects(strBlock)
+          if objects:
+              for item in objects: print item
+    See Also:
+      BlockNames
+      BlockObjectCount
+      IsBlock
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
@@ -223,6 +349,14 @@ def BlockPath(block_name):
       block_name = name of an existing block definition
     Returns:
       path to the linked block on success
+    Example:
+      import rhinoscriptsyntax as rs
+      strBlock = rs.GetString("Block name to list path")
+      if rs.IsBlockEmbedded(strBlock):
+          print rs.BlockPath(strBlock)
+    See Also:
+      IsBlock
+      IsBlockEmbedded
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
@@ -243,6 +377,14 @@ def BlockStatus(block_name):
       None
     Returns:
       the status of a linked block
+    Example:
+      import rhinoscriptsyntax as rs
+      block = rs.GetString("Block name to list description")
+      if rs.IsBlock(block):
+          status = rs.BlockStatus(block)
+          print "block status for", block, "is", status
+    See Also:
+      IsBlock
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     if not idef: return -3
@@ -255,6 +397,15 @@ def DeleteBlock(block_name):
       block_name = name of an existing block definition
     Returns:
       True or False indicating success or failure  
+    Example:
+      import rhinoscriptsyntax as rs
+      strBlock = rs.GetString("Block name to delete")
+      if rs.IsBlock(strBlock):
+          rs.DeleteBlock(strBlock)
+    See Also:
+      BlockNames
+      ExplodeBlockInstance
+      IsBlock
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
@@ -271,6 +422,14 @@ def ExplodeBlockInstance(object_id, explode_nested_instances=False):
       explode_nested_instances = By default nested blocks are not exploded.
     Returns:
       identifiers for the newly exploded objects on success
+    Example:
+      import rhinoscriptsyntax as rs
+      strObject = rs.GetObject("Select block instance to explode")
+      if rs.IsBlockInstance(strObject):
+          rs.ExplodeBlockInstance(strObject)
+    See Also:
+      DeleteBlock
+      IsBlockInstance
     """
     instance = __InstanceObjectFromId(object_id, True)
     guids = scriptcontext.doc.Objects.AddExplodedInstancePieces(instance, explodeNestedInstances=explode_nested_instances, deleteInstance=True)
@@ -289,6 +448,8 @@ def InsertBlock( block_name, insertion_point, scale=(1,1,1), angle_degrees=0, ro
       rotation_normal [opt] = the axis of rotation.
     Returns:
       id for the block that was added to the doc
+    Example:
+    See Also:
     """
     insertion_point = rhutil.coerce3dpoint(insertion_point, True)
     rotation_normal = rhutil.coerce3dvector(rotation_normal, True)
@@ -308,6 +469,8 @@ def InsertBlock2(block_name, xform):
       xform = 4x4 transformation matrix to apply
     Returns:
       id for the block that was added to the doc on success
+    Example:
+    See Also:
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
@@ -324,6 +487,18 @@ def IsBlock(block_name):
       block_name = name of an existing block definition
     Returns:
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      strBlock = rs.GetString("Block name")
+      if rs.IsBlock(strBlock):
+          print "The block definition exists."
+      else:
+          print "The block definition does not exist."
+    See Also:
+      IsBlockEmbedded
+      IsBlockInstance
+      IsBlockInUse
+      IsBlockReference
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     return (idef is not None)
@@ -335,6 +510,21 @@ def IsBlockEmbedded(block_name):
       block_name = name of an existing block definition
     Returns:
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      strBlock = rs.GetString("Block name")
+      if rs.IsBlock(strBlock):
+          if rs.IsBlockEmbedded(strBlock):
+              print "The block definition is embedded."
+          else:
+              print "The block definition is not embedded."
+      else:
+          print "The block definition does not exist."
+    See Also:
+      IsBlock
+      IsBlockInstance
+      IsBlockInUse
+      IsBlockReference
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
@@ -348,6 +538,18 @@ def IsBlockInstance(object_id):
       object_id = The identifier of an existing block insertion object
     Returns:
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select block instance")
+      if rs.IsBlockInstance(obj):
+          print "The object is a block instance."
+      else:
+          print "The object is not a block instance."
+    See Also:
+      IsBlock
+      IsBlockEmbedded
+      IsBlockInUse
+      IsBlockReference
     """
     return  __InstanceObjectFromId(object_id, False) is not None
 
@@ -362,6 +564,21 @@ def IsBlockInUse(block_name, where_to_look=0):
            2 = Check for references in other instance definitions
     Returns:
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      strBlock = rs.GetString("Block name")
+      if rs.IsBlock(strBlock):
+          if rs.IsBlockInUse(strBlock):
+              print "The block definition is in use."
+          else:
+              print "The block definition is not in use."
+      else:
+          print "The block definition does not exist."
+    See Also:
+      IsBlock
+      IsBlockInstance
+      IsBlockEmbedded
+      IsBlockReference
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
@@ -374,6 +591,21 @@ def IsBlockReference(block_name):
       block_name = name of an existing block definition
     Returns:
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      strBlock = rs.GetString("Block name")
+      if rs.IsBlock(strBlock):
+          if rs.IsBlockReference(strBlock):
+              print "The block definition is a reference definition."
+          else:
+              print "The block definition is not a reference definition."
+      else:
+          print "The block definition does not exist."
+    See Also:
+      IsBlock
+      IsBlockEmbedded
+      IsBlockInUse
+      IsBlockInstance
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
@@ -387,6 +619,16 @@ def RenameBlock( block_name, new_name ):
       new_name = name to change to
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      strOldBlock = rs.GetString("Old block name")
+      if strOldBlock:
+          strNewBlock = rs.GetString("New block name")
+          if strNewBlock:
+              rs.RenameBlock (strOldBlock, strNewBlock)
+    See Also:
+      BlockNames
+      IsBlock
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
