@@ -16,6 +16,14 @@ def AddAlignedDimension(start_point, end_point, point_on_dimension_line, style=N
     Returns:
       identifier of new dimension on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      origin = 1, 1, 0
+      offset = 11, 5, 0
+      point = 1, 3, 0
+      rs.AddAlignedDimension( origin, offset, point )
+    See Also:
+      IsAlignedDimension
     """
     start = rhutil.coerce3dpoint(start_point, True)
     end = rhutil.coerce3dpoint(end_point, True)
@@ -44,6 +52,15 @@ def AddDimStyle(dimstyle_name=None):
     Returns:
       name of the new dimension style on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      print "New dimension style: ", rs.AddDimStyle()
+      print "New dimension style: ", rs.AddDimStyle("MyDimStyle")
+    See Also:
+      CurrentDimStyle
+      DeleteDimStyle
+      IsDimStyle
+      RenameDimStyle
     """
     index = scriptcontext.doc.DimStyles.Add(dimstyle_name)
     if index<0: return scriptcontext.errorhandler()
@@ -63,6 +80,13 @@ def AddLeader(points, view_or_plane=None, text=None):
     Returns:
       identifier of the new leader on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      points = rs.GetPoints(True, False, "Select leader points")
+      if points: rs.AddLeader( points )
+    See Also:
+      IsLeader
+      LeaderText
     """
     points = rhutil.coerce3dpointlist(points)
     if points is None or len(points)<2: raise ValueError("points must have at least two items")
@@ -107,6 +131,14 @@ def AddLinearDimension(plane, start_point, end_point, point_on_dimension_line):
     Returns:
       identifier of the new object on success
       None on error
+    Example:
+      import rhinoscriptsyntax as  rs
+      points = rs.GetPoints(True,  False, "Select 3 dimension points")
+      if points and len(points)>2:
+          rs.AddLinearDimension(rs.WorldXYPlane(),  points[0], points[1], points[2] )
+    See Also:
+      IsLeader
+      LeaderText
     """
     if not plane: 
       plane = ViewCPlane()
@@ -140,6 +172,15 @@ def CurrentDimStyle( dimstyle_name=None ):
       if dimstyle_name is not specified, name of the current dimension style
       if dimstyle_name is specified, name of the previous dimension style
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      rs.AddDimStyle("MyDimStyle")
+      rs.CurrentDimStyle("MyDimStyle")
+    See Also:
+      AddDimStyle
+      DeleteDimStyle
+      IsDimStyle
+      RenameDimStyle
     """
     rc = scriptcontext.doc.DimStyles.CurrentDimensionStyle.Name
     if dimstyle_name:
@@ -157,6 +198,14 @@ def DeleteDimStyle(dimstyle_name):
     Returns:
       The name of the deleted dimension style if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      dimstyle = rs.GetString("Dimension style to remove")
+    See Also:
+      AddDimStyle
+      CurrentDimStyle
+      IsDimStyle
+      RenameDimStyle
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle_name, True)
     if ds and scriptcontext.doc.DimStyles.DeleteDimensionStyle(ds.Index, True):
@@ -180,6 +229,13 @@ def DimensionStyle(object_id, dimstyle_name=None):
       if dimstyle_name is specified, the object's current dimension style name
       if dimstyle_name is not specified, the object's previous dimension style name
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a dimension")
+      if rs.IsDimension(obj): rs.DimensionStyle(obj, "Default")
+    See Also:
+      DimStyleNames
+      IsDimStyle
     """
     annotation_object = __coerceannotation(object_id)
     ds = annotation_object.DimensionStyle
@@ -199,6 +255,15 @@ def DimensionText(object_id):
       object_id = identifier of the object
     Returns:
       the text displayed by a dimension object
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a dimension")
+      if rs.IsDimension(obj):
+          print rs.DimensionText(obj)
+    See Also:
+      DimensionUserText
+      DimensionValue
+      IsDimension
     """
     annotation_object = __coerceannotation(object_id)
     return annotation_object.DisplayText
@@ -213,6 +278,16 @@ def DimensionUserText(object_id, usertext=None):
     Returns:
       if usertext is not specified, the current usertext string
       if usertext is specified, the previous usertext string
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a dimension")
+      if rs.IsDimension(obj):
+          usertext =  "<> " + chr(177) + str(rs.UnitAbsoluteTolerance())
+          rs.DimensionUserText( obj, usertext )
+    See Also:
+      DimensionText
+      DimensionValue
+      IsDimension
     """
     annotation_object = __coerceannotation(object_id)
     rc = annotation_object.Geometry.Text
@@ -229,6 +304,15 @@ def DimensionValue(object_id):
       object_id = identifier of the object
     Returns:
       numeric value of the dimension if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a dimension")
+      if rs.IsDimension(obj):
+          print rs.DimensionValue(obj)
+    See Also:
+      DimensionText
+      DimensionUserText
+      IsDimension
     """
     annotation_object = __coerceannotation(object_id)
     return annotation_object.Geometry.NumericValue
@@ -243,6 +327,21 @@ def DimStyleAnglePrecision(dimstyle, precision=None):
     Returns:
       If a precision is not specified, the current angle precision
       If a precision is specified, the previous angle precision
+    Example:
+      import rhinoscriptsyntax as rs
+      dimstyle = rs.CurrentDimStyle()
+      precision = rs.DimStyleAnglePrecision(dimstyle)
+      if precision>2:
+          rs.DimStyleAnglePrecision( dimstyle, 2 )
+    See Also:
+      DimStyleArrowSize
+      DimStyleExtension
+      DimStyleFont
+      DimStyleLinearPrecision
+      DimStyleNumberFormat
+      DimStyleOffset
+      DimStyleTextAlignment
+      DimStyleTextHeight
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     if ds is None: return scriptcontext.errorhandler()
@@ -263,6 +362,19 @@ def DimStyleArrowSize(dimstyle, size=None):
       If size is not specified, the current arrow size
       If size is specified, the previous arrow size
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      dimstyle = rs.CurrentDimStyle()
+      size = rs.DimStyleArrowSize(dimstyle)
+    See Also:
+      DimStyleAnglePrecision
+      DimStyleExtension
+      DimStyleFont
+      DimStyleLinearPrecision
+      DimStyleNumberFormat
+      DimStyleOffset
+      DimStyleTextAlignment
+      DimStyleTextHeight
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     if ds is None: return scriptcontext.errorhandler()
@@ -280,6 +392,13 @@ def DimStyleCount():
       None
     Returns:
       the number of dimension styles in the document
+    Example:
+      import rhinoscriptsyntax as rs
+      count = rs.DimStyleCount()
+      print "There are", count, "dimension styles."
+    See Also:
+      DimStyleNames
+      IsDimStyle
     """
     return scriptcontext.doc.DimStyles.Count
 
@@ -293,6 +412,19 @@ def DimStyleExtension(dimstyle, extension=None):
       if extension is not specified, the current extension line extension
       if extension is specified, the previous extension line extension
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      dimstyle = rs.CurrentDimStyle()
+      extension = rs.DimStyleExtension(dimstyle)
+    See Also:
+      DimStyleAnglePrecision
+      DimStyleArrowSize
+      DimStyleFont
+      DimStyleLinearPrecision
+      DimStyleNumberFormat
+      DimStyleOffset
+      DimStyleTextAlignment
+      DimStyleTextHeight
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     if ds is None: return scriptcontext.errorhandler()
@@ -313,6 +445,19 @@ def DimStyleFont(dimstyle, font=None):
       if font is not specified, the current font if successful
       if font is specified, the previous font if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      dimstyle = rs.CurrentDimStyle()
+      font = rs.DimStyleFont(dimstyle)
+    See Also:
+      DimStyleAnglePrecision
+      DimStyleArrowSize
+      DimStyleExtension
+      DimStyleLinearPrecision
+      DimStyleNumberFormat
+      DimStyleOffset
+      DimStyleTextAlignment
+      DimStyleTextHeight
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     if ds is None: return scriptcontext.errorhandler()
@@ -335,6 +480,20 @@ def DimStyleLeaderArrowSize(dimstyle, size=None):
       if size is not specified, the current leader arrow size
       if size is specified, the previous leader arrow size
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      dimstyle = rs.CurrentDimStyle()
+      size = rs.DimStyleLeaderArrowSize(dimstyle)
+    See Also:
+      DimStyleAnglePrecision
+      DimStyleArrowSize
+      DimStyleExtension
+      DimStyleFont
+      DimStyleLinearPrecision
+      DimStyleNumberFormat
+      DimStyleOffset
+      DimStyleTextAlignment
+      DimStyleTextHeight
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     if ds is None: return scriptcontext.errorhandler()
@@ -356,6 +515,13 @@ def DimStyleLengthFactor(dimstyle, factor=None):
       if factor is not defined, the current length factor
       if factor is defined, the previous length factor
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      dimstyle = rs.CurrentDimStyle()
+      factor = rs.DimStyleLengthFactor(dimstyle)
+    See Also:
+      DimStylePrefix
+      DimStyleSuffix
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     if ds is None: return scriptcontext.errorhandler()
@@ -376,6 +542,19 @@ def DimStyleLinearPrecision(dimstyle, precision=None):
       if precision is not specified, the current linear precision value
       if precision is specified, the previous linear precision value
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      dimstyle = rs.CurrentDimStyle()
+      precision = rs.DimStyleLinearPrecision(dimstyle)
+    See Also:
+      DimStyleAnglePrecision
+      DimStyleArrowSize
+      DimStyleExtension
+      DimStyleFont
+      DimStyleNumberFormat
+      DimStyleOffset
+      DimStyleTextAlignment
+      DimStyleTextHeight
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     if ds is None: return scriptcontext.errorhandler()
@@ -393,6 +572,14 @@ def DimStyleNames(sort=False):
       sort [opt] = sort the list if True, not sorting is the default (False)
     Returns:
       the names of all dimension styles in the document
+    Example:
+      import rhinoscriptsyntax as rs
+      dimstyles = rs.DimStyleNames()
+      if dimstyles:
+          for dimstyle in dimstyles: print dimstyle
+    See Also:
+      DimStyleCount
+      IsDimStyle
     """
     rc = [ds.Name for ds in scriptcontext.doc.DimStyles]
     if sort: rc.sort()
@@ -411,6 +598,19 @@ def DimStyleNumberFormat(dimstyle, format=None):
       if format is not specified, the current display format
       if format is specified, the previous display format
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      dimstyle = rs.CurrentDimStyle()
+      format = rs.DimStyleNumberFormat(dimstyle)
+    See Also:
+      DimStyleAnglePrecision
+      DimStyleArrowSize
+      DimStyleExtension
+      DimStyleFont
+      DimStyleLinearPrecision
+      DimStyleOffset
+      DimStyleTextAlignment
+      DimStyleTextHeight
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     if ds is None: return scriptcontext.errorhandler()
@@ -433,6 +633,19 @@ def DimStyleOffset(dimstyle, offset=None):
       if offset is not specified, the current extension line offset
       if offset is specified, the previous extension line offset
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      dimstyle = rs.CurrentDimStyle()
+      offset = rs.DimStyleOffset(dimstyle)
+    See Also:
+      DimStyleAnglePrecision
+      DimStyleArrowSize
+      DimStyleExtension
+      DimStyleFont
+      DimStyleLinearPrecision
+      DimStyleNumberFormat
+      DimStyleTextAlignment
+      DimStyleTextHeight
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     if ds is None: return scriptcontext.errorhandler()
@@ -454,6 +667,13 @@ def DimStylePrefix(dimstyle, prefix=None):
       if prefix is not specified, the current prefix
       if prefix is specified, the previous prefix
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      dimstyle = rs.CurrentDimStyle()
+      rs.DimStylePrefix( dimstyle, "[" )
+    See Also:
+      DimStyleLengthFactor
+      DimStyleSuffix
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     if ds is None: return scriptcontext.errorhandler()
@@ -475,6 +695,13 @@ def DimStyleSuffix(dimstyle, suffix=None):
       if suffix is not specified, the current suffix
       if suffix is specified, the previous suffix
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      dimstyle = rs.CurrentDimStyle()
+      rs.DimStyleSuffix( dimstyle, "}" )
+    See Also:
+      DimStyleLengthFactor
+      DimStylePrefix
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     if ds is None: return scriptcontext.errorhandler()
@@ -499,6 +726,19 @@ def DimStyleTextAlignment(dimstyle, alignment=None):
       if alignment is not specified, the current text alignment
       if alignment is specified, the previous text alignment
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      dimstyle = rs.CurrentDimStyle()
+      alignment = rs.DimStyleTextAlignment(dimstyle)
+    See Also:
+      DimStyleAnglePrecision
+      DimStyleArrowSize
+      DimStyleExtension
+      DimStyleFont
+      DimStyleLinearPrecision
+      DimStyleNumberFormat
+      DimStyleOffset
+      DimStyleTextHeight
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     if ds is None: return scriptcontext.errorhandler()
@@ -522,6 +762,20 @@ def DimStyleTextGap(dimstyle, gap=None):
       if gap is not specified, the current text gap
       if gap is specified, the previous text gap
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      dimstyle = rs.CurrentDimStyle()
+      gap = rs.DimStyleTextGap(dimstyle)
+    See Also:
+      DimStyleAnglePrecision
+      DimStyleArrowSize
+      DimStyleExtension
+      DimStyleFont
+      DimStyleLinearPrecision
+      DimStyleNumberFormat
+      DimStyleOffset
+      DimStyleTextAlignment
+      DimStyleTextHeight
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     if ds is None: return scriptcontext.errorhandler()
@@ -542,6 +796,19 @@ def DimStyleTextHeight(dimstyle, height=None):
       if height is not specified, the current text height
       if height is specified, the previous text height
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      dimstyle = rs.CurrentDimStyle()
+      height = rs.DimStyleTextHeight(dimstyle)
+    See Also:
+      DimStyleAnglePrecision
+      DimStyleArrowSize
+      DimStyleExtension
+      DimStyleFont
+      DimStyleLinearPrecision
+      DimStyleNumberFormat
+      DimStyleOffset
+      DimStyleTextAlignment
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     if ds is None: return scriptcontext.errorhandler()
@@ -559,6 +826,20 @@ def IsAlignedDimension(object_id):
       object_id = the object's identifier
     Returns:
       True or False.  None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a dimension")
+      if rs.IsAlignedDimension(obj):
+          print "The object is an aligned dimension."
+      else:
+          print "The object is not an aligned dimension."
+    See Also:
+      IsAngularDimension
+      IsDiameterDimension
+      IsDimension
+      IsLinearDimension
+      IsOrdinateDimension
+      IsRadialDimension
     """
     annotation_object = __coerceannotation(object_id)
     id = rhutil.coerceguid(object_id, True)
@@ -574,6 +855,20 @@ def IsAngularDimension(object_id):
       object_id = the object's identifier
     Returns:
       True or False. None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a dimension")
+      if rs.IsAngularDimension(obj):
+          print "The object is an angular dimension."
+      else:
+          print "The object is not an angular dimension."
+    See Also:
+      IsAlignedDimension
+      IsDiameterDimension
+      IsDimension
+      IsLinearDimension
+      IsOrdinateDimension
+      IsRadialDimension
     """
     id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
@@ -587,6 +882,20 @@ def IsDiameterDimension(object_id):
       object_id = the object's identifier
     Returns:
       True or False.  None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a dimension")
+      if rs.IsDiameterDimension(obj):
+          print "The object is a diameter dimension."
+      else:
+          print "The object is not a diameter dimension."
+    See Also:
+      IsAlignedDimension
+      IsAngularDimension
+      IsDimension
+      IsLinearDimension
+      IsOrdinateDimension
+      IsRadialDimension
     """
     id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
@@ -602,6 +911,20 @@ def IsDimension(object_id):
       object_id = the object's identifier
     Returns:
       True or False.  None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a dimension")
+      if rs.IsDimension(obj):
+          print "The object is a dimension."
+      else:
+          print "The object is not a dimension."
+    See Also:
+      IsAlignedDimension
+      IsAngularDimension
+      IsDiameterDimension
+      IsLinearDimension
+      IsOrdinateDimension
+      IsRadialDimension
     """
     id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
@@ -615,6 +938,18 @@ def IsDimStyle(dimstyle):
       dimstyle = the name of a dimstyle to test for
     Returns:
       True or False. None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      dimstyle = rs.GetString("Dimension style to test")
+      if rs.IsDimStyle(dimstyle):
+          if rs.IsDimStyleReference(dimstyle):
+              print "The dimension style is from a reference file."
+          else:
+              print "The dimension style is not from a reference file."
+      else:
+          print "The dimension style does not exist."
+    See Also:
+      IsDimStyleReference
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     return ds is not None
@@ -626,6 +961,18 @@ def IsDimStyleReference(dimstyle):
       dimstyle = the name of an existing dimension style
     Returns:
       True or False. None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      dimstyle = rs.GetString("Dimension style to test")
+      if rs.IsDimStyle(dimstyle):
+          if rs.IsDimStyleReference(dimstyle):
+              print "The dimension style is from a reference file."
+          else:
+              print "The dimension style is not from a reference file."
+      else:
+          print "The dimension style does not exist."
+    See Also:
+      IsDimStyle
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     if ds is None: return scriptcontext.errorhandler()
@@ -638,6 +985,16 @@ def IsLeader(object_id):
       object_id = the object's identifier
     Returns:
       True or False. None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a leader")
+      if rs.IsLeader(obj):
+          print "The object is a leader."
+      else:
+          print "The object is not a leader."
+    See Also:
+      AddLeader
+      LeaderText
     """
     id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
@@ -651,6 +1008,20 @@ def IsLinearDimension(object_id):
       object_id = the object's identifier
     Returns:
       True or False. None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a dimension")
+      if rs.IsLinearDimension(obj):
+          print "The object is a linear dimension."
+      else:
+          print "The object is not a linear dimension."
+    See Also:
+      IsAlignedDimension
+      IsAngularDimension
+      IsDiameterDimension
+      IsDimension
+      IsOrdinateDimension
+      IsRadialDimension
     """
     id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
@@ -664,6 +1035,20 @@ def IsOrdinateDimension(object_id):
       object_id = the object's identifier
     Returns:
       True or False. None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a dimension")
+      if rs.IsOrdinateDimension(obj):
+          print "The object is an ordinate dimension."
+      else:
+          print "The object is not an ordinate dimension."
+    See Also:
+      IsAlignedDimension
+      IsAngularDimension
+      IsDiameterDimension
+      IsDimension
+      IsLinearDimension
+      IsRadialDimension
     """
     id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
@@ -677,6 +1062,20 @@ def IsRadialDimension(object_id):
       object_id = the object's identifier
     Returns:
       True or False. None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a dimension")
+      if rs.IsRadialDimension(obj):
+          print "The object is a radial dimension."
+      else:
+          print "The object is not a radial dimension."
+    See Also:
+      IsAlignedDimension
+      IsAngularDimension
+      IsDiameterDimension
+      IsDimension
+      IsLinearDimension
+      IsOrdinateDimension
     """
     id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
@@ -693,6 +1092,12 @@ def LeaderText(object_id, text=None):
       if text is not specified, the current text string
       if text is specified, the previous text string
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a leader")
+    See Also:
+      AddLeader
+      IsLeader
     """
     id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
@@ -715,6 +1120,16 @@ def RenameDimStyle(oldstyle, newstyle):
     Returns:
       the new dimension style name if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      oldstyle = rs.GetString("Old dimension style name")
+      if oldstyle:
+          newstyle = rs.GetString("New dimension style name")
+    See Also:
+      AddDimStyle
+      CurrentDimStyle
+      DeleteDimStyle
+      IsDimStyle
     """
     ds = scriptcontext.doc.DimStyles.Find(oldstyle, True)
     if not ds: return scriptcontext.errorhandler()

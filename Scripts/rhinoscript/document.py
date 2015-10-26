@@ -18,6 +18,15 @@ def CreatePreviewImage(filename, view=None, size=None, flags=0, wireframe=False)
           a rendered image will be created
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as  rs
+      result = rs.CreatePreviewImage("test.jpg")
+      if result:
+          print  "test.jpg created successfully."
+      else:
+          print  "Unable to create preview image."
+    See Also:
+      ExtractPreviewImage
     """
     rhview = scriptcontext.doc.Views.ActiveView
     if view is not None:
@@ -44,6 +53,12 @@ def DocumentModified(modified=None):
     Returns:
       if no modified state is specified, the current modified state
       if a modified state is specified, the previous modified state
+    Example:
+      import rhinoscriptsyntax as rs
+      modified = rs.IsDocumentModified()
+      if not modified: rs.DocumentModified(True)
+    See Also:
+      IsDocumentModified
     """
     oldstate = scriptcontext.doc.Modified
     if modified is not None and modified!=oldstate:
@@ -57,6 +72,12 @@ def DocumentName():
       None
     Returns:
       the name of the currently loaded Rhino document (3DM file)
+    Example:
+      import rhinoscriptsyntax as rs
+      name = rs.DocumentName()
+      print name
+    See Also:
+      DocumentPath
     """
     return scriptcontext.doc.Name or None
 
@@ -67,6 +88,12 @@ def DocumentPath():
       None
     Returns:
       the path of the currently loaded Rhino document (3DM file) 
+    Example:
+      import rhinoscriptsyntax as rs
+      path = rs.DocumentPath()
+      print path
+    See Also:
+      DocumentName
     """
     # GetDirectoryName throws an exception if an empty string is passed hence the 'or None'
     path = System.IO.Path.GetDirectoryName(scriptcontext.doc.Path or None)
@@ -82,6 +109,11 @@ def EnableRedraw(enable=True):
       enable [opt] = True to enable, False to disable
     Returns: 
       previous screen redrawing state
+    Example:
+      import rhinoscriptsyntax as rs
+      redraw = rs.EnableRedraw(True)
+    See Also:
+      Redraw
     """
     old = scriptcontext.doc.Views.RedrawEnabled
     if old!=enable: scriptcontext.doc.Views.RedrawEnabled = enable
@@ -98,6 +130,15 @@ def ExtractPreviewImage(filename, modelname=None):
          preview image. If omitted, the currently loaded model is used.
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      result = rs.ExtractPreviewImage("test.jpg")
+      if result:
+          print "Test.jpg created successfully."
+      else:
+          print "Unable to extract preview image."
+    See Also:
+      CreatePreviewImage
     """
     return scriptcontext.doc.ExtractPreviewImage(filename, modelname)
 
@@ -108,6 +149,12 @@ def IsDocumentModified():
       None
     Returns:
       True or False. None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      modified = rs.IsDocumentModified()
+      if not modified: rs.DocumentModified(True)
+    See Also:
+      DocumentModified
     """
     return scriptcontext.doc.Modified
 
@@ -120,6 +167,12 @@ def Notes(newnotes=None):
     Returns:
       if newnotes is omitted, the current notes if successful
       if newnotes is specified, the previous notes if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      notes = rs.Notes()
+      if notes: rs.MessageBox(notes)
+    See Also:
+      
     """
     old = scriptcontext.doc.Notes
     if newnotes is not None: scriptcontext.doc.Notes = newnotes
@@ -134,6 +187,12 @@ def ReadFileVersion():
       None
     Returns:
       the file version of the current document
+    Example:
+      import rhinoscriptsyntax as rs
+      print "ReadFileVersion =", rs.ReadFileVersion()
+    See Also:
+      DocumentName
+      DocumentPath
     """
     return scriptcontext.doc.ReadFileVersion()
 
@@ -144,6 +203,11 @@ def Redraw():
       None
     Returns:
       None 
+    Example:
+      import rhinoscriptsyntax as rs
+      rs.Redraw()
+    See Also:
+      EnableRedraw
     """
     old = scriptcontext.doc.Views.RedrawEnabled
     scriptcontext.doc.Views.RedrawEnabled = True
@@ -159,6 +223,13 @@ def RenderAntialias(style=None):
     Returns:
       if style is not specified, the current antialias style
       if style is specified, the previous antialias style
+    Example:
+      import rhinoscriptsyntax as rs
+      rs.RenderAntialias(1)
+    See Also:
+      RenderColor
+      RenderResolution
+      RenderSettings
     """
     rc = scriptcontext.doc.RenderSettings.AntialiasLevel
     if style==0 or style==1 or style==2:
@@ -176,6 +247,14 @@ def RenderColor(item, color=None):
     Returns:
       if color is not specified, the current item color
       if color is specified, the previous item color
+    Example:
+      import rhinoscriptsyntax as rs
+      render_background_color = 1
+      rs.RenderColor( render_background_color, (0,0,255) )
+    See Also:
+      RenderAntialias
+      RenderResolution
+      RenderSettings
     """
     if item!=0 and item!=1: raise ValueError("item must be 0 or 1")
     if item==0: rc = scriptcontext.doc.RenderSettings.AmbientLight
@@ -197,6 +276,13 @@ def RenderResolution(resolution=None):
     Returns:
       if resolution is not specified, the current resolution width,height
       if resolution is specified, the previous resolution width, height
+    Example:
+      import rhinoscriptsyntax as rs
+      sizex, sizey = rs.Viewsize()
+    See Also:
+      RenderAntialias
+      RenderColor
+      RenderSettings
     """
     rc = scriptcontext.doc.RenderSettings.ImageSize
     if resolution:
@@ -218,6 +304,17 @@ def RenderSettings(settings=None):
     Returns:
       if settings are not specified, the current render settings
       if settings are specified, the previous render settings
+    Example:
+      import rhinoscriptsyntax as rs
+      render_annotations = 8
+      settings = rs.RenderSettings()
+      if settings & render_annotations:
+          settings = settings - render_annotations
+          rs.RenderSettings( settings )
+    See Also:
+      RenderAntialias
+      RenderColor
+      RenderResolution
     """
     rc = 0
     rendersettings = scriptcontext.doc.RenderSettings
@@ -245,6 +342,16 @@ def UnitAbsoluteTolerance(tolerance=None, in_model_units=True):
     Returns:
       if tolerance is not specified, the current absolute tolerance
       if tolerance is specified, the previous absolute tolerance
+    Example:
+      import rhinoscriptsyntax as rs
+      tol = rs.UnitAbsoluteTolerance()
+      if tol<0.01:
+          rs.UnitAbsoluteTolerance( 0.01 )
+    See Also:
+      UnitAngleTolerance
+      UnitDistanceDisplayPrecision
+      UnitRelativeTolerance
+      UnitSystem
     """
     if in_model_units:
         rc = scriptcontext.doc.ModelAbsoluteTolerance
@@ -268,6 +375,16 @@ def UnitAngleTolerance(angle_tolerance_degrees=None, in_model_units=True):
     Returns:
       if angle_tolerance_degrees is not specified, the current angle tolerance
       if angle_tolerance_degrees is specified, the previous angle tolerance
+    Example:
+      import rhinoscriptsyntax as rs
+      tol = rs.UnitAngleTolerance()
+      if tol<3.0:
+          rs.UnitAngleTolerance(3.0)
+    See Also:
+      UnitAbsoluteTolerance
+      UnitDistanceDisplayPrecision
+      UnitRelativeTolerance
+      UnitSystem
     """
     if in_model_units:
         rc = scriptcontext.doc.ModelAngleToleranceDegrees
@@ -287,6 +404,15 @@ def UnitDistanceDisplayPrecision(precision=None, model_units=True):
       model_units [opt] = Return or modify the document's model units (True) or the document's page units (False). The default is True.
     Returns:
      If precision is not specified, the current distance display precision if successful. If precision is specified, the previous distance display precision if successful. If not successful, or on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      precision = 3
+      rs.UnitDistanceDisplayPrecision( precision )
+    See Also:
+      UnitAbsoluteTolerance
+      UnitAngleTolerance
+      UnitRelativeTolerance
+      UnitSystem
     """
     if model_units:
         rc = scriptcontext.doc.ModelDistanceDisplayPrecision
@@ -308,6 +434,16 @@ def UnitRelativeTolerance(relative_tolerance=None, in_model_units=True):
     Returns:
       if relative_tolerance is not specified, the current tolerance in percent
       if relative_tolerance is specified, the previous tolerance in percent
+    Example:
+      import rhinoscriptsyntax as rs
+      tol = rs.UnitRelativeTolerance()
+      if tol<1.0:
+          rs.UnitRelativeTolerance(1.0)
+    See Also:
+      UnitAbsoluteTolerance
+      UnitAngleTolerance
+      UnitDistanceDisplayPrecision
+      UnitSystem
     """
     if in_model_units:
         rc = scriptcontext.doc.ModelRelativeTolerance
@@ -354,6 +490,11 @@ def UnitScale(to_system, from_system=None):
         the document's current unit system is used
   Returns:
     scale factor for changing between unit systems
+  Example:
+    import rhinoscriptsyntax as rs
+  See Also:
+    UnitSystem
+    UnitSystemName
   """
   if from_system is None:
       from_system = scriptcontext.doc.ModelUnitSystem
@@ -403,6 +544,18 @@ def UnitSystem(unit_system=None, scale=False, in_model_units=True):
       if unit_system is not specified, the current unit system
       if unit_system is specified, the previous unit system
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      rhUnitMillimeters = 2
+      rhUnitInches = 8
+      current_system = rs.UnitSystem()
+      if current_system==rhUnitMillimeters:
+          rs.UnitSystem(rhUnitInches, True)
+    See Also:
+      UnitAbsoluteTolerance
+      UnitAngleTolerance
+      UnitDistanceDisplayPrecision
+      UnitRelativeTolerance
     """
     if (unit_system is not None and (unit_system<1 or unit_system>25)):
         raise ValueError("unit_system value of %s is not valid"%unit_system)
@@ -428,5 +581,11 @@ def UnitSystemName(capitalize=False, singular=True, abbreviate=False, model_unit
       model_units [opt] = Return the document's model units (True) or the document's page units (False). The default is True.
     Returns:
       The name of the current units system if successful. 
+    Example:
+      import rhinoscriptsyntax as rs
+      system = rs.UnitSystemName(False, False, False)
+      print "The units system is set to", system
+    See Also:
+      UnitSystem
     """
     return scriptcontext.doc.GetUnitSystemName(model_units, capitalize, singular, abbreviate)

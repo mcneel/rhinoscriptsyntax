@@ -9,6 +9,16 @@ def DeleteDocumentData(section=None, entry=None):
       entry = entry name. If omitted, all entries for section are removed
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      rs.DeleteDocumentData( "MySection1", "MyEntry1" )
+      rs.DeleteDocumentData( "MySection1", "MyEntry2" )
+      rs.DeleteDocumentData( "MySection2", "MyEntry1" )
+    See Also:
+      DocumentDataCount
+      GetDocumentData
+      IsDocumentData
+      SetDocumentData
     """
     return scriptcontext.doc.Strings.Delete(section, entry)
 
@@ -19,6 +29,15 @@ def DocumentDataCount():
       None
     Returns:
       the number of user data strings in the current document
+    Example:
+      import rhinoscriptsyntax as rs
+      count = rs.DocumentDataCount()
+      print "RhinoScript document user data count: ", count
+    See Also:
+      DeleteDocumentData
+      GetDocumentData
+      IsDocumentData
+      SetDocumentData
     """
     return scriptcontext.doc.Strings.DocumentDataCount
 
@@ -29,6 +48,12 @@ def DocumentUserTextCount():
       None
     Returns:
       the number of user text strings in the current document
+    Example:
+      
+    See Also:
+      GetDocumentUserText
+      IsDocumentUserText
+      SetDocumentUserText
     """
     return scriptcontext.doc.Strings.DocumentUserTextCount
 
@@ -42,6 +67,21 @@ def GetDocumentData(section=None, entry=None):
       list of all section names if section name is omitted
       list of all entry names for a section if entry is omitted
       value of the entry if both section and entry are specified
+    Example:
+      import rhinoscriptsyntax as rs
+      value = rs.GetDocumentData("MySection1", "MyEntry1")
+      print value
+       
+      value = rs.GetDocumentData("MySection1", "MyEntry2")
+      print value
+       
+      value = rs.GetDocumentData("MySection2", "MyEntry1")
+      print value
+    See Also:
+      DeleteDocumentData
+      DocumentDataCount
+      IsDocumentData
+      SetDocumentData
     """
     if section is None:
         rc = scriptcontext.doc.Strings.GetSectionNames()
@@ -61,6 +101,12 @@ def GetDocumentUserText(key=None):
       If key is specified, then the associated value if successful.
       If key is not specified, then a list of key names if successful.
       If not successful, or on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      print rs.GetDocumentUserText("Designer")
+      print rs.GetDocumentUserText("Notes")
+    See Also:
+      SetDocumentUserText
     """
     if key: 
       val =  scriptcontext.doc.Strings.GetValue(key)
@@ -79,6 +125,15 @@ def GetUserText(object_id, key=None, attached_to_geometry=False):
     Returns:
       if key is specified, the associated value if successful
       if key is not specified, a list of key names if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object")
+      if obj:
+          print rs.GetUserText(obj, "PartNo")
+          print rs.GetUserText(obj, "Price")
+    See Also:
+      IsUserText
+      SetUserText
     """
     obj = rhutil.coercerhinoobject(object_id, True, True)
     source = None
@@ -96,6 +151,18 @@ def IsDocumentData():
       None
     Returns:
       True or False indicating the presence of Script user data
+    Example:
+      import rhinoscriptsyntax as rs
+      result = rs.IsDocumentData()
+      if result:
+          print "This document contains Script document user data"
+      else:
+          print "This document contains no Script document user data"
+    See Also:
+      DeleteDocumentData
+      DocumentDataCount
+      GetDocumentData
+      SetDocumentData
     """
     return scriptcontext.doc.Strings.DocumentDataCount > 0
 
@@ -106,6 +173,11 @@ def IsDocumentUserText():
       None
     Returns:
       True or False indicating the presence of Script user text
+    Example:
+      
+    See Also:
+      GetDocumentUserText
+      SetDocumentUserText
     """
     return scriptcontext.doc.Strings.DocumentUserTextCount > 0
 
@@ -119,6 +191,18 @@ def IsUserText(object_id):
       1 = attribute user text
       2 = geometry user text
       3 = both attribute and geometry user text
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object")  
+      if obj:
+          usertext_type = rs.IsUserText(obj)
+          if usertext_type==0: print "Object has no user text"
+          elif usertext_type==1: print "Object has attribute user text"
+          elif usertext_type==2: print "Object has geometry user text"
+          elif usertext_type==3: print "Object has attribute and geometry user text"
+    See Also:
+      GetUserText
+      SetUserText
     """
     obj = rhutil.coercerhinoobject(object_id, True, True)
     rc = 0
@@ -135,6 +219,16 @@ def SetDocumentData(section, entry, value):
       value  = the string value
     Returns:
       The previous value
+    Example:
+      import rhinoscriptsyntax as rs
+      rs.SetDocumentData( "MySection1", "MyEntry1", "MyValue1" )
+      rs.SetDocumentData( "MySection1", "MyEntry2", "MyValue2" )
+      rs.SetDocumentData( "MySection2", "MyEntry1", "MyValue1" )
+    See Also:
+      DeleteDocumentData
+      DocumentDataCount
+      GetDocumentData
+      IsDocumentData
     """
     val = scriptcontext.doc.Strings.SetString(section, entry, value)
     return val if val else None
@@ -148,6 +242,12 @@ def SetDocumentUserText(key, value=None):
         specified by key will be deleted
     Returns:
       True or False indicating success
+    Example:
+      import rhinoscriptsyntax as rs
+      rs.SetDocumentUserText("Designer", "Steve Baer")
+      rs.SetDocumentUserText("Notes", "Added some layer and updated some geometry")
+    See Also:
+      GetDocumentUserText
     """
     if value: scriptcontext.doc.Strings.SetString(key,value)
     else: scriptcontext.doc.Strings.Delete(key)
@@ -164,6 +264,15 @@ def SetUserText(object_id, key, value=None, attach_to_geometry=False):
       attach_to_geometry[opt] = location on the object to store the user text
     Returns:
       True or False indicating success or failure 
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object")
+      if obj:
+        rs.SetUserText( obj, "PartNo", "KM40-4960" )
+        rs.SetUserText( obj, "Price", "1.25" )
+    See Also:
+      GetUserText
+      IsUserText
     """
     obj = rhutil.coercerhinoobject(object_id, True, True)
     if type(key) is not str: key = str(key)

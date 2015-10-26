@@ -13,6 +13,13 @@ def AddMaterialToLayer(layer):
     Returns:
       Material index of the layer if successful
       None if not successful or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      layer = rs.CurrentLayer()
+      index = rs.LayerMaterialIndex(layer)
+    See Also:
+      LayerMaterialIndex
+      IsMaterialDefault
     """
     layer = __getlayer(layer, True)
     if layer.RenderMaterialIndex>-1: return layer.RenderMaterialIndex
@@ -32,6 +39,15 @@ def AddMaterialToObject(object_id):
       object_id = identifier of an object
     Returns:
       material index of the object
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject()
+      if obj:
+          index = rs.ObjectMaterialIndex(obj)
+    See Also:
+      IsMaterialDefault
+      ObjectMaterialIndex
+      ObjectMaterialSource
     """
     rhino_object = rhutil.coercerhinoobject(object_id, True, True)
     attr = rhino_object.Attributes
@@ -53,6 +69,15 @@ def CopyMaterial(source_index, destination_index):
       source_index, destination_index = indices of materials to copy
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      src = rs.LayerMaterialIndex("Default")
+      dest = rs.LayerMaterialIndex(rs.CurrentLayer())
+      if src>=0 and dest>=0 and src!=dest:
+          rs.CopyMaterial( src, dest )
+    See Also:
+      LayerMaterialIndex
+      ObjectMaterialIndex
     """
     if source_index==destination_index: return False
     source = scriptcontext.doc.Materials[source_index]
@@ -70,6 +95,18 @@ def IsMaterialDefault(material_index):
       material_index = the zero-based material index
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject()
+      if obj:
+          index = rs.ObjectMaterialIndex(obj)
+          if rs.IsMaterialDefault(index):
+              print "Object is assigned default material."
+          else:
+              print "Object is not assigned default material."
+    See Also:
+      LayerMaterialIndex
+      ObjectMaterialIndex
     """
     mat = scriptcontext.doc.Materials[material_index]
     return mat and mat.IsDefaultMaterial
@@ -81,6 +118,19 @@ def IsMaterialReference(material_index):
       material_index = the zero-based material index
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject()
+      if obj:
+          index = rs.ObjectMaterialIndex(obj)
+          if rs.IsMaterialReference(index):
+              print "The material is referenced from another file."
+          else:
+              print "The material is not referenced from another file."
+    See Also:
+      IsLayerReference
+      IsLightReference
+      isObjectReference
     """
     mat = scriptcontext.doc.Materials[material_index]
     return mat and mat.IsReference
@@ -95,6 +145,16 @@ def MatchMaterial(source, destination):
     Returns:
       number of objects that were modified if successful
       None if not successful or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select source object")
+      if obj and rs.ObjectMaterialIndex(obj)>-1:
+          objects = rs.GetObjects("Select destination objects")
+          if objects: rs.MatchMaterial( obj, objects )
+    See Also:
+      CopyMaterial
+      LayerMaterialIndex
+      ObjectMaterialIndex
     """
     source_id = rhutil.coerceguid(source)
     source_mat = None
@@ -127,6 +187,20 @@ def MaterialBump(material_index, filename=None):
       if filename is not specified, the current bump bitmap filename
       if filename is specified, the previous bump bitmap filename
       None if not successful or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object")
+      if obj:
+          index = rs.ObjectMaterialIndex(obj)
+          if index>-1:
+              rs.MaterialBump( index, "C:\\Users\\Steve\\Desktop\\bumpimage.png" )
+    See Also:
+      MaterialColor
+      MaterialName
+      MaterialReflectiveColor
+      MaterialShine
+      MaterialTexture
+      MaterialTransparency
     """
     mat = scriptcontext.doc.Materials[material_index]
     if mat is None: return scriptcontext.errorhandler()
@@ -148,6 +222,20 @@ def MaterialColor(material_index, color=None):
       if color is not specified, the current material color
       if color is specified, the previous material color
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object")
+      if obj:
+          index = rs.ObjectMaterialIndex(obj)
+          if index>-1:
+              rs.MaterialColor( index, (127, 255, 191) )
+    See Also:
+      MaterialBump
+      MaterialName
+      MaterialReflectiveColor
+      MaterialShine
+      MaterialTexture
+      MaterialTransparency
     """
     mat = scriptcontext.doc.Materials[material_index]
     if mat is None: return scriptcontext.errorhandler()
@@ -169,6 +257,17 @@ def MaterialEnvironmentMap(material_index, filename=None):
       if filename is not specified, the current environment bitmap filename
       if filename is specified, the previous environment bitmap filename
       None if not successful or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object")
+      if obj:
+          index = rs.ObjectMaterialIndex(obj)
+          if index>-1:
+              rs.MaterialEnvironmentMap( index, "C:\\Users\\Steve\\Desktop\\emapimage.png" )
+    See Also:
+      MaterialBump
+      MaterialTexture
+      MaterialTransparencyMap
     """
     mat = scriptcontext.doc.Materials[material_index]
     if mat is None: return scriptcontext.errorhandler()
@@ -190,6 +289,20 @@ def MaterialName(material_index, name=None):
       if name is not specified, the current material name
       if name is specified, the previous material name
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object")
+      if obj:
+          index = rs.ObjectMaterialIndex(obj)
+          if index>-1:
+              rs.MaterialName( index, "Fancy_Material" )
+    See Also:
+      MaterialBump
+      MaterialColor
+      MaterialReflectiveColor
+      MaterialShine
+      MaterialTexture
+      MaterialTransparency
     """
     mat = scriptcontext.doc.Materials[material_index]
     if mat is None: return scriptcontext.errorhandler()
@@ -209,6 +322,20 @@ def MaterialReflectiveColor(material_index, color=None):
       if color is not specified, the current material reflective color
       if color is specified, the previous material reflective color
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object")
+      if obj:
+          index = rs.ObjectMaterialIndex(obj)
+          if index>-1:
+              rs.MaterialReflectiveColor( index, (191, 191, 255) )
+    See Also:
+      MaterialBump
+      MaterialColor
+      MaterialName
+      MaterialShine
+      MaterialTexture
+      MaterialTransparency
     """
     mat = scriptcontext.doc.Materials[material_index]
     if mat is None: return scriptcontext.errorhandler()
@@ -231,6 +358,21 @@ def MaterialShine(material_index, shine=None):
       if shine is not specified, the current material shine value
       if shine is specified, the previous material shine value
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      MAX_SHINE = 255.0
+      obj = rs.GetObject("Select object")
+      if obj:
+          index = rs.ObjectMaterialIndex(obj)
+          if index>-1:
+              rs.MaterialShine( index, MAX_SHINE/2 )
+    See Also:
+      MaterialBump
+      MaterialColor
+      MaterialName
+      MaterialReflectiveColor
+      MaterialTexture
+      MaterialTransparency
     """
     mat = scriptcontext.doc.Materials[material_index]
     if mat is None: return scriptcontext.errorhandler()
@@ -251,6 +393,20 @@ def MaterialTexture(material_index, filename=None):
       if filename is not specified, the current texture bitmap filename
       if filename is specified, the previous texture bitmap filename
       None if not successful or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object")
+      if obj:
+          index = rs.ObjectMaterialIndex(obj)
+          if index>-1:
+              rs.MaterialTexture( index, "C:\\Users\\Steve\\Desktop\\textureimage.png" )
+    See Also:
+      MaterialBump
+      MaterialColor
+      MaterialName
+      MaterialReflectiveColor
+      MaterialShine
+      MaterialTransparency
     """
     mat = scriptcontext.doc.Materials[material_index]
     if mat is None: return scriptcontext.errorhandler()
@@ -273,6 +429,20 @@ def MaterialTransparency(material_index, transparency=None):
       if transparency is not specified, the current material transparency value
       if transparency is specified, the previous material transparency value
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object")
+      if obj:
+          index = rs.ObjectMaterialIndex(obj)
+          if index>-1:
+              rs.MaterialTransparency( index, 0.50 )
+    See Also:
+      MaterialBump
+      MaterialColor
+      MaterialName
+      MaterialReflectiveColor
+      MaterialShine
+      MaterialTexture
     """
     mat = scriptcontext.doc.Materials[material_index]
     if mat is None: return scriptcontext.errorhandler()
@@ -293,6 +463,17 @@ def MaterialTransparencyMap(material_index, filename=None):
       if filename is not specified, the current transparency bitmap filename
       if filename is specified, the previous transparency bitmap filename
       None if not successful or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object")
+      if obj:
+          index = rs.ObjectMaterialIndex(obj)
+          if index>-1:
+              rs.MaterialTransparencyMap( index, "C:\\Users\\Steve\\Desktop\\texture.png" )
+    See Also:
+      MaterialBump
+      MaterialEnvironmentMap
+      MaterialTexture
     """
     mat = scriptcontext.doc.Materials[material_index]
     if mat is None: return scriptcontext.errorhandler()
@@ -311,6 +492,15 @@ def ResetMaterial(material_index):
       material_index = zero based material index
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object")
+      if obj:
+          index = rs.ObjectMaterialIndex(obj)
+          if index>-1: rs.ResetMaterial(index)
+    See Also:
+      LayerMaterialIndex
+      ObjectMaterialIndex
     """
     mat = scriptcontext.doc.Materials[material_index]
     if mat is None: return False
