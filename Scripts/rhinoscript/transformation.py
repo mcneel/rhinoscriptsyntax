@@ -12,14 +12,6 @@ def IsXformIdentity(xform):
       xform =  List or Rhino.Geometry.Transform.  A 4x4 transformation matrix.
     Returns:
       True or False indicating success or failure.
-    Example:
-      import rhinoscriptsyntax as rs
-      xform = rs.XformIdentity()
-      print rs.IsXformIdentity(xform)
-    See Also:
-      IsXformSimilarity
-      IsXformZero
-      XformIdentity
     """
     xform = rhutil.coercexform(xform, True)
     return xform==Rhino.Geometry.Transform.Identity
@@ -33,13 +25,6 @@ def IsXformSimilarity(xform):
       xform = List or Rhino.Geometry.Transform.  A 4x4 transformation matrix.
     Returns:
       True if this transformation is an orientation preserving similarity, otherwise False.
-    Example:
-      import rhinoscriptsyntax as rs
-      xform = rs.BlockInstanceXform(block)
-      print rs.IsXformSimilarity(xform)
-    See Also:
-      IsXformIdentity
-      IsXformZero
     """
     xform = rhutil.coercexform(xform, True)
     return xform.SimilarityType!=Rhino.Geometry.TransformSimilarityType.NotSimilarity
@@ -51,14 +36,6 @@ def IsXformZero(xform):
       xform = List or Rhino.Geometry.Transform.  A 4x4 transformation matrix.
     Returns:
       True or False indicating success or failure.
-    Example:
-      import rhinoscriptsyntax as rs
-      xform = rs.XformZero()
-      print rs.IsXformZero(xform)
-    See Also:
-      IsXformIdentity
-      IsXformSimilarity
-      XformZero
     """
     xform = rhutil.coercexform(xform, True)
     for i in range(4):
@@ -74,22 +51,6 @@ def XformChangeBasis(initial_plane, final_plane):
       final_plane = the final plane
     Returns:
       The 4x4 transformation matrix if successful, otherwise None
-    Example:
-      import rhinoscriptsyntax as rs
-      import math
-      objs = rs.GetObjects("Select objects to shear")
-      if objs:
-          cplane = rs.ViewCPlane()
-          cob = rs.XformChangeBasis(rs.WorldXYPlane(), cplane)
-          shear2d = rs.XformIdentity()
-          shear2d[0,2] = math.tan(math.radians(45.0))
-          cob_inverse = rs.XformChangeBasis(cplane, rs.WorldXYPlane())
-          temp = rs.XformMultiply(shear2d, cob)
-          xform = rs.XformMultiply(cob_inverse, temp)
-          rs.TransformObjects( objs, xform, True )
-    See Also:
-      XformCPlaneToWorld
-      XformWorldToCPlane
     """
     initial_plane = rhutil.coerceplane(initial_plane, True)
     final_plane = rhutil.coerceplane(final_plane, True)
@@ -105,8 +66,6 @@ def XformChangeBasis2(x0,y0,z0,x1,y1,z1):
       x1,y1,z1 = final basis
     Returns:
       The 4x4 transformation matrix if successful, otherwise None
-    Example:
-    See Also:
     """
     x0 = rhutil.coerce3dvector(x0, True)
     y0 = rhutil.coerce3dvector(y0, True)
@@ -127,15 +86,6 @@ def XformCompare(xform1, xform2):
       -1 if xform1<xform2
        1 if xform1>xform2
        0 if xform1=xform2
-    Example:
-      import rhinoscriptsyntax as rs
-      xform0 = rs.XformZero()
-      xform1 = rs.XformIdentity()
-      print rs.XformCompare(xform0, xform1)
-    See Also:
-      IsXformIdentity
-      IsXformSimilarity
-      IsXformZero
     """
     xform1 = rhutil.coercexform(xform1, True)
     xform2 = rhutil.coercexform(xform2, True)
@@ -149,13 +99,6 @@ def XformCPlaneToWorld(point, plane):
       plane = The construction plane
     Returns:
       A 3D point in world coordinates
-    Example:
-      import rhinoscriptsyntax as rs
-      plane = rs.ViewCPlane()
-      point = rs.XFormCPlaneToWorld([0,0,0], plane)
-      if point: print "World point: ", point
-    See Also:
-      XformWorldToCPlane
     """
     point = rhutil.coerce3dpoint(point, True)
     plane = rhutil.coerceplane(plane, True)
@@ -170,12 +113,6 @@ def XformDeterminant(xform):
       xform = List or Rhino.Geometry.Transform.  A 4x4 transformation matrix.
     Returns:
       The determinant if successful, otherwise None
-    Example:
-      import rhinoscriptsyntax as rs
-      xform = rs.BlockInstanceXform(obj)
-      if xform: print rs.XformDeterminant(xform)
-    See Also:
-      XformInverse
     """
     xform = rhutil.coercexform(xform, True)
     return xform.Determinant
@@ -188,15 +125,6 @@ def XformDiagonal(diagonal_value):
       diagonal_value = the diagonal value
     Returns:
       The 4x4 transformation matrix if successful, otherwise None
-    Example:
-      import rhinoscriptsyntax as rs
-      def printmatrix(xform):
-          for i in range(4):
-              print "[", xform[i,0], ", ", xform[i,1], ", ", xform[i,2], ", ", xform[i,3], "]"
-      printmatrix(rs.XformDiagonal(3))
-    See Also:
-      XformIdentity
-      XformZero
     """
     return Rhino.Geometry.Transform(diagonal_value)
 
@@ -207,15 +135,6 @@ def XformIdentity():
       None
     Returns:
       The 4x4 transformation matrix
-    Example:
-      import rhinoscriptsyntax as rs
-      def printmatrix(xform):
-          for i in range(4):
-              print "[", xform[i,0], ", ", xform[i,1], ", ", xform[i,2], ", ", xform[i,3], "]"
-      printmatrix(rs.XformIdentity())
-    See Also:
-      XFormDiagonal
-      XformZero
     """
     return Rhino.Geometry.Transform.Identity
 
@@ -227,13 +146,6 @@ def XformInverse(xform):
     Returns:
       The inverted 4x4 transformation matrix if successful.
       None, if matrix is non-singular or on error.
-    Example:
-      import rhinoscriptsyntax as rs
-      xform = rs.BlockInstanceXform(obj)
-      if xform:
-          rs.TransformObject( obj, rs.XformInverse(xform) )
-    See Also:
-      XformDeterminant
     """
     xform = rhutil.coercexform(xform, True)
     rc, inverse = xform.TryGetInverse()
@@ -248,19 +160,6 @@ def XformMirror(mirror_plane_point, mirror_plane_normal):
       mirror_plane_normal = a 3D vector that is normal to the mirror plane
     Returns:
       mirror Transform
-    Example:
-      import rhinoscriptsyntax as rs
-      objs = rs.GetObjects("Select objects to mirror")
-      if objs:
-          plane = rs.ViewCPlane()
-          xform = rs.XformMirror(plane.Origin, plane.Normal)
-          rs.TransformObjects( objs, xform, True )
-    See Also:
-      XformPlanarProjection
-      XformRotation
-      XformScale
-      XformShear
-      XformTranslation
     """
     point = rhutil.coerce3dpoint(mirror_plane_point, True)
     normal = rhutil.coerce3dvector(mirror_plane_normal, True)
@@ -274,25 +173,6 @@ def XformMultiply(xform1, xform2):
       xform2 = List or Rhino.Geometry.Transform.  The second 4x4 transformation matrix to multiply.
     Returns:
       result transformation on success
-    Example:
-      import rhinoscriptsyntax as rs
-      import math
-      objs = rs.GetObjects("Select objects to shear")
-      if objs:
-          cplane = rs.ViewCPlane()
-          cob = rs.XformChangeBasis(rs.WorldXYPlane(), cplane)
-          shear2d = rs.XformIdentity()
-          shear2d[0,2] = math.tan(math.radians(45.0))
-          cob_inv = rs.XformChangeBasis(cplane, rs.WorldXYPlane())
-          temp = rs.XformMultiply(shear2d, cob)
-          xform = rs.XformMultiply(cob_inv, temp)
-          rs.TransformObjects( objs, xform, True )
-    See Also:
-      XformPlanarProjection
-      XformRotation
-      XformScale
-      XformShear
-      XformTranslation
     """
     xform1 = rhutil.coercexform(xform1, True)
     xform2 = rhutil.coercexform(xform2, True)
@@ -305,19 +185,6 @@ def XformPlanarProjection(plane):
       plane = The plane to project to.
     Returns:
       The 4x4 transformation matrix.
-    Example:
-      import rhinoscriptsyntax as rs
-      objects = rs.GetObjects("Select objects to project")
-      if objects:
-          cplane = rs.ViewCPlane()
-          xform = rs.XformPlanarProjection(cplane)
-          rs.TransformObjects( objects, xform, True )
-    See Also:
-      XformMirror
-      XformRotation
-      XformScale
-      XformShear
-      XformTranslation
     """
     plane = rhutil.coerceplane(plane, True)
     return Rhino.Geometry.Transform.PlanarProjection(plane)
@@ -332,8 +199,6 @@ def XformRotation1(initial_plane, final_plane):
     Returns:
       The 4x4 transformation matrix.
       None on error.
-    Example:
-    See Also:
     """
     initial_plane = rhutil.coerceplane(initial_plane, True)
     final_plane = rhutil.coerceplane(final_plane, True)
@@ -351,8 +216,6 @@ def XformRotation2(angle_degrees, rotation_axis, center_point):
     Returns:
       The 4x4 transformation matrix.
       None on error.
-    Example:
-    See Also:
     """
     axis = rhutil.coerce3dvector(rotation_axis, True)
     center = rhutil.coerce3dpoint(center_point, True)
@@ -371,8 +234,6 @@ def XformRotation3( start_direction, end_direction, center_point ):
     Returns:
       The 4x4 transformation matrix.
       None on error.
-    Example:
-    See Also:
     """
     start = rhutil.coerce3dvector(start_direction, True)
     end = rhutil.coerce3dvector(end_direction, True)
@@ -390,8 +251,6 @@ def XformRotation4(x0, y0, z0, x1, y1, z1):
     Returns:
       The 4x4 transformation matrix.
       None on error.
-    Example:
-    See Also:
     """
     x0 = rhutil.coerce3dvector(x0, True)
     y0 = rhutil.coerce3dvector(y0, True)
@@ -412,18 +271,6 @@ def XformScale(scale, point=None):
     Returns:
       The 4x4 transformation matrix on success
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      objs = rs.GetObjects("Select objects to scale")
-      if objs:
-          xform = rs.XformScale( (3.0,1.0,1.0) )
-          rs.TransformObjects( objs, xform, True)
-    See Also:
-      XformMirror
-      XformPlanarProjection
-      XformRotation
-      XformShear
-      XformTranslation
     """
     factor = rhutil.coerce3dpoint(scale)
     if factor is None:
@@ -449,14 +296,6 @@ def XformScreenToWorld(point, view=None, screen_coordinates=False):
     Returns:
       3D point on success
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      point2d = 200,100
-      view = rs.CurrentView()
-      point = rs.XformScreenToWorld(point2d, view)
-      print point
-    See Also:
-      XformWorldToScreen
     """
     point = rhutil.coerce2dpoint(point, True)
     view = rhview.__viewhelper(view)
@@ -478,19 +317,6 @@ def XformShear(plane, x, y, z):
       x,y,z = each axis scale factor
     Returns:
       The 4x4 transformation matrix on success
-    Example:
-      import rhinoscriptsyntax as rs
-      objects = rs.GetObjects("Select objects to shear")
-      if objects:
-          cplane = rs.ViewCPlane()
-          xform = rs.XformShear(cplane, (1,1,0), (-1,1,0), (0,0,1))
-          rs.TransformObjects(objects, xform, True)
-    See Also:
-      XformMirror
-      XformPlanarProjection
-      XformRotation
-      XformScale
-      XformTranslation
     """
     plane = rhutil.coerceplane(plane, True)
     x = rhutil.coerce3dvector(x, True)
@@ -505,18 +331,6 @@ def XformTranslation(vector):
       vector = List of 3 numbers, Point3d, or Vector3d.  A 3-D translation vector.
     Returns:
       The 4x4 transformation matrix is successful, otherwise None
-    Example:
-      import rhinoscriptsyntax as rs
-      objs = rs.GetObjects("Select objects to copy")
-      if objs:
-          xform = rs.XformTranslation([1,0,0])
-          rs.TransformObjects( objs, xform, True )
-    See Also:
-      XformMirror
-      XformPlanarProjection
-      XformRotation
-      XformScale
-      XformShear
     """
     vector = rhutil.coerce3dvector(vector, True)
     return Rhino.Geometry.Transform.Translation(vector)
@@ -529,13 +343,6 @@ def XformWorldToCPlane(point, plane):
       plane = The construction plane
     Returns:
       A 3D point in construction plane coordinates
-    Example:
-      import rhinoscriptsyntax as rs
-      plane = rs.ViewCPlane()
-      point = rs.XformWorldToCPlane([0,0,0], plane)
-      if point: print "CPlane point:", point
-    See Also:
-      XformCPlaneToWorld
     """
     point = rhutil.coerce3dpoint(point, True)
     plane = rhutil.coerceplane(plane, True)
@@ -555,14 +362,6 @@ def XformWorldToScreen(point, view=None, screen_coordinates=False):
     Returns:
       2D point on success
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      point = (0.0, 0.0, 0.0)
-      view = rs.CurrentView()
-      point2d = rs.XformWorldToScreen(point, view)
-      print point2d
-    See Also:
-      XformScreenToWorld
     """
     point = rhutil.coerce3dpoint(point, True)
     view = rhview.__viewhelper(view)
@@ -583,14 +382,5 @@ def XformZero():
       None
     Returns:
       a zero transformation matrix
-    Example:
-      import rhinoscriptsyntax as rs
-      def printmatrix(xform):
-          for i in range(4):
-              print "[", xform[i,0], ", ", xform[i,1], ", ", xform[i,2], ", ", xform[i,3], "]"
-      printmatrix( rs.XformZero() )
-    See Also:
-      XformDiagonal
-      XformIdentity
     """
     return Rhino.Geometry.Transform()

@@ -8,16 +8,6 @@ def CloseToolbarCollection(name, prompt=False):
         if it has been modified prior to closing
     Returns:
       True or False indicating success or failure
-    Example:
-      import rhinoscriptsyntax as rs
-      names = rs.ToolbarCollectionNames()
-      if names:
-    See Also:
-      IsToolbarCollection
-      OpenToolbarCollection
-      ToolbarCollectionCount
-      ToolbarCollectionNames
-      ToolbarCollectionPath
     """
     tbfile = Rhino.RhinoApp.ToolbarFiles.FindByName(name, True)
     if tbfile: return tbfile.Close(prompt)
@@ -31,17 +21,6 @@ def HideToolbar(name, toolbar_group):
       toolbar_group = name of a toolbar group to hide
     Returns:
       True or False indicating success or failure
-    Example:
-      import rhinoscriptsyntax as rs
-      file = "C:\\SteveBaer\\AppData\\Roaming\\McNeel\\Rhinoceros\\5.0\\UI\\default.rui"
-      name = rs.IsToolbarCollection(file)
-      if names: rs.HideToolbar(name, "Layer")
-    See Also:
-      IsToolbar
-      IsToolbarVisible
-      ShowToolbar
-      ToolbarCount
-      ToolbarNames
     """
     tbfile = Rhino.RhinoApp.ToolbarFiles.FindByName(name, True)
     if tbfile:
@@ -60,21 +39,6 @@ def IsToolbar(name, toolbar, group=False):
       group[opt] = if toolbar parameter is refering to a toolbar group
     Returns:
       True or False indicating success or failure
-    Example:
-      import rhinoscriptsyntax as rs
-      file = "C:\\SteveBaer\\AppData\\Roaming\\McNeel\\Rhinoceros\\5.0\\UI\\default.rui"
-      name = rs.IsToolbarCollection(file)
-      if name:
-          if rs.IsToolbar(name, "Layer"):
-              print "The collection contains the Layer toolbar."
-          else:
-              print "The collection does not contain the Layer toolbar."
-    See Also:
-      HideToolbar
-      IsToolbarVisible
-      ShowToolbar
-      ToolbarCount
-      ToolbarNames
     """
     tbfile = Rhino.RhinoApp.ToolbarFiles.FindByName(name, True)
     if tbfile:
@@ -90,16 +54,6 @@ def IsToolbarCollection(file):
     Returns:
       Rhino-assigned name of the toolbar collection if successful
       None if not successful
-    Example:
-      import rhinoscriptsyntax as rs
-      file = "C:\\SteveBaer\\AppData\\Roaming\\McNeel\\Rhinoceros\\5.0\\UI\\default.rui"
-      name = rs.IsToolbarCollection(file)
-    See Also:
-      CloseToolbarCollection
-      OpenToolbarCollection
-      ToolbarCollectionCount
-      ToolbarCollectionNames
-      ToolbarCollectionPath
     """
     tbfile = Rhino.RhinoApp.ToolbarFiles.FindByPath(file)
     if tbfile: return tbfile.Name
@@ -113,18 +67,6 @@ def IsToolbarDocked(name, toolbar_group):
     Returns:
       True or False indicating success or failure
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      rc = rs.IsToolbarDocked("Default", "Main1")
-      if rc==True:
-          print "The Main1 toolbar is docked."
-      elif rc==False:
-          print "The Main1 toolbar is not docked."
-      else:
-          print "The Main1 toolbar is not visible."
-    See Also:
-      IsToolbar
-      IsToolbarVisible
     """
     tbfile = Rhino.RhinoApp.ToolbarFiles.FindByName(name, True)
     if tbfile:
@@ -140,17 +82,6 @@ def IsToolbarVisible(name, toolbar_group):
     Returns:
       True or False indicating success or failure
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      file = "C:\\SteveBaer\\AppData\\Roaming\\McNeel\\Rhinoceros\\5.0\\UI\\default.rui"
-      name = rs.IsToolbarCollection(file)
-      if name:
-    See Also:
-      HideToolbar
-      IsToolbar
-      ShowToolbar
-      ToolbarCount
-      ToolbarNames
     """
     tbfile = Rhino.RhinoApp.ToolbarFiles.FindByName(name, True)
     if tbfile:
@@ -165,16 +96,6 @@ def OpenToolbarCollection(file):
     Returns:
       Rhino-assigned name of the toolbar collection if successful
       None if not successful
-    Example:
-      import rhinoscriptsyntax as rs
-      file = "C:\\SteveBaer\\AppData\\Roaming\\McNeel\\Rhinoceros\\5.0\\UI\\default.rui"
-      name = Rhino.IsToolbarCollection(file)
-    See Also:
-      CloseToolbarCollection
-      IsToolbarCollection
-      ToolbarCollectionCount
-      ToolbarCollectionNames
-      ToolbarCollectionPath
     """
     tbfile = Rhino.RhinoApp.ToolbarFiles.Open(file)
     if tbfile: return tbfile.Name
@@ -186,12 +107,6 @@ def SaveToolbarCollection(name):
       name = name of a currently open toolbar file
     Returns:
       True or False indicating success or failure
-    Example:
-      import rhinoscriptsyntax as rs
-      name = "Default"
-      rs.SaveToolbarCollection(name)
-    See Also:
-      SaveToolbarCollectionAs
     """
     tbfile = Rhino.RhinoApp.ToolbarFiles.FindByName(name, True)
     if tbfile: return tbfile.Save()
@@ -205,13 +120,6 @@ def SaveToolbarCollectionAs(name, file):
       file = full path to file name to save to
     Returns:
       True or False indicating success or failure
-    Example:
-      import rhinoscriptsyntax as rs
-      name = "Default"
-      file = "D:\\NewDefault.rui"
-      rs.SaveToolbarCollectionAs(name,file)
-    See Also:
-      SaveToolbarCollection
     """
     tbfile = Rhino.RhinoApp.ToolbarFiles.FindByName(name, True)
     if tbfile: return tbfile.SaveAs(file)
@@ -225,17 +133,6 @@ def ShowToolbar(name, toolbar_group):
       toolbar_group = name of a toolbar group to show
     Returns:
       True or False indicating success or failure
-    Example:
-      import rhinoscriptsyntax as rs
-      file = "C:\\SteveBaer\\AppData\\Roaming\\McNeel\\Rhinoceros\\5.0\\UI\\default.rui"
-      name = rs.IsToolbarCollection(file)
-      if name: rs.ShowToolbar(name, "Layer")
-    See Also:
-      HideToolbar
-      IsToolbar
-      IsToolbarVisible
-      ToolbarCount
-      ToolbarNames
     """
     tbfile = Rhino.RhinoApp.ToolbarFiles.FindByName(name, True)
     if tbfile:
@@ -252,16 +149,6 @@ def ToolbarCollectionCount():
       None
     Returns:
       the number of currently open toolbar collections
-    Example:
-      import rhinoscriptsyntax as rs
-      count = rs.ToolbarCollectionCount()
-      print "There are", count, " toolbar(s) collections loaded."
-    See Also:
-      CloseToolbarCollection
-      IsToolbarCollection
-      OpenToolbarCollection
-      ToolbarCollectionNames
-      ToolbarCollectionPath
     """
     return Rhino.RhinoApp.ToolbarFiles.Count
 
@@ -272,16 +159,6 @@ def ToolbarCollectionNames():
       None
     Returns:
       the names of all currently open toolbar collections
-    Example:
-      import rhinoscriptsyntax as rs
-      names = rs.ToolbarCollectionNames()
-      if names:
-    See Also:
-      CloseToolbarCollection
-      IsToolbarCollection
-      OpenToolbarCollection
-      ToolbarCollectionCount
-      ToolbarCollectionPath
     """
     return [tbfile.Name for tbfile in Rhino.RhinoApp.ToolbarFiles]
 
@@ -292,16 +169,6 @@ def ToolbarCollectionPath(name):
       name = name of currently open toolbar collection
     Returns:
       full path on success, None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      names = rs.ToolbarCollectionNames()
-      if names:
-    See Also:
-      CloseToolbarCollection
-      IsToolbarCollection
-      OpenToolbarCollection
-      ToolbarCollectionCount
-      ToolbarCollectionNames
     """
     tbfile = Rhino.RhinoApp.ToolbarFiles.FindByName(name, True)
     if tbfile: return tbfile.Path
@@ -314,18 +181,6 @@ def ToolbarCount(name, groups=False):
       groups[opt] = If true, return the number of toolbar groups in the file
     Returns:
       number of toolbars on success, None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      names = rs.ToolbarCollectionNames()
-      if names:
-          count = rs.ToolbarCount(names[0])
-          print "The", names[0], " collection contains", count, " toolbars."
-    See Also:
-      HideToolbar
-      IsToolbar
-      IsToolbarVisible
-      ShowToolbar
-      ToolbarNames
     """
     tbfile = Rhino.RhinoApp.ToolbarFiles.FindByName(name, True)
     if tbfile:
@@ -341,19 +196,6 @@ def ToolbarNames(name, groups=False):
       groups[opt] = If true, return the names of toolbar groups in the file
     Returns:
       names of all toolbars (or toolbar groups) on success, None on error
-    Example:
-      import rhinoscriptsytax as rs
-      names = rs.ToolbarCollectionNames()
-      if names:
-          toolbars = rs.ToolbarNames(names[0])
-          if toolbars:
-              for toolbar in toolbars: print toolbar
-    See Also:
-      HideToolbar
-      IsToolbar
-      IsToolbarVisible
-      ShowToolbar
-      ToolbarCount
     """
     tbfile = Rhino.RhinoApp.ToolbarFiles.FindByName(name, True)
     if tbfile:

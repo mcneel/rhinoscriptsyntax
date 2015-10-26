@@ -13,11 +13,6 @@ def ContextIsRhino():
       None
     Returns:
       True if the script is being executed in the context of Rhino
-    Example:
-      import rhinoscriptsyntax as  rs
-      print rs.ContextIsRhino()
-    See Also:
-      ContextIsGrasshopper
     """
     return scriptcontext.id == 1
 
@@ -28,11 +23,6 @@ def ContextIsGrasshopper():
       None
     Returns:
       True if the script is being executed in a grasshopper component
-    Example:
-      import rhinoscriptsyntax as  rs
-      print rs.ContextIsGrasshopper()
-    See Also:
-      ContextIsRhino
     """
     return scriptcontext.id == 2
 
@@ -53,17 +43,6 @@ def Angle(point1, point2, plane=True):
         element 3 = delta in the Y direction
         element 4 = delta in the Z direction
       None if not successful
-    Example:
-      import rhinoscriptsyntax as  rs
-      point1 = rs.GetPoint("First  point")
-      if point1:
-          point2  = rs.GetPoint("Second point")
-          if point2:
-              angle  = rs.Angle(point1, point2)
-              if  angle: print "Angle: ", angle[0]
-    See Also:
-      Angle2
-      Distance
     """
     pt1 = coerce3dpoint(point1)
     if pt1 is None:
@@ -107,17 +86,6 @@ def Angle2(line1, line2):
         0 The angle in degrees.
         1 The reflex angle in degrees.
         None If not successful, or on error.
-    Example:
-      import rhinoscriptsyntax as rs
-      point1 = rs.GetPoint("Start of first line")
-      point2 = rs.GetPoint("End of first line", point1)
-      point3 = rs.GetPoint("Start of second line")
-      point4 = rs.GetPoint("End of second line", point3)
-      angle = rs.Angle2( (point1, point2), (point3, point4))
-      if angle: print "Angle: ", angle
-    See Also:
-      Angle
-      Distance
     """
     line1 = coerceline(line1, True)
     line2 = coerceline(line2, True)
@@ -141,12 +109,6 @@ def ClipboardText(text=None):
       if text is not specified, the current text in the clipboard
       if text is specified, the previous text in the clipboard
       None if not successful
-    Example:
-      import rhinoscriptsyntax as rs
-      txt = rs.ClipboardText("Hello Rhino!")
-      if txt: rs.MessageBox(txt, 0, "Clipboard Text")
-    See Also:
-      
     """
     rc = None
     if System.Windows.Forms.Clipboard.ContainsText():
@@ -168,15 +130,6 @@ def ColorAdjustLuma(rgb, luma, scale=False):
           current luminance. If False, luma specified the absolute luminance.
     Returns:
       modified rgb value if successful
-    Example:
-      import rhinoscriptsyntax as rs
-      rgb = rs.ColorAdjustLuma((128, 128, 128), 50)
-      print "Red = ", rs.ColorRedValue(rgb)
-      print "Green = ", rs.ColorGreenValue(rgb)
-      print "Blue = ", rs.ColorBlueValue(rgb)
-    See Also:
-      ColorHLSToRGB
-      ColorRGBToHLS
     """
     rgb = coercecolor(rgb, True)
     hsl = Rhino.Display.ColorHSL(rgb)
@@ -192,15 +145,6 @@ def ColorBlueValue(rgb):
       rgb = the RGB color value
     Returns:
       The blue component if successful, otherwise None
-    Example:
-      import rhinoscriptsyntax as rs
-      rgb = rs.LayerColor("Default")
-      print "Red = ", rs.ColorRedValue(rgb)
-      print "Green = ", rs.ColorGreenValue(rgb)
-      print "Blue = ", rs.ColorBlueValue(rgb)
-    See Also:
-      ColorGreenValue
-      ColorRedValue
     """
     return coercecolor(rgb, True).B
 
@@ -211,15 +155,6 @@ def ColorGreenValue(rgb):
       rgb = the RGB color value
     Returns:
       The green component if successful, otherwise None
-    Example:
-      import rhinoscriptsyntax as rs
-      rgb = rs.LayerColor("Default")
-      print "Red = ", rs.ColorRedValue(rgb)
-      print "Green = ", rs.ColorGreenValue(rgb)
-      print "Blue = ", rs.ColorBlueValue(rgb)
-    See Also:
-      ColorBlueValue
-      ColorRedValue
     """
     return coercecolor(rgb, True).G
 
@@ -230,15 +165,6 @@ def ColorHLSToRGB(hls):
       hls = the HLS color value
     Returns:
       The RGB color value if successful, otherwise False
-    Example:
-      import rhinoscriptsyntax as rs
-      rgb = rs.ColorHLSToRGB( (160, 120, 0) )
-      print "Red = ", rs.ColorRedValue(rgb)
-      print "Green = ", rs.ColorGreenValue(rgb)
-      print "Blue = ", rs.ColorBlueValue(rgb)
-    See Also:
-      ColorAdjustLuma
-      ColorRGBToHLS
     """
     if len(hls)==3:
         hls = Rhino.Display.ColorHSL(hls[0]/240.0, hls[2]/240.0, hls[1]/240.0)
@@ -253,15 +179,6 @@ def ColorRedValue(rgb):
       hls = the HLS color value
     Returns:
       The red color value if successful, otherwise False
-    Example:
-      import rhinoscriptsyntax as rs
-      rgb = rs.LayerColor("Default")
-      print "Red = ", rs.ColorRedValue(rgb)
-      print "Green = ", rs.ColorGreenValue(rgb)
-      print "Blue = ", rs.ColorBlueValue(rgb)
-    See Also:
-      ColorBlueValue
-      ColorGreenValue
     """
     return coercecolor(rgb, True).R
 
@@ -272,15 +189,6 @@ def ColorRGBToHLS(rgb):
       rgb = the RGB color value
     Returns:
       The HLS color value if successful, otherwise False  
-    Example:
-      import rhinoscriptsyntax as rs
-      hls = rs.ColorRGBToHLS((128, 128, 128))
-      print "Hue = ", hls[0]
-      print "Luminance = ", hls[1]
-      print "Saturation = ", hls[2]
-    See Also:
-      ColorAdjustLuma
-      ColorHLSToRGB
     """
     rgb = coercecolor(rgb, True)
     hsl = Rhino.Display.ColorHSL(rgb)
@@ -294,13 +202,6 @@ def CullDuplicateNumbers(numbers, tolerance=None):
       tolerance [opt] = The minimum distance between numbers.  Numbers that fall within this tolerance will be discarded.  If omitted, Rhino's internal zero tolerance is used.
     Returns:
       a list of numbers with duplicates removed if successful.
-    Example:
-      import rhinoscriptsyntax as rs
-      arr = [1,1,2,2,3,3,4,4,5,5]
-      arr = rs.CullDuplicateNumbers(arr)
-      for n in arr: print n
-    See Also:
-      CullDuplicatePoints
     """
     count = len(numbers)
     if count < 2: return numbers
@@ -328,14 +229,6 @@ def CullDuplicatePoints(points, tolerance=-1):
     Returns:
       list of 3D points with duplicates removed if successful.
       None if not successful
-    Example:
-      import rhinoscriptsyntax as rs
-      points = rs.GetPoints(,,"First point", "Next point")
-      if points:
-          points= rs.CullDuplicatePoints(points)
-          for p in points: print p
-    See Also:
-      CullDuplicateNumbers
     """
     points = coerce3dpointlist(points, True)
     if tolerance is None or tolerance < 0:
@@ -353,16 +246,6 @@ def Distance(point1, point2):
       If point2 is a 3D point then the distance if successful.
       If point2 is a list of points, then an list of distances if successful.
       None if not successful
-    Example:
-      import rhinoscriptsyntax as rs
-      point1 = rs.GetPoint("First point")
-      if point1:
-          point2 = rs.GetPoint("Second point")
-          if point2:
-              print "Distance: ", rs.Distance(point1, point2)
-    See Also:
-      Angle
-      Angle2
     """
     from_pt = coerce3dpoint(point1, True)
     to_pt = coerce3dpoint(point2)
@@ -384,21 +267,6 @@ def GetSettings(filename, section=None, entry=None):
       If entry is not specified, a list containing all entry names for a given section
       If section and entry are specied, a value for entry
       None if not successful
-    Example:
-      import rhinoscriptsyntax as rs
-      filename = rs.OpenFileName("Open", "Initialization Files (*.ini)|*.ini||")
-      if filename:
-          sections = rs.GetSettings(filename)
-          if sections:
-              section = rs.ListBox(sections, "Select a section", filename)
-              if section:
-                  entries = rs.GetSettings(filename, section)
-                  if entries:
-                      entry = rs.ListBox(entries, "Select an entry", section)
-                      if entry
-                          value = rs.GetSettings(filename, section, entry)
-    See Also:
-      
     """
     import ConfigParser
     try:
@@ -423,17 +291,6 @@ def Polar(point, angle_degrees, distance, plane=None):
     Returns:
       resulting point is successful
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      point = (1.0, 1.0, 0.0)
-      result = rs.Polar(point, 45.0, 1.414214)
-      print result
-    See Also:
-      PointAdd
-      PointCompare
-      PointDivide
-      PointScale
-      PointSubtract
     """
     point = coerce3dpoint(point, True)
     angle = math.radians(angle_degrees)
@@ -454,14 +311,6 @@ def SimplifyArray(points):
       points = 
     Returns:
       A one-dimensional list containing real numbers, if successful, otherwise None
-    Example:
-      import rhinoscriptsyntax as rs
-      points = rs.GetPoints()
-      if points:
-          numbers = rs.SimplifyArray(points)
-          for n in numbers: print n
-    See Also:
-      
     """
     rc = []
     for point in points:
@@ -478,19 +327,6 @@ def Sleep(milliseconds):
       milliseconds = thousands of a second
     Returns:
       None
-    Example:
-      import rhinoscriptsyntax as rs
-      print "This"
-      rs.Sleep(2000)
-      print "is"
-      rs.Sleep(2000)
-      print "a"
-      rs.Sleep(2000)
-      print "slow"
-      rs.Sleep(2000)
-      print "message!"
-    See Also:
-      
     """
     time.sleep( milliseconds / 1000.0 )
     Rhino.RhinoApp.Wait() #keep the message pump alive
@@ -505,14 +341,6 @@ def SortPointList(points, tolerance=None):
     Returns:
       a list of sorted 3D points if successful
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      points = rs.GetPointCoordinates()
-      if points:
-          sorted = rs.SortPointList(points)
-          rs.AddPolyline(sorted)
-    See Also:
-      SortPoints
     """
     points = coerce3dpointlist(points, True)
     if tolerance is None: tolerance = Rhino.RhinoMath.ZeroTolerance
@@ -537,14 +365,6 @@ def SortPoints(points, ascending=True, order=0):
       order [opt] = the component sort order
     Returns:
       A list of sorted 3-D points if successful, otherwise None
-    Example:
-      import rhinoscriptsyntax as rs
-      points = rs.GetPoints()
-      if points:
-          points = rs.SortPoints(points)
-          for p in points: print p
-    See Also:
-      
     """
     def __cmpXYZ( a, b ):
         rc = cmp(a.X, b.X)
@@ -586,12 +406,6 @@ def Str2Pt(point):
       point =  A string that contains a delimited point like "1,2,3".
     Returns:
       error on invalid format
-    Example:
-      import rhinoscriptsyntax as rs
-      point = rs.Str2Pt("1,2,3")
-      if point: rs.AddPoint( point )
-    See Also:
-      
     """
     return coerce3dpoint(point, True)
 
@@ -631,8 +445,6 @@ def coerce3dpoint(point, raise_on_error=False):
       raise_on_error [opt] = True or False
     Returns:
       a Rhino.Geometry.Point3d
-    Example:
-    See Also:
     """
     if type(point) is Rhino.Geometry.Point3d: return point
     if hasattr(point, "__len__") and len(point)==3 and hasattr(point, "__getitem__"):
@@ -660,8 +472,6 @@ def coerce2dpoint(point, raise_on_error=False):
       raise_on_error [opt] = True or False
     Returns:
       a Rhino.Geometry.Point2d
-    Example:
-    See Also:
     """
     if type(point) is Rhino.Geometry.Point2d: return point
     if type(point) is list or type(point) is tuple:
@@ -683,8 +493,6 @@ def coerce3dvector(vector, raise_on_error=False):
       raise_on_error [opt] = True or False
     Returns:
       a Rhino.Geometry.Vector3d
-    Example:
-    See Also:
     """
     if type(vector) is Rhino.Geometry.Vector3d: return vector
     point = coerce3dpoint(vector, False)
@@ -745,8 +553,6 @@ def coerceplane(plane, raise_on_bad_input=False):
       plane = Plane, list, tuple
     Returns:
       a Rhino.Geometry.Plane
-    Example:
-    See Also:
     """
     if type(plane) is Rhino.Geometry.Plane: return plane
     if type(plane) is list or type(plane) is tuple:
@@ -775,8 +581,6 @@ def coercexform(xform, raise_on_bad_input=False):
     Parameters:
       xform = the xform
       raise_on_bad_input [opt] = True or False
-    Example:
-    See Also:
     """
     t = type(xform)
     if t is Rhino.Geometry.Transform: return xform
@@ -847,8 +651,6 @@ def coercegeometry(id, raise_if_missing=False):
     Parameters:
       id = geometry identifier
       raise_if_missing [opt] = True or False
-    Example:
-    See Also:
     """
     if isinstance(id, Rhino.Geometry.GeometryBase): return id
     if type(id) is Rhino.DocObjects.ObjRef: return id.Geometry()
@@ -867,8 +669,6 @@ def coercebrep(id, raise_if_missing=False):
       raise_if_missing [opt] = True or False
     Returns:
       a Rhino.Geometry.Brep
-    Example:
-    See Also:
     """
     geom = coercegeometry(id, False)
     if isinstance(geom, Rhino.Geometry.Brep): return geom
@@ -882,8 +682,6 @@ def coercecurve(id, segment_index=-1, raise_if_missing=False):
       id = id to be coerced into a curve
       segment_index [opt] = index of segment to retrieve
       raise_if_missing [opt] = True or False
-    Example:
-    See Also:
     """
     if isinstance(id, Rhino.Geometry.Curve): return id
     if type(id) is Rhino.DocObjects.ObjRef: return id.Curve()
@@ -904,8 +702,6 @@ def coercesurface(object_id, raise_if_missing=False):
       raise_if_missing [opt] = True or False
     Returns:
       a Rhino.Geometry.Surface
-    Example:
-    See Also:
     """
     if isinstance(object_id, Rhino.Geometry.Surface): return object_id
     if type(object_id) is Rhino.DocObjects.ObjRef: return object_id.Face()
@@ -927,8 +723,6 @@ def coercemesh(object_id, raise_if_missing=False):
       raise_if_missing [opt] = True or False
     Returns:
       a Rhino.Geometry.Mesh
-    Example:
-    See Also:
     """
     if type(object_id) is Rhino.DocObjects.ObjRef: return object_id.Mesh()
     if isinstance(object_id, Rhino.Geometry.Mesh): return object_id
@@ -949,8 +743,6 @@ def coercerhinoobject(object_id, raise_if_bad_input=False, raise_if_missing=Fals
         raise_if_missing [opt] = True or False
     Returns:
       a RhinoObject
-    Example:
-    See Also:
     """
     if isinstance(object_id, Rhino.DocObjects.RhinoObject): return object_id
     object_id = coerceguid(object_id, raise_if_bad_input)

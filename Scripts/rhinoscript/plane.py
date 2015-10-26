@@ -10,18 +10,6 @@ def DistanceToPlane(plane, point):
       point = List of 3 numbers or Point3d
     Returns:
       The distance if successful, otherwise None
-    Example:
-      import rhinoscriptsyntax as rs
-      point = rs.GetPoint("Point to test")
-      if point:
-          plane = rs.ViewCPlane()
-          if plane:
-              distance = rs.DistanceToPlane(plane, point)
-              if distance is not None:
-                  print "Distance to plane: ", distance
-    See Also:
-      Distance
-      PlaneClosestPoint
     """
     plane = rhutil.coerceplane(plane, True)
     point = rhutil.coerce3dpoint(point, True)
@@ -35,14 +23,6 @@ def EvaluatePlane(plane, parameter):
       parameter = list of two numbers defining the U,V parameter to evaluate
     Returns:
       Point3d on success
-    Example:
-      import rhinoscriptsyntax as rs
-      view = rs.CurrentView()
-      plane = rs.ViewCPlane(view)
-      point = rs.EvaluatePlane(plane, (5,5))
-      rs.AddPoint( point )
-    See Also:
-      PlaneClosestPoint
     """
     plane = rhutil.coerceplane(plane, True)
     return plane.PointAt(parameter[0], parameter[1])
@@ -57,17 +37,6 @@ def IntersectPlanes(plane1, plane2, plane3):
     Returns:
       Point3d on success
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      plane1 = rs.WorldXYPlane()
-      plane2 = rs.WorldYZPlane()
-      plane3 = rs.WorldZXPlane()
-      point = rs.IntersectPlanes(plane1, plane2, plane3)
-      if point: rs.AddPoint(point)
-    See Also:
-      LineLineIntersection
-      LinePlaneIntersection
-      PlanePlaneIntersection
     """
     plane1 = rhutil.coerceplane(plane1, True)
     plane2 = rhutil.coerceplane(plane2, True)
@@ -83,17 +52,6 @@ def MovePlane(plane, origin):
       origin = Point3d or list of three numbers
     Returns:
       moved plane
-    Example:
-      import rhinoscriptsyntax as rs
-      origin = rs.GetPoint("CPlane origin")
-      if origin:
-          plane = rs.ViewCPlane()
-          plane = rs.MovePlane(plane,origin)
-          rs.ViewCplane(plane)
-    See Also:
-      PlaneFromFrame
-      PlaneFromNormal
-      RotatePlane
     """
     plane = rhutil.coerceplane(plane, True)
     origin = rhutil.coerce3dpoint(origin, True)
@@ -116,16 +74,6 @@ def PlaneClosestPoint(plane, point, return_point=True):
       If return_point is False, then an array containing the U,V parameters
       of the point
       None if not successful, or on error.
-    Example:
-      import rhinoscriptsyntax as rs
-      point = rs.GetPoint("Point to test")
-      if point:
-          plane = rs.ViewCPlane()
-          if plane:
-              print rs.PlaneClosestPoint(plane, point)
-    See Also:
-      DistanceToPlane
-      EvaluatePlane
     """
     plane = rhutil.coerceplane(plane, True)
     point = rhutil.coerce3dpoint(point, True)
@@ -181,20 +129,6 @@ def PlaneCurveIntersection(plane, curve, tolerance=None):
                             If the event type is Overlap (2), then the V plane parameter for curve at (n, 6).
 
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-       
-      curve = rs.GetObject("Select curve", rs.filter.curve)
-      if curve:
-          plane = rs.WorldXYPlane()
-          intersections = rs.PlaneCurveIntersection(plane, curve)
-          if intersections:
-              for intersection in intersections:
-                  rs.AddPoint(intersection[1])
-    See Also:
-      IntersectPlanes
-      PlanePlaneIntersection
-      PlaneSphereIntersection
     """
     plane = rhutil.coerceplane(plane, True)
     curve = rhutil.coercecurve(curve, -1, True)
@@ -226,18 +160,6 @@ def PlaneEquation(plane):
       plane = the plane
     Returns:
       A tuple containing four numbers that represent the coefficients of the equation if successful, otherwise None
-    Example:
-      import rhinoscriptsyntax as rs
-      plane = rs.ViewCPlane()
-      equation = rs.PlaneEquation(plane)
-      print "A =", equation[0]
-      print "B =", equation[1]
-      print "C =", equation[2]
-      print "D =", equation[3]
-    See Also:
-      PlaneFromFrame
-      PlaneFromNormal
-      PlaneFromPoints
     """
     plane = rhutil.coerceplane(plane, True)
     rc = plane.GetPlaneEquation()
@@ -251,19 +173,6 @@ def PlaneFitFromPoints(points):
     Returns: 
       The plane if successful
       None if not successful
-    Example:
-      import rhinoscriptsyntax as rs
-      points = rs.GetPoints()
-      if points:
-          plane = rs.PlaneFitFromPoints(points)
-          if plane:
-              magX = plane.XAxis.Length
-              magY = plane.YAxis.Length
-              rs.AddPlaneSurface( plane, magX, magY )
-    See Also:
-      PlaneFromFrame
-      PlaneFromNormal
-      PlaneFromPoints
     """
     points = rhutil.coerce3dpointlist(points, True)
     rc, plane = Rhino.Geometry.Plane.FitPlaneToPoints(points)
@@ -281,19 +190,6 @@ def PlaneFromFrame(origin, x_axis, y_axis):
                have to be perpendicular to x_axis.
     Returns:
       The plane if successful. 
-    Example:
-      import rhinoscriptsyntax as rs
-      origin = rs.GetPoint("CPlane origin")
-      if origin:
-          xaxis = (1,0,0)
-          yaxis = (0,0,1)
-          plane = rs.PlaneFromFrame( origin, xaxis, yaxis )
-          rs.ViewCPlane(None, plane)
-    See Also:
-      MovePlane
-      PlaneFromNormal
-      PlaneFromPoints
-      RotatePlane
     """
     origin = rhutil.coerce3dpoint(origin, True)
     x_axis = rhutil.coerce3dvector(x_axis, True)
@@ -309,20 +205,6 @@ def PlaneFromNormal(origin, normal, xaxis=None):
       xaxis[opt] = optional vector defining the plane's x-axis
     Returns:
       The plane if successful.
-    Example:
-      import rhinoscriptsyntax as rs
-      origin = rs.GetPoint("CPlane origin")
-      if origin:
-          direction = rs.GetPoint("CPlane direction")
-          if direction:
-              normal = direction - origin
-              normal = rs.VectorUnitize(normal)
-              rs.ViewCPlane( None, rs.PlaneFromNormal(origin, normal) )
-    See Also:
-      MovePlane
-      PlaneFromFrame
-      PlaneFromPoints
-      RotatePlane
     """
     origin = rhutil.coerce3dpoint(origin, True)
     normal = rhutil.coerce3dvector(normal, True)
@@ -343,14 +225,6 @@ def PlaneFromPoints(origin, x, y):
       x, y = points on the plane's x and y axes
     Returns:
       The plane if successful, otherwise None
-    Example:
-      import rhinoscriptsyntax as rs
-      corners = rs.GetRectangle()
-      if corners:
-          rs.ViewCPlane( rs.PlaneFromPoints(corners[0], corners[1], corners[3]))
-    See Also:
-      PlaneFromFrame
-      PlaneFromNormal
     """
     origin = rhutil.coerce3dpoint(origin, True)
     x = rhutil.coerce3dpoint(x, True)
@@ -367,16 +241,6 @@ def PlanePlaneIntersection(plane1, plane2):
     Returns:
       two 3d points identifying the starting/ending points of the intersection
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      plane1 = rs.WorldXYPlane()
-      plane2 = rs.WorldYZPlane()
-      line = rs.PlanePlaneIntersection(plane1, plane2)
-      if line: rs.AddLine(line[0], line[1])
-    See Also:
-      IntersectPlanes
-      LineLineIntersection
-      LinePlaneIntersection
     """
     plane1 = rhutil.coerceplane(plane1, True)
     plane2 = rhutil.coerceplane(plane2, True)
@@ -394,20 +258,6 @@ def PlaneSphereIntersection(plane, sphere_plane, sphere_radius):
     Returns:
       list of intersection results - see help
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      plane = rs.WorldXYPlane()
-      radius = 10
-      results = rs.PlaneSphereIntersection(plane, plane, radius)
-      if results:
-          if results[0]==0:
-              rs.AddPoint(results[1])
-          else:
-              rs.AddCircle(results[1], results[2])
-    See Also:
-      IntersectPlanes
-      LinePlaneIntersection
-      PlanePlaneIntersection
     """
     plane = rhutil.coerceplane(plane, True)
     sphere_plane = rhutil.coerceplane(sphere_plane, True)
@@ -426,16 +276,6 @@ def PlaneTransform(plane, xform):
       xform = Transformation to apply
     Returns:
       the resulting plane if successful, otherwise None
-    Example:
-      import rhinoscriptsyntax as rs
-      plane = rs.ViewCPlane()
-      xform = rs.XformRotation(45.0, plane.Zaxis, plane.Origin)
-      plane = rs.PlaneTransform(plane, xform)
-      rs.ViewCPlane(None, plane)
-    See Also:
-      PlaneFromFrame
-      PlaneFromNormal
-      PlaneFromPoints
     """
     plane = rhutil.coerceplane(plane, True)
     xform = rhutil.coercexform(xform, True)
@@ -451,15 +291,6 @@ def RotatePlane(plane, angle_degrees, axis):
       axis = Vector3d or list of three numbers
     Returns:
       rotated plane on success
-    Example:
-      import rhinoscriptsyntax as rs
-      plane = rs.ViewCPlane()
-      rotated = rs.RotatePlane(plane, 45.0, plane.XAxis)
-      rs.ViewCPlane( None, rotated )
-    See Also:
-      MovePlane
-      PlaneFromFrame
-      PlaneFromNormal
     """
     plane = rhutil.coerceplane(plane, True)
     axis = rhutil.coerce3dvector(axis, True)
@@ -474,13 +305,6 @@ def WorldXYPlane():
       None
     Returns:
       Rhino's world XY plane
-    Example:
-      import rhinoscriptsyntax as rs
-      view = rs.CurrentView()
-      rs.ViewCPlane( view, rs.WorldXYPlane() )
-    See Also:
-      WorldYZPlane
-      WorldZXPlane
     """
     return Rhino.Geometry.Plane.WorldXY
 
@@ -491,13 +315,6 @@ def WorldYZPlane():
       None
     Returns:
       Rhino's world YZ plane
-    Example:
-      import rhinoscriptsyntax as rs
-      view = rs.CurrentView()
-      rs.ViewCPlane( view, rs.WorldYZPlane() )
-    See Also:
-      WorldXYPlane
-      WorldZXPlane
     """
     return Rhino.Geometry.Plane.WorldYZ
 
@@ -508,12 +325,5 @@ def WorldZXPlane():
       None
     Returns:
       Rhino's world ZX plane
-    Example:
-      import rhinoscriptsyntax as rs
-      view = rs.CurrentView()
-      rs.ViewCPlane( view, rs.WorldZXPlane() )
-    See Also:
-      WorldXYPlane
-      WorldYZPlane
     """
     return Rhino.Geometry.Plane.WorldZX

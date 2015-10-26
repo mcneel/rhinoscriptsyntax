@@ -29,18 +29,6 @@ def AddLayer(name=None, color=None, visible=True, locked=False, parent=None):
           layer will not have a parent layer.
     Returns:
       The full name of the new layer if successful.
-    Example:
-      import rhinoscriptsyntax as rs
-      from System.Drawing import Color
-      print "New layer:", rs.AddLayer()
-      print "New layer:", rs.AddLayer("MyLayer1")
-      print "New layer:", rs.AddLayer("MyLayer2", Color.DarkSeaGreen)
-      print "New layer:", rs.AddLayer("MyLayer3", Color.Cornsilk)
-      print "New layer:", rs.AddLayer("MyLayer4",parent="MyLayer3")
-    See Also:
-      CurrentLayer
-      DeleteLayer
-      RenameLayer
     """
     names = ['']
     if name:
@@ -84,14 +72,6 @@ def CurrentLayer(layer=None):
     Returns:
       If a layer name is not specified, the full name of the current layer
       If a layer name is specified, the full name of the previous current layer
-    Example:
-      import rhinoscriptsyntax as rs
-      rs.AddLayer("MyLayer")
-      rs.CurrentLayer("MyLayer")
-    See Also:
-      AddLayer
-      DeleteLayer
-      RenameLayer
     """
     rc = scriptcontext.doc.Layers.CurrentLayer.FullPath
     if layer:
@@ -110,15 +90,6 @@ def DeleteLayer(layer):
       layer = the name or id of an existing empty layer
     Returns:
       True or False indicating success or failure
-    Example:
-      import rhinoscriptsyntax as rs
-      layer = rs.GetString("Layer to remove")
-      if layer: rs.DeleteLayer(layer)
-    See Also:
-      AddLayer
-      CurrentLayer
-      PurgeLayer
-      RenameLayer
     """
     layer = __getlayer(layer, True)
     return scriptcontext.doc.Layers.Delete( layer.LayerIndex, True)
@@ -131,12 +102,6 @@ def ExpandLayer( layer, expand ):
       expand = True to expand, False to collapse
     Returns:
       True or False indicating success or failure
-    Example:
-      import rhinoscriptsyntax as rs
-      if rs.IsLayerExpanded("Default"):
-          rs.ExpandLayer( "Default", False )
-    See Also:
-      IsLayerExpanded
     """
     layer = __getlayer(layer, True)
     if layer.IsExpanded==expand: return True
@@ -150,21 +115,6 @@ def IsLayer(layer):
       layer = the name or id of a layer to search for
     Returns:
       True on success otherwise False
-    Example:
-      import rhinoscriptsyntax as rs
-      layer = rs.GetString("Layer name")
-      if rs.IsLayer(layer):
-          print "The layer exists."
-      else:
-          print "The layer does not exist."
-    See Also:
-      IsLayerChangeable
-      IsLayerEmpty
-      IsLayerLocked
-      IsLayerOn
-      IsLayerReference
-      IsLayerSelectable
-      IsLayerVisible
     """
     layer = __getlayer(layer, False)
     return layer is not None
@@ -176,22 +126,6 @@ def IsLayerChangeable(layer):
       layer = the name or id of an existing layer
     Returns:
       True on success otherwise False
-    Example:
-      import rhinoscriptsyntax as rs
-      layer = rs.GetString("Layer name")
-      if rs.IsLayer(layer):
-          if rs.IsLayerChangeable(layer): print "The layer is changeable."
-          else: print "The layer is not changeable."
-      else:
-          print "The layer does not exist."
-    See Also:
-      IsLayer
-      IsLayerEmpty
-      IsLayerLocked
-      IsLayerOn
-      IsLayerReference
-      IsLayerSelectable
-      IsLayerVisible
     """
     layer = __getlayer(layer, True)
     rc = layer.IsVisible and not layer.IsLocked
@@ -205,14 +139,6 @@ def IsLayerChildOf(layer, test):
       test = the name or id to the layer to test
     Returns:
       True on success otherwise False
-    Example:
-      import rhinoscriptsyntax as rs
-      rs.AddLayer("MyLayer1")
-      rs.AddLayer("MyLayer2", parent="MyLayer1")
-      rs.AddLayer("MyLayer3", parent="MyLayer2")
-      rs.MessageBox( rs.IsLayerChildOf("MyLayer1", "MyLayer3") )
-    See Also:
-      IsLayerParentOf
     """
     layer = __getlayer(layer, True)
     test = __getlayer(test, True)
@@ -225,22 +151,6 @@ def IsLayerCurrent(layer):
       layer the name or id of an existing layer
     Returns:
       True on success otherwise False
-    Example:
-      import rhinoscriptsyntax as rs
-      layer = rs.GetString("Layer name")
-      if rs.IsLayer(layer):
-          if rs.IsLayerCurrent(layer): print "The layer is current."
-          else: print "The layer is not current."
-      else:
-          print "The layer does not exist."
-    See Also:
-      IsLayer
-      IsLayerEmpty
-      IsLayerLocked
-      IsLayerOn
-      IsLayerReference
-      IsLayerSelectable
-      IsLayerVisible
     """
     layer = __getlayer(layer, True)
     return layer.LayerIndex == scriptcontext.doc.Layers.CurrentLayerIndex
@@ -252,21 +162,6 @@ def IsLayerEmpty(layer):
       layer the name or id of an existing layer
     Returns:
       True on success otherwise False
-    Example:
-      import rhinoscriptsyntax as rs
-      layer = rs.GetString("Layer name")
-      if rs.IsLayer(layer):
-          if rs.IsLayerEmpty(layer): print "The layer is empty."
-          else: print "The layer is not empty."
-      else:
-          print "The layer does not exist."
-    See Also:
-      IsLayerChangeable
-      IsLayerLocked
-      IsLayerOn
-      IsLayerReference
-      IsLayerSelectable
-      IsLayerVisible
     """
     layer = __getlayer(layer, True)
     rhobjs = scriptcontext.doc.Objects.FindByLayer(layer)
@@ -281,12 +176,6 @@ def IsLayerExpanded(layer):
       layer the name or id of an existing layer
     Returns:
       True on success otherwise False
-    Example:
-      import rhinoscriptsyntax as rs
-      if rs.IsLayerExpanded("Default"):
-          rs.ExpandLayer( "Default", False )
-    See Also:
-      ExpandLayer
     """
     layer = __getlayer(layer, True)
     return layer.IsExpanded   
@@ -298,22 +187,6 @@ def IsLayerLocked(layer):
       layer the name or id of an existing layer
     Returns:
       True on success otherwise False
-    Example:
-      import rhinoscriptsyntax as rs
-      layer = rs.GetString("Layer name")
-      if rs.IsLayer(layer):
-          if rs.IsLayerLocked(layer): print "The layer is locked."
-          else: print "The layer is not locked."
-      else:
-          print "The layer does not exist."
-    See Also:
-      IsLayer
-      IsLayerChangeable
-      IsLayerEmpty
-      IsLayerOn
-      IsLayerReference
-      IsLayerSelectable
-      IsLayerVisible
     """
     layer = __getlayer(layer, True)
     return layer.IsLocked
@@ -325,22 +198,6 @@ def IsLayerOn(layer):
       layer the name or id of an existing layer
     Returns:
       True on success otherwise False
-    Example:
-      import rhinoscriptsyntax as rs
-      layer = rs.GetString("Layer name")
-      if rs.IsLayer(layer):
-          if rs.IsLayerOn(layer): print "The layer is on."
-          else: print "The layer is not on."
-      else:
-          print "The layer does not exist."
-    See Also:
-      IsLayer
-      IsLayerChangeable
-      IsLayerEmpty
-      IsLayerLocked
-      IsLayerReference
-      IsLayerSelectable
-      IsLayerVisible
     """
     layer = __getlayer(layer, True)
     return layer.IsVisible
@@ -352,22 +209,6 @@ def IsLayerSelectable(layer):
       layer the name or id of an existing layer
     Returns:
       True on success otherwise False
-    Example:
-      import rhinoscriptsyntax as rs
-      layer = rs.GetString("Layer name")
-      if rs.IsLayer(layer):
-          if rs.IsLayerSelectable(layer): print "The layer is selectable."
-          else: print "The layer is not selectable."
-      else:
-          print "The layer does not exist."
-    See Also:
-      IsLayer
-      IsLayerChangeable
-      IsLayerEmpty
-      IsLayerLocked
-      IsLayerOn
-      IsLayerReference
-      IsLayerVisible
     """
     layer = __getlayer(layer, True)
     return layer.IsVisible and not layer.IsLocked
@@ -380,14 +221,6 @@ def IsLayerParentOf(layer, test):
       test = the name or id to the layer to test
     Returns:
       True on success otherwise False
-    Example:
-      import rhinoscriptsyntax as rs
-      rs.AddLayer("MyLayer1")
-      rs.AddLayer("MyLayer2", parent="MyLayer1")
-      rs.AddLayer("MyLayer3", parent="MyLayer2")
-      rs.MessageBox( rs.IsLayerParentOf("MyLayer3", "MyLayer1") )
-    See Also:
-      IsLayerChildOf
     """
     layer = __getlayer(layer, True)
     test = __getlayer(test, True)
@@ -400,22 +233,6 @@ def IsLayerReference(layer):
       layer the name or id of an existing layer
     Returns:
       True on success otherwise False
-    Example:
-      import rhinoscriptsyntax as rs
-      layer = rs.GetString("Layer name")
-      if rs.IsLayer(layer):
-          if rs.IsLayerReference(layer): print "The layer is a reference layer."
-          else: print "The layer is not a reference layer."
-      else:
-          print "The layer does not exist."
-    See Also:
-      IsLayer
-      IsLayerChangeable
-      IsLayerEmpty
-      IsLayerLocked
-      IsLayerOn
-      IsLayerSelectable
-      IsLayerVisible
     """
     layer = __getlayer(layer, True)
     return layer.IsReference
@@ -427,22 +244,6 @@ def IsLayerVisible(layer):
       layer the name or id of an existing layer
     Returns:
       True on success otherwise False
-    Example:
-      import rhinoscriptsyntax as rs
-      layer = rs.GetString("Layer name")
-      if rs.IsLayer(layer):
-          if rs.IsLayerVisible(layer): print "The layer is visible"
-          else: print "The layer is not visible"
-      else:
-          print "The layer does not exist."
-    See Also:
-      IsLayer
-      IsLayerChangeable
-      IsLayerEmpty
-      IsLayerLocked
-      IsLayerOn
-      IsLayerReference
-      IsLayerSelectable
     """
     layer = __getlayer(layer, True)
     return layer.IsVisible
@@ -454,12 +255,6 @@ def LayerChildCount(layer):
       layer the name or id of an existing layer
     Returns:
       the number of immediate child layers if successful
-    Example:
-      import rhinoscriptsyntax as rs
-      children = rs.LayerChildCount("Default")
-      if children: rs.ExpandLayer("Default", True)
-    See Also:
-      LayerChildren
     """
     layer = __getlayer(layer, True)
     children = layer.GetChildren()
@@ -473,14 +268,6 @@ def LayerChildren(layer):
       layer = the name or id of an existing layer
     Returns:
       List of children
-    Example:
-      import rhinoscriptsyntax as rs
-      children = rs.LayerChildren("Default")
-      if children:
-          for child in children: print child
-    See Also:
-      LayerChildCount
-      ParentLayer
     """
     layer = __getlayer(layer, True)
     children = layer.GetChildren()
@@ -496,22 +283,6 @@ def LayerColor(layer, color=None):
     Returns:
       If a color value is not specified, the current color value on success
       If a color value is specified, the previous color value on success
-    Example:
-      import rhinoscriptsyntax as rs
-      import random
-      from System.Drawing import Color
-       
-      def randomcolor():
-          red = int(255*random.random())
-          green = int(255*random.random())
-          blue = int(255*random.random())
-          return Color.FromArgb(red,green,blue)
-       
-      layerNames = rs.LayerNames()
-      if layerNames:
-          for name in layerNames: rs.LayerColor(name, randomcolor())
-    See Also:
-      
     """
     layer = __getlayer(layer, True)
     rc = layer.Color
@@ -529,12 +300,6 @@ def LayerCount():
       None
     Returns:
       the number of layers in the document
-    Example:
-      import rhinoscriptsyntax as rs
-      count = rs.LayerCount()
-      print "There are", count, "layers."
-    See Also:
-      LayerNames
     """
     return scriptcontext.doc.Layers.ActiveCount
 
@@ -545,13 +310,6 @@ def LayerIds():
       None
     Returns:
       the identifiers of all layers in the document
-    Example:
-      import rhinoscriptsyntax as rs
-      layers = rs.LayerIds()
-      for layer in layers: print layer
-    See Also:
-      LayerCount
-      LayerNames
     """
     return [layer.Id for layer in scriptcontext.doc.Layers]
 
@@ -564,16 +322,6 @@ def LayerLinetype(layer, linetype=None):
     Returns:
       If linetype is not specified, name of the current linetype
       If linetype is specified, name of the previous linetype
-    Example:
-      import rhinoscriptsyntax as rs
-      layers = rs.LayerNames()
-      if layers:
-          for layer in layers:
-              if rs.LayerLinetype(layer)!="Continuous":
-                  rs.LayerLinetype(layer,"Continuous")
-    See Also:
-      LayerPrintColor
-      LayerPrintWidth
     """
     layer = __getlayer(layer, True)
     index = layer.LinetypeIndex
@@ -595,14 +343,6 @@ def LayerLocked(layer, locked=None):
     Returns:
       If locked is not specified, the current layer locked mode
       If locked is specified, the previous layer locked mode
-    Example:
-      import rhinoscriptsyntax as rs
-      layers = rs.LayerNames()
-      if layers:
-          for layer in layers:
-              if rs.LayerLocked(layer): rs.LayerLocked(layer, False)
-    See Also:
-      LayerVisible
     """
     layer = __getlayer(layer, True)
     rc = layer.IsLocked
@@ -621,16 +361,6 @@ def LayerMaterialIndex(layer,index=None):
       index [opt] = the new material index
     Returns:
       a zero-based material index if successful
-    Example:
-      import rhinoscriptsyntax as rs
-      index = rs.LayerMaterialIndex("Default")
-      if index is not None:
-          if index==-1:
-              print "The default layer does not have a material assigned."
-          else:
-              print "The default layer has a material assigned."
-    See Also:
-      
     """
     layer = __getlayer(layer, True)
     rc = layer.RenderMaterialIndex
@@ -647,11 +377,6 @@ def LayerId(layer):
     Returns:
       String - The layer's identifier if successful.
       Null - If not successful, or on error.
-    Example:
-      import rhinoscriptsyntax as  rs
-      id = rs.LayerId('Layer 01')
-    See Also:
-      LayerName
     """
     idx = scriptcontext.doc.Layers.FindByFullPath(layer, True)
     return str(scriptcontext.doc.Layers[idx].Id) if idx >= 0 else None
@@ -664,13 +389,6 @@ def LayerName(layer_id, fullpath=True):
       fullpath [opt] = return the full path name or short name
     Returns:
       the layer's name if successful otherwise None
-    Example:
-      import rhinoscriptsyntax as rs
-      layers = rs.LayerIds()
-      if layers:
-          for layer in layers: print rs.LayerName(layer)
-    See Also:
-      LayerId
     """
     layer = __getlayer(layer_id, True)
     if fullpath: return layer.FullPath
@@ -683,12 +401,6 @@ def LayerNames(sort=False):
       sort [opt] = return a sorted list of the layer names
     Returns:
       list of strings
-    Example:
-      import rhinoscriptsyntax as rs
-      layers = rs.LayerNames()
-      if layers:
-    See Also:
-      LayerCount
     """
     rc = []
     for layer in scriptcontext.doc.Layers:
@@ -705,14 +417,6 @@ def LayerOrder(layer):
       layer = name of existing layer
     Returns:
       0 based index
-    Example:
-      import rhinoscriptsyntax as rs
-      index = rs.LayerOrder("Default")
-      if index is not None:
-          if index==-1: print "The layer does not display in the Layer dialog."
-          else: print "The layer does display in the Layer dialog."
-    See Also:
-      
     """
     layer = __getlayer(layer, True)
     return layer.SortIndex
@@ -728,17 +432,6 @@ def LayerPrintColor(layer, color=None):
       if color is not specified, the current layer print color
       if color is specified, the previous layer print color
       None on error
-    Example:
-      import rhinoscriptsyntax as rs
-      layers = rs.LayerNames()
-      if layers:
-          for layer in layers:
-              black = rs.coercecolor((0,0,0))
-              if rs.LayerPrintColor(layer)!=black:
-                  rs.LayerPrintColor(layer, black)
-    See Also:
-      LayerLinetype
-      LayerPrintWidth
     """
     layer = __getlayer(layer, True)
     rc = layer.PlotColor
@@ -758,16 +451,6 @@ def LayerPrintWidth(layer, width=None):
     Returns:
       if width is not specified, the current layer print width
       if width is specified, the previous layer print width
-    Example:
-      import rhinoscriptsyntax as rs
-      layers = rs.LayerNames()
-      if layers:
-          for layer in layers:
-              if rs.LayerPrintWidth(layer)!=0:
-                  rs.LayerPrintWidth(layer, 0)
-    See Also:
-      LayerLinetype
-      LayerPrintColor
     """
     layer = __getlayer(layer, True)
     rc = layer.PlotWeight
@@ -785,15 +468,6 @@ def LayerVisible(layer, visible=None, force_visible=False):
     Returns:
       if visible is not specified, the current layer visibility
       if visible is specified, the previous layer visibility
-    Example:
-      import rhinoscriptsyntax as rs
-      layers = rs.LayerNames()
-      if layers:
-          for layer in layers:
-              if rs.LayerVisible(layer)==False:
-                  rs.LayerVisible(layer,True)
-    See Also:
-      LayerLocked
     """
     layer = __getlayer(layer, True)
     rc = layer.IsVisible
@@ -816,14 +490,6 @@ def ParentLayer(layer, parent=None):
       If parent is not specified, the name of the current parent layer
       If parent is specified, the name of the previous parent layer
       None if the layer does not have a parent
-    Example:
-      import rhinoscriptsyntax as rs
-      layers = rs.LayerNames()
-      for layer in layers:
-          parent = rs.ParentLayer(layer)
-          print "Layer:", layer, ", Parent:", parent
-    See Also:
-      LayerChildren
     """
     layer = __getlayer(layer, True)
     parent_id = layer.ParentLayerId
@@ -851,15 +517,6 @@ def PurgeLayer(layer):
       layer = the name or id of an existing empty layer
     Returns:
       True or False indicating success or failure
-    Example:
-      import rhinoscriptsyntax as rs
-      layer = rs.GetString("Layer to purge")
-      if layer: rs.PurgeLayer(layer)
-    See Also:
-      AddLayer
-      CurrentLayer
-      DeleteLayer
-      RenameLayer
     """
     layer = __getlayer(layer, True)
     rc = scriptcontext.doc.Layers.Purge( layer.LayerIndex, True)
@@ -873,16 +530,6 @@ def RenameLayer(oldname, newname):
       newname = new layer name
     Returns: 
       The new layer name if successful otherwise None
-    Example:
-      import rhinoscriptsyntax as rs
-      oldname = rs.GetString("Old layer name")
-      if oldname:
-          newname = rs.GetString("New layer name")
-          if newname: rs.RenameLayer(oldname, newname)
-    See Also:
-      AddLayer
-      CurrentLayer
-      DeleteLayer
     """
     if oldname and newname:
         layer = __getlayer(oldname, True)
