@@ -599,26 +599,30 @@ def OsnapMode(mode=None):
       mode [opt] = The object snap mode or modes to set. Object snap modes
                    can be added together to set multiple modes
                    0     None
-                   2     Near
-                   8     Focus
-                   32    Center
-                   64    Vertex
-                   128   Knot
-                   512   Quadrant
-                   2048  Midpoint
-                   8192  Intersection
-                   0x20000   End
-                   0x80000   Perpendicular
-                   0x200000   Tangent
-                   0x8000000  Point
+                   1     Near
+                   2     Focus
+                   4     Center
+                   8     Knot
+                   16    Quadrant
+                   32    Midpoint
+                   64    Intersection
+                   128   End
+                   256   Perpendicular
+                   512   Tangent
+                   1024  Point
+                   2048  Vertex
     Returns:
       if mode is not specified, then the current object snap mode(s)
       if mode is specified, then the previous object snap mode(s) 
     """
-    rc = modelaid.OsnapModes
+    rc = int(modelaid.OsnapModes)
+    m = [(0,0), (1,2), (2,8), (4,0x20), (8,0x80), (16,0x200), (32,0x800), (64,0x2000),
+          (128,0x20000), (256,0x80000), (512,0x200000), (1024,0x8000000), (2048, 0x40)]
+    rc = sum([x[0] for x in m if x[1] & rc])
     if mode is not None:
+        mode = sum([x[1] for x in m if x[0] & int(mode)])
         modelaid.OsnapModes = System.Enum.ToObject(Rhino.ApplicationSettings.OsnapModes, mode)
-    return int(rc)
+    return rc
 
 
 def Planar(enable=None):
