@@ -14,6 +14,18 @@ def AddArc(plane, radius, angle_degrees):
       angle_degrees = interval of arc
     Returns:
       id of the new curve object
+    Example:
+      import rhinoscriptsyntax as  rs
+      plane = rs.WorldXYPlane()
+      plane = rs.RotatePlane(plane,  45.0, [0,0,1])
+      rs.AddArc( plane, 5.0, 45.0  )
+    See Also:
+      AddArc3Pt
+      ArcAngle
+      ArcCenterPoint
+      ArcMidPoint
+      ArcRadius
+      IsArc
     """
     plane = rhutil.coerceplane(plane, True)
     radians = math.radians(angle_degrees)
@@ -31,6 +43,22 @@ def AddArc3Pt(start, end, point_on_arc):
       point_on_arc = a point on the arc
     Returns:
       id of the new curve object
+    Example:
+      import rhinoscriptsyntax as rs
+      start = rs.GetPoint("Start of arc")
+      if start is not None:
+      end = rs.GetPoint("End of arc")
+      if end is not None:
+      pton = rs.GetPoint("Point on arc")
+      if pton is not None:
+      rs.AddArc3Pt(start, end, pton)
+    See Also:
+      AddArc
+      ArcAngle
+      ArcCenterPoint
+      ArcMidPoint
+      ArcRadius
+      IsArc
     """
     start = rhutil.coerce3dpoint(start, True)
     end = rhutil.coerce3dpoint(end, True)
@@ -51,6 +79,22 @@ def AddArcPtTanPt(start, direction, end):
       end = the ending point of the arc
     Returns:
       id of the new curve object
+    Example:
+      import rhinoscriptsyntax as  rs
+      pick = rs.GetCurveObject("Select  curve to extend")
+      point = rs.GetPoint("End  of extension")
+      domain = rs.CurveDomain(pick[0])
+      if abs(pick[4]-domain[0]) <  abs(pick[4]-domain[1]):
+      origin  = rs.CurveStartPoint(pick[0])
+      tangent  = rs.VectorReverse(rs.CurveTangent(pick[0], domain[0]))
+      else:
+      origin  = rs.CurveEndPoint(pick[0])
+      tangent  = rs.CurveTangent(pick[0], domain[1])
+      rs.AddArcPtTanPt(origin, tangent,  point)
+    See Also:
+      AddArc
+      AddArc3Pt
+      IsArc
     """
     start = rhutil.coerce3dpoint(start, True)
     direction = rhutil.coerce3dvector(direction, True)
@@ -72,6 +116,19 @@ def AddBlendCurve(curves, parameters, reverses, continuities):
         0 = position, 1 = tangency, 2 = curvature
     Returns:
       identifier of new curve on success
+    Example:
+      import rhinoscriptsyntax as rs
+      curve0 = rs.AddLine((0,0,0), (0,9,0))
+      curve1 = rs.AddLine((1,10,0), (10,10,0))
+      curves = curve0, curve1
+      domain_crv0 = rs.CurveDomain(curve0)
+      domain_crv1 = rs.CurveDomain(curve1)
+      params = domain_crv0[1], domain_crv1[0]
+      revs = False, True
+      cont = 2,2
+      rs.AddBlendCurve( curves, params, revs, cont )
+    See Also:
+      AddFilletCurve
     """
     crv0 = rhutil.coercecurve(curves[0], -1, True)
     crv1 = rhutil.coercecurve(curves[1], -1, True)
@@ -93,6 +150,16 @@ def AddCircle(plane_or_center, radius):
       radius = the radius of the circle
     Returns:
       id of the new curve object
+    Example:
+      import rhinoscriptsyntax as rs
+      plane = rs.WorldXYPlane()
+      rs.AddCircle( plane, 5.0 )
+    See Also:
+      AddCircle3Pt
+      CircleCenterPoint
+      CircleCircumference
+      CircleRadius
+      IsCircle
     """
     rc = None
     plane = rhutil.coerceplane(plane_or_center, False)
@@ -117,6 +184,21 @@ def AddCircle3Pt(first, second, third):
       first, second, third = points on the circle
     Returns:
       id of the new curve object
+    Example:
+      import rhinoscriptsyntax as rs
+      point1 = rs.GetPoint("First point on circle")
+      if point1:
+      point2 = rs.GetPoint("Second point on circle")
+      if point2:
+      point3 = rs.GetPoint("Third point on circle")
+      if point3:
+      rs.AddCircle3Pt(point1, point2, point3)
+    See Also:
+      AddCircle
+      CircleCenterPoint
+      CircleCircumference
+      CircleRadius
+      IsCircle
     """
     start = rhutil.coerce3dpoint(first, True)
     end = rhutil.coerce3dpoint(second, True)
@@ -135,6 +217,13 @@ def AddCurve(points, degree=3):
       degree[opt] = degree of the curve
     Returns:
       id of the new curve object
+    Example:
+      import rhinoscriptsyntax as rs
+      points = rs.GetPoints(True, message1="Pick curve point")
+      if points: rs.AddCurve(points)
+    See Also:
+      AddInterpCurve
+      IsCurve
     """
     points = rhutil.coerce3dpointlist(points, True)
     curve = Rhino.Geometry.Curve.CreateControlPointCurve(points, degree)
@@ -153,6 +242,15 @@ def AddEllipse(plane, radiusX, radiusY):
       radiusX, radiusY = radius in the X and Y axis directions
     Returns:
       id of the new curve object if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      plane = rs.WorldXYPlane()
+      rs.AddEllipse( plane, 5.0, 10.0 )
+    See Also:
+      AddEllipse3Pt
+      IsEllipse
+      EllipseCenterPoint
+      EllipseQuadPoints
     """
     plane = rhutil.coerceplane(plane, True)
     ellipse = Rhino.Geometry.Ellipse(plane, radiusX, radiusY)
@@ -170,6 +268,17 @@ def AddEllipse3Pt(center, second, third):
       third  = end point of the y axis
     Returns:
       id of the new curve object if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      center = (0,0,0)
+      second = (5,0,0)
+      third = (0,10,0)
+      rs.AddEllipse3Pt( center, second, third )
+    See Also:
+      AddEllipse
+      IsEllipse
+      EllipseCenterPoint
+      EllipseQuadPoints
     """
     center = rhutil.coerce3dpoint(center, True)
     second = rhutil.coerce3dpoint(second, True)
@@ -193,6 +302,13 @@ def AddFilletCurve(curve0id, curve1id, radius=1.0, base_point0=None, base_point1
                           starting point of the curve is used
     Returns:
       id of the new curve object if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      curve0 = rs.AddLine([0,0,0], [5,1,0])
+      curve1 = rs.AddLine([0,0,0], [1,5,0])
+      rs.AddFilletCurve( curve0, curve1 )
+    See Also:
+      CurveFilletPoints
     """
     if base_point0: base_point0 = rhutil.coerce3dpoint(base_point0, True)
     else: base_point0 = Rhino.Geometry.Point3d.Unset
@@ -231,6 +347,19 @@ def AddInterpCrvOnSrf(surface_id, points):
                The list must contain at least 2 points
     Returns:
       id of the new curve object if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      surface_id = rs.GetObject("Select surface to draw curve on", rs.filter.surface)
+      if surface_id:
+      point1 = rs.GetPointOnSurface( surface_id, "First point on surface")
+      if point1:
+      point2 = rs.GetPointOnSurface( surface_id, "Second point on surface")
+      if point2:
+      rs.AddInterpCrvOnSrf( surface_id, [point1, point2])
+    See Also:
+      AddCurve
+      AddInterpCurve
+      AddInterpCrvOnSrfUV
     """
     surface = rhutil.coercesurface(surface_id, True)
     points = rhutil.coerce3dpointlist(points, True)
@@ -253,6 +382,20 @@ def AddInterpCrvOnSrfUV(surface_id, points):
                at least 2 sets of parameters
     Returns:
       id of the new curve object if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      surface_id = rs.GetObject("Select surface to draw curve on", rs.filter.surface)
+      if surface_id:
+      u0 = domainU[0]/2
+      u1 = domainU[1]/2
+      domainV = rs.SurfaceDomain( surface_id, 1)
+      v0 = domainV[0]/2
+      V1 = domainV[1]/2
+      rs.AddInterpCrvOnSrfUV( surface_d, [[u0,v0],[u1,v1]])
+    See Also:
+      AddCurve
+      AddInterpCurve
+      AddInterpCrvOnSrf
     """
     surface = rhutil.coercesurface(surface_id, True)
     points = rhutil.coerce2dpointlist(points)
@@ -289,6 +432,14 @@ def AddInterpCurve(points, degree=3, knotstyle=0, start_tangent=None, end_tangen
           end of the curve. If the curve is periodic, this argument must be omitted.
     Returns:
       id of the new curve object if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      points = (0,0,0), (1,1,0), (2,0,0), (3,1,0), (4,0,0), (5,1,0)
+      rs.AddInterpCurve(points)
+    See Also:
+      AddCurve
+      CurvePointCount
+      IsCurve
     """
     points = rhutil.coerce3dpointlist(points, True)
     if not start_tangent: start_tangent = Rhino.Geometry.Vector3d.Unset
@@ -310,6 +461,16 @@ def AddLine(start, end):
       start, end = end points of the line
     Returns:
       id of the new curve object
+    Example:
+      import rhinoscriptsyntax as rs
+      start = rs.GetPoint("Start of line")
+      if start:
+      end = rs.GetPoint("End of line")
+      if end: rs.AddLine(start, end)
+    See Also:
+      CurveEndPoint
+      CurveStartPoint
+      IsLine
     """
     start = rhutil.coerce3dpoint(start, True)
     end = rhutil.coerce3dpoint(end, True)
@@ -330,6 +491,18 @@ def AddNurbsCurve(points, knots, degree, weights=None):
           equal the number of elements in points. Values must be greater than 0
     Returns:
       the identifier of the new object if successful, otherwise None
+    Example:
+      import rhinoscriptsyntax as rs
+      curve_id = rs.GetObject("Pick a curve", rs.filter.curve)
+      if curve_id:
+      points = rs.CurvePoints(curve_id)
+      knots = rs.CurveKnots(curve_id)
+      degree = rs.CurveDegree(curve_id)
+      if newcurve: rs.SelectObject(newcurve)
+    See Also:
+      CurveDegree
+      CurveKnots
+      CurvePoints
     """
     points = rhutil.coerce3dpointlist(points, True)
     cvcount = len(points)
@@ -367,6 +540,12 @@ def AddPolyline(points, replace_id=None):
                will be replaced by this polyline
     Returns:
       id of the new curve object if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      points = rs.GetPoints(True)
+      if points: rs.AddPolyline(points)
+    See Also:
+      IsPolyline
     """
     points = rhutil.coerce3dpointlist(points, True)
     if replace_id: replace_id = rhutil.coerceguid(replace_id, True)
@@ -391,6 +570,13 @@ def AddRectangle(plane, width, height):
         x and y axes
     Returns:
       id of new rectangle
+    Example:
+      import rhinoscriptsyntax as rs
+      plane = rs.WorldXYPlane()
+      plane = rs.RotatePlane(plane, 45.0, [0,0,1])
+      rs.AddRectangle( plane, 5.0, 15.0 )
+    See Also:
+      
     """
     plane = rhutil.coerceplane(plane, True)
     rect = Rhino.Geometry.Rectangle3d(plane, width, height)
@@ -412,6 +598,17 @@ def AddSpiral(point0, point1, pitch, turns, radius0, radius1=None):
       radius0, radius1 = starting and ending radius
     Returns:
       id of new curve on success
+    Example:
+      import rhinoscriptsyntax as rs
+      point0 = (0,0,0)
+      point1 = (0,0,10)
+      pitch = 1
+      turns = 10
+      radius0 = 5.0
+      radius1 = 8.0
+      rs.AddSpiral(point0, point1, pitch, turns, radius0, radius1)
+    See Also:
+      
     """
     if radius1 is None: radius1 = radius0
     point0 = rhutil.coerce3dpoint(point0, True)
@@ -434,6 +631,22 @@ def AddSubCrv(curve_id, param0, param1):
       param0, param1 = first and second parameters on the source curve
     Returns:
       id of the new curve object if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      getresult = rs.GetCurveObject()
+      if getresult:
+      curve_id = retresult[0]
+      point0 = rs.GetPointOnCurve( curve_id )
+      if point0:
+      point1 = rs.GetPointOnCurve( curve_id )
+      if point1:
+      t0 = rs.CurveClosestPoint( curve_id, point0)
+      t1 = rs.CurveClosestPoint( curve_id, point1)
+      rs.AddSubCrv( curve_id, t0, t1 )
+    See Also:
+      CurveClosestPoint
+      GetCurveObject
+      GetPointOnCurve
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     trimcurve = curve.Trim(param0, param1)
@@ -452,6 +665,18 @@ def ArcAngle(curve_id, segment_index=-1):
       curve_id identifies a polycurve
     Returns:
       The angle in degrees if successful.
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select arc")
+      if rs.IsArc(id):
+      angle = rs.ArcAngle(id)
+      print "Arc angle:", angle
+    See Also:
+      AddArc3Pt
+      ArcCenterPoint
+      ArcMidPoint
+      ArcRadius
+      IsArc
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     rc, arc = curve.TryGetArc( Rhino.RhinoMath.ZeroTolerance )
@@ -467,6 +692,18 @@ def ArcCenterPoint(curve_id, segment_index=-1):
       curve_id identifies a polycurve
     Returns:
       The 3D center point of the arc if successful.
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select arc")
+      if rs.IsArc(id):
+      point = rs.ArcCenterPoint(id)
+      rs.AddPoint(point)
+    See Also:
+      AddArc3Pt
+      ArcAngle
+      ArcMidPoint
+      ArcRadius
+      IsArc
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     rc, arc = curve.TryGetArc( Rhino.RhinoMath.ZeroTolerance )
@@ -482,6 +719,18 @@ def ArcMidPoint(curve_id, segment_index=-1):
       curve_id identifies a polycurve
     Returns:
       The 3D mid point of the arc if successful.
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select arc")
+      if rs.IsArc(id):
+      point = rs.ArcMidPoint(id)
+      rs.AddPoint(point)
+    See Also:
+      AddArc3Pt
+      ArcAngle
+      ArcCenterPoint
+      ArcRadius
+      IsArc
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     rc, arc = curve.TryGetArc( Rhino.RhinoMath.ZeroTolerance )
@@ -497,6 +746,17 @@ def ArcRadius(curve_id, segment_index=-1):
       curve_id identifies a polycurve
     Returns:
       The radius of the arc if successful.
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select arc")
+      if rs.IsArc(id):
+      radius = rs.ArcRadius(id)
+    See Also:
+      AddArc3Pt
+      ArcAngle
+      ArcCenterPoint
+      ArcMidPoint
+      IsArc
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     rc, arc = curve.TryGetArc( Rhino.RhinoMath.ZeroTolerance )
@@ -514,6 +774,18 @@ def CircleCenterPoint(curve_id, segment_index=-1, return_plane=False):
     Returns:
       The 3D center point of the circle if successful.
       The plane of the circle if return_plane is True
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select circle")
+      if rs.IsCircle(id):
+      point = rs.CircleCenterPoint(id)
+      rs.AddPoint( point )
+    See Also:
+      AddCircle
+      AddCircle3Pt
+      CircleCircumference
+      CircleRadius
+      IsCircle
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     rc, circle = curve.TryGetCircle(Rhino.RhinoMath.ZeroTolerance)
@@ -530,6 +802,18 @@ def CircleCircumference(curve_id, segment_index=-1):
       curve_id identifies a polycurve
     Returns:
       The circumference of the circle if successful.
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select circle")
+      if rs.IsCircle(id):
+      circumference = rs.CircleCircumference(id)
+      print "Circle circumference:", circumference
+    See Also:
+      AddCircle
+      AddCircle3Pt
+      CircleCenterPoint
+      CircleRadius
+      IsCircle
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     rc, circle = curve.TryGetCircle( Rhino.RhinoMath.ZeroTolerance )
@@ -544,6 +828,18 @@ def CircleRadius(curve_id, segment_index=-1):
       curve_id identifies a polycurve
     Returns:
       The radius of the circle if successful.
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select circle")
+      if rs.IsCircle(id):
+      radius = rs.CircleRadius(id)
+      print "Circle radius:", radius
+    See Also:
+      AddCircle
+      AddCircle3Pt
+      CircleCenterPoint
+      CircleCircumference
+      IsCircle
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     rc, circle = curve.TryGetCircle( Rhino.RhinoMath.ZeroTolerance )
@@ -559,6 +855,14 @@ def CloseCurve(curve_id, tolerance=-1.0):
           point. If omitted, the current absolute tolerance is used
     Returns:
       id of the new curve object if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select curve", rs.filter.curve)
+      if not rs.IsCurveClosed(obj) and rs.IsCurveClosable(obj):
+      rs.CloseCurve( obj )
+    See Also:
+      IsCurveClosable
+      IsCurveClosed
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     if curve.IsClosed: return curve_id
@@ -580,6 +884,8 @@ def ClosedCurveOrientation(curve_id, direction=(0,0,1)):
       1 if the curve's orientation is clockwise
       -1 if the curve's orientation is counter-clockwise
       0 if unable to compute the curve's orientation
+    Example:
+    See Also:
     """
     curve = rhutil.coercecurve(curve_id, -1 ,True)
     direction = rhutil.coerce3dvector(direction, True)
@@ -602,6 +908,14 @@ def ConvertCurveToPolyline(curve_id, angle_tolerance=5.0, tolerance=0.01, delete
       max_edge_length[opt] = Maximum segment length
     Returns:
       The new curve if successful.
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve")
+      if rs.IsCurve(obj):
+      polyline = rs.ConvertCurveToPolyline(obj)
+      if polyline: rs.SelectObject(polyline)
+    See Also:
+      IsCurve
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     if angle_tolerance<=0: angle_tolerance = 5.0
@@ -629,6 +943,17 @@ def CurveArcLengthPoint(curve_id, length, from_start=True):
           point is calculated from the end of the curve.
     Returns:
       Point3d if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve")
+      if rs.IsCurve(obj):
+      length = rs.CurveLength(obj)
+      point = rs.CurveArcLengthPoint(obj, length/3.0)
+      rs.AddPoint( point )
+    See Also:
+      CurveEndPoint
+      CurveMidPoint
+      CurveStartPoint
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     curve_length = curve.GetLength()
@@ -656,6 +981,17 @@ def CurveArea(curve_id):
         0        The area. If more than one curve was specified, the
                  value will be the cumulative area.
         1        The absolute (+/-) error bound for the area.
+    Example:
+      import rhinocsriptsyntax as rs
+      id = rs.GetObject("Select a curve", rs.filter.curve)
+      if id:
+      props = rs.CurveArea(id)
+      if props:
+      print "The curve area is:", props[0]
+    See Also:
+      IsCurve
+      IsCurveClosed
+      IsCurvePlanar
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     tol = scriptcontext.doc.ModelAbsoluteTolerance
@@ -675,6 +1011,17 @@ def CurveAreaCentroid(curve_id):
                  the value will be the cumulative area.
         1        A 3d vector with the absolute (+/-) error bound for the area
                  centroid.
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select a curve", rs.filter.curve)
+      if id:
+      props = rs.CurveAreaCentroid(id)
+      if props:
+      print "The curve area centroid is:", props[0]
+    See Also:
+      IsCurve
+      IsCurveClosed
+      IsCurvePlanar
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     tol = scriptcontext.doc.ModelAbsoluteTolerance
@@ -694,6 +1041,10 @@ def CurveArrows(curve_id, arrow_style=None):
       Returns:
         if arrow_style is not specified, the current annotation arrow style
         if arrow_style is specified, the previos arrow style
+    Example:
+      import rhinoscriptsyntax as rs
+    See Also:
+      IsCurve
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     rhobj = rhutil.coercerhinoobject(curve_id, True, True)
@@ -725,6 +1076,17 @@ def CurveBooleanDifference(curve_id_0, curve_id_1):
       curve_id_1 = identifier of the second curve object.
     Returns:
       The identifiers of the new objects if successful, None on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      curveA = rs.GetObject("Select first curve", rs.filter.curve)
+      curveB = rs.GetObject("Select second curve", rs.filter.curve)
+      arrResult = rs.CurveBooleanDifference(curveA, curveB)
+      if arrResult:
+      rs.DeleteObject( curveA )
+      rs.DeleteObject( curveB )
+    See Also:
+      CurveBooleanIntersection
+      CurveBooleanUnion
     """
     curve0 = rhutil.coercecurve(curve_id_0, -1, True)
     curve1 = rhutil.coercecurve(curve_id_1, -1, True)
@@ -749,6 +1111,17 @@ def CurveBooleanIntersection(curve_id_0, curve_id_1):
       curve_id_1 = identifier of the second curve object.
     Returns:
       The identifiers of the new objects.
+    Example:
+      import rhinoscriptsyntax as rs
+      curveA = rs.GetObject("Select first curve", rs.filter.curve)
+      curveB = rs.GetObject("Select second curve", rs.filter.curve)
+      result = rs.CurveBooleanIntersection(curveA, curveB)
+      if result:
+      rs.DeleteObject( curveA )
+      rs.DeleteObject( curveB )
+    See Also:
+      CurveBooleanDifference
+      CurveBooleanUnion
     """
     curve0 = rhutil.coercecurve(curve_id_0, -1, True)
     curve1 = rhutil.coercecurve(curve_id_1, -1, True)
@@ -772,6 +1145,15 @@ def CurveBooleanUnion(curve_id):
       curve_id = list of two or more close planar curves identifiers
     Returns:
       The identifiers of the new objects.
+    Example:
+      import rhinoscriptsyntax as rs
+      curve_ids = rs.GetObjects("Select curves to union", rs.filter.curve)
+      if curve_ids and len(curve_ids)>1:
+      result = rs.CurveBooleanUnion(curve_ids)
+      if result: rs.DeleteObjects(curve_ids)
+    See Also:
+      CurveBooleanDifference
+      CurveBooleanIntersection
     """
     in_curves = [rhutil.coercecurve(id,-1,True) for id in curve_id]
     if len(in_curves)<2: raise ValueException("curve_id must have at least 2 curves")
@@ -799,6 +1181,14 @@ def CurveBrepIntersect(curve_id, brep_id, tolerance=None):
     Returns:
       List of identifiers for the newly created intersection curve and
       point objects if successful. None on error.            
+    Example:
+      import rhinoscriptsyntax as rs
+      curve = rs.GetObject("Select a curve", rs.filter.curve)
+      if curve:
+      brep = rs.GetObject("Select a brep", rs.filter.surface + rs.filter.polysurface)
+      if brep: rs.CurveBrepIntersect( curve, brep )
+    See Also:
+      CurveSurfaceIntersection
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     brep = rhutil.coercebrep(brep_id, True)
@@ -838,6 +1228,22 @@ def CurveClosestObject(curve_id, object_ids):
         0    The identifier of the closest object.
         1    The 3-D point that is closest to the closest object. 
         2    The 3-D point that is closest to the test curve.
+    Example:
+      import rhinoscriptsyntax as rs
+      filter = rs.filter.curve | rs.filter.pointcloud | rs.filter.surface | rs.filter.polysurface
+      objects = rs.GetObjects("Select target objects for closest point", filter)
+      if objects:
+      curve = rs.GetObject("Select curve")
+      if curve:
+      results = rs.CurveClosestObject(curve, objects)
+      if results:
+      print "Curve id:", results[0]
+      rs.AddPoint( results[1] )
+      rs.AddPoint( results[2] )
+    See Also:
+      CurveClosestPoint
+      EvaluateCurve
+      IsCurve
     """
     curve = rhutil.coercecurve(curve_id,-1,True)
     geometry = []
@@ -859,6 +1265,17 @@ def CurveClosestPoint(curve_id, test_point, segment_index=-1 ):
       segment_index [opt] = curve segment if curve_id identifies a polycurve
     Returns:
       The parameter of the closest point on the curve
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select a curve")
+      if id:
+      point = rs.GetPointOnCurve(id, "Pick a test point")
+      if point:
+      param = rs.CurveClosestPoint(id, point)
+      print "Curve parameter:", param
+    See Also:
+      EvaluateCurve
+      IsCurve
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     point = rhutil.coerce3dpoint(test_point, True)
@@ -878,6 +1295,15 @@ def CurveContourPoints(curve_id, start_point, end_point, interval=None):
       bounding box divided by 50.
     Returns:
       A list of 3D points, one for each contour
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select curve", rs.filter.curve)
+      start_point = rs.GetPoint("Base point of center line")
+      end_point = rs.GetPoint("Endpoint of center line", start_point)
+      contour = rs.CurveContourPoints(obj, start_point, end_point)
+      if contour: rs.AddPoints(contour)
+    See Also:
+      AddSrfContourCrvs
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     start_point = rhutil.coerce3dpoint(start_point, True)
@@ -906,6 +1332,24 @@ def CurveCurvature(curve_id, parameter):
         element 3 = radius of curvature
         element 4 = curvature vector
       None on failure
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve")
+      if rs.IsCurve(obj):
+      point = rs.GetPointOnCurve(obj, "Pick a test point")
+      if point:
+      param = rs.CurveClosestPoint(obj, point)
+      if param:
+      data = rs.CurveCurvature(obj, param)
+      if data:
+      print "Curve curvature evaluation at parameter", param, ":"
+      print " 3-D Point:", data[0]
+      print " 3-D Tangent:", data[1]
+      print " Center of radius of curvature:", data[2]
+      print " Radius of curvature:", data[3]
+      print " 3-D Curvature:", data[4]
+    See Also:
+      SurfaceCurvature
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     point = curve.PointAt(parameter)
@@ -958,6 +1402,34 @@ def CurveCurveIntersection(curveA, curveB=None, tolerance=-1):
         [n][8]  Number   If the event type is Point (1), then the second curve parameter.
                          If the event type is Overlap (2), then the end value of the 
                          second curve parameter range.
+    Example:
+      import rhinoscriptsyntax as rs
+      def ccx():
+      if curve1 is None: return
+      curve2 = rs.GetObject("Select second curve", rs.filter.curve)
+      if curve2 is None: return
+      intersection_list = rs.CurveCurveIntersection(curve1, curve2)
+      if intersection_list is None:
+      print "Selected curves do not intersect."
+      return
+      for intersection in intersection_list:
+      if intersection[0] == 1:
+      print "Point"
+      print "Intersection point on first curve: ", intersection[1]
+      print "Intersection point on second curve: ", intersection[3]
+      print "First curve parameter: ", intersection[5]
+      print "Second curve parameter: ", intersection[7]
+      else:
+      print "Overlap"
+      print "Intersection start point on first curve: ", intersection[1]
+      print "Intersection end point on first curve: ", intersection[2]
+      print "Intersection start point on second curve: ", intersection[3]
+      print "Intersection end point on second curve: ", intersection[4]
+      print "First curve parameter range: ", intersection[5], " to ", intersection[6]
+      print "Second curve parameter range: ", intersection[7], " to ", intersection[8]
+      ccx()
+    See Also:
+      CurveSurfaceIntersection
     """
     curveA = rhutil.coercecurve(curveA, -1, True)
     if curveB: curveB = rhutil.coercecurve(curveB, -1, True)
@@ -986,6 +1458,15 @@ def CurveDegree(curve_id, segment_index=-1):
       segment_index [opt] = the curve segment if curve_id identifies a polycurve.
     Returns:
       The degree of the curve if successful. None on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve")
+      if rs.IsCurve(obj):
+      degree = rs.CurveDegree(obj)
+      print "Curve degree:", degree
+    See Also:
+      CurveDomain
+      IsCurve
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     return curve.Degree
@@ -1004,6 +1485,17 @@ def CurveDeviation(curve_a, curve_b):
         element 4 = curve_b parameter at minimum overlap distance point
         element 5 = minimum distance between curves
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      curveA = rs.GetObject("Select first curve to test", rs.filter.curve)
+      curveB = rs.GetObject("Select second curve to test", rs.filter.curve)
+      deviation = rs.CurveDeviation(curveA, curveB)
+      if deviation:
+      print "Minimum deviation =", deviation[5]
+      print "Maximum deviation =", deviation[2]
+    See Also:
+      CurveArea
+      CurveAreaCentroid
     """
     curve_a = rhutil.coercecurve(curve_a, -1, True)
     curve_b = rhutil.coercecurve(curve_b, -1, True)
@@ -1026,6 +1518,14 @@ def CurveDim(curve_id, segment_index=-1):
       segment_index [opt] = the curve segment if curve_id identifies a polycurve.
     Returns:
       The dimension of the curve if successful. None on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      curve = rs.GetObject("Select a curve")
+      if rs.IsCurve(curve):
+      print "Curve dimension =", rs.CurveDim(curve)
+    See Also:
+      CurveDegree
+      CurveDomain
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     return curve.Dimension
@@ -1041,6 +1541,16 @@ def CurveDirectionsMatch(curve_id_0, curve_id_1):
       curve_id_1 = identifier of second curve object
     Returns:
       True if the curve directions match, otherwise False. 
+    Example:
+      import rhinoscriptsyntax as rs
+      curve1 = rs.GetObject("Select first curve to compare", rs.filter.curve)
+      curve2 = rs.GetObject("Select second curve to compare", rs.filter.curve)
+      if rs.CurveDirectionsMatch(curve1, curve2):
+      print "Curves are in the same direction"
+      else:
+      print "Curve are not in the same direction"
+    See Also:
+      ReverseCurve
     """
     curve0 = rhutil.coercecurve(curve_id_0, -1, True)
     curve1 = rhutil.coercecurve(curve_id_1, -1, True)
@@ -1062,6 +1572,14 @@ def CurveDiscontinuity(curve_id, style):
           5        G2 - Continuous unit tangent and curvature
     Returns:
       List 3D points where the curve is discontinuous
+    Example:
+      import rhinoscriptsyntax as rs
+      curve = rs.GetObject("Select a curve", rs.filter.curve)
+      if rs.IsCurve(curve):
+      points = rs.CurveDiscontinuity(curve, 2)
+      if points: rs.AddPoints( points )
+    See Also:
+      IsCurve
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     dom = curve.Domain
@@ -1084,6 +1602,15 @@ def CurveDomain(curve_id, segment_index=-1):
       segment_index [opt] = the curve segment if curve_id identifies a polycurve.
     Returns:
       the domain of the curve if successful, otherwise None
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve")
+      if rs.IsCurve(obj):
+      domain = rs.CurveDomain(obj)
+      print "Curve domain:", domain[0], "to", domain[1]
+    See Also:
+      CurveDegree
+      IsCurve
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     dom = curve.Domain
@@ -1101,6 +1628,15 @@ def CurveEditPoints(curve_id, return_parameters=False, segment_index=-1):
     Returns:
       curve parameters of 3d points on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve")
+      if rs.IsCurve(obj):
+      points = rs.CurveEditPoints(obj)
+    See Also:
+      IsCurve
+      CurvePointCount
+      CurvePoints
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     nc = curve.ToNurbsCurve()
@@ -1116,6 +1652,16 @@ def CurveEndPoint(curve_id, segment_index=-1):
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
     Returns:
       The 3-D end point of the curve if successful.
+    Example:
+      import rhinoscriptsyntax as rs
+      object = rs.GetObject("Select a curve")
+      if rs.IsCurve(object):
+      point = rs.CurveEndPoint(object)
+      rs.AddPoint(point)
+    See Also:
+      CurveMidPoint
+      CurveStartPoint
+      IsCurve
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     return curve.PointAtEnd
@@ -1156,6 +1702,17 @@ def CurveFilletPoints(curve_id_0, curve_id_1, radius=1.0, base_point_0=None, bas
       If return_points is False, then the identifier of the fillet curve
       if successful.
       None if not successful, or on error.                  
+    Example:
+      import rhinoscriptsyntax as rs
+      curve0 = rs.AddLine([0,0,0], [5,1,0])
+      curve1 = rs.AddLine([0,0,0], [1,5,0])
+      fillet = rs.CurveFilletPoints(curve0, curve1)
+      if fillet:
+      rs.AddPoint( fillet[0] )
+      rs.AddPoint( fillet[1] )
+      rs.AddPoint( fillet[2] )
+    See Also:
+      AddFilletCurve
     """
     curve0 = rhutil.coercecurve(curve_id_0, -1, True)
     curve1 = rhutil.coercecurve(curve_id_1, -1, True)
@@ -1189,6 +1746,14 @@ def CurveFrame(curve_id, parameter, segment_index=-1):
     Returns:
       The plane at the specified parameter if successful. 
       None if not successful, or on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      curve = rs.GetCurveObject("Select a curve")
+      if curve:
+      plane = rs.CurveFrame(curve[0], curve[4])
+      rs.AddPlaneSurface(plane, 5.0, 3.0)
+    See Also:
+      CurvePerpFrame
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     domain = curve.Domain
@@ -1213,6 +1778,15 @@ def CurveKnotCount(curve_id, segment_index=-1):
     Returns:
       The number of knots if successful.
       None if not successful or on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve")
+      if rs.IsCurve(obj):
+      count = rs.CurveKnotCount(obj)
+      print "Curve knot count:", count
+    See Also:
+      DivideCurve
+      IsCurve
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     nc = curve.ToNurbsCurve()
@@ -1228,6 +1802,15 @@ def CurveKnots(curve_id, segment_index=-1):
     Returns:
       knot values if successful.
       None if not successful or on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve")
+      if rs.IsCurve(obj):
+      knots = rs.CurveKnots(obj)
+      if knots:
+    See Also:
+      CurveKnotCount
+      IsCurve
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     nc = curve.ToNurbsCurve()
@@ -1248,6 +1831,15 @@ def CurveLength(curve_id, segment_index=-1, sub_domain=None):
     Returns:
       The length of the curve if successful.
       None if not successful, or on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      object = rs.GetObject("Select a curve")
+      if rs.IsCurve(object):
+      length = rs.CurveLength(object)
+      print "Curve length:", length
+    See Also:
+      CurveDomain
+      IsCurve
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     if sub_domain:
@@ -1266,6 +1858,16 @@ def CurveMidPoint(curve_id, segment_index=-1):
     Returns:
       The 3D mid point of the curve if successful.
       None if not successful, or on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      object = rs.GetObject("Select a curve")
+      if rs.IsCurve(object):
+      point = rs.CurveMidPoint(pbject)
+      rs.AddPoint( point )
+    See Also:
+      CurveEndPoint
+      CurveStartPoint
+      IsCurve
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     rc, t = curve.NormalizedLengthParameter(0.5)
@@ -1281,6 +1883,15 @@ def CurveNormal(curve_id, segment_index=-1):
     Returns:
       The 3D normal vector if sucessful.
       None if not successful, or on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      object = rs.GetObject("Select a planar curve")
+      if rs.IsCurve(object) and rs.IsCurvePlanar(object):
+      normal = rs.CurveNormal(object)
+      if normal: print "Curve Normal:", normal
+    See Also:
+      IsCurve
+      IsCurvePlanar
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     tol = scriptcontext.doc.ModelAbsoluteTolerance
@@ -1297,6 +1908,18 @@ def CurveNormalizedParameter(curve_id, parameter):
       parameter = the curve parameter to convert
     Returns:
       normalized curve parameter
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select curve")
+      if rs.IsCurve(obj):
+      domain = rs.CurveDomain(obj)
+      parameter = (domain[0]+domain[1])/2.0
+      print "Curve parameter:", parameter
+      normalized = rs.CurveNormalizedParameter(obj, parameter)
+      print "Normalized parameter:", normalized
+    See Also:
+      CurveDomain
+      CurveParameter
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     return curve.Domain.NormalizedParameterAt(parameter)
@@ -1310,6 +1933,17 @@ def CurveParameter(curve_id, parameter):
       parameter = the normalized curve parameter to convert
     Returns:
       curve parameter
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select curve")
+      if rs.IsCurve(obj):
+      normalized = 0.5
+      print "Normalized parameter:", normalized
+      parameter = rs.CurveParameter(obj, normalized)
+      print "Curve parameter:", parameter
+    See Also:
+      CurveDomain
+      CurveNormalizedParameter
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     return curve.Domain.ParameterAt(parameter)
@@ -1324,6 +1958,14 @@ def CurvePerpFrame(curve_id, parameter):
     Returns:
       Plane on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      crv = rs.GetCurveObject("Select a curve")
+      if crv:
+      plane = rs.CurvePerpFrame(crv[0], crv[4])
+      rs.AddPlaneSurface( plane, 1, 1 )
+    See Also:
+      CurveFrame
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     parameter = float(parameter)
@@ -1340,6 +1982,15 @@ def CurvePlane(curve_id, segment_index=-1):
     Returns:
       The plane in which the curve lies if successful.
       None if not successful, or on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      curve = rs.GetObject("Select a curve", rs.filter.curve)
+      if rs.IsCurvePlanar(curve):
+      plane = rs.CurvePlane(curve)
+      rs.ViewCPlane(None, plane)
+    See Also:
+      IsCurve
+      IsCurvePlanar
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     tol = scriptcontext.doc.ModelAbsoluteTolerance
@@ -1356,6 +2007,15 @@ def CurvePointCount(curve_id, segment_index=-1):
     Returns:
       Number of control points if successful.
       None if not successful
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve")
+      if rs.IsCurve(obj):
+      count = rs.CurvePointCount(obj)
+      print "Curve point count:", count
+    See Also:
+      DivideCurve
+      IsCurve
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     nc = curve.ToNurbsCurve()
@@ -1372,6 +2032,15 @@ def CurvePoints(curve_id, segment_index=-1):
       segment_index [opt] = if curve_id identifies a polycurve object, then intIndex identifies the curve segment of the polycurve to query
     Returns:
       the control points, or control vertices, of a curve object
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve")
+      if rs.IsCurve(obj):
+      points = rs.CurvePoints(obj)
+      if points: [rs.AddPoint(pt) for pt in points]
+    See Also:
+      CurvePointCount
+      IsCurve
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     nc = curve.ToNurbsCurve()
@@ -1389,6 +2058,16 @@ def CurveRadius(curve_id, test_point, segment_index=-1):
     Returns:
       The radius of curvature at the point on the curve if successful.
       None if not successful, or on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve")
+      if rs.IsCurve(obj):
+      point = rs.GetPointOnCurve(obj, "Pick a test point")
+      if point:
+      radius = rs.CurveRadius(obj, point)
+      print "Radius of curvature:", radius
+    See Also:
+      IsCurve
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     point = rhutil.coerce3dpoint(test_point, True)
@@ -1409,6 +2088,16 @@ def CurveSeam(curve_id, parameter):
                   domain will start at dblParameter.
     Returns:
       True or False indicating success or failure.
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select closed curve", rs.filter.curve)
+      if rs.IsCurveClosed(obj):
+      domain = rs.CurveDomain(obj)
+      parameter = (domain[0] + domain[1])/2.0
+      rs.CurveSeam( obj, parameter )
+    See Also:
+      IsCurve
+      IsCurveClosed
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     if (not curve.IsClosed or not curve.Domain.IncludesParameter(parameter)):
@@ -1430,6 +2119,16 @@ def CurveStartPoint(curve_id, segment_index=-1, point=None):
       point [opt] = new start point
     Returns:
       The 3D starting point of the curve if successful.
+    Example:
+      import rhinoscriptsyntax as rs
+      object = rs.GetObject("Select a curve")
+      if rs.IsCurve(object):
+      point = rs.CurveStartPoint(object)
+      rs.AddPoint(point)
+    See Also:
+      CurveEndPoint
+      CurveMidPoint
+      IsCurve
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     rc = curve.PointAtStart
@@ -1489,6 +2188,36 @@ def CurveSurfaceIntersection(curve_id, surface_id, tolerance=-1, angle_tolerance
         (n, 10) Number   If the event type is Point(1), then the V surface parameter.
                          If the event type is Overlap(2), then the V surface parameter
                          for curve at (n, 6).
+    Example:
+      import rhinoscriptsyntax as rs
+      def csx():
+      curve = rs.GetObject("Select curve", rs.filter.curve)
+      if curve is None: return
+      surface = rs.GetObject("Select surface", rs.filter.surface)
+      if surface is None: return
+      intersection_list = rs.CurveSurfaceIntersection(curve, surface)
+      if intersection_list is None:
+      print "Curve and surface do not intersect."
+      return
+      for intersection in intersection_list:
+      if intersection[0]==1:
+      print "Point"
+      print "Intersection point on curve:", intersection[1]
+      print "Intersection point on surface:", intersection[3]
+      print "Curve parameter:", intersection[5]
+      print "Surface parameter:", intersection[7], ",", intersection[8]
+      else:
+      print "Overlap"
+      print "Intersection start point on curve:", intersection[1]
+      print "Intersection end point on curve:", intersection[2]
+      print "Intersection start point on surface:", intersection[3]
+      print "Intersection end point on surface:", intersection[4]
+      print "Curve parameter range:", intersection[5], "to", intersection[6]
+      print "Surface parameter range:", intersection[7], ",", intersection[8], "to", intersection[9], ",", intersection[10]
+      csx()
+    See Also:
+      CurveCurveIntersection
+      CurveBrepIntersect
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     surface = rhutil.coercesurface(surface_id, True)
@@ -1520,6 +2249,18 @@ def CurveTangent(curve_id, parameter, segment_index=-1):
     Returns:
       A 3D vector if successful.
       None on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve", rs.filter.curve)
+      if obj:
+      point = rs.GetPointOnCurve(obj)
+      if point:
+      param = rs.CurveClosestPoint(obj, point)
+      normal = rs.CurveTangent(obj, param)
+      print normal
+    See Also:
+      CurveClosestPoint
+      CurveDomain
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     rc = Rhino.Geometry.Point3d.Unset
@@ -1536,6 +2277,17 @@ def CurveWeights(curve_id, segment_index=-1):
     Returns:
       The weight values of the curve if successful.
       None if not successful, or on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve")
+      if rs.IsCurve(obj):
+      weights = rs.CurveWeights(obj)
+      if weights:
+      for weight in weights:
+      print "Curve control point weight value:", weight
+    See Also:
+      CurveKnots
+      IsCurve
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     nc = curve
@@ -1560,6 +2312,14 @@ def DivideCurve(curve_id, segments, create_points=False, return_points=True):
       If return_points is False, then an array containing division curve
       parameters.
       None if not successful, or on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve")
+      if obj:
+      points = rs.DivideCurve(obj, 4)
+    See Also:
+      DivideCurveEquidistant
+      DivideCurveLength
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     rc = curve.DivideByCount(segments, True)
@@ -1585,6 +2345,14 @@ def DivideCurveEquidistant(curve_id, distance, create_points=False, return_point
     Returns:
       A list of points or curve parameters based on the value of return_points
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve", rs.filter.curve)
+      if obj:
+      points = rs.DivideCurveEquidistant(obj, 4, True)
+    See Also:
+      DivideCurve
+      DivideCurveLength
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     points = curve.DivideEquidistant(distance)
@@ -1615,6 +2383,16 @@ def DivideCurveLength(curve_id, length, create_points=False, return_points=True)
       If return_points is False, then an array containing division curve
       parameters if successful.
       None if not successful, or on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve")
+      if rs.IsCurve(obj):
+      length = rs.CurveLength(obj) / 4
+      points = rs.DivideCurveLength(obj, length)
+      for point in points: rs.AddPoint(point)
+    See Also:
+      DivideCurve
+      DivideCurveEquidistant
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     rc = curve.DivideByLength(length, True)
@@ -1634,6 +2412,15 @@ def EllipseCenterPoint(curve_id):
       curve_id = identifier of the curve object.    
     Returns:
       The 3D center point of the ellipse if successful.
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select ellipse")
+      if rs.IsEllipse(obj):
+      point = rs.EllipseCenterPoint(obj)
+      rs.AddPoint( point )
+    See Also:
+      IsEllipse
+      EllipseQuadPoints
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     rc, ellipse = curve.TryGetEllipse()
@@ -1647,6 +2434,14 @@ def EllipseQuadPoints(curve_id):
       curve_id = identifier of the curve object.
     Returns:
       Four 3D points identifying the quadrants of the ellipse
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select ellipse")
+      if rs.IsEllipse(obj):
+      rs.AddPoints( rs.EllipseQuadPoints(obj) )
+    See Also:
+      IsEllipse
+      EllipseCenterPoint
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     rc, ellipse = curve.TryGetEllipse()
@@ -1665,6 +2460,17 @@ def EvaluateCurve(curve_id, t, segment_index=-1):
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
     Returns:
       a 3-D point if successful, otherwise None
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve")
+      if rs.IsCurve(obj):
+      domain = rs.CurveDomain(obj)
+      t = domain[1]/2.0
+      point = rs.EvaluateCurve(obj, t)
+      rs.AddPoint( point )
+    See Also:
+      CurveClosestPoint
+      IsCurve
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     return curve.PointAt(t)
@@ -1679,6 +2485,15 @@ def ExplodeCurves(curve_ids, delete_input=False):
       delete_input[opt] = Delete input objects after exploding.
     Returns:
       List identifying the newly created curve objects
+    Example:
+      import rhinoscriptsyntax as rs
+      crv = rs.GetObject("Select curve to explode", rs.filter.curve)
+      if rs.IsCurve(crv): rs.ExplodeCurves(crv)
+    See Also:
+      IsCurve
+      IsPolyCurve
+      IsPolyline
+      JoinCurves
     """
     if( type(curve_ids) is list or type(curve_ids) is tuple ): pass
     else: curve_ids = [curve_ids]
@@ -1707,6 +2522,15 @@ def ExtendCurve(curve_id, extension_type, side, boundary_object_ids):
     Returns:
       The identifier of the new object if successful.
       None if not successful
+    Example:
+      import rhinoscriptsyntax as rs
+      filter = rs.filter.curve | rs.filter.surface | rs.filter.polysurface
+      objects = rs.GetObjects("Select boundary objects", filter)
+      if objects:
+      curve = rs.GetObject("Select curve to extend", rs.filter.curve)
+    See Also:
+      ExtendCurveLength
+      ExtendCurvePoint
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     if extension_type==0: extension_type = Rhino.Geometry.CurveExtensionStyle.Line
@@ -1742,6 +2566,14 @@ def ExtendCurveLength(curve_id, extension_type, side, length):
     Returns:
       The identifier of the new object
       None if not successful
+    Example:
+      import rhinoscriptsyntax as rs
+      curve = rs.GetObject("Select curve to extend", rs.filter.curve)
+      if curve:
+      length = rs.GetReal("Length to extend", 3.0)
+    See Also:
+      ExtendCurve
+      ExtendCurvePoint
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     if extension_type==0: extension_type = Rhino.Geometry.CurveExtensionStyle.Line
@@ -1773,6 +2605,15 @@ def ExtendCurvePoint(curve_id, side, point):
     Returns:
       The identifier of the new object if successful.
       None if not successful, or on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      curve = rs.GetObject("Select curve to extend", rs.filter.curve)
+      if curve:
+      point = rs.GetPoint("Point to extend to")
+      if point: rs.ExtendCurvePoint(curve, 1, point)
+    See Also:
+      ExtendCurve
+      ExtendCurveLength
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     point = rhutil.coerce3dpoint(point, True)
@@ -1802,6 +2643,13 @@ def FairCurve(curve_id, tolerance=1.0):
       tolerance[opt] = fairing tolerance
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      curves = rs.GetObjects("Select curves to fair", rs.filter.curve)
+      if curves:
+      [rs.FairCurve(curve) for curve in curves]
+    See Also:
+      
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     angle_tol = 0.0
@@ -1836,6 +2684,14 @@ def FitCurve(curve_id, degree=3, distance_tolerance=-1, angle_tolerance=-1):
     Returns:
       The identifier of the new object
       None if not successful, or on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      oldCurve = rs.GetObject("Select curve to fit", rs.filter.curve)
+      if oldCurve:
+      newCurve = rs.FitCurve(oldCurve)
+      if newCurve: rs.DeleteObject(oldCurve)
+    See Also:
+      
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     if distance_tolerance is None or distance_tolerance<0:
@@ -1865,6 +2721,17 @@ def InsertCurveKnot(curve_id, parameter, symmetrical=False ):
           the center of the curve
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select curve for knot insertion", rs.filter.curve)
+      if obj:
+      point = rs.GetPointOnCurve(obj, "Point on curve to add knot")
+      if point:
+      parameter = rs.CurveClosestPoint(obj, point)
+      rs.InsertCurveKnot( obj, parameter )
+    See Also:
+      CurveKnotCount
+      CurveKnots
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     if not curve.Domain.IncludesParameter(parameter): return False
@@ -1892,6 +2759,19 @@ def IsArc(curve_id, segment_index=-1):
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
     Returns:
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select an arc")
+      if rs.IsArc(obj):
+      print "The object is an arc."
+      else:
+      print "The object is not an arc."
+    See Also:
+      AddArc3Pt
+      ArcAngle
+      ArcCenterPoint
+      ArcMidPoint
+      ArcRadius
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     return curve.IsArc() and not curve.IsCircle()
@@ -1906,6 +2786,19 @@ def IsCircle(curve_id, tolerance=None):
         properties of a circle. If omitted, Rhino's internal zero tolerance is used
     Returns:
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a circle")
+      if rs.IsCircle(obj):
+      print "The object is a circle."
+      else:
+      print "The object is not a circle."
+    See Also:
+      AddCircle
+      AddCircle3Pt
+      CircleCenterPoint
+      CircleCircumference
+      CircleRadius
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     if tolerance is None or tolerance < 0:
@@ -1919,6 +2812,17 @@ def IsCurve(object_id):
       object_id = the object's identifier
     Returns:
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      object = rs.GetObject("Select a curve")
+      if rs.IsCurve(object):
+      else:
+      print "The object is not a curve."
+    See Also:
+      IsCurveClosed
+      IsCurveLinear
+      IsCurvePeriodic
+      IsCurvePlanar
     """
     curve = rhutil.coercecurve(object_id)
     return curve is not None
@@ -1934,6 +2838,13 @@ def IsCurveClosable(curve_id, tolerance=None):
         point. If omitted, the document's current absolute tolerance is used
     Returns:
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      crv = rs.GetObject("Select curve", rs.filter.curve)
+      if not rs.IsCurveClosed(crv) and rs.IsCurveClosable(crv):
+    See Also:
+      CloseCurve
+      IsCurveClosed
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     if tolerance is None: tolerance = scriptcontext.doc.ModelAbsoluteTolerance
@@ -1946,6 +2857,21 @@ def IsCurveClosed(object_id):
       object_id = the object's identifier
     Returns:
       True if succussful otherwise False.  None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      object = rs.GetObject("Select a curve")
+      if rs.IsCurve(object):
+      if rs.IsCurveClosed(oObject):
+      print "The object is a closed curve."
+      else:
+      print "The object is not a closed curve."
+      else:
+      print "The object is not a curve."
+    See Also:
+      IsCurve
+      IsCurveLinear
+      IsCurvePeriodic
+      IsCurvePlanar
     """
     curve = rhutil.coercecurve(object_id)
     return None if not curve else curve.IsClosed
@@ -1958,6 +2884,19 @@ def IsCurveInPlane(object_id, plane=None):
       plane[opt] = plane to test. If omitted, the active construction plane is used
     Returns:
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve")
+      if rs.IsCurve(obj) and rs.IsCurvePlanar(obj):
+      if rs.IsCurveInPlane(obj):
+      print "The curve lies in the current cplane."
+      else:
+      print "The curve does not lie in the current cplane."
+      else:
+      print "The object is not a planar curve."
+    See Also:
+      IsCurve
+      IsCurvePlanar
     """
     curve = rhutil.coercecurve(object_id, -1, True)
     if not plane:
@@ -1974,6 +2913,21 @@ def IsCurveLinear(object_id, segment_index=-1):
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select a curve")
+      if rs.IsCurve(id):
+      if rs.IsCurveLinear(id):
+      print "The object is a linear curve."
+      else:
+      print "The object is not a linear curve."
+      else:
+      print "The object is not a curve."
+    See Also:
+      IsCurve
+      IsCurveClosed
+      IsCurvePeriodic
+      IsCurvePlanar
     """
     curve = rhutil.coercecurve(object_id, segment_index, True)
     return curve.IsLinear()
@@ -1986,6 +2940,21 @@ def IsCurvePeriodic(curve_id, segment_index=-1):
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
     Returns:
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve")
+      if rs.IsCurve(obj):
+      if rs.IsCurvePeriodic(obj):
+      print "The object is a periodic curve."
+      else:
+      print "The object is not a periodic curve."
+      else:
+      print "The object is not a curve."
+    See Also:
+      IsCurve
+      IsCurveClosed
+      IsCurveLinear
+      IsCurvePlanar
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     return curve.IsPeriodic
@@ -1998,6 +2967,21 @@ def IsCurvePlanar(curve_id, segment_index=-1):
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve")
+      if rs.IsCurve(obj):
+      if rs.IsCurvePlanar(obj):
+      print "The object is a planar curve."
+      else:
+      print "The object is not a planar curve."
+      else:
+      print "The object is not a curve."
+    See Also:
+      IsCurve
+      IsCurveClosed
+      IsCurveLinear
+      IsCurvePeriodic
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     tol = scriptcontext.doc.ModelAbsoluteTolerance
@@ -2011,6 +2995,21 @@ def IsCurveRational(curve_id, segment_index=-1):
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve")
+      if rs.IsCurve(obj):
+      if rs.IsCurveRational(obj):
+      print "The object is a rational NURBS curve."
+      else:
+      print "The object is not a rational NURBS curve."
+      else:
+      print "The object is not a curve."
+    See Also:
+      IsCurve
+      IsCurveClosed
+      IsCurveLinear
+      IsCurvePeriodic
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     if isinstance(curve, Rhino.Geometry.NurbsCurve): return curve.IsRational
@@ -2024,6 +3023,16 @@ def IsEllipse(object_id, segment_index=-1):
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select an ellipse")
+      if rs.IsEllipse(obj):
+      print "The object is an ellipse."
+      else:
+      print "The object is not an ellipse."
+    See Also:
+      EllipseCenterPoint
+      EllipseQuadPoints
     """
     curve = rhutil.coercecurve(object_id, segment_index, True)
     return curve.IsEllipse()
@@ -2036,6 +3045,15 @@ def IsLine(object_id, segment_index=-1):
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a line")
+      if rs.IsLine(obj):
+      print "The object is a line."
+      else:
+      print "The object is not a line."
+    See Also:
+      AddLine
     """
     curve = rhutil.coercecurve(object_id, segment_index, True)
     if isinstance(curve, Rhino.Geometry.LineCurve): return True
@@ -2052,6 +3070,18 @@ def IsPointOnCurve(object_id, point, segment_index=-1):
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve")
+      if rs.IsCurve(obj):
+      point = rs.GetPoint("Pick a test point")
+      if point:
+      if rs.IsPointOnCurve(obj, point):
+      print "The point is on the curve"
+      else:
+      print "The point is not on the curve"
+    See Also:
+      IsCurve
     """
     curve = rhutil.coercecurve(object_id, segment_index, True)
     point = rhutil.coerce3dpoint(point, True)
@@ -2066,6 +3096,15 @@ def IsPolyCurve(object_id, segment_index=-1):
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
     Returns:
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a polycurve")
+      if rs.IsPolyCurve(obj):
+      print "The object is a polycurve."
+      else:
+      print "The object is not a polycurve."
+    See Also:
+      PolyCurveCount
     """
     curve = rhutil.coercecurve(object_id, segment_index, True)
     return isinstance(curve, Rhino.Geometry.PolyCurve)
@@ -2078,6 +3117,16 @@ def IsPolyline( object_id, segment_index=-1 ):
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
     Returns:
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a polyline")
+      if rs.IsPolyline(obj):
+      print "The object is a polyline."
+      else:
+      print "The object is not a polyline."
+    See Also:
+      IsPolyline
+      PolylineVertices
     """
     curve = rhutil.coercecurve(object_id, segment_index, True)
     return isinstance(curve, Rhino.Geometry.PolylineCurve)
@@ -2092,6 +3141,14 @@ def JoinCurves(object_ids, delete_input=False, tolerance=None):
           tolerance is used
     Returns:
       List of Guids representing the new curves
+    Example:
+      import rhinoscriptsyntax as rs
+      objs = rs.GetObjects("Select curves to join", rs.filter.curve)
+      if objs: rs.JoinCurves(objs)
+    See Also:
+      ExplodeCurves
+      IsCurve
+      IsCurveClosed
     """
     if len(object_ids)<2: raise ValueError("object_ids must contain at least 2 items")
     curves = [rhutil.coercecurve(id, -1, True) for id in object_ids]
@@ -2115,6 +3172,16 @@ def LineFitFromPoints(points):
       points = a list of at least two 3D points
     Returns:
       line on success
+    Example:
+      import rhinoscriptsyntax as rs
+      points = rs.GetPoints()
+      if points and len(points)>1:
+      line=rs.LineFitFromPoints(points)
+      if line: rs.AddLine(line.From, line.To)
+    See Also:
+      AddLine
+      CurveEndPoint
+      CurveStartPoint
     """
     points = rhutil.coerce3dpointlist(points, True)
     rc, line = Rhino.Geometry.Line.TryFitLineToPoints(points)
@@ -2131,6 +3198,11 @@ def MakeCurveNonPeriodic(curve_id, delete_input=False):
     Returns:
       id of the new or modified curve if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      curve = rs.GetObject("Select a curve", rs.filter.curve)
+    See Also:
+      IsCurvePeriodic
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     if not curve.IsPeriodic: return scriptcontext.errorhandler()
@@ -2164,6 +3236,12 @@ def MeanCurve(curve0, curve1, tolerance=None):
     Returns:
       id of the new or modified curve if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      curve0 = rs.GetObject("Select the first curve", rs.filter.curve)
+      curve1 = rs.GetObject("Select the second curve", rs.filter.curve)
+    See Also:
+      UnitAngleTolerance
     """
     curve0 = rhutil.coercecurve(curve0, -1, True)
     curve1 = rhutil.coercecurve(curve1, -1, True)
@@ -2183,6 +3261,15 @@ def MeshPolyline(polyline_id):
     Returns:
       identifier of the new mesh object
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      polyline = rs.GetObject("Select a polyline", rs.filter.curve)
+      if polyline:
+      if rs.IsPolyline(polyline) and rs.IsCurveClosed(polyline):
+      rs.MeshPolyline( polyline )
+    See Also:
+      IsCurveClosed
+      IsPolyline
     """
     curve = rhutil.coercecurve(polyline_id, -1, True)
     ispolyline, polyline = curve.TryGetPolyline()
@@ -2207,6 +3294,14 @@ def OffsetCurve(object_id, direction, distance, normal=None, style=1):
     Returns:
       List of ids for the new curves on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve", rs.filter.curve)
+      if rs.IsCurve(obj):
+      rs.OffsetCurve( obj, [0,0,0], 1.0 )
+    See Also:
+      OffsetCurveOnSurface
+      OffsetSurface
     """
     curve = rhutil.coercecurve(object_id, -1, True)
     direction = rhutil.coerce3dpoint(direction, True)
@@ -2236,6 +3331,23 @@ def OffsetCurveOnSurface(curve_id, surface_id, distance_or_parameter):
     Returns:
       Identifiers of the new curves if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      def TestOffset():
+      curve = rs.GetObject("Select curve on a surface", rs.filter.curve)
+      if curve is None: return False
+      surface = rs.GetObject("Select base surface", rs.filter.surface)
+      if surface is None: return False
+      point = rc.GetPointOnSurface( surface, "Through point" )
+      if point is None: return False
+      parameter = rs.SurfaceClosestPoint(surface, point)
+      rc = rs.OffsetCurveOnSurface( curve, surface, parameter )
+      return rc is not None
+      
+      TestOffset()
+    See Also:
+      OffsetCurve
+      OffsetSurface
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     surface = rhutil.coercesurface(surface_id, True)
@@ -2267,6 +3379,16 @@ def PlanarClosedCurveContainment(curve_a, curve_b, plane=None, tolerance=None):
         2 = the region bounded by curve_a is inside of curve_b
         3 = the region bounded by curve_b is inside of curve_a
       None if not successful
+    Example:
+      import rhinoscriptsyntax as rs
+      curve1 = rs.GetObject("Select first curve", rs.filter.curve )
+      curve2 = rs.GetObject("Select second curve", rs.filter.curve )
+      if rs.IsCurvePlanar(curve1) and rs.IsCurvePlanar(curve2):
+      if rs.IsCurveInPlane(curve1) and rs.IsCurveInPlane(curve2):
+      result = rs.PlanarClosedCurveContainment(curve1, curve2)
+    See Also:
+      PlanarCurveCollision
+      PointInPlanarClosedCurve
     """
     curve_a = rhutil.coercecurve(curve_a, -1, True)
     curve_b = rhutil.coercecurve(curve_b, -1, True)
@@ -2289,6 +3411,17 @@ def PlanarCurveCollision(curve_a, curve_b, plane=None, tolerance=None):
       tolerance[opt] = if omitted, the document absolute tolerance is used
     Returns:
       True if the curves intersect; otherwise False
+    Example:
+      import rhinoscriptsyntax as rs
+      curve1 = rs.GetObject("Select first curve")
+      curve2 = rs.GetObject("Select second curve")
+      print "The coplanar curves intersect."
+      else:
+      print "The coplanar curves do not intersect."
+    See Also:
+      CurveCurveIntersection
+      PlanarClosedCurveContainment
+      PointInPlanarClosedCurve
     """
     curve_a = rhutil.coercecurve(curve_a, -1, True)
     curve_b = rhutil.coercecurve(curve_b, -1, True)
@@ -2315,6 +3448,16 @@ def PointInPlanarClosedCurve(point, curve, plane=None, tolerance=None):
           0 = point is outside of the curve
           1 = point is inside of the curve
           2 = point in on the curve
+    Example:
+      import rhinoscriptsyntax as rs
+      curve = rs.GetObject("Select a planar, closed curve", rs.filter.curve)
+      if rs.IsCurveClosed(curve) and rs.IsCurvePlanar(curve):
+      point = rs.GetPoint("Pick a point")
+      if point:
+      result = rs.PointInPlanarClosedCurve(point, curve)
+    See Also:
+      PlanarClosedCurveContainment
+      PlanarCurveCollision
     """
     point = rhutil.coerce3dpoint(point, True)
     curve = rhutil.coercecurve(curve, -1, True)
@@ -2338,6 +3481,14 @@ def PolyCurveCount(curve_id, segment_index=-1):
       segment_index [opt] = if curve_id identifies a polycurve object, then segment_index identifies the curve segment of the polycurve to query.
     Returns:
       the number of curve segments in a polycurve if successful, otherwise None
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a polycurve")
+      if rs.IsPolyCurve(obj):
+      count = rs.PolyCurveCount(obj)
+      if count: print "The polycurve contains", count, " curves."
+    See Also:
+      IsPolyCurve
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     if isinstance(curve, Rhino.Geometry.PolyCurve): return curve.SegmentCount
@@ -2351,6 +3502,16 @@ def PolylineVertices(curve_id, segment_index=-1):
       segment_index [opt] = if curve_id identifies a polycurve object, then segment_index identifies the curve segment of the polycurve to query.
     Returns:
       an  array of Point3d vertex points if successful, otherwise None
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a polyline")
+      if rs.IsPolyline(obj):
+      points = rs.PolylineVertices(obj)
+      if points:
+      for point in points: rs.AddPoint(point)
+    See Also:
+      AddPolyline
+      IsPolyline
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
     rc, polyline = curve.TryGetPolyline()
@@ -2366,6 +3527,16 @@ def ProjectCurveToMesh(curve_ids, mesh_ids, direction):
       direction = projection direction
     Returns:
       list of identifiers
+    Example:
+      import rhinoscriptsyntax as rs
+      mesh = rs.GetObject("Select mesh to project onto", rs.filter.mesh)
+      curve= rs.GetObject("Select curve to project", rs.filter.curve)
+      #Project down...
+      results = rs.ProjectCurveToMesh(curve, mesh, (0,0,-1))
+    See Also:
+      ProjectCurveToSurface
+      ProjectPointToMesh
+      ProjectPointToSurface
     """
     curve_ids = rhutil.coerceguidlist(curve_ids)
     mesh_ids = rhutil.coerceguidlist(mesh_ids)
@@ -2387,6 +3558,16 @@ def ProjectCurveToSurface(curve_ids, surface_ids, direction):
       direction = projection direction
     Returns:
       list of identifiers
+    Example:
+      import rhinoscriptsyntax as rs
+      surface = rs.GetObject("Select surface to project onto", rs.filter.surface)
+      curve = rs.GetObject("Select curve to project", rs.filter.curve)
+      # Project down...
+      results = rs.ProjectCurveToSurface(curve, surface, (0,0,-1))
+    See Also:
+      ProjectCurveToMesh
+      ProjectPointToMesh
+      ProjectPointToSurface
     """
     curve_ids = rhutil.coerceguidlist(curve_ids)
     surface_ids = rhutil.coerceguidlist(surface_ids)
@@ -2409,6 +3590,12 @@ def RebuildCurve(curve_id, degree=3, point_count=10):
       point_count [opt] = new point count, which must be bigger than degree.
     Returns:
       True of False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      curve = rs.GetObject("Select curve to rebuild", rs.filter.curve)
+      if curve: rs.RebuildCurve(curve, 3, 10)
+    See Also:
+      RebuildSurface
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     if degree<1: raise ValueError("degree must be greater than 0")
@@ -2425,6 +3612,12 @@ def ReverseCurve(curve_id):
       curve_id = identifier of the curve object
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      curve = rs.GetObject("Select a curve to reverse")
+      if rs.IsCurve(curve): rs.ReverseCurve(curve)
+    See Also:
+      CurveDirectionsMatch
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     if curve.Reverse():
@@ -2461,6 +3654,12 @@ def SimplifyCurve(curve_id, flags=0):
       flags [opt] = the simplification methods to use. By default, all methods are used (flags = 0)
     Returns:
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      curve = rs.GetObject("Select a curve to simplify", rs.filter.curve)
+    See Also:
+      IsArc
+      IsCurveLinear
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     _flags = Rhino.Geometry.CurveSimplifyOptions.All
@@ -2491,6 +3690,15 @@ def SplitCurve(curve_id, parameter, delete_input=True):
     Returns:
       list of new curves on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      curve = rs.GetObject("Select a curve to split", rs.filter.curve)
+      if rs.IsCurve(curve):
+      domain = rs.CurveDomain(curve)
+      parameter = domain[1] / 2.0
+      rs.SplitCurve( curve, parameter )
+    See Also:
+      TrimCurve
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     newcurves = curve.Split(parameter)
@@ -2519,6 +3727,15 @@ def TrimCurve(curve_id, interval, delete_input=True):
     Returns:
       identifier of the new curve on success
       None on failure
+    Example:
+      import rhinoscriptsyntax as rs
+      curve = rs.GetObject("Select a curve to trim", rs.filter.curve)
+      if rs.IsCurve(curve):
+      domain = rs.CurveDomain(curve)
+      domain[1] /= 2.0
+      rs.TrimCurve( curve, domain )
+    See Also:
+      SplitCurve
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     if interval[0]==interval[1]: raise ValueError("interval values are equal")

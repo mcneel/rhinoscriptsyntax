@@ -15,6 +15,17 @@ def CopyObject(object_id, translation=None):
     Returns:
       id for the copy if successful
       None if not able to copy
+    Example:
+      import rhinoscriptsyntax as rs
+      if id:
+      start = rs.GetPoint("Point to copy from")
+      if start:
+      end = rs.GetPoint("Point to copy to", start)
+      if end:
+      translation = end-start
+      rs.CopyObject( id, translation )
+    See Also:
+      CopyObjects
     """
     rc = CopyObjects(object_id, translation)
     if rc: return rc[0]
@@ -28,6 +39,17 @@ def CopyObjects(object_ids, translation=None):
                          translation vector to apply to copied set
     Returns:
       list of identifiers for the copies if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      objectIds = rs.GetObjects("Select objects to copy")
+      if objectIds:
+      start = rs.GetPoint("Point to copy from")
+      if start:
+      end = rs.GetPoint("Point to copy to", start)
+      if end:
+      rs.CopyObjects( objectIds, translation )
+    See Also:
+      CopyObject
     """
     if translation:
         translation = rhutil.coerce3dvector(translation, True)
@@ -43,6 +65,12 @@ def DeleteObject(object_id):
       object_id: identifier of object to delete
     Returns:
       True of False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select object to delete")
+      if id: rs.DeleteObject(id)
+    See Also:
+      DeleteObjects
     """
     object_id = rhutil.coerceguid(object_id, True)
     rc = scriptcontext.doc.Objects.Delete(object_id, True)
@@ -56,6 +84,12 @@ def DeleteObjects(object_ids):
       object_ids: identifiers of objects to delete
     Returns:
       Number of objects deleted
+    Example:
+      import rhinoscriptsyntax as rs
+      object_ids = rs.GetObjects("Select objects to delete")
+      if object_ids: rs.DeleteObjects(object_ids)
+    See Also:
+      DeleteObject
     """
     rc = 0
     id = rhutil.coerceguid(object_ids, False)
@@ -76,6 +110,15 @@ def FlashObject(object_ids, style=True):
         If False, flash between visible and invisible
     Returns:
       None
+    Example:
+      import rhinoscriptsyntax as rs
+      objs = rs.ObjectsByLayer("Default")
+      if objs: rs.FlashObject(objs)
+    See Also:
+      HideObjects
+      SelectObjects
+      ShowObjects
+      UnselectObjects
     """
     id = rhutil.coerceguid(object_ids, False)
     if id: object_ids = [id]
@@ -89,6 +132,15 @@ def HideObject(object_id):
       object_id: String or Guid representing id of object to hide
     Returns:
       True of False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select object to hide")
+      if id: rs.HideObject(id)
+    See Also:
+      HideObjects
+      IsObjectHidden
+      ShowObject
+      ShowObjects
     """
     return HideObjects(object_id)==1
 
@@ -99,6 +151,15 @@ def HideObjects(object_ids):
       object_ids: identifiers of objects to hide
     Returns:
       Number of objects hidden
+    Example:
+      import rhinoscriptsyntax as rs
+      ids = rs.GetObjects("Select objects to hide")
+      if ids: rs.HideObjects(ids)
+    See Also:
+      HideObjects
+      IsObjectHidden
+      ShowObject
+      ShowObjects
     """
     id = rhutil.coerceguid(object_ids, False)
     if id: object_ids = [id]
@@ -117,6 +178,17 @@ def IsLayoutObject(object_id):
     Returns:
       True if the object is in page layout space
       False if the object is in model space
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select object")
+      if id:
+      if rs.IsLayoutObject(id):
+      print "The object is in page layout space."
+      else:
+      print "The object is in model space."
+    See Also:
+      IsObject
+      IsObjectReference
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     return rhobj.Attributes.Space == Rhino.DocObjects.ActiveSpace.PageSpace
@@ -129,6 +201,22 @@ def IsObject(object_id):
     Returns:
       True if the object exists
       False if the object does not exist
+    Example:
+      import rhinoscriptsyntax as rs
+      #Do something here...
+      if rs.IsObject(id):
+      print "The object exists."
+      else:
+      print "The object does not exist."
+    See Also:
+      IsObjectHidden
+      IsObjectInGroup
+      IsObjectLocked
+      IsObjectNormal
+      IsObjectReference
+      IsObjectSelectable
+      IsObjectSelected
+      IsObjectSolid
     """
     return rhutil.coercerhinoobject(object_id, True, False) is not None
 
@@ -141,6 +229,22 @@ def IsObjectHidden(object_id):
     Returns:
       True if the object is hidden
       False if the object is not hidden
+    Example:
+      import rhinoscriptsyntax as rs
+      # Do something here...
+      if rs.IsObjectHidden(id):
+      print "The object is hidden."
+      else:
+      print "The object is not hidden."
+    See Also:
+      IsObject
+      IsObjectInGroup
+      IsObjectLocked
+      IsObjectNormal
+      IsObjectReference
+      IsObjectSelectable
+      IsObjectSelected
+      IsObjectSolid
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     return rhobj.IsHidden
@@ -156,6 +260,19 @@ def IsObjectInBox(object_id, box, test_mode=True):
     Returns:
       True if object is inside box
       False is object is not inside box
+    Example:
+      import rhinoscriptsyntax as rs
+      box = rs.GetBox()
+      if box:
+      rs.EnableRedraw(False)
+      object_list = rs.AllObjects()
+      for obj in object_list:
+      if rs.IsObjectInBox(obj, box, False):
+      rs.SelectObject( obj )
+      rs.EnableRedraw( True )
+    See Also:
+      BoundingBox
+      GetBox
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     box = rhutil.coerceboundingbox(box, True)
@@ -176,6 +293,26 @@ def IsObjectInGroup(object_id, group_name=None):
         was not specified, the object is a member of some group.
       False if the object is not a member of the specified group. If a
         group_name was not specified, the object is not a member of any group
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select object")
+      if id:
+      name = rs.GetString("Group name")
+      if name:
+      result = rs.IsObjectInGroup(id, name)
+      if result:
+      print "The object belongs to the group."
+      else:
+      print "The object does not belong to the group."
+    See Also:
+      IsObject
+      IsObjectHidden
+      IsObjectLocked
+      IsObjectNormal
+      IsObjectReference
+      IsObjectSelectable
+      IsObjectSelected
+      IsObjectSolid
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     count = rhobj.GroupCount
@@ -197,6 +334,22 @@ def IsObjectLocked(object_id):
     Returns:
       True if the object is locked
       False if the object is not locked
+    Example:
+      import rhinoscriptsyntax as rs
+      # Do something here...
+      if rs.IsObjectLocked(object):
+      print "The object is locked."
+      else:
+      print "The object is not locked."
+    See Also:
+      IsObject
+      IsObjectHidden
+      IsObjectInGroup
+      IsObjectNormal
+      IsObjectReference
+      IsObjectSelectable
+      IsObjectSelected
+      IsObjectSolid
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     return rhobj.IsLocked
@@ -210,6 +363,22 @@ def IsObjectNormal(object_id):
     Returns:
       True if the object is normal
       False if the object is not normal
+    Example:
+      import rhinoscriptsyntax as rs
+      #Do something here...
+      if rs.IsObjectNormal(object):
+      print "The object is normal."
+      else:
+      print "The object is not normal."
+    See Also:
+      IsObject
+      IsObjectHidden
+      IsObjectInGroup
+      IsObjectLocked
+      IsObjectReference
+      IsObjectSelectable
+      IsObjectSelected
+      IsObjectSolid
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     return rhobj.IsNormal
@@ -223,6 +392,22 @@ def IsObjectReference(object_id):
     Returns:
       True if the object is a reference object
       False if the object is not a reference object
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select object")
+      if rs.IsObjectReference(id):
+      print "The object is a reference object."
+      else:
+      print "The object is not a reference object."
+    See Also:
+      IsObject
+      IsObjectHidden
+      IsObjectInGroup
+      IsObjectLocked
+      IsObjectNormal
+      IsObjectSelectable
+      IsObjectSelected
+      IsObjectSolid
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     return rhobj.IsReference
@@ -234,6 +419,20 @@ def IsObjectSelectable(object_id):
       object_id: String or Guid. The identifier of an object
     Returns:
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      # Do something here...
+      if rs.IsObjectSelectable(object):
+      rs.SelectObject( object )
+    See Also:
+      IsObject
+      IsObjectHidden
+      IsObjectInGroup
+      IsObjectLocked
+      IsObjectNormal
+      IsObjectReference
+      IsObjectSelected
+      IsObjectSolid
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     return rhobj.IsSelectable(True,False,False,False)
@@ -246,6 +445,22 @@ def IsObjectSelected(object_id):
     Returns:
       True if the object is selected
       False if the object is not selected
+    Example:
+      import rhinocsriptsyntax as rs
+      # Do something here...
+      if rs.IsObjectSelected(object):
+      print "The object is selected."
+      else:
+      print "The object is not selected."
+    See Also:
+      IsObject
+      IsObjectHidden
+      IsObjectInGroup
+      IsObjectLocked
+      IsObjectNormal
+      IsObjectReference
+      IsObjectSelectable
+      IsObjectSolid
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     return rhobj.IsSelected(False)
@@ -258,6 +473,22 @@ def IsObjectSolid(object_id):
     Returns:
       True if the object is solid, or a mesh is closed.
       False otherwise.
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select object")
+      if rs.IsObjectSolid(id):
+      print "The object is solid."
+      else:
+      print "The object is not solid."
+    See Also:
+      IsObject
+      IsObjectHidden
+      IsObjectInGroup
+      IsObjectLocked
+      IsObjectNormal
+      IsObjectReference
+      IsObjectSelectable
+      IsObjectSelected
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     geom = rhobj.Geometry
@@ -278,6 +509,15 @@ def IsObjectValid(object_id):
       object_id: The identifier of an object
     Returns:
       True if the object is valid
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select object")
+      if rs.IsObjectValid(id):
+      print "The object is valid."
+      else:
+      print "The object is not valid."
+    See Also:
+      IsObject
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     return rhobj.IsValid
@@ -290,6 +530,18 @@ def IsVisibleInView(object_id, view=None):
       view = The title of the view.  If omitted, the current active view is used.
     Returns:
       True if the object is visible in the specified view, otherwise False.  None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object")
+      if rs.IsObject(obj):
+      view = rs.CurrentView()
+      if rs.IsVisibleInView(obj, view):
+      print "The object is visible in", view, "."
+      else:
+      print "The object is not visible in", view, "."
+    See Also:
+      IsObject
+      IsView
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     viewport = __viewhelper(view).MainViewport
@@ -304,6 +556,15 @@ def LockObject(object_id):
       object_id: The identifier of an object
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select object to lock")
+      if id: rs.LockObject(id)
+    See Also:
+      IsObjectLocked
+      LockObjects
+      UnlockObject
+      UnlockObjects
     """
     return LockObjects(object_id)==1
 
@@ -315,6 +576,15 @@ def LockObjects(object_ids):
       object_ids: list of Strings or Guids. The identifiers of objects
     Returns:
       number of objects locked
+    Example:
+      import rhinoscriptsyntax as rs
+      ids = rs.GetObjects("Select objects to lock")
+      if ids: rs.LockObjects(ids)
+    See Also:
+      IsObjectLocked
+      LockObject
+      UnlockObject
+      UnlockObjects
     """
     id = rhutil.coerceguid(object_ids, False)
     if id: object_ids = [id]
@@ -334,6 +604,15 @@ def MatchObjectAttributes(target_ids, source_id=None):
         then the default attributes are copied to the target_ids
     Returns:
       number of objects modified
+    Example:
+      import rhinoscriptsyntax as rs
+      targets = rs.GetObjects("Select objects")
+      if targets:
+      source = rs.GetObject("Select object to match")
+      if source: rs.MatchObjectAttributes( targets, source )
+    See Also:
+      GetObject
+      GetObjects
     """
     id = rhutil.coerceguid(target_ids, False)
     if id: target_ids = [id]
@@ -360,6 +639,16 @@ def MirrorObject(object_id, start_point, end_point, copy=False):
     Returns:
       Identifier of the mirrored object if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object to mirror")
+      if obj:
+      start = rs.GetPoint("Start of mirror plane")
+      end = rs.GetPoint("End of mirror plane")
+      if start and end:
+      rs.MirrorObject( obj, start, end, True )
+    See Also:
+      MirrorObjects
     """
     rc = MirrorObjects(object_id, start_point, end_point, copy)
     if rc: return rc[0]
@@ -374,6 +663,16 @@ def MirrorObjects(object_ids, start_point, end_point, copy=False):
       copy[opt] = copy the objects
     Returns:
       List of identifiers of the mirrored objects if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      objs = rs.GetObjects("Select objects to mirror")
+      if objs:
+      start = rs.GetPoint("Start of mirror plane")
+      end = rs.GetPoint("End of mirror plane")
+      if start and end:
+      rs.MirrorObjects( objs, start, end, True )
+    See Also:
+      MirrorObject
     """
     start_point = rhutil.coerce3dpoint(start_point, True)
     end_point = rhutil.coerce3dpoint(end_point, True)
@@ -395,6 +694,17 @@ def MoveObject(object_id, translation):
     Returns:
       Identifier of the moved object if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select object to move")
+      if id:
+      start = rs.GetPoint("Point to move from")
+      if start:
+      end = rs.GetPoint("Point to move to")
+      if end:
+      rs.MoveObject(id, translation)
+    See Also:
+      MoveObjects
     """
     rc = MoveObjects(object_id, translation)
     if rc: return rc[0]
@@ -407,6 +717,18 @@ def MoveObjects(object_ids, translation):
       translation: list of 3 numbers or Vector3d
     Returns:
       List of identifiers of the moved objects if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      ids = rs.GetObjects("Select objects to move")
+      if ids:
+      start = rs.GetPoint("Point to move from")
+      if start:
+      end = rs.GetPoint("Point to move to")
+      if end:
+      translation = end-start
+      rs.MoveObjects( ids, translation )
+    See Also:
+      MoveObject
     """
     translation = rhutil.coerce3dvector(translation, True)
     xf = Rhino.Geometry.Transform.Translation(translation)
@@ -426,6 +748,16 @@ def ObjectColor(object_ids, color=None):
         If color value is not specified, the current color value
         If color value is specified, the previous color value
         If object_ids is a list, then the number of objects modified
+    Example:
+      import rhinoscriptsyntax as rs
+      objs = rs.GetObjects("Select objects to change color")
+      if objs:
+      color = rs.GetColor(0)
+      if color:
+      for obj in objs: rs.ObjectColor( obj, color )
+    See Also:
+      ObjectColorSource
+      ObjectsByColor
     """
     id = rhutil.coerceguid(object_ids, False)
     rhino_object = None
@@ -471,6 +803,13 @@ def ObjectColorSource(object_ids, source=None):
       if color source is not specified, the current color source
       is color source is specified, the previous color source
       if color_ids is a list, then the number of objects modifief
+    Example:
+      import rhinoscriptsyntax as rs
+      objs = rs.GetObjects("Select objects to reset color source")
+      if objs:
+      for obj In objs: rs.ObjectColorSource(obj, 0)
+    See Also:
+      ObjectColor
     """
     id = rhutil.coerceguid(object_ids, False)
     if id:
@@ -499,6 +838,14 @@ def ObjectDescription(object_id):
       object_id = identifier of an object
     Returns:
       A short text description of the object if successful.
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object")
+      if obj:
+      description = rs.ObjectDescription(obj)
+      print "Object description:" , description
+    See Also:
+      ObjectType
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     return rhobj.ShortDescription(False)
@@ -510,6 +857,17 @@ def ObjectGroups(object_id):
       object_id = identifier of an object
     Returns:
       list of group names on success
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object")
+      if obj:
+      groups = rs.ObjectGroups(obj)
+      if groups:
+      for group in groups: print "Object group: ", group
+      else:
+      print "No groups."
+    See Also:
+      ObjectsByGroup
     """
     rhino_object = rhutil.coercerhinoobject(object_id, True, True)
     if rhino_object.GroupCount<1: return []
@@ -527,6 +885,12 @@ def ObjectLayer(object_id, layer=None):
       If a layer is not specified, the object's current layer
       If a layer is specified, the object's previous layer
       If object_id is a list or tuple, the number of objects modified
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select object")
+      if id: rs.ObjectLayer(id, "Default")
+    See Also:
+      ObjectsByLayer
     """
     if type(object_id) is not str and hasattr(object_id, "__len__"):
         layer = __getlayer(layer, True)
@@ -564,6 +928,14 @@ def ObjectLayout(object_id, layout=None, return_name=True):
       if layout is not specified, the object's current page layout view
       if layout is specfied, the object's previous page layout view
       None if not successful
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object")
+      if obj: rs.ObjectLayout(obj, "Page 1")
+    See Also:
+      IsLayoutObject
+      IsLayout
+      ViewNames
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     rc = None
@@ -599,6 +971,12 @@ def ObjectLinetype(object_ids, linetype=None):
       If a linetype is not specified, the object's current linetype
       If linetype is specified, the object's previous linetype
       If object_ids is a list, the number of objects modified
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object")
+      if obj: rs.ObjectLinetype(obj, "Continuous")
+    See Also:
+      ObjectLinetypeSource
     """
     id = rhutil.coerceguid(object_ids, False)
     if id:
@@ -636,6 +1014,13 @@ def ObjectLinetypeSource(object_ids, source=None):
       If a source is not specified, the object's current linetype source
       If source is specified, the object's previous linetype source
       If object_ids is a list, the number of objects modified
+    Example:
+      import rhinoscriptsyntax as rs
+      objects = rs.GetObjects("Select objects to reset linetype source")
+      if objects:
+      for obj in objects: rs.ObjectLinetypeSource( obj, 0 )
+    See Also:
+      ObjectLinetype
     """
     id = rhutil.coerceguid(object_ids, False)
     if id:
@@ -670,6 +1055,18 @@ def ObjectMaterialIndex(object_id, material_index=None):
       material. A material index of -1 indicates no material has been assigned,
       and that Rhino's internal default material has been assigned to the object.
       None on failure      
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object")
+      if obj:
+      source = rs.ObjectMaterialSource(obj)
+      if source==0:
+      print "The material source is by layer"
+      else:
+      print "The material source is by object"
+      index = rs.ObjectMaterialIndex(obj)
+    See Also:
+      ObjectMaterialSource
     """
     rhino_object = rhutil.coercerhinoobject(object_id, True, True)
     if material_index is not None and material_index < scriptcontext.doc.Materials.Count:
@@ -694,6 +1091,13 @@ def ObjectMaterialSource(object_ids, source=None):
       If source is not specified, the current rendering material source
       If source is specified, the previous rendering material source
       If object_ids refers to multiple objects, the number of objects modified
+    Example:
+      import rhinoscriptsyntax as rs
+      objects = rs.GetObjects("Select objects to reset rendering material source")
+      if objects:
+      [rs.ObjectMaterialSource(obj, 0) for obj in objects]
+    See Also:
+      ObjectMaterialIndex
     """
     id = rhutil.coerceguid(object_ids, False)
     if id: # working with single object
@@ -722,6 +1126,18 @@ def ObjectName(object_id, name=None):
       If name is not specified, the current object name
       If name is specified, the previous object name
       If object_id is a list, the number of objects changed
+    Example:
+      import rhinoscriptsyntax as rs
+      points = rs.GetPoints(message1="Pick some points")
+      if points:
+      count = 0
+      for point in points:
+      obj = rs.AddPoint(point)
+      if obj:
+      rs.ObjectName( obj, "Point"+str(count) )
+      count += 1
+    See Also:
+      ObjectsByName
     """
     id = rhutil.coerceguid(object_id, False)
     rhino_object = None
@@ -759,6 +1175,15 @@ def ObjectPrintColor(object_ids, color=None):
       If color is not specified, the object's current print color
       If color is specified, the object's previous print color
       If object_ids is a list or tuple, the number of objects modified
+    Example:
+      import rhinoscriptsyntax as rs
+      objects = rs.GetObjects("Select objects to change print color")
+      if objects:
+      color = rs.GetColor()
+      if color:
+      for object in objects: rs.ObjectPrintColor(object, color)
+    See Also:
+      ObjectPrintColorSource
     """
     id = rhutil.coerceguid(object_ids, False)
     if id:
@@ -792,6 +1217,13 @@ def ObjectPrintColorSource(object_ids, source=None):
       If source is not specified, the object's current print color source
       If source is specified, the object's previous print color source
       If object_ids is a list or tuple, the number of objects modified
+    Example:
+      import rhinoscriptsyntax as rs
+      objects = rs.GetObjects("Select objects to reset print color source")
+      if objects:
+      for object in objects: rs.ObjectPrintColorSource(object, 0)
+    See Also:
+      ObjectPrintColor
     """
     id = rhutil.coerceguid(object_ids, False)
     if id:
@@ -821,6 +1253,13 @@ def ObjectPrintWidth(object_ids, width=None):
       If width is not specified, the object's current print width
       If width is specified, the object's previous print width
       If object_ids is a list or tuple, the number of objects modified
+    Example:
+      import rhinoscriptsyntax as rs
+      objs = rs.GetObjects("Select objects to change print width")
+      if objs:
+      for obj in objs: rs.ObjectPrintWidth(obj,0.5)
+    See Also:
+      ObjectPrintWidthSource
     """
     id = rhutil.coerceguid(object_ids, False)
     if id:
@@ -853,6 +1292,13 @@ def ObjectPrintWidthSource(object_ids, source=None):
       If source is not specified, the object's current print width source
       If source is specified, the object's previous print width source
       If object_ids is a list or tuple, the number of objects modified
+    Example:
+      import rhinoscriptsyntax as rs
+      objects = rs.GetObjects("Select objects to reset print width source")
+      if objects:
+      for obj in objects: rs.ObjectPrintWidthSource(obj,0)
+    See Also:
+      ObjectPrintColor
     """
     id = rhutil.coerceguid(object_ids, False)
     if id:
@@ -877,6 +1323,14 @@ def ObjectType(object_id):
       object_id = identifier of an object
     Returns:
       see help for values
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object")
+      if obj:
+      objtype = rs.ObjectType(obj)
+      print "Object type:", objtype
+    See Also:
+      ObjectsByType
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     geom = rhobj.Geometry
@@ -903,6 +1357,17 @@ def OrientObject(object_id, reference, target, flags=0):
                     2 = scale object
     Returns:
       The identifier of the oriented object if successful.
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object to orient")
+      if obj:
+      reference = rs.GetPoints(message1="First reference point")
+      if reference and len(reference)>0:
+      target = rs.GetPoints(message1="First target point")
+      if target and len(target)>0:
+      rs.OrientObject( obj, reference, target )
+    See Also:
+      
     """
     object_id = rhutil.coerceguid(object_id, True)
     from_array = rhutil.coerce3dpointlist(reference)
@@ -959,6 +1424,14 @@ def RotateObject(object_id, center_point, rotation_angle, axis=None, copy=False)
     Returns:
       Identifier of the rotated object if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object to rotate")
+      if obj:
+      point = rs.GetPoint("Center point of rotation")
+      if point: rs.RotateObject(obj, point, 45.0, None, copy=True)
+    See Also:
+      RotateObjects
     """
     rc = RotateObjects(object_id, center_point, rotation_angle, axis, copy)
     if rc: return rc[0]
@@ -976,6 +1449,15 @@ def RotateObjects( object_ids, center_point, rotation_angle, axis=None, copy=Fal
       copy[opt] = copy the object
     Returns:
       List of identifiers of the rotated objects if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      objs = rs.GetObjects("Select objects to rotate")
+      if objs:
+      point = rs.GetPoint("Center point of rotation")
+      if point:
+      rs.RotateObjects( objs, point, 45.0, None, True )
+    See Also:
+      RotateObject
     """
     center_point = rhutil.coerce3dpoint(center_point, True)
     if not axis:
@@ -998,6 +1480,15 @@ def ScaleObject(object_id, origin, scale, copy=False):
     Returns:
       Identifier of the scaled object if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object to scale")
+      if obj:
+      origin = rs.GetPoint("Origin point")
+      if origin:
+      rs.ScaleObject( obj, origin, (1,2,3), True )
+    See Also:
+      ScaleObjects
     """
     rc = ScaleObjects(object_id, origin, scale, copy )
     if rc: return rc[0]
@@ -1015,6 +1506,15 @@ def ScaleObjects(object_ids, origin, scale, copy=False):
     Returns:
       List of identifiers of the scaled objects if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      objs = rs.GetObjects("Select objects to scale")
+      if objs:
+      origin = rs.GetPoint("Origin point")
+      if origin:
+      rs.ScaleObjects( objs, origin, (2,2,2), True )
+    See Also:
+      ScaleObject
     """
     origin = rhutil.coerce3dpoint(origin, True)
     scale = rhutil.coerce3dpoint(scale, True)
@@ -1031,6 +1531,19 @@ def SelectObject(object_id, redraw=True):
       object_id = the identifier of the object to select
     Returns:
       True on success
+    Example:
+      import rhinoscriptsyntax as rs
+      rs.Command( "Line 0,0,0 5,5,0" )
+      id = rs.FirstObject()
+      if id: rs.SelectObject(id)
+      # Do something here...
+      rs.UnselectObject(id)
+    See Also:
+      IsObjectSelectable
+      IsObjectSelected
+      SelectObjects
+      UnselectObject
+      UnselectObjects
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     rhobj.Select(True)
@@ -1044,6 +1557,19 @@ def SelectObjects( object_ids):
       object_ids = list of Guids identifying the objects to select
     Returns:
       number of selected objects
+    Example:
+      import rhinoscriptsyntax as rs
+      ids = rs.GetObjects("Select object to copy in-place")
+      if ids:
+      rs.UnselectObjects(ids)
+      copies = rs.CopyObjects(ids)
+      if copies: rs.SelectObjects(copies)
+    See Also:
+      IsObjectSelectable
+      IsObjectSelected
+      SelectObject
+      UnselectObject
+      UnselectObjects
     """
     id = rhutil.coerceguid(object_ids, False)
     if id: object_ids = [id]
@@ -1062,6 +1588,16 @@ def ShearObject(object_id, origin, reference_point, angle_degrees, copy=False):
     Returns:
       Identifier of the sheared object if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object to shear")
+      if obj:
+      origin = rs.GetPoint("Origin point")
+      refpt = rs.GetPoint("Reference point")
+      if origin and refpt:
+      rs.ShearObject(obj, origin, refpt, 45.0, True)
+    See Also:
+      ShearObjects
     """
     rc = ShearObjects(object_id, origin, reference_point, angle_degrees, copy)
     if rc: return rc[0]
@@ -1074,6 +1610,16 @@ def ShearObjects(object_ids, origin, reference_point, angle_degrees, copy=False)
       origin, reference_point: origin/reference point of the shear transformation
     Returns:
       List of identifiers of the sheared objects if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      object_ids = rs.GetObjects("Select objects to shear")
+      if object_ids:
+      origin = rs.GetPoint("Origin point")
+      refpt = rs.GetPoint("Reference point")
+      if origin and refpt:
+      rs.ShearObjects( object_ids, origin, refpt, 45.0, True )
+    See Also:
+      ShearObject
     """
     origin = rhutil.coerce3dpoint(origin, True)
     reference_point = rhutil.coerce3dpoint(reference_point, True)
@@ -1106,6 +1652,17 @@ def ShowObject(object_id):
       object_id: String or Guid representing id of object to show
     Returns:
       True of False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object to hide")
+      if obj: rs.HideObject(obj)
+      # Do something here...
+      rs.ShowObject( obj )
+    See Also:
+      HideObject
+      HideObjects
+      IsObjectHidden
+      ShowObjects
     """
     return ShowObjects(object_id)==1
 
@@ -1117,6 +1674,17 @@ def ShowObjects(object_ids):
       object_ids: list of Strings or Guids representing ids of objects to show
     Returns:
       Number of objects shown
+    Example:
+      import rhinoscriptsyntax as rs
+      objs = rs.GetObjects("Select objects to hide")
+      if objs: rs.HideObjects(objs)
+      #Do something here...
+      rs.ShowObjects( objs )
+    See Also:
+      HideObject
+      HideObjects
+      IsObjectHidden
+      ShowObject
     """
     id = rhutil.coerceguid(object_ids, False)
     if id: object_ids = [id]
@@ -1138,6 +1706,19 @@ def TransformObject(object_id, matrix, copy=False):
     Returns:
       The identifier of the transformed object
       None if not successful, or on error
+    Example:
+      # Rotate an object by theta degrees about the world Z axis
+      import math
+      import rhinoscriptsyntax as rs
+      radians = math.radians(degrees)
+      c = math.cos(radians)
+      s = math.sin(radians)
+      matrix = []
+      matrix.append( [0, 0, 1, 0] )
+      matrix.append( [0, 0, 0, 1] )
+      obj = rs.GetObject("Select object to rotate")
+    See Also:
+      TransformObjects
     """
     rc = TransformObjects(object_id, matrix, copy)
     if rc: return rc[0]
@@ -1153,6 +1734,14 @@ def TransformObjects(object_ids, matrix, copy=False):
       copy[opt] = Copy the objects
     Returns:
       List of ids identifying the newly transformed objects
+    Example:
+      import rhinoscriptsyntax as rs
+      # Translate (move) objects by (10,10,0)
+      xform = rs.XformTranslation([10,10,0])
+      objs = rs.GetObjects("Select objects to translate")
+      if objs: rs.TransformObjects(objs, xform)
+    See Also:
+      TransformObject
     """
     xform = rhutil.coercexform(matrix, True)
     id = rhutil.coerceguid(object_ids, False)
@@ -1173,6 +1762,17 @@ def UnlockObject(object_id):
       object_id: The identifier of an object
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object to lock")
+      if obj: rs.LockObject(obj)
+      #Do something here...
+      rs.UnlockObject( obj )
+    See Also:
+      IsObjectLocked
+      LockObject
+      LockObjects
+      UnlockObjects
     """
     return UnlockObjects(object_id)==1
 
@@ -1184,6 +1784,17 @@ def UnlockObjects(object_ids):
       object_ids: The identifiers of objects
     Returns:
       number of objects unlocked
+    Example:
+      import rhinoscriptsyntax as rs
+      objs = rs.GetObjects("Select objects to lock")
+      if objs: rs.LockObjects(objs)
+      #Do something here...
+      rs.UnlockObjects( objs )
+    See Also:
+      IsObjectLocked
+      LockObject
+      LockObjects
+      UnlockObject
     """
     id = rhutil.coerceguid(object_ids, False)
     if id: object_ids = [id]
@@ -1201,6 +1812,18 @@ def UnselectObject(object_id):
       object_id: String or Guid representing id of object to unselect
     Returns:
       True of False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      rs.Command("Line 0,0,0 5,5,0")
+      obj = rs.FirstObject()
+      if obj: rs.SelectObject(obj)
+      #Do something here...
+      rs.UnselectObject( obj )
+    See Also:
+      IsObjectSelected
+      SelectObject
+      SelectObjects
+      UnselectObjects
     """
     return UnselectObjects(object_id)==1
 
@@ -1211,6 +1834,18 @@ def UnselectObjects(object_ids):
       object_ids = identifiers of the objects to unselect.
     Returns:
       The number of objects unselected
+    Example:
+      import rhinoscriptsyntax as rs
+      objects = rs.GetObjects("Select object to copy in-place")
+      if objects:
+      rs.UnselectObjects(objects)
+      copies= rs.CopyObjects(objects)
+      if copies: rs.SelectObjects(copies)
+    See Also:
+      IsObjectSelected
+      SelectObject
+      SelectObjects
+      UnselectObject
     """
     id = rhutil.coerceguid(object_ids, False)
     if id: object_ids = [id]

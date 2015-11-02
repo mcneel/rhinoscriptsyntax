@@ -15,6 +15,11 @@ def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
     Returns:
       object identifier on success
       None on failure  
+    Example:
+      import rhinoscriptsyntax as rs
+      rs.AddClippingPlane( rs.WorldXYPlane(), 5.0, 3.0 )
+    See Also:
+      IsClippingPlane
     """
     viewlist = []
     if views:
@@ -61,6 +66,10 @@ def AddPictureFrame(plane, filename, width=0.0, height=0.0, self_illumination=Tr
   Returns:
     object identifier on success
     None on failure
+  Example:
+    
+  See Also:
+    
   """
   plane = rhutil.coerceplane(plane, True)
   if type(filename) is not System.String or not System.IO.File.Exists(filename): raise Exception('\"{0}\" does not exist or is not a file name'.format(filename))
@@ -75,6 +84,12 @@ def AddPoint(point, y=None, z=None):
       point = x,y,z location of point to add
     Returns:
       Guid for the object that was added to the doc
+    Example:
+      import rhinoscriptsyntax as rs
+      rs.AddPoint( (1,2,3) )
+    See Also:
+      IsPoint
+      PointCoordinates
     """
     if y is not None and z is not None: point = Rhino.Geometry.Point3d(point,y,z)
     point = rhutil.coerce3dpoint(point, True)
@@ -91,6 +106,14 @@ def AddPointCloud(points, colors=None):
       colors[opt] = list of colors to apply to each point
     Returns:
       identifier of point cloud on success
+    Example:
+      import rhinoscriptsyntax as rs
+      points = (0,0,0), (1,1,1), (2,2,2), (3,3,3)
+      rs.AddPointCloud(points)
+    See Also:
+      IsPointCloud
+      PointCloudCount
+      PointCloudPoints
     """
     points = rhutil.coerce3dpointlist(points, True)
     if colors and len(colors)==len(points):
@@ -111,6 +134,13 @@ def AddPoints(points):
       points = list of points
     Returns:
       list of Guid identifiers of the new objects on success
+    Example:
+      import rhinoscriptsyntax as rs
+      points = rs.GetPoints(True, True, "Select points")
+      if points: rs.AddPoints(points)
+    See Also:
+      AddPoint
+      AddPointCloud
     """
     points = rhutil.coerce3dpointlist(points, True)
     rc = [scriptcontext.doc.Objects.AddPoint(point) for point in points]
@@ -135,6 +165,12 @@ def AddText(text, point_or_plane, height=1.0, font="Arial", font_style=0, justif
     Returns:
       Guid for the object that was added to the doc on success
       None on failure
+    Example:
+      import rhinoscriptsyntax as rs
+      point = rs.GetPoint("Pick point")
+      if point: rs.AddText("Hello Rhino!", point)
+    See Also:
+      IsText
     """
     if not text: raise ValueError("text invalid")
     if not isinstance(text, str): text = str(text)
@@ -164,6 +200,11 @@ def AddTextDot(text, point):
       point = A 3D point identifying the origin point.
     Returns:
       The identifier of the new object if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      rs.AddTextDot("howdy",(1,2,3))
+    See Also:
+      IsTextDot
     """
     point = rhutil.coerce3dpoint(point, True)
     if not isinstance(text, str): text = str(text)
@@ -180,6 +221,12 @@ def Area(object_id):
     Returns:
       area if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as  rs
+      a = rs.Area('a9e34aa8-226c-4e17-9e11-b74bf2cf581b')
+    See Also:
+      IsPoint
+      PointCoordinates
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     mp = Rhino.Geometry.AreaMassProperties.Compute(rhobj.Geometry)
@@ -203,6 +250,16 @@ def BoundingBox(objects, view_or_plane=None, in_world_coords=True):
       Eight 3D points that define the bounding box. Points returned in counter-
       clockwise order starting with the bottom rectangle of the box.
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      object = rs.GetObject("Select object")
+      if object:
+      box = rs.BoundingBox(object)
+      if box:
+      for i, point in enumerate(box):
+      rs.AddTextDot( i, point )
+    See Also:
+      
     """
     def __objectbbox(object, xform):
         geom = rhutil.coercegeometry(object, False)
@@ -252,6 +309,15 @@ def ExplodeText(text_id, delete=False):
       delete[opt]: delete the text object after the curves have been created
     Returns:
       list of outline curves
+    Example:
+      import rhinoscriptsyntax as rs
+      text = rs.AddText("abcd", rs.WorldXYPlane())
+      rs.ExplodeText(text, True)
+    See Also:
+      IsHatch
+      HatchPattern
+      HatchRotation
+      HatchScale
     """
     rhobj = rhutil.coercerhinoobject(text_id, True, True)
     curves = rhobj.Geometry.Explode()
@@ -268,6 +334,15 @@ def IsClippingPlane(object_id):
       object_id: the object's identifier
     Returns:
       True if the object with a given id is a clipping plane
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select a clipping plane")
+      if rs.IsClippingPlane(id):
+      print "The object is a clipping plane."
+      else:
+      print "The object is not a clipping plane."
+    See Also:
+      AddClippingPlane
     """
     cp = rhutil.coercegeometry(object_id)
     return isinstance(cp, Rhino.Geometry.ClippingPlaneSurface)
@@ -279,6 +354,16 @@ def IsPoint(object_id):
       object_id: the object's identifier
     Returns:
       True if the object with a given id is a point
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select a point")
+      if rs.IsPoint(id):
+      print "The object is a point."
+      else:
+      print "The object is not a point."
+    See Also:
+      AddPoint
+      PointCoordinates
     """
     p = rhutil.coercegeometry(object_id)
     return isinstance(p, Rhino.Geometry.Point)
@@ -290,6 +375,17 @@ def IsPointCloud(object_id):
       object_id: the object's identifier
     Returns:
       True if the object with a given id is a point cloud
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select a point cloud")
+      if rs.IsPointCloud(id):
+      print "The object is a point cloud."
+      else:
+      print "The object is not a point cloud."
+    See Also:
+      AddPointCloud
+      PointCloudCount
+      PointCloudPoints
     """
     pc = rhutil.coercegeometry(object_id)
     return isinstance(pc, Rhino.Geometry.PointCloud)
@@ -301,6 +397,15 @@ def IsText(object_id):
       object_id: the object's identifier
     Returns:
       True if the object with a given id is a text object
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select a text object")
+      if rs.IsText(id):
+      print "The object is a text object."
+      else:
+      print "The object is not a text object."
+    See Also:
+      AddText
     """
     text = rhutil.coercegeometry(object_id)
     return isinstance(text, Rhino.Geometry.TextEntity)
@@ -312,6 +417,15 @@ def IsTextDot(object_id):
       object_id: the object's identifier
     Returns:
       True if the object with a given id is a text dot object
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select a text dot object")
+      if rs.IsTextDot(id):
+      print "The object is a text dot object."
+      else:
+      print "The object is not a text dot object."
+    See Also:
+      AddTextDot
     """
     td = rhutil.coercegeometry(object_id)
     return isinstance(td, Rhino.Geometry.TextDot)
@@ -323,6 +437,14 @@ def PointCloudCount(object_id):
       object_id: the point cloud object's identifier
     Returns:
       number of points if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select point cloud", rs.filter.pointcloud)
+      print "Point count:", rs.PointCloudCount(id)
+    See Also:
+      AddPointCloud
+      IsPointCloud
+      PointCloudPoints
     """
     pc = rhutil.coercegeometry(object_id, True)
     if isinstance(pc, Rhino.Geometry.PointCloud): return pc.Count
@@ -334,6 +456,17 @@ def PointCloudHasHiddenPoints(object_id):
       object_id: the point cloud object's identifier
     Returns:
       True if cloud has hidden points, otherwise False
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a point cloud", rs.filter.pointcloud)
+      if rs.PointCloudHasHiddenPoints(obj):
+      print "The point cloud has hidden points."
+      else:
+      print "The point cloud has no hidden points."
+    See Also:
+      PointCloudHasPointColors
+      PointCloudHidePoints
+      PointCloudPointColors
     """
     pc = rhutil.coercegeometry(object_id, True)
     if isinstance(pc, Rhino.Geometry.PointCloud): return pc.HiddenPointCount>0
@@ -345,6 +478,17 @@ def PointCloudHasPointColors(object_id):
       object_id: the point cloud object's identifier
     Returns:
       True if cloud has point colors, otherwise False
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a point cloud", rs.filter.pointcloud)
+      if rs.PointCloudHasPointColors(obj):
+      print "The point cloud has point colors."
+      else:
+      print "The point cloud has no point colors."
+    See Also:
+      PointCloudHasPointColors
+      PointCloudHidePoints
+      PointCloudPointColors
     """
     pc = rhutil.coercegeometry(object_id, True)
     if isinstance(pc, Rhino.Geometry.PointCloud): return pc.ContainsColors
@@ -357,6 +501,16 @@ def PointCloudHidePoints(object_id, hidden=[]):
       hidden: list of hidden values if you want to hide certain points
     Returns:
       List of point cloud hidden states
+    Example:
+      import rhinoscriptsyntax as rs
+      if obj:
+      hidden = [True] * rs.PointCloudCount(obj)
+      for i in range(len(hidden)):
+      hidden[i] = (i%2==0)
+      rs.PointCloudHidePoints(obj, hidden)
+    See Also:
+      PointCloudHasPointColors
+      PointCloudPointColors
     """
     rhobj = rhutil.coercerhinoobject(object_id)
     if rhobj: pc = rhobj.Geometry
@@ -381,6 +535,24 @@ def PointCloudPointColors(object_id, colors=[]):
       colors: list of color values if you want to adjust colors
     Returns:
       List of point cloud colors
+    Example:
+      import rhinoscriptsyntax as rs
+      import random
+      
+      def RandomColor():
+      red = random.randint(0,255)
+      green = random.randint(0,255)
+      blue = random.randint(0,255)
+      return rs.coercecolor((red,green,blue))
+      
+      obj = rs.GetObject("Select point cloud", rs.filter.pointcloud)
+      if obj:
+      colors = [RandomColor() for i in range(rs.PointCloudCount(obj))]
+      rs.PointCloudColors(obj, colors)
+    See Also:
+      PointCloudHasHiddenPoints
+      PointCloudHasPointColors
+      PointCloudHidePoints
     """
     rhobj = rhutil.coercerhinoobject(object_id)
     if rhobj: pc = rhobj.Geometry
@@ -404,6 +576,15 @@ def PointCloudPoints(object_id):
       object_id: the point cloud object's identifier
     Returns:
       list of points if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select point cloud", rs.filter.pointcloud)
+      points = rs.PointCloudPoints(id)
+      if points: for point in points: print point
+    See Also:
+      AddPointCloud
+      IsPointCloud
+      PointCloudCount
     """
     pc = rhutil.coercegeometry(object_id, True)
     if isinstance(pc, Rhino.Geometry.PointCloud): return pc.GetPoints()
@@ -417,6 +598,13 @@ def PointCoordinates(object_id, point=None):
     Returns:
       If point is not specified, the current 3-D point location
       If point is specified, the previous 3-D point location
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select point", rs.filter.point)
+      point = rs.PointCoordinates(id)
+    See Also:
+      AddPoint
+      IsPoint
     """
     point_geometry = rhutil.coercegeometry(object_id, True)
     if isinstance(point_geometry, Rhino.Geometry.Point):
@@ -438,6 +626,15 @@ def TextDotFont(object_id, fontface=None):
       If font is not specified, the current text dot font
       If font is specified, the previous text dot font
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select text dot")
+    See Also:
+      AddTextDot
+      IsTextDot
+      TextDotHeight
+      TextDotPoint
+      TextDotText
     """
     textdot = rhutil.coercegeometry(object_id, True)
     if isinstance(textdot, Rhino.Geometry.TextDot):
@@ -459,6 +656,16 @@ def TextDotHeight(object_id, height=None):
       If height is not specified, the current text dot height
       If height is specified, the previous text dot height
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select text dot")
+      if rs.IsTextDot(obj): rs.TextDotHeight(obj, 10.0)
+    See Also:
+      AddTextDot
+      IsTextDot
+      TextDotFont
+      TextDotPoint
+      TextDotText
     """
     textdot = rhutil.coercegeometry(object_id, True)
     if isinstance(textdot, Rhino.Geometry.TextDot):
@@ -480,6 +687,17 @@ def TextDotPoint(object_id, point=None):
       If point is not specified, the current 3-D text dot location
       If point is specified, the previous 3-D text dot location
       None if not successful, or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select text dot")
+      if rs.IsTextDot(id):
+      point = rs.TestDotPoint(id)
+      rs.AddPoint( point )
+      rs.TextDotPoint(id, [0,0,0])
+    See Also:
+      AddTextDot
+      IsTextDot
+      TextDotText
     """
     textdot = rhutil.coercegeometry(object_id, True)
     if isinstance(textdot, Rhino.Geometry.TextDot):
@@ -501,6 +719,15 @@ def TextDotText(object_id, text=None):
       If text is not specified, the current text dot text
       If text is specified, the previous text dot text
       None if not successful, or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select text dot")
+      if rs.IsTextDot(id):
+      rs.TextDotText( id, "Rhino")
+    See Also:
+      AddTextDot
+      IsTextDot
+      TextDotPoint
     """
     textdot = rhutil.coercegeometry(object_id, True)
     if isinstance(textdot, Rhino.Geometry.TextDot):
@@ -523,6 +750,18 @@ def TextObjectFont(object_id, font=None):
       if a font is not specified, the current font face name
       if a font is specified, the previous font face name
       None if not successful, or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select text")
+      if rs.IsText(obj): rs.TextObjectFont(obj, "Arial")
+    See Also:
+      AddText
+      IsText
+      TextObjectHeight
+      TextObjectPlane
+      TextObjectPoint
+      TextObjectStyle
+      TextObjectText
     """
     annotation = rhutil.coercegeometry(object_id, True)
     if not isinstance(annotation, Rhino.Geometry.TextEntity):
@@ -548,6 +787,19 @@ def TextObjectHeight(object_id, height=None):
       if height is not specified, the current text height
       if height is specified, the previous text height
       None if not successful, or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select text")
+      if rs.IsText(obj):
+      rs.TextObjectHeight( obj, 1.0 )
+    See Also:
+      AddText
+      IsText
+      TextObjectFont
+      TextObjectPlane
+      TextObjectPoint
+      TextObjectStyle
+      TextObjectText
     """
     annotation = rhutil.coercegeometry(object_id, True)
     if not isinstance(annotation, Rhino.Geometry.TextEntity):
@@ -570,6 +822,20 @@ def TextObjectPlane(object_id, plane=None):
       if a plane is not specified, the current plane if successful
       if a plane is specified, the previous plane if successful
       None if not successful, or on Error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select text")
+      if rs.IsText(obj):
+      plane = rs.ViewCPlane("Top")
+      rs.TextObjectPlane( obj, plane )
+    See Also:
+      AddText
+      IsText
+      TextObjectFont
+      TextObjectHeight
+      TextObjectPoint
+      TextObjectStyle
+      TextObjectText
     """
     annotation = rhutil.coercegeometry(object_id, True)
     if not isinstance(annotation, Rhino.Geometry.TextEntity):
@@ -592,6 +858,19 @@ def TextObjectPoint(object_id, point=None):
       if point is not specified, the 3D point identifying the current location
       if point is specified, the 3D point identifying the previous location
       None if not successful, or on Error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select text")
+      if rs.IsText(obj):
+      rs.TextObjectPoint( obj, [0,0,0] )
+    See Also:
+      AddText
+      IsText
+      TextObjectFont
+      TextObjectHeight
+      TextObjectPlane
+      TextObjectStyle
+      TextObjectText
     """
     text = rhutil.coercegeometry(object_id, True)
     if not isinstance(text, Rhino.Geometry.TextEntity):
@@ -619,6 +898,19 @@ def TextObjectStyle(object_id, style=None):
       if style is not specified, the current font style
       if style is specified, the previous font style
       None if not successful, or on Error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select text")
+      if rs.IsText(obj):
+      rs.TextObjectStyle( obj, 3 )
+    See Also:
+      AddText
+      IsText
+      TextObjectFont
+      TextObjectHeight
+      TextObjectPlane
+      TextObjectPoint
+      TextObjectText
     """
     annotation = rhutil.coercegeometry(object_id, True)
     if not isinstance(annotation, Rhino.Geometry.TextEntity):
@@ -646,6 +938,18 @@ def TextObjectText(object_id, text=None):
       if text is not specified, the current string value if successful
       if text is specified, the previous string value if successful
       None if not successful, or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select text")
+      if rs.IsText(obj): rs.TextObjectText(obj, "Rhino")
+    See Also:
+      AddText
+      IsText
+      TextObjectFont
+      TextObjectHeight
+      TextObjectPlane
+      TextObjectPoint
+      TextObjectStyle
     """
     annotation = rhutil.coercegeometry(object_id, True)
     if not isinstance(annotation, Rhino.Geometry.TextEntity):
