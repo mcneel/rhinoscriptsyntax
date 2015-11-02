@@ -19,6 +19,13 @@ def BrowseForFolder(folder=None, message=None, title=None):
     Returns:
       selected folder
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      folder = rs.BrowseForFolder("C:\\Program Files\\" )
+      if folder: print folder
+    See Also:
+      OpenFileName
+      SaveFileName
     """
     dlg = System.Windows.Forms.FolderBrowserDialog()
     if folder:
@@ -41,6 +48,19 @@ def CheckListBox(items, message=None, title=None):
       A list of tuples containing the input string in items along with their
       new boolean check value
       None on error      
+    Example:
+      import rhinoscriptsyntax as  rs
+      layers = rs.LayerNames()
+      if layers:
+      items  = [(layer, rs.IsLayerOn(layer)) for layer in layers]
+      results  = rs.CheckListBox(items, "Turn layers on/off", "Layers")
+      if results:
+      for  layer, state in results: rs.LayerVisible(layer, state)
+    See Also:
+      ComboListBox
+      ListBox
+      MultiListbox
+      PropertyListBox
     """
     checkstates = [item[1] for item in items]
     itemstrs = [str(item[0]) for item in items]
@@ -60,6 +80,17 @@ def ComboListBox(items, message=None, title=None):
     Returns:
       The selected item if successful
       None if not successful or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      layers = rs.LayerNames()
+      if layers:
+      layer = rs.ComboListBox(layers, "Select current layer")
+      if layer: rs.CurrentLayer(layer)
+    See Also:
+      CheckListBox
+      ListBox
+      MultiListbox
+      PropertyListBox
     """
     return Rhino.UI.Dialogs.ShowComboListBox(title, message, items)
 
@@ -73,6 +104,13 @@ def EditBox(default_string=None, message=None, title=None):
       title [opt] = a dialog box title.
     Returns:
       Multiple lines that are separated by carriage return-linefeed combinations if successful, otherwise None.
+    Example:
+      import rhinoscriptsyntax as rs
+      text = rs.EditBox(message="Enter some text")
+      print text
+    See Also:
+      GetString
+      StringBox
     """
     rc, text = Rhino.UI.Dialogs.ShowEditBox(title, message, default_string, True)
     return text
@@ -87,6 +125,16 @@ def GetAngle(point=None, reference_point=None, default_angle_degrees=0, message=
       message(opt) = a prompt to display
     Returns:
       angle in degree if successful, None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      point = rs.GetPoint("Base point")
+      if point:
+      reference = rs.GetPoint("Reference point", point)
+      if reference:
+      angle = rs.GetAngle(point, reference)
+      if angle!=None: print "Angle:", angle
+    See Also:
+      GetDistance
     """
     point = rhutil.coerce3dpoint(point)
     if not point: point = Rhino.Geometry.Point3d.Unset
@@ -111,6 +159,13 @@ def GetBoolean(message, items, defaults):
     Returns:
       a list of values that represent the boolean values if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      results = rs.GetBoolean("Boolean options", items, (True, True, True) )
+      if results:
+      for val in results: print val
+    See Also:
+      GetString
     """
     go = Rhino.Input.Custom.GetOption()
     go.AcceptNothing(True)
@@ -151,6 +206,13 @@ def GetBox(mode=0, base_point=None, prompt1=None, prompt2=None, prompt3=None):
     Returns:
       list of eight Point3d that define the corners of the box on success
       None is not successful, or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      box = rs.GetBox()
+      if box:
+      for i, pt in enumerate(box): rs.AddTextDot( i, pt )
+    See Also:
+      GetRectangle
     """
     base_point = rhutil.coerce3dpoint(base_point)
     if base_point is None: base_point = Rhino.Geometry.Point3d.Unset
@@ -165,6 +227,13 @@ def GetColor(color=[0,0,0]):
     Returns:
       RGB tuple of three numbers on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      color = rs.LayerColor("Default")
+      rgb = rs.GetColor(color)
+      if rgb: rs.LayerColor("Default", rgb)
+    See Also:
+      
     """
     color = rhutil.coercecolor(color)
     if color is None: color = System.Drawing.Color.Black
@@ -182,6 +251,12 @@ def GetCursorPos():
       cursor position in screen coordinates
       id of the active viewport
       cursor position in client coordinates
+    Example:
+      import rhinoscriptsyntax as  rs
+      world, screen, view, client  = rs.GetCursorPos()
+    See Also:
+      XFormScreenToWorld
+      XFormWorldToScreen
     """
     view = scriptcontext.doc.Views.ActiveView
     screen_pt = Rhino.UI.MouseCursor.Location
@@ -203,6 +278,13 @@ def GetDistance(first_pt=None, distance=None, first_pt_msg='First distance point
     Returns:
       The distance between the two points if successful.
       None if not successful, or on error.
+    Example:
+      import rhinoscriptsyntax as  rs
+      dist = rs.GetDistance()
+      if dist:
+      print  dist
+    See Also:
+      GetAngle
     """
     if distance is not None and first_pt is None: 
         raise Exception("The 'first_pt' parameter needs a value if 'distance' is not None.")
@@ -251,6 +333,16 @@ def GetEdgeCurves(message=None, min_count=1, max_count=0, select=False):
     Returns:
       List of (curve id, parent id, selection point)
       None if not successful
+    Example:
+      import rhinoscriptsyntax as rs
+      edges = rs.GetEdgeCurves()
+      if edges:
+      for edgeinfo in edges:
+      print "Curve Id =", edgeinfo[0]
+      print "Parent Id =", edgeinfo[1]
+      print "Pick point =", edgeinfo[2]
+    See Also:
+      DuplicateEdgeCurves
     """
     if min_count<0 or (max_count>0 and min_count>max_count): return
     if not message: message = "Select Edges"
@@ -288,6 +380,13 @@ def GetInteger(message=None, number=None, minimum=None, maximum=None):
     Returns:
        The whole number input by the user if successful.
        None if not successful, or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      color = rs.LayerColor("Default")
+      color = rs.GetInteger("Enter an RGB color value", color.ToArgb(), 0)
+      if color: rs.LayerColor("Default", color)
+    See Also:
+      
     """
     gi = Rhino.Input.Custom.GetInteger()
     if message: gi.SetCommandPrompt(message)
@@ -309,6 +408,14 @@ def GetLayer(title="Select Layer", layer=None, show_new_button=False, show_set_c
     Returns:
       name of selected layer if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object")
+      if obj:
+      layer = rs.GetLayer("Select Layer", rs.ObjectLayer(obj), True, True)
+      if layer: rs.ObjectLayer( obj, layer )
+    See Also:
+      
     """
     layer_index = scriptcontext.doc.Layers.CurrentLayerIndex
     if layer:
@@ -327,6 +434,13 @@ def GetLayers(title="Select Layers", show_new_button=False):
       show_new_button[opt] = Optional button to show on the dialog
     Returns:
       The names of selected layers if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      layers = rs.GetLayers("Select Layers")
+      if layers:
+      for layer in layers: print layer
+    See Also:
+      GetLayer
     """
     rc, layer_indices = Rhino.UI.Dialogs.ShowSelectMultipleLayersDialog(None, title, show_new_button)
     if rc:
@@ -342,6 +456,14 @@ def GetLine(mode=0, point=None, message1=None, message2=None, message3=None):
     Returns:
       Tuple of two points on success
       None on error
+    Example:
+      import rhinoscriptsyntax as  rs
+      line = rs.GetLine()
+      if line: rs.AddLine( line[0],  line[1] )
+    See Also:
+      GetBox
+      GetPoint
+      GetRectangle
     """
     gl = Rhino.Input.Custom.GetLine()
     if mode==0: gl.EnableAllVariations(True)
@@ -368,6 +490,18 @@ def GetMeshFaces(object_id, message="", min_count=1, max_count=0):
     Returns:
       list of mesh face indices on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      mesh = rs.GetObject("Select mesh", rs.filter.mesh)
+      if mesh:
+      indices = rs.GetMeshFaces(mesh)
+      if indices:
+      for index in indices: print index
+    See Also:
+      GetMeshVertices
+      MeshFaces
+      MeshFaceVertices
+      MeshVertices
     """
     scriptcontext.doc.Objects.UnselectAll()
     scriptcontext.doc.Views.Redraw()
@@ -398,6 +532,18 @@ def GetMeshVertices(object_id, message="", min_count=1, max_count=0):
     Returns:
       list of mesh vertex indices on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      mesh = rs.GetObject("Select mesh", rs.filter.mesh)
+      if mesh:
+      indices = rs.GetMeshVertices(mesh)
+      if indices:
+      for index in indices: print index
+    See Also:
+      GetMeshFaces
+      MeshFaces
+      MeshFaceVertices
+      MeshVertices
     """
     scriptcontext.doc.Objects.UnselectAll()
     scriptcontext.doc.Views.Redraw()
@@ -427,6 +573,22 @@ def GetPoint(message=None, base_point=None, distance=None, in_plane=False):
     Returns:
       point on success
       None if no point picked or user canceled
+    Example:
+      import rhinoscriptsyntax as rs
+      point1 = rs.GetPoint("Pick first point")
+      if point1:
+      rs.AddPoint(point1)
+      point2 = rs.GetPoint("Pick second point", point1)
+      if point2:
+      rs.AddPoint(point2)
+      distance = (point1-point2).Length
+      point3 = rs.GetPoint("Pick third point", point2, distance)
+      if point3: rs.AddPoint(point3)
+    See Also:
+      GetPointOnCurve
+      GetPointOnSurface
+      GetPoints
+      GetRectangle
     """
     gp = Rhino.Input.Custom.GetPoint()
     if message: gp.SetCommandPrompt(message)
@@ -452,6 +614,17 @@ def GetPointOnCurve(curve_id, message=None):
     Returns:
       3d point if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Pick a curve")
+      if rs.IsCurve(obj):
+      point = rs.GetPointOnCurve(obj, "Point on curve")
+      if point: rs.AddPoint(point)
+    See Also:
+      GetPoint
+      GetPointOnMesh
+      GetPointOnSurface
+      GetPoints
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     gp = Rhino.Input.Custom.GetPoint()
@@ -473,6 +646,17 @@ def GetPointOnMesh(mesh_id, message=None):
     Returns:
       3d point if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      mesh = rs.GetObject("Pick a mesh", rs.filter.mesh)
+      if mesh:
+      point = rs.GetPointOnMesh(mesh, "Point on mesh")
+      if point: rs.AddPoint( point )
+    See Also:
+      GetPoint
+      GetPointOnCurve
+      GetPointOnSurface
+      GetPoints
     """
     mesh_id = rhutil.coerceguid(mesh_id, True)
     if not message: message = "Point"
@@ -489,6 +673,17 @@ def GetPointOnSurface(surface_id, message=None):
     Returns:
       3d point if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      surface = rs.GetObject("Pick a surface")
+      if surface:
+      point = rs.GetPointOnSurface(surface, "Point on surface")
+      if point: rs.AddPoint(point)
+    See Also:
+      GetPoint
+      GetPointOnCurve
+      GetPointOnMesh
+      GetPoints
     """
     surfOrBrep = rhutil.coercesurface(surface_id)
     if not surfOrBrep:
@@ -520,6 +715,15 @@ def GetPoints(draw_lines=False, in_plane=False, message1=None, message2=None, ma
     Returns:
       list of 3d points if successful
       None if not successful or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      points = rs.GetPoints(True)
+      if points: rs.AddPointCloud(points)
+    See Also:
+      GetPoint
+      GetPointOnCurve
+      GetPointOnSurface
+      GetRectangle
     """
     gp = Rhino.Input.Custom.GetPoint()
     if message1: gp.SetCommandPrompt(message1)
@@ -563,6 +767,12 @@ def GetReal(message="Number", number=None, minimum=None, maximum=None):
     Returns:
        The number input by the user if successful.
        None if not successful, or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      radius = rs.GetReal("Radius of new circle", 3.14, 1.0)
+      if radius: rs.AddCircle( (0,0,0), radius )
+    See Also:
+      RealBox
     """
     gn = Rhino.Input.Custom.GetNumber()
     if message: gn.SetCommandPrompt(message)
@@ -589,6 +799,15 @@ def GetRectangle(mode=0, base_point=None, prompt1=None, prompt2=None, prompt3=No
     Returns:
       a tuple of four 3d points that define the corners of the rectangle
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      rect = rs.GetRectangle()
+      if rect:
+      for i, corner in enumerate(rect):
+      rs.AddTextDot( i, corner )
+    See Also:
+      GetPoint
+      GetPoints
     """
     mode = System.Enum.ToObject( Rhino.Input.GetBoxMode, mode )
     base_point = rhutil.coerce3dpoint(base_point)
@@ -611,6 +830,14 @@ def GetString(message=None, defaultString=None, strings=None):
         Note, strings cannot begin with a numeric character
     Returns:
       The string either input or selected by the user if successful.  If the user presses the Enter key without typing in a string, an empty string "" is returned.  None if not successful, on error, or if the user pressed cancel.
+    Example:
+      import rhinoscriptsyntax as rs
+      layer = rs.CurrentLayer()
+      layer = rs.GetString("Layer to set current", layer)
+      if layer: rs.CurrentLayer(layer)
+    See Also:
+      GetBoolean
+      StringBox
     """
     gs = Rhino.Input.Custom.GetString()
     gs.AcceptNothing(True)
@@ -635,6 +862,17 @@ def ListBox(items, message=None, title=None, default=None):
     Returns:
       The selected item if successful
       None if not successful or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      layers = rs.LayerNames()
+      if layers:
+      result = rs.ListBox(layers, "Layer to set current")
+      if result:rs.CurrentLayer( result )
+    See Also:
+      CheckListBox
+      ComboListBox
+      MultiListBox
+      PropertyListBox
     """
     return Rhino.UI.Dialogs.ShowListBox(title, message, items, default)
 
@@ -674,6 +912,13 @@ def MessageBox(message, buttons=0, title=""):
         5      Ignore button was clicked.
         6      Yes button was clicked.
         7      No button was clicked.
+    Example:
+      import rhinoscriptsyntax as rs
+      rs.MessageBox("Hello Rhino!")
+      rs.MessageBox("Hello Rhino!", 4 | 32)
+      rs.MessageBox("Hello Rhino!", 2 | 48)
+    See Also:
+      
     """
     buttontype = buttons & 0x00000007 #111 in binary
     btn = Rhino.UI.ShowMessageButton.OK
@@ -720,6 +965,23 @@ def PropertyListBox(items, values, message=None, title=None):
     Returns:
       a list of new values on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      objs = rs.GetObjects("Select Objects")
+      if objs:
+      names = []
+      for obj in objs:
+      name = rs.ObjectName(obj)
+      if name is None: name=""
+      names.append(name)
+      results = rs.PropertyListBox(objs, names, "Modify object name(s)")
+      if results:
+      rs.ObjectName( objs[i], results[i] )
+    See Also:
+      CheckListBox
+      ComboListBox
+      ListBox
+      MultiListbox
     """
     values = [str(v) for v in values]
     return Rhino.UI.Dialogs.ShowPropertyListBox(title, message, items, values)
@@ -735,6 +997,19 @@ def MultiListBox(items, message=None, title=None, defaults=None):
     Returns:
       a list containing the selected items if succesful
       None on error
+    Example:
+      import rhinoscriptsyntax as  rs
+      layers = rs.LayerNames()
+      if layers:
+      layers  = rs.MultiListBox(layers, "Layers to lock")
+      if layers:
+      for  layer in layers:
+      rs.LayerLocked(layer,  True)
+    See Also:
+      CheckListBox
+      ComboListBox
+      ListBox
+      PropertyListBox
     """
     if isinstance(defaults, str):
       defaults = [defaults]  
@@ -755,6 +1030,18 @@ def OpenFileName(title=None, filter=None, folder=None, filename=None, extension=
     Returns:
       the file name is successful
       None if not successful, or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      filename = rs.OpenFileName()
+      if filename: rs.MessageBox(filename)
+      filename = rs.OpenFileName("Open", "Text Files (*.txt)|*.txt||")
+      if filename: rs.MessageBox(filename)
+      filename = rs.OpenFileName("Open", "Text Files (*.txt)|*.txt|All Files (*.*)|*.*||")
+      if filename: rs.MessageBox(filename)
+    See Also:
+      BrowseForFolder
+      OpenFileNames
+      SaveFileName
     """
     fd = Rhino.UI.OpenFileDialog()
     if title: fd.Title = title
@@ -778,6 +1065,14 @@ def OpenFileNames(title=None, filter=None, folder=None, filename=None, extension
       extension[opt] = a default file extension
     Returns:
       list of selected file names
+    Example:
+      import rhinoscriptsyntax as rs
+      filenames = rs.OpenFileNames("Open", "Text Files (*.txt)|*.txt|All Files (*.*)|*.*||")
+      for filename in filenames: print filename
+    See Also:
+      BrowseForFolder
+      OpenFileName
+      SaveFileName
     """
     fd = Rhino.UI.OpenFileDialog()
     if title: fd.Title = title
@@ -808,6 +1103,13 @@ def PopupMenu(items, modes=None, point=None, view=None):
         If omitted, the active view is used
     Returns:
       index of the menu item picked or -1 if no menu item was picked
+    Example:
+      import rhinoscriptsyntax as rs
+      items = "Line", "", "Circle", "Arc"
+      modes = 2,0,0,0
+      if result>=0: rs.MessageBox(items[result])
+    See Also:
+      
     """
     screen_point = System.Windows.Forms.Cursor.Position
     if point:
@@ -830,6 +1132,14 @@ def RealBox(message="", default_number=None, title="", minimum=None, maximum=Non
     Returns:
       number on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      radius = rs.RealBox("Enter a radius value", 5.0 )
+      if radius:
+      point = (0,0,0)
+      rs.AddCircle( point, radius )
+    See Also:
+      GetReal
     """
     if default_number is None: default_number = Rhino.RhinoMath.UnsetValue
     if minimum is None: minimum = Rhino.RhinoMath.UnsetValue
@@ -852,6 +1162,19 @@ def SaveFileName(title=None, filter=None, folder=None, filename=None, extension=
     Returns:
       the file name is successful
       None if not successful, or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      filename = rs.SaveFileName()
+      if filename: rs.MessageBox(filename)
+      
+      filename = rs.SaveFileName ("Save", "Text Files (*.txt)|*.txt||")
+      if filename: rs.MessageBox(filename)
+      
+      filename = rrshui.SaveFileName ("Save", "Text Files (*.txt)|*.txt|All Files (*.*)|*.*||")
+      if filename: rs.MessageBox(filename)
+    See Also:
+      BrowseForFolder
+      OpenFileName
     """
     fd = Rhino.UI.SaveFileDialog()
     if title: fd.Title = title
@@ -870,6 +1193,12 @@ def StringBox(message=None, default_value=None, title=None):
       title [opt] = a dialog box title
     Returns:
       the string value if successful, otherwise None
+    Example:
+      import rhinoscriptsyntax as rs
+      layer = rs.StringBox("New layer name" )
+      if layer: rs.AddLayer( layer )
+    See Also:
+      GetString
     """
     rc, text = Rhino.UI.Dialogs.ShowEditBox(title, message, default_value, False)
     if rc: return text

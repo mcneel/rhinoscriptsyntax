@@ -9,6 +9,15 @@ def AddGroup(group_name=None):
     Returns:
       name of the new group if successful
       None is not successful or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      name = rs.AddGroup("NewGroup")
+    See Also:
+      DeleteGroup
+      GroupCount
+      GroupNames
+      IsGroup
+      RenameGroup
     """
     index = -1
     if group_name is None:
@@ -28,6 +37,16 @@ def AddObjectsToGroup(object_ids, group_name):
       group_name = the name of an existing group
     Returns:
       number of objects added to the group
+    Example:
+      import rhinoscriptsyntax as rs
+      name = "NewGroup"
+      object_ids = rs.GetObjects("Select objects to add to group")
+      if object_ids: rs.AddObjectsToGroup(object_ids, name)
+    See Also:
+      AddObjectToGroup
+      IsGroupEmpty
+      ObjectGroups
+      ObjectsByGroup
     """
     if not isinstance(group_name, str): group_name = str(group_name)
     index = scriptcontext.doc.Groups.Find(group_name, True)
@@ -44,6 +63,16 @@ def AddObjectToGroup(object_id, group_name):
       group_name = the name of an existing group
     Returns:
       True or False representing success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      name = "NewGroup"
+      id = rs.GetObject("Select object to add to group")
+      if id: rs.AddObjectToGroup(id,name)
+    See Also:
+      AddObjectsToGroup
+      IsGroupEmpty
+      ObjectGroups
+      ObjectsByGroup
     """
     object_id = rhutil.coerceguid(object_id)
     if not isinstance(group_name, str): group_name = str(group_name)
@@ -59,6 +88,17 @@ def DeleteGroup(group_name):
       group_name = the name of an existing group
     Returns:
       True or False representing success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      groups = rs.GroupNames()
+      if groups:
+      for group in groups: rs.DeleteGroup(group)
+    See Also:
+      AddGroup
+      GroupCount
+      GroupNames
+      IsGroup
+      RenameGroup
     """
     if not isinstance(group_name, str): group_name = str(group_name)
     index = scriptcontext.doc.Groups.Find(group_name, True)
@@ -71,6 +111,16 @@ def GroupCount():
       None
     Returns:
       the number of groups in the document
+    Example:
+      import rhinoscriptsyntax as rs
+      numgroups = rs.GroupCount()
+      print "Group count:", numgroups
+    See Also:
+      AddGroup
+      DeleteGroup
+      GroupNames
+      IsGroup
+      RenameGroup
     """
     return scriptcontext.doc.Groups.Count
 
@@ -82,6 +132,17 @@ def GroupNames():
       None
     Returns:
       the names of all the groups in the document.  None if no names exist in the document
+    Example:
+      import rhinoscriptsyntax as rs
+      groups = rs.GroupNames()
+      if groups:
+      for group in groups: print group
+    See Also:
+      AddGroup
+      DeleteGroup
+      GroupCount
+      IsGroup
+      RenameGroup
     """
     names = scriptcontext.doc.Groups.GroupNames(True)
     if names is None: return None
@@ -95,6 +156,15 @@ def HideGroup(group_name):
       group_name = the name of an existing group
     Returns:
       The number of objects that were hidden
+    Example:
+      import rhinoscriptsyntax as rs
+      groups = rs.GroupNames()
+      if groups:
+      for group in groups: rs.HideGroup(group)
+    See Also:
+      LockGroup
+      ShowGroup
+      UnlockGroup
     """
     index = scriptcontext.doc.Groups.Find(group_name, True)
     if index<0: return 0
@@ -107,6 +177,19 @@ def IsGroup(group_name):
       group_name = the name of the group to check for
     Returns:
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      group = rs.GetString("Group name to verify")
+      if rs.IsGroup(group):
+      print "The group exists."
+      else:
+      print "The group does not exist."
+    See Also:
+      AddGroup
+      DeleteGroup
+      GroupCount
+      GroupNames
+      RenameGroup
     """
     if not isinstance(group_name, str): group_name = str(group_name)
     return scriptcontext.doc.Groups.Find(group_name, True)>=0
@@ -119,6 +202,18 @@ def IsGroupEmpty(group_name):
     Returns:
       True or False if group_name exists
       None if group_name does not exist
+    Example:
+      import rhinoscriptsyntax as rs
+      names = rs.GroupNames()
+      if names:
+      for name in names:
+      if rs.IsGroupEmpty(name): rs.DeleteGroup(name)
+    See Also:
+      AddObjectsToGroup
+      AddObjectToGroup
+      RemoveObjectFromAllGroups
+      RemoveObjectFromGroup
+      RemoveObjectsFromGroup
     """
     if not isinstance(group_name, str): group_name = str(group_name)
     index = scriptcontext.doc.Groups.Find(group_name, True)
@@ -134,6 +229,15 @@ def LockGroup(group_name):
     Returns:
       Number of objects that were locked if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      names = rs.GroupNames()
+      if names:
+      for name in names: rs.LockGroup(name)
+    See Also:
+      HideGroup
+      ShowGroup
+      UnlockGroup
     """
     if not isinstance(group_name, str): group_name = str(group_name)
     index = scriptcontext.doc.Groups.Find(group_name, True)
@@ -148,6 +252,16 @@ def RemoveObjectFromAllGroups(object_id):
       object_id = the object identifier
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      object = rs.GetObject("Select object")
+      if object: rs.RemoveObjectFromAllGroups(object)
+    See Also:
+      IsGroupEmpty
+      ObjectGroups
+      ObjectsByGroup
+      RemoveObjectFromGroup
+      RemoveObjectsFromGroup
     """
     rhinoobject = rhutil.coercerhinoobject(object_id, True, True)
     if rhinoobject.GroupCount<1: return False
@@ -163,6 +277,17 @@ def RemoveObjectFromGroup(object_id, group_name):
       group_name = the name of an existing group
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      name = "NewGroup"
+      id = rs.GetObject("Select object")
+      if name: rs.RemoveObjectFromGroup(id,name)
+    See Also:
+      IsGroupEmpty
+      ObjectGroups
+      ObjectsByGroup
+      RemoveObjectFromAllGroups
+      RemoveObjectsFromGroup
     """
     count = RemoveObjectsFromGroup(object_id, group_name)
     return not (count is None or count<1)
@@ -176,6 +301,17 @@ def RemoveObjectsFromGroup(object_ids, group_name):
     Returns:
       The number of objects removed from the group is successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      group = "NewGroup"
+      ids = rs.GetObjects("Select objects")
+      if ids: rs.RemoveObjectsFromGroup(ids,group)
+    See Also:
+      IsGroupEmpty
+      ObjectGroups
+      ObjectsByGroup
+      RemoveObjectFromAllGroups
+      RemoveObjectFromGroup
     """
     if not isinstance(group_name, str): group_name = str(group_name)
     index = scriptcontext.doc.Groups.Find(group_name, True)
@@ -200,6 +336,18 @@ def RenameGroup(old_name, new_name):
     Returns:
       the new group name if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      strOldGroup = rs.GetString("Old group name")
+      if strOldGroup:
+      strNewGroup = rs.GetString("New group name")
+      if strNewName: rs.RenameGroup(strOldGroup, strNewGroup)
+    See Also:
+      AddGroup
+      DeleteGroup
+      GroupCount
+      GroupNames
+      IsGroup
     """
     if not isinstance(old_name, str): old_name = str(old_name)
     index = scriptcontext.doc.Groups.Find(old_name, True)
@@ -218,6 +366,15 @@ def ShowGroup(group_name):
     Returns:
       The number of objects that were shown if successful
       None on error  
+    Example:
+      import rhinoscriptsyntax as rs
+      groups = rs.GroupNames()
+      if groups:
+      for group in groups: rs.ShowGroup(group)
+    See Also:
+      HideGroup
+      LockGroup
+      UnlockGroup
     """
     if not isinstance(group_name, str): group_name = str(group_name)
     index = scriptcontext.doc.Groups.Find(group_name, True)
@@ -233,6 +390,15 @@ def UnlockGroup(group_name):
     Returns:
       The number of objects that were unlocked if successful
       None on error  
+    Example:
+      import rhinoscriptsyntax as rs
+      groups = rs.GroupNames()
+      if groups:
+      for group in groups: rs.UnlockGroup(group)
+    See Also:
+      HideGroup
+      LockGroup
+      ShowGroup
     """
     if not isinstance(group_name, str): group_name = str(group_name)
     index = scriptcontext.doc.Groups.Find(group_name, True)

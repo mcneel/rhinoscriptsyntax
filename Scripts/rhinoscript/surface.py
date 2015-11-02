@@ -13,6 +13,15 @@ def AddBox(corners):
         be in counter-clockwise order starting with the bottom rectangle of the box
     Returns:
       identifier of the new object on success
+    Example:
+      import rhinoscriptsyntax as rs
+      box = rs.GetBox()
+      if box: rs.AddBox(box)
+    See Also:
+      AddCone
+      AddCylinder
+      AddSphere
+      AddTorus
     """
     box = rhutil.coerce3dpointlist(corners, True)
     brep = Rhino.Geometry.Brep.CreateFromBox(box)
@@ -35,6 +44,18 @@ def AddCone(base, height, radius, cap=True):
       cap [opt] = cap base of the cone
     Returns:
       identifier of the new object on success
+    Example:
+      import rhinoscriptsyntax as rs
+      radius = 5.0
+      base = rs.GetPoint("Base of cone")
+      if base:
+      height = rs.GetPoint("Height of cone", base)
+      if height: rs.AddCone(base, height, radius)
+    See Also:
+      AddBox
+      AddCylinder
+      AddSphere
+      AddTorus
     """
     plane = None
     height_point = rhutil.coerce3dpoint(height)
@@ -66,6 +87,16 @@ def AddCutPlane(object_ids, start_point, end_point, normal=None):
     Returns:
       identifier of new object on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      objs = rs.GetObjects("Select objects for cut plane")
+      if objs:
+      point0 = rs.GetPoint("Start of cut plane")
+      if point0:
+      point1 = rs.GetPoint("End of cut plane", point0)
+      if point1: rs.AddCutPlane( objs, point0, point1 )
+    See Also:
+      AddPlaneSurface
     """
     objects = []
     bbox = Rhino.Geometry.BoundingBox.Unset
@@ -100,6 +131,18 @@ def AddCylinder(base, height, radius, cap=True):
     Returns:
       identifier of new object if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      radius = 5.0
+      base = rs.GetPoint("Base of cylinder")
+      if base:
+      height = rs.GetPoint("Height of cylinder", base)
+      if height: rs.AddCylinder( base, height, radius )
+    See Also:
+      AddBox
+      AddCone
+      AddSphere
+      AddTorus
     """
     cylinder=None
     height_point = rhutil.coerce3dpoint(height)
@@ -131,6 +174,14 @@ def AddEdgeSrf(curve_ids):
     Returns:
       identifier of new object if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      if curves and len(curves)>1 ): rs.AddEdgeSrf(curves)
+    See Also:
+      AddPlanarSrf
+      AddSrfControlPtGrid
+      AddSrfPt
+      AddSrfPtGrid
     """
     curves = [rhutil.coercecurve(id, -1, True) for id in curve_ids]
     brep = Rhino.Geometry.Brep.CreateEdgeSurface(curves)
@@ -149,6 +200,13 @@ def AddNetworkSrf(curves, continuity=1, edge_tolerance=0, interior_tolerance=0, 
         0=loose, 1=position, 2=tangency, 3=curvature
     Returns:
       identifier of new object if successful
+    Example:
+      import rhinoscriptsyntax as  rs
+      curve_ids = rs.GetObjects("Select  curves in network", 4, True, True)
+      if len(curve_ids) > 0:
+      rs.AddNetworkSrf(curve_ids)
+    See Also:
+      
     """
     curves = [rhutil.coercecurve(curve, -1, True) for curve in curves]
     surf, err = Rhino.Geometry.NurbsSurface.CreateNetworkSurface(curves, continuity, edge_tolerance, interior_tolerance, angle_tolerance)
@@ -174,6 +232,28 @@ def AddNurbsSurface(point_count, points, knots_u, knots_v, degree, weights=None)
     Returns:
       identifier of new object if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Pick a surface", rs.filter.surface)
+      if obj:
+      point_count = rs.SurfacePointCount(obj)
+      points = rs.SurfacePoints(obj)
+      knots = rs.SurfaceKnots(obj)
+      degree = rs.SurfaceDegree(obj)
+      if rs.IsSurfaceRational(obj):
+      weights = rs.SurfaceWeights(obj)
+      obj = rs.AddNurbsSurface(point_count, points, knots[0], knots[1], degree, weights)
+      else:
+      obj = rs.AddNurbsSurface(point_count, points, knots[0], knots[1], degree)
+      if obj: rs.SelectObject(obj)
+    See Also:
+      IsSurfaceRational
+      SurfaceDegree
+      SurfaceKnotCount
+      SurfaceKnots
+      SurfacePointCount
+      SurfacePoints
+      SurfaceWeights
     """
     if len(points)<(point_count[0]*point_count[1]):
         return scriptcontext.errorhandler()
@@ -224,6 +304,8 @@ def AddPatch(object_ids, uv_spans_tuple_OR_surface_object_id, tolerance=None, tr
     Returns:
       Identifier of the new surface object if successful.
       None on error.
+    Example:
+    See Also:
     """
     # System.Collections.List instead of Python list because IronPython is
     # having problems converting a list to an IEnumerable<GeometryBase> which
@@ -268,6 +350,14 @@ def AddPipe(curve_id, parameters, radii, blend_type=0, cap=0, fit=False):
       fit = attempt to fit a single surface
     Returns:
       List of identifiers of new objects created
+    Example:
+      import rhinoscriptsyntax as rs
+      curve = rs.GetObject("Select curve to create pipe around", rs.filter.curve, True)
+      if curve:
+      domain = rs.CurveDomain(curve)
+      rs.AddPipe(curve, 0, 4)
+    See Also:
+      
     """
     rail = rhutil.coercecurve(curve_id, -1, True)
     abs_tol = scriptcontext.doc.ModelAbsoluteTolerance
@@ -290,6 +380,15 @@ def AddPlanarSrf(object_ids):
     Returns:
       list of surfaces created on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      objs = rs.GetObjects("Select planar curves to build surface", rs.filter.curve)
+      if objs: rs.AddPlanarSrf(objs)
+    See Also:
+      AddEdgeSrf
+      AddSrfControlPtGrid
+      AddSrfPt
+      AddSrfPtGrid
     """
     id = rhutil.coerceguid(object_ids, False)
     if id: object_ids = [id]
@@ -310,6 +409,16 @@ def AddPlaneSurface(plane, u_dir, v_dir):
     Returns:
       The identifier of the new object if successful.
       None if not successful, or on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      rs.AddPlaneSurface( rs.WorldXYPlane(), 5.0, 3.0 )
+    See Also:
+      AddCutPlane
+      AddEdgeSrf
+      AddSrfControlPtGrid
+      AddSrfPt
+      AddSrfPtGrid
+      IsPlaneSurface
     """
     plane = rhutil.coerceplane(plane, True)
     u_interval = Rhino.Geometry.Interval(0, u_dir)
@@ -358,6 +467,14 @@ def AddLoftSrf(object_ids, start=None, end=None, loft_type=0, simplify_method=0,
     Returns:
       Array containing the identifiers of the new surface objects if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      objs = rs.GetObjects("Pick curves to loft", rs.filter.curve)
+      if objs: rs.AddLoftSrf(objs)
+    See Also:
+      CurveDirectionsMatch
+      CurveSeam
+      ReverseCurve
     """
     if loft_type<0 or loft_type>5: raise ValueError("loft_type must be 0-4")
     if simplify_method<0 or simplify_method>2: raise ValueError("simplify_method must be 0-2")
@@ -406,6 +523,12 @@ def AddRevSrf(curve_id, axis, start_angle=0.0, end_angle=360.0):
     Returns:
       identifier of new object if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      curve = rs.AddLine((5,0,0), (10,0,10))
+      rs.AddRevSrf( curve, ((0,0,0), (0,0,1)) )
+    See Also:
+      
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     axis = rhutil.coerceline(axis, True)
@@ -427,6 +550,16 @@ def AddSphere(center_or_plane, radius):
     Returns:
       intentifier of the new object on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      radius = 2
+      center = rs.GetPoint("Center of sphere")
+      if center: rs.AddSphere(center, radius)
+    See Also:
+      AddBox
+      AddCone
+      AddCylinder
+      AddTorus
     """
     center = rhutil.coerce3dpoint(center_or_plane)
     if center is None:
@@ -452,6 +585,14 @@ def AddSrfContourCrvs(object_id, points_or_plane, interval=None):
     Returns:
       ids of new curves on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select object", rs.filter.surface + rs.filter.polysurface)
+      startpoint = rs.GetPoint("Base point of center line")
+      endpoint = rs.GetPoint("Endpoint of center line", startpoint)
+      rs.AddSrfContourCrvs( obj, (startpoint, endpoint) )
+    See Also:
+      CurveContourPoints
     """
     brep = rhutil.coercebrep(object_id)
     plane = rhutil.coerceplane(points_or_plane)
@@ -483,6 +624,8 @@ def AddSrfControlPtGrid(count, points, degree=(3,3)):
     Returns:
       The identifier of the new object if successful.
       None if not successful, or on error.
+    Example:
+    See Also:
     """
     points = rhutil.coerce3dpointlist(points, True)
     surf = Rhino.Geometry.NurbsSurface.CreateFromPoints(points, count[0], count[1], degree[0], degree[1])
@@ -500,6 +643,14 @@ def AddSrfPt(points):
     Returns:
       The identifier of the new object if successful.
       None if not successful, or on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      points = rs.GetPoints(True, message1="Pick 3 or 4 corner points")
+      if points: rs.AddSrfPt(points)
+    See Also:
+      AddEdgeSrf
+      AddSrfControlPtGrid
+      AddSrfPtGrid
     """
     points = rhutil.coerce3dpointlist(points, True)
     surface=None
@@ -524,6 +675,8 @@ def AddSrfPtGrid(count, points, degree=(3,3), closed=(False,False)):
     Returns:
       The identifier of the new object if successful.
       None if not successful, or on error.
+    Example:
+    See Also:
     """
     points = rhutil.coerce3dpointlist(points, True)
     surf = Rhino.Geometry.NurbsSurface.CreateThroughPoints(points, count[0], count[1], degree[0], degree[1], closed[0], closed[1])
@@ -544,6 +697,16 @@ def AddSweep1(rail, shapes, closed=False):
     Returns:
       List of new surface objects if successful
       None if not successfule, or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      rail = rs.GetObject("Select rail curve", rs.filter.curve)
+      if rail:
+      shapes = rs.GetObjects("Select cross-section curves", rs.filter.curve)
+      if shapes: rs.AddSweep1( rail, shapes )
+    See Also:
+      AddSweep2
+      CurveDirectionsMatch
+      ReverseCurve
     """
     rail = rhutil.coercecurve(rail, -1, True)
     shapes = [rhutil.coercecurve(shape, -1, True) for shape in shapes]
@@ -565,6 +728,15 @@ def AddSweep2(rails, shapes, closed=False):
     Returns:
       List of new surface objects if successful
       None if not successfule, or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      rails = rs.GetObjects("Select two rail curve", rs.filter.curve)
+      if rails and len(rails)==2:
+      shapes = rs.GetObjects("Select cross-section curves", rs.filter.curve)
+    See Also:
+      AddSweep1
+      CurveDirectionsMatch
+      ReverseCurve
     """
     rail1 = rhutil.coercecurve(rails[0], -1, True)
     rail2 = rhutil.coercecurve(rails[1], -1, True)
@@ -587,6 +759,20 @@ def AddTorus(base, major_radius, minor_radius, direction=None):
     Returns:
       The identifier of the new object if successful.
       None if not successful, or on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      major_radius = 5.0
+      minor_radius = major_radius - 2.0
+      base = rs.GetPoint("Base of torus")
+      if base:
+      direction = rs.GetPoint("Direction of torus", base)
+      if direction:
+      rs.AddTorus( base, major_radius, minor_radius, direction )
+    See Also:
+      AddBox
+      AddCone
+      AddCylinder
+      AddSphere
     """
     baseplane = None
     basepoint = rhutil.coerce3dpoint(base)
@@ -616,6 +802,16 @@ def BooleanDifference(input0, input1, delete_input=True):
     Returns:
         list of identifiers of newly created objects on success
         None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      filter = rs.filter.surface | rs.filter.polysurface
+      input0 = rs.GetObjects("Select first set of surfaces or polysurfaces", filter)
+      if input0:
+      input1 = rs.GetObjects("Select second set of surfaces or polysurfaces", filter)
+      if input1: rs.BooleanDifference(input0, input1)
+    See Also:
+      BooleanIntersection
+      BooleanUnion
     """
     if type(input0) is list or type(input0) is tuple: pass
     else: input0 = [input0]
@@ -648,6 +844,14 @@ def BooleanIntersection(input0, input1, delete_input=True):
     Returns:
         list of identifiers of newly created objects on success
         None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      input0 = rs.GetObjects("Select first set of surfaces or polysurfaces", rs.filter.surface | rs.filter.polysurface)
+      if input0:
+      input1 = rs.GetObjects("Select second set of surfaces or polysurfaces", rs.filter.surface | rs.filter.polysurface)
+    See Also:
+      BooleanDifference
+      BooleanUnion
     """
     if type(input0) is list or type(input0) is tuple: pass
     else: input0 = [input0]
@@ -678,6 +882,13 @@ def BooleanUnion(input, delete_input=True):
     Returns:
         list of identifiers of newly created objects on success
         None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      nput = rs.GetObjects("Select surfaces or polysurfaces to union", rs.filter.surface | rs.filter.polysurface)
+      if input and len(input)>1: rs.BooleanUnion(input)
+    See Also:
+      BooleanDifference
+      BooleanUnion
     """
     if len(input)<2: return scriptcontext.errorhandler()
     breps = [rhutil.coercebrep(id, True) for id in input]
@@ -713,6 +924,20 @@ def BrepClosestPoint(object_id, point):
          3        Vector3d         The normal to the brep_face, or the tangent
                                    to the brep_edge.  
       None if not successful, or on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a surface", rs.filter.surface)
+      if obj:
+      point = rs.GetPoint("Pick a test point")
+      if point:
+      arrCP = rs.BrepClosestPoint(obj, point)
+      if arrCP:
+      rs.AddPoint(point)
+      rs.AddPoint( arrCP[0] )
+    See Also:
+      EvaluateSurface
+      IsSurface
+      SurfaceClosestPoint
     """
     brep = rhutil.coercebrep(object_id, True)
     point = rhutil.coerce3dpoint(point, True)
@@ -729,6 +954,14 @@ def CapPlanarHoles(surface_id):
       surface_id = The identifier of the surface or polysurface to cap.
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      surface = rs.GetObject("Select surface or polysurface to cap", rs.filter.surface | rs.filter.polysurface)
+    See Also:
+      ExtrudeCurve
+      ExtrudeCurvePoint
+      ExtrudeCurveStraight
+      ExtrudeSurface
     """
     brep = rhutil.coercebrep(surface_id, True)
     tolerance = scriptcontext.doc.ModelAbsoluteTolerance
@@ -754,6 +987,15 @@ def DuplicateEdgeCurves(object_id, select=False):
     Returns:
       A list of Guids identifying the newly created curve objects if successful.
       None if not successful, or on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select surface or polysurface", rs.filter.surface | rs.filter.polysurface)
+      if obj:
+      rs.DuplicateEdgeCurves( obj, True )
+      rs.DeleteObject( obj )
+    See Also:
+      IsPolysurface
+      IsSurface
     """
     brep = rhutil.coercebrep(object_id, True)
     out_curves = brep.DuplicateEdgeCurves()
@@ -778,6 +1020,12 @@ def DuplicateSurfaceBorder(surface_id, type=0):
     Returns:
       list of curve ids on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      surface = rs.GetObject("Select surface or polysurface", rs.filter.surface | rs.filter.polysurface)
+    See Also:
+      DuplicateEdgeCurves
+      DuplicateMeshBorder
     """
     brep = rhutil.coercebrep(surface_id, True)
     inner = type==0 or type==2
@@ -799,6 +1047,19 @@ def EvaluateSurface(surface_id, u, v):
       u, v = u, v parameters to evaluate.
     Returns:
       a 3-D point if successful, otherwise None
+    Example:
+      import rhinoscriptsyntax as rs
+      objectId = rs.GetObject("Select a surface")
+      if rs.IsSurface(objectId):
+      domainU = rs.SurfaceDomain(objectId, 0)
+      domainV = rs.SurfaceDomain(objectId, 1)
+      u = domainU[1]/2.0
+      v = domainV[1]/2.0
+      point = rs.EvaluateSurface(objectId, u, v)
+      rs.AddPoint( point )
+    See Also:
+      IsSurface
+      SurfaceClosestPoint
     """
     surface = rhutil.coercesurface(surface_id, True)
     rc = surface.PointAt(u,v)
@@ -818,6 +1079,14 @@ def ExtendSurface(surface_id, parameter, length, smooth=True):
         edge. If False, the surface is extended in a straight line from the edge
     Returns:
       True or False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+      pick = rs.GetObjectEx("Select surface to extend", rs.filter.surface)
+      if pick:
+      parameter = rs.SurfaceClosestPoint(pick[0], pick[3])
+      rs.ExtendSurface(pick[0], parameter, 5.0)
+    See Also:
+      IsSurface
     """
     surface = rhutil.coercesurface(surface_id, True)
     edge = surface.ClosestSide(parameter[0], parameter[1])
@@ -837,6 +1106,14 @@ def ExplodePolysurfaces(object_ids, delete_input=False):
       delete_input[opt] = delete input objects after exploding
     Returns:
       List of identifiers of exploded pieces on success
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select polysurface to explode", rs.filter.polysurface)
+      if rs.IsPolysurface(obj):
+      rs.ExplodePolysurfaces( obj )
+    See Also:
+      IsPolysurface
+      IsSurface
     """
     id = rhutil.coerceguid(object_ids, False)
     if id: object_ids = [id]
@@ -863,6 +1140,14 @@ def ExtractIsoCurve(surface_id, parameter, direction):
     Returns:
       list of curve ids on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select surface for isocurve extraction", rs.filter.surface)
+      point = rs.GetPointOnSurface(obj, "Select location for extraction")
+      parameter = rs.SurfaceClosestPoint(obj, point)
+      rs.ExtractIsoCurve( obj, parameter, 2 )
+    See Also:
+      IsSurface
     """
     surface = rhutil.coercesurface(surface_id, True)
     ids = []
@@ -898,6 +1183,14 @@ def ExtractSurface(object_id, face_indices, copy=False):
       copy[opt]: If True the faces are copied. If False, the faces are extracted
     Returns:
       identifiers of extracted surface objects on success
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select polysurface", rs.filter.polysurface, True)
+      if obj: rs.ExtractSurface(obj, 0)
+    See Also:
+      BrepClosestPoint
+      IsSurface
+      IsPolysurface
     """
     brep = rhutil.coercebrep(object_id, True)
     if hasattr(face_indices, "__getitem__"): pass
@@ -925,6 +1218,15 @@ def ExtrudeCurve(curve_id, path_id):
     Returns:
       identifier of new surface on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      curve = rs.AddCircle(rs.WorldXYPlane(), 5)
+      path = rs.AddLine([5,0,0], [10,0,10])
+      rs.ExtrudeCurve( curve, path )
+    See Also:
+      ExtrudeCurvePoint
+      ExtrudeCurveStraight
+      ExtrudeSurface
     """
     curve1 = rhutil.coercecurve(curve_id, -1, True)
     curve2 = rhutil.coercecurve(path_id, -1, True)
@@ -943,6 +1245,15 @@ def ExtrudeCurvePoint(curve_id, point):
     Returns:
       identifier of new surface on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      curve = rs.AddCircle(rs.WorldXYPlane(), 5)
+      point = (0,0,10)
+      rs.ExtrudeCurvePoint( curve, point )
+    See Also:
+      ExtrudeCurve
+      ExtrudeCurveStraight
+      ExtrudeSurface
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     point = rhutil.coerce3dpoint(point, True)
@@ -961,6 +1272,14 @@ def ExtrudeCurveStraight(curve_id, start_point, end_point):
     Returns:
       identifier of new surface on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      curve = rs.AddCircle(rs.WorldXYPlane(), 5)
+      rs.ExtrudeCurveStraight( curve, (0,0,0), (0, 10, 10) )
+    See Also:
+      ExtrudeCurve
+      ExtrudeCurvePoint
+      ExtrudeSurface
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     start_point = rhutil.coerce3dpoint(start_point, True)
@@ -981,6 +1300,15 @@ def ExtrudeSurface(surface, curve, cap=True):
       cap[opt] = extrusion is capped at both ends
     Returns:
       identifier of new surface on success
+    Example:
+      import rhinoscriptsyntax as rs
+      surface = rs.AddSrfPt([(0,0,0), (5,0,0), (5,5,0), (0,5,0)])
+      curve = rs.AddLine((5,0,0), (10,0,10))
+      rs.ExtrudeSurface(surface, curve)
+    See Also:
+      ExtrudeCurve
+      ExtrudeCurvePoint
+      ExtrudeCurveStraight
     """
     brep = rhutil.coercebrep(surface, True)
     curve = rhutil.coercecurve(curve, -1, True)
@@ -1003,6 +1331,13 @@ def FilletSurfaces(surface0, surface1, radius, uvparam0=None, uvparam1=None):
     Returns:
       ids of surfaces created on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      surface0 = rs.GetObject("First surface", rs.filter.surface)
+      surface1 = rs.GetObject("Second surface", rs.filter.surface)
+      rs.FilletSurfaces(surface0, surface1, 2.0)
+    See Also:
+      IsSurface
     """
     surface0 = rhutil.coercesurface(surface0, True)
     surface1 = rhutil.coercesurface(surface1, True)
@@ -1033,6 +1368,14 @@ def FlipSurface(surface_id, flip=None):
       if flipped is not specified, the current normal orientation
       if flipped is specified, the previous normal orientation
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      surf = rs.GetObject("Select object", rs.filter.surface)
+      if surf:
+      flip = rs.FlipSurface(surf)
+      if flip: rs.FlipSurface(surf, False)
+    See Also:
+      IsSurface
     """
     brep = rhutil.coercebrep(surface_id, True)
     if brep.Faces.Count>1: return scriptcontext.errorhandler()
@@ -1058,6 +1401,14 @@ def IntersectBreps(brep1, brep2, tolerance=None):
       List of Guids identifying the newly created intersection curve and
       point objects if successful.
       None if not successful, or on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      brep1 = rs.GetObject("Select the first brep", rs.filter.surface | rs.filter.polysurface)
+      if brep1:
+      brep2 = rs.GetObject("Select the second", rs.filter.surface | rs.filter.polysurface)
+      if brep2: rs.IntersectBreps( brep1, brep2)
+    See Also:
+      
     """
     brep1 = rhutil.coercebrep(brep1, True)
     brep2 = rhutil.coercebrep(brep2, True)
@@ -1107,6 +1458,18 @@ def IntersectSpheres(sphere_plane0, sphere_radius0, sphere_plane1, sphere_radius
         element 1 = Point of intersection or plane of circle intersection
         element 2 = radius of circle if circle intersection
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      plane0 = rs.WorldXYPlane()
+      plane1 = rs.MovePlane(plane0, (10,0,0))
+      radius = 10
+      results = rs.IntersectSpheres(plane0, radius, plane1, radius)
+      if results:
+      if results[0] == 0: rs.AddPoint(results[1])
+      else: rs.AddCircle( results[1], results[2])
+    See Also:
+      IntersectBreps
+      IntersectPlanes
     """
     plane0 = rhutil.coerceplane(sphere_plane0, True)
     plane1 = rhutil.coerceplane(sphere_plane1, True)
@@ -1129,6 +1492,17 @@ def IsBrep(object_id):
     Returns:
       True if successful, otherwise False.
       None on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a Brep")
+      if rs.IsBrep(obj):
+      print "The object is a Brep."
+      else:
+      print "The object is not a Brep."
+    See Also:
+      IsPolysurface
+      IsPolysurfaceClosed
+      IsSurface
     """
     return rhutil.coercebrep(object_id)!=None
 
@@ -1139,6 +1513,19 @@ def IsCone(object_id):
       object_id = the surface object's identifier
     Returns:
       True if successful, otherwise False
+    Example:
+      import rhinoscriptsyntax as rs
+      surface = rs.GetObject("Select a surface", rs.filter.surface)
+      if surface:
+      if rs.IsCone(surface):
+      print "The surface is a portion of a cone."
+      else:
+      print "The surface is not a portion of a cone."
+    See Also:
+      IsCylinder
+      IsSphere
+      IsSurface
+      IsTorus
     """
     surface = rhutil.coercesurface(object_id, True)
     return surface.IsCone()
@@ -1150,6 +1537,19 @@ def IsCylinder(object_id):
       object_id = the cylinder object's identifier
     Returns:
       True if successful, otherwise False
+    Example:
+      import rhinoscriptsyntax as rs
+      surface = rs.GetObject("Select a surface", rs.filter.surface)
+      if surface:
+      if rs.IsCylinder(surface):
+      print "The surface is a portion of a cylinder."
+      else:
+      print "The surface is not a portion of a cylinder."
+    See Also:
+      IsCone
+      IsSphere
+      IsSurface
+      IsTorus
     """
     surface = rhutil.coercesurface(object_id, True)
     return surface.IsCylinder()
@@ -1162,6 +1562,17 @@ def IsPlaneSurface(object_id):
       object_id = the object's identifier
     Returns:
       True if successful, otherwise False
+    Example:
+      import rhinoscriptsyntax as rs
+       = rs.GetObject("Select surface to trim", rs.filter.surface)
+      if surface and rs.IsPlaneSurface(surface):
+      print "got a plane surface"
+      else:
+      print "not a plane surface"
+    See Also:
+      IsBrep
+      IsPolysurface
+      IsSurface
     """
     face = rhutil.coercesurface(object_id, True)
     if type(face) is Rhino.Geometry.BrepFace and face.IsSurface:
@@ -1179,6 +1590,18 @@ def IsPointInSurface(object_id, point, strictly_in=False, tolerance=None):
         strict inclusion. If omitted, Rhino's internal tolerance is used
     Returns:
       True if successful, otherwise False
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a polysurface", rs.filter.polysurface)
+      if rs.IsPolysurfaceClosed(obj):
+      point = rs.GetPoint("Pick a test point")
+      if point:
+      if rs.IsPointInSurface(obj, point):
+      print "The point is inside the polysurface."
+      else:
+      print "The point is not inside the polysurface."
+    See Also:
+      IsPointOnSurface
     """
     object_id = rhutil.coerceguid(object_id, True)
     point = rhutil.coerce3dpoint(point, True)
@@ -1202,6 +1625,18 @@ def IsPointOnSurface(object_id, point):
       point: list of three numbers or Point3d. The test, or sampling point
     Returns:
       True if successful, otherwise False
+    Example:
+      import rhinoscriptsyntax as rs
+      surf = rs.GetObject("Select a surface")
+      if rs.IsSurface(surf):
+      point = rs.GetPoint("Pick a test point")
+      if point:
+      if rs.IsPointOnSurface(surf, point):
+      print "The point is on the surface."
+      else:
+      print "The point is not on the surface."
+    See Also:
+      IsPointInSurface
     """
     surf = rhutil.coercesurface(object_id, True)
     point = rhutil.coerce3dpoint(point, True)
@@ -1223,6 +1658,16 @@ def IsPolysurface(object_id):
       object_id: the object's identifier
     Returns:
       True is successful, otherwise False
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a polysurface")
+      if rs.IsPolysurface(obj):
+      print "The object is a polysurface."
+      else:
+      print "The object is not a polysurface."
+    See Also:
+      IsBrep
+      IsPolysurfaceClosed
     """
     brep = rhutil.coercebrep(object_id)
     if brep is None: return False
@@ -1236,6 +1681,16 @@ def IsPolysurfaceClosed(object_id):
       object_id: the object's identifier
     Returns:
       True is successful, otherwise False
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a polysurface", rs.filter.polysurface)
+      if rs.IsPolysurfaceClosed(obj):
+      print "The polysurface is closed."
+      else:
+      print "The polysurface is not closed."
+    See Also:
+      IsBrep
+      IsPolysurface
     """
     brep = rhutil.coercebrep(object_id, True)
     return brep.IsSolid
@@ -1247,6 +1702,19 @@ def IsSphere(object_id):
       object_id = the object's identifier
     Returns:
       True if successful, otherwise False
+    Example:
+      import rhinoscriptsyntax as rs
+      surface = rs.GetObject("Select a surface", rs.filter.surface)
+      if surface:
+      if rs.IsSphere(surface):
+      print "The surface is a portion of a sphere."
+      else:
+      print "The surface is not a portion of a sphere."
+    See Also:
+      IsCone
+      IsCylinder
+      IsSurface
+      IsTorus
     """
     surface = rhutil.coercesurface(object_id, True)
     return surface.IsSphere()
@@ -1259,6 +1727,19 @@ def IsSurface(object_id):
       object_id = the object's identifier.
     Returns:
       True if successful, otherwise False.
+    Example:
+      import rhinoscriptsyntax as rs
+      objectId = rs.GetObject("Select a surface")
+      if rs.IsSurface(objectId):
+      print "The object is a surface."
+      else:
+      print "The object is not a surface."
+    See Also:
+      IsPointOnSurface
+      IsSurfaceClosed
+      IsSurfacePlanar
+      IsSurfaceSingular
+      IsSurfaceTrimmed
     """
     brep = rhutil.coercebrep(object_id)
     if brep and brep.Faces.Count==1: return True
@@ -1274,6 +1755,18 @@ def IsSurfaceClosed( surface_id, direction ):
       direction = 0=U, 1=V
     Returns:
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a surface", rs.filter.surface)
+      if rs.IsSurfaceClosed(obj, 0):
+      print "The surface is closed in the U direction."
+      else:
+      print "The surface is not closed in the U direction."
+    See Also:
+      IsSurface
+      IsSurfacePlanar
+      IsSurfaceSingular
+      IsSurfaceTrimmed
     """
     surface = rhutil.coercesurface(surface_id, True)
     return surface.IsClosed(direction)
@@ -1286,6 +1779,19 @@ def IsSurfacePeriodic(surface_id, direction):
       direction = 0=U, 1=V
     Returns:
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a surface", rs.filter.surface)
+      if rs.IsSurfacePeriodic(obj, 0):
+      print "The surface is periodic in the U direction."
+      else:
+      print "The surface is not periodic in the U direction."
+    See Also:
+      IsSurface
+      IsSurfaceClosed
+      IsSurfacePlanar
+      IsSurfaceSingular
+      IsSurfaceTrimmed
     """
     surface = rhutil.coercesurface(surface_id, True)
     return surface.IsPeriodic(direction)
@@ -1299,6 +1805,18 @@ def IsSurfacePlanar(surface_id, tolerance=None):
         tolerance is used
     Returns:
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a surface", rs.filter.surface)
+      if rs.IsSurfacePlanar(obj):
+      print "The surface is planar."
+      else:
+      print "The surface is not planar."
+    See Also:
+      IsSurface
+      IsSurfaceClosed
+      IsSurfaceSingular
+      IsSurfaceTrimmed
     """
     surface = rhutil.coercesurface(surface_id, True)
     if tolerance is None:
@@ -1312,6 +1830,18 @@ def IsSurfaceRational(surface_id):
       surface_id = the surface's identifier
     Returns:
       True if successful, otherwise False
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a surface", rs.filter.surface)
+      if rs.IsSurfaceRational(obj):
+      print "The surface is rational."
+      else:
+      print "The surface is not rational."
+    See Also:
+      IsSurface
+      IsSurfaceClosed
+      IsSurfacePlanar
+      IsSurfaceTrimmed
     """
     surface = rhutil.coercesurface(surface_id, True)
     ns = surface.ToNurbsSurface()
@@ -1327,6 +1857,18 @@ def IsSurfaceSingular(surface_id, direction):
       direction: 0=south, 1=east, 2=north, 3=west
     Returns:
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a surface", rs.filter.surface)
+      if rs.IsSurfaceSingular(obj, 0):
+      print "The surface is singular."
+      else:
+      print "The surface is not singular."
+    See Also:
+      IsSurface
+      IsSurfaceClosed
+      IsSurfacePlanar
+      IsSurfaceTrimmed
     """
     surface = rhutil.coercesurface(surface_id, True)
     return surface.IsSingular(direction)
@@ -1338,6 +1880,18 @@ def IsSurfaceTrimmed(surface_id):
       surface_id = the surface's identifier
     Returns:
       True or False
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a surface", rs.filter.surface)
+      if rs.IsSurfaceTrimmed(obj):
+      print "The surface is trimmed."
+      else:
+      print "The surface is not trimmed."
+    See Also:
+      IsSurface
+      IsSurfaceClosed
+      IsSurfacePlanar
+      IsSurfaceSingular
     """
     brep = rhutil.coercebrep(surface_id, True)
     return not brep.IsSurface
@@ -1349,6 +1903,19 @@ def IsTorus(surface_id):
       surface_id = the surface object's identifier
     Returns:
       True if successful, otherwise False
+    Example:
+      import rhinoscriptsyntax as rs
+      surface = rs.GetObject("Select a surface", rs.filter.surface)
+      if surface:
+      if rs.IsTorus(surface):
+      print "The surface is a portion of a torus."
+      else:
+      print "The surface is not a portion of a torus."
+    See Also:
+      IsCone
+      IsCylinder
+      IsSphere
+      IsSurface
     """
     surface = rhutil.coercesurface(surface_id, True)
     return surface.IsTorus()
@@ -1362,6 +1929,16 @@ def JoinSurfaces(object_ids, delete_input=False):
     Returns:
       identifier of newly created object on success
       None on failure
+    Example:
+      import rhinoscriptsyntax as rs
+      objs = rs.GetObjects("Select surfaces in order", rs.filter.surface)
+      if objs and len(objs)>1: rs.JoinSurfaces(objs)
+    See Also:
+      ExplodePolysurfaces
+      IsPolysurface
+      IsPolysurfaceClosed
+      IsSurface
+      IsSurfaceClosed
     """
     breps = [rhutil.coercebrep(id, True) for id in object_ids]
     if len(breps)<2: return scriptcontext.errorhandler()
@@ -1389,6 +1966,13 @@ def MakeSurfacePeriodic(surface_id, direction, delete_input=False):
       if delete_input is False, identifier of the new surface
       if delete_input is True, identifer of the modifier surface
       None on error
+    Example:
+      import rhinoscriptsyntax as  rs
+      obj = rs.GetObject("Select  a surface", rs.filter.surface)
+      if not rs.IsSurfacePeriodic(obj,  0):
+      rs.MakeSurfacePeriodic(obj,  0)
+    See Also:
+      IsSurfacePeriodic
     """
     surface = rhutil.coercesurface(surface_id, True)
     newsurf = Rhino.Geometry.Surface.CreatePeriodicSurface(surface, direction)
@@ -1415,6 +1999,13 @@ def OffsetSurface(surface_id, distance, tolerance=None, both_sides=False, create
     Returns:
       identifier of the new object if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      surface = rs.GetObject("Select a surface", rs.filter.surface)
+      if rs.IsSurface(surface):
+      rs.OffsetSurface( surface, 10.0 )
+    See Also:
+      OffsetCurve
     """
     brep = rhutil.coercebrep(surface_id, True)
     face = None
@@ -1438,6 +2029,13 @@ def PullCurve(surface, curve, delete_input=False):
     Returns:
       list of new curves if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      curve = rs.GetObject("Select curve to pull", rs.filter.curve )
+      surface = rs.GetObject("Select surface that pulls", rs.filter.surface )
+      rs.PullCurve(surface, curve)
+    See Also:
+      IsSurface
     """
     crvobj = rhutil.coercerhinoobject(curve, True, True)
     brep = rhutil.coercebrep(surface, True)
@@ -1461,6 +2059,8 @@ def RebuildSurface(object_id, degree=(3,3), pointcount=(10,10)):
       pointcount[opt] = two numbers that identify the surface point count in both the U and V directions
     Returns:
       True of False indicating success or failure
+    Example:
+    See Also:
     """
     surface = rhutil.coercesurface(object_id, True)
     newsurf = surface.Rebuild( degree[0], degree[1], pointcount[0], pointcount[1] )
@@ -1481,6 +2081,14 @@ def ReverseSurface(surface_id, direction):
     Returns:
       Boolean indicating success or failure
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a surface to reverse")
+      ff rs.IsSurface(obj):
+      rs.ReverseSurface( obj, 1 )
+    See Also:
+      FlipSurface
+      IsSurface
     """
     brep = rhutil.coercebrep(surface_id, True)
     if not brep.Faces.Count==1: return scriptcontext.errorhandler()
@@ -1506,6 +2114,28 @@ def ShootRay(surface_ids, start_point, direction, reflections=10):
     Returns:
       list of reflection points on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      def TestRayShooter():
+      corners = []
+      corners.append((0,0,0))
+      corners.append((10,0,0))
+      corners.append((10,10,0))
+      corners.append((0,10,0))
+      corners.append((0,0,10))
+      corners.append((10,0,10))
+      corners.append((10,10,10))
+      corners.append((0,10,10))
+      box = rs.AddBox(corners)
+      dir = 10,7.5,7
+      reflections = rs.ShootRay(box, (0,0,0), dir)
+      rs.AddPolyline( reflections )
+      rs.AddPoints( reflections )
+      
+      TestRayShooter()
+    See Also:
+      IsPolysurface
+      IsSurface
     """
     start_point = rhutil.coerce3dpoint(start_point, True)
     direction = rhutil.coerce3dvector(direction, True)
@@ -1538,6 +2168,16 @@ def ShortPath(surface_id, start_point, end_point):
     Returns:
       identifier of the new surface on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      surface = rs.GetObject("Select surface for short path", rs.filter.surface + rs.filter.surface)
+      if surface:
+      start = rs.GetPointOnSurface(surface, "First point")
+      end = rs.GetPointOnSurface(surface, "Second point")
+      rs.ShortPath(surface, start, end)
+    See Also:
+      EvaluateSurface
+      SurfaceClosestPoint
     """
     surface = rhutil.coercesurface(surface_id, True)
     start = rhutil.coerce3dpoint(start_point, True)
@@ -1566,6 +2206,13 @@ def ShrinkTrimmedSurface(object_id, create_copy=False):
       If create_copy is False, True or False indifating success or failure
       If create_copy is True, the identifier of the new surface
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      filter = rs.filter.surface | rs.filter.polysurface
+      surface = rs.GetObject("Select surface or polysurface to shrink", filter )
+      if surface: rs.ShrinkTrimmedSurface( surface )
+    See Also:
+      IsSurfaceTrimmed
     """
     brep = rhutil.coercebrep(object_id, True)
     if not brep.Faces.ShrinkFaces(): return scriptcontext.errorhandler()
@@ -1599,6 +2246,14 @@ def SplitBrep(brep_id, cutter_id, delete_input=False):
     Returns:
       identifiers of split pieces on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      filter = rs.filter.surface + rs.filter.polysurface
+      brep = rs.GetObject("Select brep to split", filter)
+      cutter = rs.GetObject("Select cutting brep", filter)
+      rs.SplitBrep ( brep, cutter )
+    See Also:
+      IsBrep
     """
     brep = rhutil.coercebrep(brep_id, True)
     cutter = rhutil.coercebrep(cutter_id, True)
@@ -1621,6 +2276,16 @@ def SurfaceArea(object_id):
     Returns:
       list of area information on success (area, absolute error bound)
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a surface", rs.filter.surface)
+      if obj:
+      massprop = rs.SurfaceArea( obj )
+      if massprop:
+      print "The surface area is: ", massprop[0]
+    See Also:
+      SurfaceAreaCentroid
+      SurfaceAreaMoments
     """
     amp = __GetMassProperties(object_id, True)
     if amp: return amp.Area, amp.AreaError
@@ -1633,6 +2298,14 @@ def SurfaceAreaCentroid(object_id):
     Returns:
       (Area Centriod, Error bound) on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      if obj:
+      massprop = rs.SurfaceAreaCentroid(obj)
+      if massprop:rs.AddPoint( massprop[0] )
+    See Also:
+      SurfaceArea
+      SurfaceAreaMoments
     """
     amp = __GetMassProperties(object_id, True)
     if amp is None: return scriptcontext.errorhandler()
@@ -1667,6 +2340,16 @@ def SurfaceAreaMoments(surface_id):
     Returns:
       list of moments and error bounds - see help topic
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a surface", rs.filter.surface)
+      if obj:
+      massprop= rs.SurfaceAreaMoments(obj)
+      if massprop:
+      print "Area Moments of Inertia about the World Coordinate Axes: ", massprop[6]
+    See Also:
+      SurfaceArea
+      SurfaceAreaCentroid
     """
     return __AreaMomentsHelper(surface_id, True)
 
@@ -1679,6 +2362,20 @@ def SurfaceClosestPoint(surface_id, test_point):
     Returns:
       The U,V parameters of the closest point on the surface if successful.
       None on error.
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a surface", rs.filter.surface)
+      if rs.IsSurface(obj):
+      point = rs.GetPointOnSurface(obj, "Pick a test point")
+      if point:
+      param = rs.SurfaceClosestPoint(obj, point)
+      if param:
+      print "Surface U parameter: ", str(param[0])
+      print "Surface V parameter: ", str(param[1])
+    See Also:
+      BrepClosestPoint
+      EvaluateSurface
+      IsSurface
     """
     surface = rhutil.coercesurface(surface_id, True)
     point = rhutil.coerce3dpoint(test_point, True)
@@ -1698,6 +2395,13 @@ def SurfaceCone(surface_id):
         element 1 = the height of the cone
         element 2 = the radius of the cone
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      if rs.IsCone(cone):
+      cone_def = rs.SurfaceCone(cone)
+      rs.AddCone( cone_def[0], cone_def[1], cone_def[2], False )
+    See Also:
+      
     """
     surface = rhutil.coercesurface(surface_id, True)
     rc, cone = surface.TryGetCone()
@@ -1722,6 +2426,25 @@ def SurfaceCurvature(surface_id, parameter):
         element 6 = gaussian curvature
         element 7 = mean curvature
       None if not successful, or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      srf = rs.GetObject("Select a surface", rs.filter.surface)
+      if rs.IsSurface(srf):
+      point = rs.GetPointOnSurface(srf, "Pick a test point")
+      if point:
+      param = rs.SurfaceClosestPoint(srf, point)
+      if param:
+      data = rs.SurfaceCurvature(srf, param)
+      if data:
+      print "Surface curvature evaluation at parameter", param, ":"
+      print " 3-D Point:", data[0]
+      print " 3-D Normal:", data[1]
+      print " Maximum principal curvature:", data[2], " ", data[3]
+      print " Minimum principal curvature:", data[4], " ", data[5]
+      print " Gaussian curvature:", data[6]
+      print " Mean curvature:", data[7]
+    See Also:
+      CurveCurvature
     """
     surface = rhutil.coercesurface(surface_id, True)
     if len(parameter)<2: return scriptcontext.errorhandler()
@@ -1737,6 +2460,14 @@ def SurfaceCylinder(surface_id):
     Returns:
       tuple of the cylinder plane, height, radius on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      cylinder = rs.AddCylinder(rs.WorldXYPlane(), 6, 2, False)
+      if rs.IsCylinder(cylinder):
+      plane, height, radius = rs.SurfaceCylinder(cylinder)
+      rs.AddCylinder(plane, height, radius, False)
+    See Also:
+      
     """
     surface = rhutil.coercesurface(surface_id, True)
     tol = scriptcontext.doc.ModelAbsoluteTolerance
@@ -1756,6 +2487,15 @@ def SurfaceDegree(surface_id, direction=2):
       Tuple of two values if direction = 2
       Single number if direction = 0 or 1
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a surface", rs.filter.surface)
+      if rs.IsSurface(obj):
+      print "Degree in U direction: ", rs.SurfaceDegree(obj, 0)
+      print "Degree in V direction: ", rs.SurfaceDegree(obj, 1)
+    See Also:
+      IsSurface
+      SurfaceDomain
     """
     surface = rhutil.coercesurface(surface_id, True)
     if direction==0 or direction==1: return surface.Degree(direction)
@@ -1771,6 +2511,17 @@ def SurfaceDomain(surface_id, direction):
     Returns:
       list containing the domain interval in the specified direction
       None if not successful, or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      object = rs.GetObject("Select a surface", rs.filter.surface)
+      if rs.IsSurface(object):
+      domainU = rs.SurfaceDomain(object, 0)
+      domainV = rs.SurfaceDomain(object, 1)
+      print "Domain in U direction: ", domainU
+      print "Domain in V direction: ", domainV
+    See Also:
+      IsSurface
+      SurfaceDegree
     """
     if direction!=0 and direction!=1: return scriptcontext.errorhandler()
     surface = rhutil.coercesurface(surface_id, True)
@@ -1793,6 +2544,16 @@ def SurfaceEditPoints(surface_id, return_parameters=False, return_all=True):
       if return_parameters is False, a list of 3D points
       if return_parameters is True, a list of U,V parameters
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a surface")
+      if rs.IsSurface(obj):
+      points = rs.SurfaceEditPoints(obj)
+      if points: rs.AddPointCloud(points)
+    See Also:
+      IsSurface
+      SurfacePointCount
+      SurfacePoints
     """
     surface = rhutil.coercesurface(surface_id, True)
     nurb = surface.ToNurbsSurface()
@@ -1830,6 +2591,25 @@ def SurfaceEvaluate(surface_id, parameter, derivative):
     Returns:
       list of derivatives on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      def TestSurfaceEvaluate():
+      srf = rs.GetObject("Select surface to evaluate", rs.filter.surface, True)
+      if srf is None: return
+      point = rs.GetPointOnSurface(srf, "Point to evaluate")
+      if point is None: return
+      der = rs.GetInteger("Number of derivatives to evaluate", 1, 1)
+      if der is None: return
+      uv = rs.SurfaceClosestPoint(srf, point)
+      res = rs.SurfaceEvaluate(srf, uv, der)
+      if res is None:
+      print "Failed to evaluate surface."
+      return
+      for i,r in enumerate(res):
+      print i, " = ", r
+      TestSurfaceEvaluate()
+    See Also:
+      EvaluateSurface
     """
     surface = rhutil.coercesurface(surface_id, True)
     success, point, der = surface.Evaluate(parameter[0], parameter[1], derivative)
@@ -1848,6 +2628,16 @@ def SurfaceFrame(surface_id, uv_parameter):
     Returns:
       plane on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      surface = rs.GetSurfaceObject("Select a surface")
+      if surface:
+      plane = rs.SurfaceFrame(surface[0], surface[4])
+      rs.ViewCPlane(None, plane)
+    See Also:
+      EvaluateSurface
+      SurfaceClosestPoint
+      SurfaceNormal
     """
     surface = rhutil.coercesurface(surface_id, True)
     rc, frame = surface.FrameAt(uv_parameter[0], uv_parameter[1])
@@ -1871,6 +2661,13 @@ def SurfaceIsocurveDensity(surface_id, density=None):
       If density is not specified, then the current isocurve density if successful
       If density is specified, the the previous isocurve density if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a surface", rs.filter.surface | rs.filter.polysurface)
+      if obj: rs.SurfaceIsocurveDensity( obj, 8 )
+    See Also:
+      IsPolysurface
+      IsSurface
     """
     rhino_object = rhutil.coercerhinoobject(surface_id, True, True)
     if not isinstance(rhino_object, Rhino.DocObjects.BrepObject):
@@ -1891,6 +2688,16 @@ def SurfaceKnotCount(surface_id):
       surface_id = the surface object's identifier
     Returns:
       (U count, V count) on success
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a surface")
+      if rs.IsSurface(obj):
+      count = rs.SurfaceKnotCount(obj)
+      print "Knot count in U direction: ", count[0]
+      print "Knot count in V direction: ", count[1]
+    See Also:
+      IsSurface
+      SurfaceKnots
     """
     surface = rhutil.coercesurface(surface_id, True)
     ns = surface.ToNurbsSurface()
@@ -1908,6 +2715,21 @@ def SurfaceKnots(surface_id):
         0         Knot vector in U direction
         1         Knot vector in V direction
       None if not successful, or on error.
+    Example:
+      import rhinocsriptsyntax as rs
+      obj = rs.GetObject("Select a surface")
+      if rs.IsSurface(obj):
+      knots = rs.SurfaceKnots(obj)
+      if knots:
+      vector = knots[0]
+      print "Knot vector in U direction"
+      for item in vector: print "Surface knot value: ", item
+      vector = knots[1]
+      print "Knot vector in V direction"
+      for item in vector: print "Surface knot value: ", item
+    See Also:
+      IsSurface
+      SurfaceKnotCount
     """
     surface = rhutil.coercesurface(surface_id, True)
     nurb_surf = surface.ToNurbsSurface()
@@ -1925,6 +2747,18 @@ def SurfaceNormal(surface_id, uv_parameter):
       uv_parameter = the uv parameter to evaluate
     Returns:
       Normal vector on success
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a surface", rs.filter.surface)
+      if obj:
+      point = rs.GetPointOnSurface(obj)
+      if point:
+      param = rs.SurfaceClosestPoint(obj, point)
+      normal = rs.SurfaceNormal(obj, param)
+      rs.AddPoints( [point, point + normal] )
+    See Also:
+      SurfaceClosestPoint
+      SurfaceDomain
     """
     surface = rhutil.coercesurface(surface_id, True)
     return surface.NormalAt(uv_parameter[0], uv_parameter[1])
@@ -1939,6 +2773,18 @@ def SurfaceNormalizedParameter(surface_id, parameter):
     Returns:
       normalized surface parameter if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select surface")
+      if rs.IsSurface(obj):
+      domain_u = rs.SurfaceDomain(obj, 0)
+      domain_v = rs.SurfaceDomain(obj, 1)
+      print "Surface parameter: ", parameter
+      normalized = rs.SurfaceNormalizedParameter(obj, parameter)
+      print "Normalized parameter: ", normalized
+    See Also:
+      SurfaceDomain
+      SurfaceParameter
     """
     surface = rhutil.coercesurface(surface_id, True)
     u_domain = surface.Domain(0)
@@ -1960,6 +2806,17 @@ def SurfaceParameter(surface_id, parameter):
       parameter = the normalized parameter to convert
     Returns:
       surface parameter as tuple on success
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select surface")
+      if obj:
+      normalized = (0.5, 0.5)
+      print "Normalized parameter: ", normalized
+      parameter = rs.SurfaceParameter(obj, normalized)
+      print "Surface parameter: ", parameter
+    See Also:
+      SurfaceDomain
+      SurfaceNormalizedParameter
     """
     surface = rhutil.coercesurface(surface_id, True)
     x = surface.Domain(0).ParameterAt(parameter[0])
@@ -1974,6 +2831,16 @@ def SurfacePointCount(surface_id):
       surface_id = the surface object's identifier
     Returns:
       (U count, V count) on success
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a surface")
+      if rs.IsSurface(obj):
+      count = rs.SurfacePointCount(obj)
+      print "Point count in U direction: ", count[0]
+      print "Point count in V direction: ", count[1]
+    See Also:
+      IsSurface
+      SurfacePoints
     """
     surface = rhutil.coercesurface(surface_id, True)
     ns = surface.ToNurbsSurface()
@@ -1990,6 +2857,21 @@ def SurfacePoints(surface_id, return_all=True):
     Returns:
       the control points if successful
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      surface = rs.GetObject("Select surface", rs.filter.surface)
+      points = rs.SurfacePoints(surface)
+      if points is None: return
+      count = rs.SurfacePointCount(surface)
+      i = 0
+      for u in range(count[0]):
+      for v in range(count[1]):
+      print "CV[", u, ",", v, "] = ", points[i]
+      i += 1
+      PrintControlPoints()
+    See Also:
+      IsSurface
+      SurfacePointCount
     """
     surface = rhutil.coercesurface(surface_id, True)
     ns = surface.ToNurbsSurface()
@@ -2012,6 +2894,14 @@ def SurfaceTorus(surface_id):
         element 1 = the major radius of the torus
         element 2 = the minor radius of the torus
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      torus = rs.AddTorus(rs.WorldXYPlane(), 6, 2)
+      if rs.IsTorus(torus):
+      torus_def = rs.SurfaceTorus(torus)
+      rs.AddTorus( torus_def[0], torus_def[1], torus_def[2] )
+    See Also:
+      
     """
     surface = rhutil.coercesurface(surface_id, True)
     rc, torus = surface.TryGetTorus()
@@ -2025,6 +2915,17 @@ def SurfaceVolume(object_id):
     Returns:
       (Volume, Error bound) on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a surface", rs.filter.polysurface)
+      if rs.IsPolysurfaceClosed(obj):
+      massprop = rs.SurfaceVolume(obj)
+      if massprop:
+      print "The polysurface volume is: ", massprop[0]
+    See Also:
+      SurfaceVolume
+      SurfaceVolumeCentroid
+      SurfaceVolumeMoments
     """
     vmp = __GetMassProperties(object_id, False)
     if vmp: return vmp.Volume, vmp.VolumeError
@@ -2037,6 +2938,15 @@ def SurfaceVolumeCentroid(object_id):
     Returns:
       (Volume Centriod, Error bound) on success
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a surface", rs.filter.polysurface)
+      if rs.IsPolysurfaceClosed(obj):
+      massprop= rs.SurfaceVolumeCentroid(obj)
+      if massprop: rs.AddPoint( massprop[0] )
+    See Also:
+      SurfaceVolume
+      SurfaceVolumeMoments
     """
     vmp = __GetMassProperties(object_id, False)
     if vmp: return vmp.Centroid, vmp.CentroidError
@@ -2050,6 +2960,16 @@ def SurfaceVolumeMoments(surface_id):
     Returns:
       list of moments and error bounds - see help topic
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a surface", rs.filter.polysurface)
+      if rs.IsPolysurfaceClosed(obj):
+      massprop = rs.SurfaceVolumeMoments(obj)
+      if massprop:
+      print "Volume Moments of Inertia about the World Coordinate Axes: ", massprop[6]
+    See Also:
+      SurfaceVolume
+      SurfaceVolumeCentroid
     """
     return __AreaMomentsHelper(surface_id, False)
 
@@ -2063,6 +2983,18 @@ def SurfaceWeights(object_id):
     Returns:
       list of weights
       None on error
+    Example:
+      import rhinoscriptsyntax as rs
+      surf = rs.GetObject("Select a surface")
+      if rs.IsSurface(surf):
+      weights = rs.SurfaceWeights(surf)
+      if weights:
+      for w in weights:
+      print "Surface control point weight value:", w
+    See Also:
+      IsSurface
+      SurfacePointCount
+      SurfacePoints
     """
     surface = rhutil.coercesurface(object_id, True)
     ns = surface.ToNurbsSurface()
@@ -2084,6 +3016,16 @@ def TrimBrep(object_id, cutter, tolerance=None):
         tolerance is used
     Returns:
       identifiers of retained components on success
+    Example:
+      import rhinoscriptsyntax as rs
+      filter = rs.filter.surface + rs.filter.polysurface
+      obj = rs.GetObject("Select surface or polysurface to trim", filter)
+      if obj:
+      cutter = rs.GetObject("Select cutting surface or polysurface", filter)
+      if cutter:
+      rs.TrimBrep(obj,cutter)
+    See Also:
+      TrimSurface
     """
     brep = rhutil.coercebrep(object_id, True)
     brep_cutter = rhutil.coercebrep(cutter, False)
@@ -2122,6 +3064,15 @@ def TrimSurface( surface_id, direction, interval, delete_input=False):
       delete_input [opt] = should the input surface be deleted
     Returns:
       new surface identifier on success
+    Example:
+      import rhinoscriptsyntax as rs
+      surface = rs.GetObject("Select surface to split", rs.filter.surface)
+      if surface:
+      domain_u = rs.SurfaceDomain(surface, 0)
+      domain_u[0] = (domain_u[1] - domain_u[0]) * 0.25
+      rs.TrimSurface( surface, 0, domain_u, True )
+    See Also:
+      
     """
     surface = rhutil.coercesurface(surface_id, True)
     u = surface.Domain(0)
@@ -2157,6 +3108,12 @@ def UnrollSurface(surface_id, explode=False, following_geometry=None, absolute_t
       if following_geometry is not None, a tuple where item 1
         is the list of unrolled surface ids and item 2 is the
         list of unrolled following geometry
+    Example:
+      import rhinoscriptsyntax as rs
+      surface = rs.GetObject("Select surface or polysurface to unroll", rs.filter.surface + rs.filter.polysurface)
+      if surface: rs.UnrollSurface(surface)
+    See Also:
+      
     """
     brep = rhutil.coercebrep(surface_id, True)
     unroll = Rhino.Geometry.Unroller(brep)
@@ -2195,6 +3152,10 @@ def ChangeSurfaceDegree(object_id, degree):
   Returns:
     True of False indicating success or failure.
     None on failure.
+  Example:
+    
+  See Also:
+    IsSurface
   """
   object = rhutil.coercerhinoobject(object_id)
   if not object: return None
