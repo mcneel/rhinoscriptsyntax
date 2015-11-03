@@ -1642,7 +1642,7 @@ def CurveEditPoints(curve_id, return_parameters=False, segment_index=-1):
     nc = curve.ToNurbsCurve()
     if not nc: return scriptcontext.errorhandler()
     if return_parameters: return nc.GrevilleParameters()
-    return nc.GrevillePoints()
+    return list(nc.GrevillePoints())
 
 
 def CurveEndPoint(curve_id, segment_index=-1):
