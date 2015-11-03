@@ -288,7 +288,7 @@ def Command(commandString, echo=True):
       echo[opt] = the command echo mode
     Returns:
       True or False indicating success or failure
-    
+
     Write command scripts just as you would type the command sequence at the
     command line. A space or a new line acts like pressing <Enter> at the
     command line. For more information, see "Scripting" in Rhino help.
@@ -648,7 +648,7 @@ def GetPlugInObject(plug_in):
       
     """
     return Rhino.RhinoApp.GetPlugInObject(plug_in)
-  
+
 
 def InCommand(ignore_runners=True):
     """Determines if Rhino is currently running a command. Because Rhino allows
@@ -757,7 +757,7 @@ def IsRunningOnWindows():
     Parameters:
       None
     Returns:
-      True or False      
+      True or False
     Example:
       import rhinoscriptsyntax as rs
       if rs.IsRunngingOnWindows():
@@ -940,7 +940,7 @@ def OsnapMode(mode=None):
                    2048  Vertex
     Returns:
       if mode is not specified, then the current object snap mode(s)
-      if mode is specified, then the previous object snap mode(s) 
+      if mode is specified, then the previous object snap mode(s)
     Example:
       import rhinoscriptsyntax as rs
       rhOsnapModeEnd = 128
@@ -961,7 +961,6 @@ def OsnapMode(mode=None):
         mode = sum([x[1] for x in m if x[0] & int(mode)])
         modelaid.OsnapModes = System.Enum.ToObject(Rhino.ApplicationSettings.OsnapModes, mode)
     return rc
-
 
 def Planar(enable=None):
     """Enables or disables Rhino's planar modeling aid
@@ -1107,7 +1106,7 @@ def SearchPathCount():
     Parameters:
       None
     Returns:
-      the number of path items in Rhino's search path list 
+      the number of path items in Rhino's search path list
     Example:
       import rhinoscriptsyntax as rs
       count = rs.SearchPathCount()
@@ -1127,7 +1126,7 @@ def SearchPathList():
     Parameters:
       None
     Returns:
-      list of search paths  
+      list of search paths
     Example:
       import rhinoscriptsyntax as rs
       count = rs.SearchPathCount()
@@ -1164,7 +1163,7 @@ def Snap(enable=None):
       enable [opt] = the new enabled status (True or False)
     Returns:
       if enable is not specified, the current grid snap status
-      if enable is specified, the previous grid snap status  
+      if enable is specified, the previous grid snap status
     Example:
       import rhinoscriptsyntax as rs
       if not rs.Snap(): rs.Snap(True)
@@ -1319,7 +1318,7 @@ def WindowHandle():
     Parameters:
       None
     Returns:
-      the windows handle of Rhino's main window   
+      the windows handle of Rhino's main window
     Example:
       import rhinoscriptsyntax as rs
       handle = rs.WindowHandle()
