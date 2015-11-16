@@ -780,6 +780,7 @@ def ObjectColor(object_ids, color=None):
             attr.ObjectColor = color
             attr.ColorSource = Rhino.DocObjects.ObjectColorSource.ColorFromObject
             scriptcontext.doc.Objects.ModifyAttributes( rh_obj, attr, True)
+        scriptcontext.doc.Views.Redraw()
         return len(rhino_objects)
     rc = rhino_object.Attributes.DrawColor(scriptcontext.doc)
     attr = rhino_object.Attributes
