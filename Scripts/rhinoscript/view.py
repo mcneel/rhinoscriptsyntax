@@ -1251,11 +1251,9 @@ def ViewProjection(view=None, mode=None):
     viewport = view.ActiveViewport
     rc = 2
     if viewport.IsParallelProjection: rc = 1
-    elif viewport.IsTwoPointPerspectiveProjection: rc = 3
     if mode is None or mode==rc: return rc
     if mode==1: viewport.ChangeToParallelProjection(True)
     elif mode==2: viewport.ChangeToPerspectiveProjection(True, 50)
-    elif mode==3: viewport.ChangeToTwoPointPerspectiveProjection(50)
     else: return
     view.Redraw()
     return rc
