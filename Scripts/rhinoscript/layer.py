@@ -553,7 +553,7 @@ def LayerIds():
       LayerCount
       LayerNames
     """
-    return [layer.Id for layer in scriptcontext.doc.Layers]
+    return [layer.Id for layer in scriptcontext.doc.Layers if not layer.IsDeleted]
 
 
 def LayerLinetype(layer, linetype=None):
