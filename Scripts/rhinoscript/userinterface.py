@@ -463,6 +463,7 @@ def GetLine(mode=0, point=None, message1=None, message2=None, message3=None):
     See Also:
       GetBox
       GetPoint
+      GetPolyline
       GetRectangle
     """
     gl = Rhino.Input.Custom.GetLine()
@@ -756,6 +757,46 @@ def GetPoints(draw_lines=False, in_plane=False, message1=None, message2=None, ma
             rc.append(prevPoint)
     return rc
 
+def GetPolyline(flags=3, message1=None, message2=None, message3=None, message4=None, min=2, max=0):
+  """Prompts the user to pick points that define a polyline.
+  Parameters:
+    flags[opt] = The options, or flags. Values can be added together to specify more than one option. The default is 3.
+      value description
+      1     Permit close option. If specified, then after 3 points have been picked, the user can type "Close" and a closed polyline will be returned.
+      2     Permit close snap. If specified, then after 3 points have been picked, the user can pick near the start point and a closed polyline will be returned.
+      4     Force close. If specified, then the returned polyline is always closed. If specified, then intMax must be 0 or >= 4.
+      Note: the default is 3, or "Permit close option = True", "Permit close snap = True", and "Force close = False".
+    message1[opt] = A prompt or message for the first point.
+    message2[opt] = A prompt or message for the second point.
+    message3[opt] = A prompt or message for the third point.
+    message4[opt] = A prompt or message for the 'next' point.
+    min[opt] = The minimum number of points to require. The default is 2.
+    max[opt] = The maximum number of points to require; 0 for no limit.  The default is 0.
+  Returns:
+    An array of 3-D points that define the polyline if successful.
+    None if not successful or on error
+  Example:
+    import rhinoscriptsyntax as rs
+    from scriptcontext import doc
+    arr = rs.GetPolyline()
+    if arr is not None:
+      doc.AddPolyline(arr)
+  See Also:
+    GetBox
+    GetLine
+    GetRectangle
+  """
+  gpl = Rhino.Input.Custom.GetPolyline()
+  if message1: gpl.FirstPointPrompt = message1
+  if message2: gpl.SecondPointPrompt = message2
+  if message3: gpl.ThirdPointPrompt = message3
+  if message4: gpl.FourthPointPrompt = message4
+  if min: gpl.MinPointCount = min
+  if max: gpl.MaxPointCount = max
+  rc, polyline = gpl.Get()
+  scriptcontext.doc.Views.Redraw()
+  if rc==Rhino.Commands.Result.Success: return polyline
+  return None
 
 def GetReal(message="Number", number=None, minimum=None, maximum=None):
     """Pauses for user input of a number.
