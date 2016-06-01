@@ -3664,16 +3664,16 @@ def SimplifyCurve(curve_id, flags=0):
       IsCurveLinear
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
-    _flags = Rhino.Geometry.CurveSimplifyOptions.All
-    if( flags&1 ==1 ): _flags = _flags - Rhino.Geometry.CurveSimplifyOptions.SplitAtFullyMultipleKnots
-    if( flags&2 ==2 ): _flags = _flags - Rhino.Geometry.CurveSimplifyOptions.RebuildLines
-    if( flags&4 ==4 ): _flags = _flags - Rhino.Geometry.CurveSimplifyOptions.RebuildArcs
-    if( flags&8 ==8 ): _flags = _flags - Rhino.Geometry.CurveSimplifyOptions.RebuildRationals
-    if( flags&16==16 ): _flags = _flags - Rhino.Geometry.CurveSimplifyOptions.AdjustG1
-    if( flags&32==32 ): _flags = _flags - Rhino.Geometry.CurveSimplifyOptions.Merge
+    _flags = int(Rhino.Geometry.CurveSimplifyOptions.All)
+    if( flags&1 ==1 ): _flags = _flags - int(Rhino.Geometry.CurveSimplifyOptions.SplitAtFullyMultipleKnots)
+    if( flags&2 ==2 ): _flags = _flags - int(Rhino.Geometry.CurveSimplifyOptions.RebuildLines)
+    if( flags&4 ==4 ): _flags = _flags - int(Rhino.Geometry.CurveSimplifyOptions.RebuildArcs)
+    if( flags&8 ==8 ): _flags = _flags - int(Rhino.Geometry.CurveSimplifyOptions.RebuildRationals)
+    if( flags&16==16 ): _flags = _flags - int(Rhino.Geometry.CurveSimplifyOptions.AdjustG1)
+    if( flags&32==32 ): _flags = _flags - int(Rhino.Geometry.CurveSimplifyOptions.Merge)
     tol = scriptcontext.doc.ModelAbsoluteTolerance
     ang_tol = scriptcontext.doc.ModelAngleToleranceRadians
-    newcurve = curve.Simplify(_flags, tol, ang_tol)
+    newcurve = curve.Simplify(System.Enum.ToObject(Rhino.Geometry.CurveSimplifyOptions, _flags), tol, ang_tol)
     if newcurve:
         curve_id = rhutil.coerceguid(curve_id, True)
         scriptcontext.doc.Objects.Replace(curve_id, newcurve)
