@@ -302,19 +302,17 @@ def CullDuplicateNumbers(numbers, tolerance=None):
     See Also:
       CullDuplicatePoints
     """
-    count = len(numbers)
-    if count < 2: return numbers
-    if tolerance is None: tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+
+    if tolerance is None:
+        tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+
     numbers = sorted(numbers)
-    d = numbers[0]
-    index = 1
-    for step in range(1,count):
-        test_value = numbers[index]
-        if math.fabs(d-test_value)<=tolerance:
-            numbers.pop(index)
+    i = 1
+    for _ in xrange(i, len(numbers)):
+        if numbers[i]-numbers[i-1] <= tolerance:
+            numbers.pop(i)
         else:
-            d = test_value
-            index += 1
+            i += 1
     return numbers
 
 
@@ -621,7 +619,7 @@ def fxrange(start, stop, step):
 
 def frange(start, stop, step):
     "float version of the range function"
-    return [x for x in fxrange(start, stop, step)]
+    return list(fxrange(start, stop, step))
 
 
 def coerce3dpoint(point, raise_on_error=False):
