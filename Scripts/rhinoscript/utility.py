@@ -5,6 +5,7 @@ import System.Windows.Forms.Clipboard
 import scriptcontext
 import math
 import string
+import operator
 
 
 def ContextIsRhino():
@@ -303,7 +304,6 @@ def CullDuplicateNumbers(numbers, tolerance=None):
     See Also:
       CullDuplicatePoints
     """
-
     if tolerance is None:
         tolerance = scriptcontext.doc.ModelAbsoluteTolerance
 
@@ -336,9 +336,10 @@ def CullDuplicatePoints(points, tolerance=-1):
     See Also:
       CullDuplicateNumbers
     """
-    points = coerce3dpointlist(points, True)
     if tolerance is None or tolerance < 0:
         tolerance = Rhino.RhinoMath.ZeroTolerance
+    
+    points = coerce3dpointlist(points, True)
     return list(Rhino.Geometry.Point3d.CullDuplicates(points, tolerance))
 
 
@@ -462,13 +463,7 @@ def SimplifyArray(points):
     See Also:
       
     """
-    rc = []
-    for point in points:
-        point = coerce3dpoint(point, True)
-        rc.append(point.X)
-        rc.append(point.Y)
-        rc.append(point.Z)
-    return rc
+    return [coord for point in points for coord in coerce3dpoint(point, True)]
 
 
 def Sleep(milliseconds):
@@ -513,8 +508,10 @@ def SortPointList(points, tolerance=None):
     See Also:
       SortPoints
     """
+    if tolerance is None:
+        tolerance = Rhino.RhinoMath.ZeroTolerance
+
     points = coerce3dpointlist(points, True)
-    if tolerance is None: tolerance = Rhino.RhinoMath.ZeroTolerance
     return list(Rhino.Geometry.Point3d.SortAndCullPointList(points, tolerance))
 
 
@@ -604,18 +601,22 @@ def clamp(lowvalue, highvalue, value):
 
 def fxrange(start, stop, step):
     "float version of the xrange function"
-    if step==0: raise ValueError("step must not equal 0")
-    x = start
-    if start<stop:
-        if step<0: raise ValueError("step must be greater than 0")
-        while x<=stop:
-            yield x
-            x+=step
+    if step == 0:
+        raise ValueError("step must not equal 0")
+
+    if start < stop:
+        if step < 0:
+            raise ValueError("step must be greater than 0")
+        operation = operator.le
     else:
-        if step>0: raise ValueError("step must be less than 0")
-        while x>=stop:
-            yield x
-            x+=step
+        if step > 0:
+            step *= -1
+        operation = operator.ge
+
+    x = start
+    while operation(x, stop):
+        yield x
+        x += step
 
 
 def frange(start, stop, step):
