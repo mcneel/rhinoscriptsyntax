@@ -65,35 +65,36 @@ def Angle(point1, point2, plane=True):
       Angle2
       Distance
     """
-    pt1 = coerce3dpoint(point1)
-    if pt1 is None:
-        pt1 = coercerhinoobject(point1)
-        if isinstance(pt1, Rhino.DocObjects.PointObject): pt1 = pt1.Geometry.Location
-        else: pt1=None
-    pt2 = coerce3dpoint(point2)
-    if pt2 is None:
-        pt2 = coercerhinoobject(point2)
-        if isinstance(pt2, Rhino.DocObjects.PointObject): pt2 = pt2.Geometry.Location
-        else: pt2=None
-    point1 = pt1
-    point2 = pt2
-    if point1 is None or point2 is None: return scriptcontext.errorhandler()
-    vector = point2 - point1
-    x = vector.X
-    y = vector.Y
-    z = vector.Z
-    if plane!=True:
+
+    point1, point2 = [
+        point 
+        if point is not None
+        else (
+            point.Geometry.Location
+            if isinstance(point, Rhino.DocObjects.PointObject)
+            else None
+        )
+        for point in [coerce3dpoint(point1), coerce3dpoint(point2)]
+    ]
+
+    if point1 is None or point2 is None:
+        return scriptcontext.errorhandler()
+
+    if plane == True:
+        x, y, z = point2 - point1
+    else:
         plane = coerceplane(plane)
         if plane is None:
             plane = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
         vfrom = point1 - plane.Origin
         vto = point2 - plane.Origin
-        x = vto * plane.XAxis - vfrom * plane.XAxis
-        y = vto * plane.YAxis - vfrom * plane.YAxis
-        z = vto * plane.ZAxis - vfrom * plane.ZAxis
-    h = math.sqrt( x * x + y * y)
-    angle_xy = math.degrees( math.atan2( y, x ) )
-    elevation = math.degrees( math.atan2( z, h ) )
+        x = vto*plane.XAxis - vfrom*plane.XAxis
+        y = vto*plane.YAxis - vfrom*plane.YAxis
+        z = vto*plane.ZAxis - vfrom*plane.ZAxis
+
+    angle_xy = math.degrees(math.atan2(y, x))
+    elevation = math.degrees(math.atan2(z, math.sqrt(x*x + y*y)))
+
     return angle_xy, elevation, x, y, z
 
 
