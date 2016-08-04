@@ -1,11 +1,10 @@
-import Rhino
-import System.Drawing.Color, System.Array, System.Guid
-import time
-import System.Windows.Forms.Clipboard
-import scriptcontext
 import math
-import string
 import operator
+import Rhino
+import scriptcontext
+import System.Array, System.Drawing.Color System.Guid, System.Windows.Forms.Clipboard
+import string
+import time
 
 
 def ContextIsRhino():
@@ -66,7 +65,6 @@ def Angle(point1, point2, plane=True):
       Angle2
       Distance
     """
-
     point1, point2 = [
         point 
         if point is not None
@@ -593,10 +591,10 @@ def Str2Pt(point):
 
 
 def clamp(lowvalue, highvalue, value):
-    if lowvalue>=highvalue: raise Exception("lowvalue must be less than highvalue")
-    if value<lowvalue: return lowvalue
-    if value>highvalue: return highvalue
-    return value
+    if lowvalue >= highvalue:
+        raise Exception("lowvalue must be less than highvalue")
+
+    return sorted([lowvalue, value, highvalue])[1]
 
 
 def fxrange(start, stop, step):
