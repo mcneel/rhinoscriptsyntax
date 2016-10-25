@@ -2,17 +2,20 @@ import Rhino.DocObjects.Layer
 import scriptcontext
 import utility as rhutil
 import System.Guid
+from Rhino.RhinoMath import UnsetIntIndex
 
 
 def __getlayer(name_or_id, raise_if_missing):
     if not name_or_id: raise TypeError("Parameter must be a string or Guid")
     id = rhutil.coerceguid(name_or_id)
-    if id: name_or_id = id
+    if id:
+        layer = scriptcontext.doc.Layers.FindId(id)
     else:
-        layer = scriptcontext.doc.Layers.FindByFullPath(name_or_id, True)
-        if layer>=0: return scriptcontext.doc.Layers[layer]
-    layer = scriptcontext.doc.Layers.Find(name_or_id, True)
-    if layer>=0: return scriptcontext.doc.Layers[layer]
+        name = name_or_id
+        layer_index = scriptcontext.doc.Layers.FindByFullPath(name, UnsetIntIndex)
+        if layer_index != UnsetIntIndex: return scriptcontext.doc.Layers[layer_index]
+        layer = scriptcontext.doc.Layers.FindName(name)
+    if layer: return layer
     if raise_if_missing: raise ValueError("%s does not exist in LayerTable" % name_or_id)
 
 
