@@ -2755,7 +2755,7 @@ def InsertCurveKnot(curve_id, parameter, symmetrical=False ):
 
 
 def IsArc(curve_id, segment_index=-1):
-    """Verifies an object is an arc curve
+    """Verifies an object is an open arc curve
     Parameters:
       curve_id = Identifier of the curve object
       segment_index [opt] = the curve segment if curve_id identifies a polycurve
@@ -2776,7 +2776,7 @@ def IsArc(curve_id, segment_index=-1):
       ArcRadius
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
-    return curve.IsArc() and not curve.IsCircle()
+    return curve.IsArc() and not curve.IsClosed
 
 
 def IsCircle(curve_id, tolerance=None):
