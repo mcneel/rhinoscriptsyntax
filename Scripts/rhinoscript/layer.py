@@ -780,14 +780,12 @@ def LayerPrintWidth(layer, width=None):
     return rc
 
 
-def LayerVisible(layer, visible=None, force_visible=False, persistent_off = False):
+def LayerVisible(layer, visible=None, forcevisible_or_donotpersist=False):
     """Returns or changes the visible property of a layer.
     Parameters:
       layer = name of existing layer
       visible[opt] = new visible state
-      force_visible[opt] = will turn parent layers also on (if set to True)
-      persistent_off[opt] = if visible==False and persistent_off is set to True the layer light bulb symbol will be turned completly off,
-          instead of half off.
+      forcevisible_or_donotpersist[opt] = if visible is True then turn parent layers on if True.  If visible is False then do not persist if True
     Returns:
       if visible is not specified, the current layer visibility
       if visible is specified, the previous layer visibility
@@ -803,13 +801,12 @@ def LayerVisible(layer, visible=None, force_visible=False, persistent_off = Fals
     """
     layer = __getlayer(layer, True)
     rc = layer.IsVisible
-    if visible is not None and visible!=rc:
-        if visible and force_visible:
-            scriptcontext.doc.Layers.ForceLayerVisible(layer.Id)            
-        else:
-            layer.IsVisible = visible
-            if persistent_off: layer.SetPersistentVisibility(visible)             
-        layer.CommitChanges()
+    if visible is not None:
+        layer.IsVisible = visible
+        if visible and forcevisible_or_donotpersist:
+            scriptcontext.doc.Layers.ForceLayerVisible(layer.Id)
+        if not visible and not forcevisible_or_donotpersist:
+            layer.SetPersistentVisibility(visible)
         scriptcontext.doc.Views.Redraw()
     return rc
 
