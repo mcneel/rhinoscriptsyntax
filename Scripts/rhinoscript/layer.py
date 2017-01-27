@@ -583,8 +583,12 @@ def LayerLinetype(layer, linetype=None):
     rc = scriptcontext.doc.Linetypes[index].Name
     if linetype:
         if not isinstance(linetype, str): linetype = str(linetype)
-        index = scriptcontext.doc.Linetypes.Find(linetype, True)
-        if index==-1: return scriptcontext.errorhandler()
+        if linetype == scriptcontext.doc.Linetypes.ContinuousLinetypeName:
+          index = -1
+        else:
+          lt = scriptcontext.doc.Linetypes.FindName(linetype)
+          if lt == None: return scriptcontext.errorhandler()
+          index = lt.LinetypeIndex
         layer.LinetypeIndex = index
         scriptcontext.doc.Views.Redraw()
     return rc
