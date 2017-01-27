@@ -77,7 +77,7 @@ def AddLayer(name=None, color=None, visible=True, locked=False, parent=None):
         full_path = layer.Name
         if last_parent:
             full_path = last_parent.FullPath + "::" + full_path
-        last_parent_index = scriptcontext.doc.Layers.FindByFullPath(full_path, True)
+        last_parent_index = scriptcontext.doc.Layers.FindByFullPath(full_path, -1)
     return scriptcontext.doc.Layers[last_parent_index].FullPath
 
 def CurrentLayer(layer=None):
@@ -660,7 +660,7 @@ def LayerId(layer):
     See Also:
       LayerName
     """
-    idx = scriptcontext.doc.Layers.FindByFullPath(layer, True)
+    idx = scriptcontext.doc.Layers.FindByFullPath(layer, -1)
     return str(scriptcontext.doc.Layers[idx].Id) if idx >= 0 else None
 
 
@@ -838,7 +838,7 @@ def ParentLayer(layer, parent=None):
     parent_id = layer.ParentLayerId
     oldparent = None
     if parent_id!=System.Guid.Empty:
-        oldparentlayer = scriptcontext.doc.Layers.Find(parent_id, False)
+        oldparentlayer = scriptcontext.doc.Layers.Find(parent_id, -1)
         if oldparentlayer is not None:
             oldparentlayer = scriptcontext.doc.Layers[oldparentlayer]
             oldparent = oldparentlayer.FullPath
