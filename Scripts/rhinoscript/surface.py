@@ -2564,12 +2564,12 @@ def SurfaceEditPoints(surface_id, return_parameters=False, return_all=True):
     vlast = nurb.Points.CountV
     if not return_all:
         if nurb.IsClosed(0): ulast = nurb.Points.CountU-1
-        if nurbs.IsPeriodic(0):
+        if nurb.IsPeriodic(0):
             degree = nurb.Degree(0)
             ufirst = degree/2
             ulast = nurb.Points.CountU-degree+ufirst
         if nurb.IsClosed(1): vlast = nurb.Points.CountV-1
-        if nurbs.IsPeriodic(1):
+        if nurb.IsPeriodic(1):
             degree = nurb.Degree(1)
             vfirst = degree/2
             vlast = nurb.Points.CountV-degree+vfirst
