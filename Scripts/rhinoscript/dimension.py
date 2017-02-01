@@ -244,7 +244,7 @@ def DimensionStyle(object_id, dimstyle_name=None):
         ds = scriptcontext.doc.DimStyles.Find(dimstyle_name, True)
         if not ds: return scriptcontext.errorhandler()
         annotation = annotation_object.Geometry
-        annotation.DimensionStyleIndex = ds.Index
+        annotation.DimensionStyleId = ds.Id
         annotation_object.CommitChanges()
     return rc
 
