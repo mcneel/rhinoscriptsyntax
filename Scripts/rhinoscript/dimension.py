@@ -461,11 +461,10 @@ def DimStyleFont(dimstyle, font=None):
     """
     ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
     if ds is None: return scriptcontext.errorhandler()
-    oldindex = ds.FontIndex
-    rc = scriptcontext.doc.Fonts[oldindex].FaceName
+    rc = ds.Font.FaceName
     if font:
         newindex = scriptcontext.doc.Fonts.FindOrCreate(font, False, False)
-        ds.FontIndex = newindex
+        ds.Font = scriptcontext.doc.Fonts[newindex]
         ds.CommitChanges()
         scriptcontext.doc.Views.Redraw()
     return rc

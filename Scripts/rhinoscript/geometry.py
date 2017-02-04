@@ -766,12 +766,11 @@ def TextObjectFont(object_id, font=None):
     annotation = rhutil.coercegeometry(object_id, True)
     if not isinstance(annotation, Rhino.Geometry.TextEntity):
         return scriptcontext.errorhandler()
-    fontdata = scriptcontext.doc.Fonts[annotation.FontIndex]
-    if fontdata is None: return scriptcontext.errorhandler()
+    fontdata = annotation.Font
     rc = fontdata.FaceName
     if font:
         index = scriptcontext.doc.Fonts.FindOrCreate( font, fontdata.Bold, fontdata.Italic )
-        annotation.FontIndex = index
+        annotation.Font = scriptcontext.doc.Fonts[index]
         id = rhutil.coerceguid(object_id, True)
         scriptcontext.doc.Objects.Replace(id, annotation)
         scriptcontext.doc.Views.Redraw()
@@ -915,14 +914,14 @@ def TextObjectStyle(object_id, style=None):
     annotation = rhutil.coercegeometry(object_id, True)
     if not isinstance(annotation, Rhino.Geometry.TextEntity):
         return scriptcontext.errorhandler()
-    fontdata = scriptcontext.doc.Fonts[annotation.FontIndex]
+    fontdata = annotation.Font
     if fontdata is None: return scriptcontext.errorhandler()
     rc = 0
     if fontdata.Bold: rc += 1
     if fontdata.Italic: rc += 2
     if style is not None and style!=rc:
         index = scriptcontext.doc.Fonts.FindOrCreate( fontdata.FaceName, (style&1)==1, (style&2)==2 )
-        annotation.FontIndex = index
+        annotation.Font = scriptcontext.doc.Fonts[index]
         id = rhutil.coerceguid(object_id, True)
         scriptcontext.doc.Objects.Replace(id, annotation)
         scriptcontext.doc.Views.Redraw()
