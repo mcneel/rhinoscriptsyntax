@@ -1,10 +1,10 @@
-import Rhino
-import System.Drawing.Color, System.Array, System.Guid
-import time
-import System.Windows.Forms.Clipboard
-import scriptcontext
 import math
+import operator
+import Rhino
+import scriptcontext
+import System.Array, System.Drawing.Color System.Guid, System.Windows.Forms.Clipboard
 import string
+import time
 
 
 def ContextIsRhino():
@@ -65,35 +65,35 @@ def Angle(point1, point2, plane=True):
       Angle2
       Distance
     """
-    pt1 = coerce3dpoint(point1)
-    if pt1 is None:
-        pt1 = coercerhinoobject(point1)
-        if isinstance(pt1, Rhino.DocObjects.PointObject): pt1 = pt1.Geometry.Location
-        else: pt1=None
-    pt2 = coerce3dpoint(point2)
-    if pt2 is None:
-        pt2 = coercerhinoobject(point2)
-        if isinstance(pt2, Rhino.DocObjects.PointObject): pt2 = pt2.Geometry.Location
-        else: pt2=None
-    point1 = pt1
-    point2 = pt2
-    if point1 is None or point2 is None: return scriptcontext.errorhandler()
-    vector = point2 - point1
-    x = vector.X
-    y = vector.Y
-    z = vector.Z
-    if plane!=True:
+    point1, point2 = [
+        point 
+        if point is not None
+        else (
+            point.Geometry.Location
+            if isinstance(point, Rhino.DocObjects.PointObject)
+            else None
+        )
+        for point in [coerce3dpoint(point1), coerce3dpoint(point2)]
+    ]
+
+    if point1 is None or point2 is None:
+        return scriptcontext.errorhandler()
+
+    if plane == True:
+        x, y, z = point2 - point1
+    else:
         plane = coerceplane(plane)
         if plane is None:
             plane = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
         vfrom = point1 - plane.Origin
         vto = point2 - plane.Origin
-        x = vto * plane.XAxis - vfrom * plane.XAxis
-        y = vto * plane.YAxis - vfrom * plane.YAxis
-        z = vto * plane.ZAxis - vfrom * plane.ZAxis
-    h = math.sqrt( x * x + y * y)
-    angle_xy = math.degrees( math.atan2( y, x ) )
-    elevation = math.degrees( math.atan2( z, h ) )
+        x = vto*plane.XAxis - vfrom*plane.XAxis
+        y = vto*plane.YAxis - vfrom*plane.YAxis
+        z = vto*plane.ZAxis - vfrom*plane.ZAxis
+
+    angle_xy = math.degrees(math.atan2(y, x))
+    elevation = math.degrees(math.atan2(z, math.sqrt(x*x + y*y)))
+
     return angle_xy, elevation, x, y, z
 
 
@@ -302,19 +302,16 @@ def CullDuplicateNumbers(numbers, tolerance=None):
     See Also:
       CullDuplicatePoints
     """
-    count = len(numbers)
-    if count < 2: return numbers
-    if tolerance is None: tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+    if tolerance is None:
+        tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+
     numbers = sorted(numbers)
-    d = numbers[0]
-    index = 1
-    for step in range(1,count):
-        test_value = numbers[index]
-        if math.fabs(d-test_value)<=tolerance:
-            numbers.pop(index)
+    i = 1
+    for _ in xrange(i, len(numbers)):
+        if numbers[i]-numbers[i-1] <= tolerance:
+            numbers.pop(i)
         else:
-            d = test_value
-            index += 1
+            i += 1
     return numbers
 
 
@@ -337,9 +334,10 @@ def CullDuplicatePoints(points, tolerance=-1):
     See Also:
       CullDuplicateNumbers
     """
-    points = coerce3dpointlist(points, True)
     if tolerance is None or tolerance < 0:
         tolerance = Rhino.RhinoMath.ZeroTolerance
+    
+    points = coerce3dpointlist(points, True)
     return list(Rhino.Geometry.Point3d.CullDuplicates(points, tolerance))
 
 
@@ -463,13 +461,7 @@ def SimplifyArray(points):
     See Also:
       
     """
-    rc = []
-    for point in points:
-        point = coerce3dpoint(point, True)
-        rc.append(point.X)
-        rc.append(point.Y)
-        rc.append(point.Z)
-    return rc
+    return [coord for point in points for coord in coerce3dpoint(point, True)]
 
 
 def Sleep(milliseconds):
@@ -514,8 +506,10 @@ def SortPointList(points, tolerance=None):
     See Also:
       SortPoints
     """
+    if tolerance is None:
+        tolerance = Rhino.RhinoMath.ZeroTolerance
+
     points = coerce3dpointlist(points, True)
-    if tolerance is None: tolerance = Rhino.RhinoMath.ZeroTolerance
     return list(Rhino.Geometry.Point3d.SortAndCullPointList(points, tolerance))
 
 
@@ -597,31 +591,35 @@ def Str2Pt(point):
 
 
 def clamp(lowvalue, highvalue, value):
-    if lowvalue>=highvalue: raise Exception("lowvalue must be less than highvalue")
-    if value<lowvalue: return lowvalue
-    if value>highvalue: return highvalue
-    return value
+    if lowvalue >= highvalue:
+        raise Exception("lowvalue must be less than highvalue")
+
+    return sorted([lowvalue, value, highvalue])[1]
 
 
 def fxrange(start, stop, step):
     "float version of the xrange function"
-    if step==0: raise ValueError("step must not equal 0")
-    x = start
-    if start<stop:
-        if step<0: raise ValueError("step must be greater than 0")
-        while x<=stop:
-            yield x
-            x+=step
+    if step == 0:
+        raise ValueError("step must not equal 0")
+
+    if start < stop:
+        if step < 0:
+            raise ValueError("step must be greater than 0")
+        operation = operator.le
     else:
-        if step>0: raise ValueError("step must be less than 0")
-        while x>=stop:
-            yield x
-            x+=step
+        if step > 0:
+            step *= -1
+        operation = operator.ge
+
+    x = start
+    while operation(x, stop):
+        yield x
+        x += step
 
 
 def frange(start, stop, step):
     "float version of the range function"
-    return [x for x in fxrange(start, stop, step)]
+    return list(fxrange(start, stop, step))
 
 
 def coerce3dpoint(point, raise_on_error=False):
