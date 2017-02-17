@@ -888,12 +888,12 @@ def CreateColor(color):
     Example:
     See Also:
     """
-    if type(c) is System.Drawing.Color: return c
-    if type(c) is list or type(c) is tuple:
-        if len(c)==3: return System.Drawing.Color.FromArgb(c[0], c[1], c[2])
-        elif len(c)==4: return System.Drawing.Color.FromArgb(c[1], c[2], c[3], c[0])
-    if type(c)==type(1): return System.Drawing.Color.FromArgb(c)
-    if raise_if_bad_input: raise TypeError("%s can not be converted to a Color"%c)
+    if type(color) is System.Drawing.Color: return color
+    if type(color) is list or type(color) is tuple:
+        if len(color)==3: return System.Drawing.Color.FromArgb(color[0], color[1], color[2])
+        elif len(color)==4: return System.Drawing.Color.FromArgb(color[3], color[0], color[1], color[2])
+    if type(color)==type(1): return System.Drawing.Color.FromArgb(color)
+    raise TypeError("%s can not be converted to a Color"%c)
 
 
 def coerceline(line, raise_if_bad_input=False):
