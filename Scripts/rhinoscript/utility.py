@@ -158,7 +158,7 @@ def ClipboardText(text=None):
 
 
 def ColorAdjustLuma(rgb, luma, scale=False):
-    """Change the luminance of a red-green-blue value. Hue and saturation are
+    """Changes the luminance of a red-green-blue value. Hue and saturation are
     not affected
     Parameters:
       rgb = initial rgb value
@@ -494,7 +494,6 @@ def Sleep(milliseconds):
     """
     time.sleep( milliseconds / 1000.0 )
     Rhino.RhinoApp.Wait() #keep the message pump alive
-    
 
 def SortPointList(points, tolerance=None):
     """Sorts list of points so they will be connected in a "reasonable" polyline order
@@ -627,7 +626,7 @@ def frange(start, stop, step):
 def coerce3dpoint(point, raise_on_error=False):
     """Convert input into a Rhino.Geometry.Point3d if possible.
     Parameters:
-      point = Point3d, Vector3d, Pointh3f, Vector3f, str, uuid
+      point = Point3d, Vector3d, Point3f, Vector3f, str, uuid
       raise_on_error [opt] = True or False
     Returns:
       a Rhino.Geometry.Point3d
@@ -651,6 +650,19 @@ def coerce3dpoint(point, raise_on_error=False):
             geom = rhobj.Geometry
             if isinstance(geom, Rhino.Geometry.Point): return geom.Location
     if raise_on_error: raise ValueError("Could not convert %s to a Point3d" % point)
+
+
+def CreatePoint(point):
+    """Converts input into a Rhino.Geometry.Point3d
+    If not possible, an error is raised.
+    Parameters:
+      point = Point3d, Vector3d, Point3f, Vector3f, str, uuid
+    Returns:
+      a Rhino.Geometry.Point3d
+    Example:
+    See Also:
+    """
+    return coerce3dpoint(point, True)
 
 
 def coerce2dpoint(point, raise_on_error=False):
@@ -690,6 +702,19 @@ def coerce3dvector(vector, raise_on_error=False):
     point = coerce3dpoint(vector, False)
     if point: return Rhino.Geometry.Vector3d(point.X, point.Y, point.Z)
     if raise_on_error: raise ValueError("Could not convert %s to a Vector3d" % vector)
+
+
+def CreateVector(vector):
+    """Convert input into a Rhino.Geometry.Vector3d if possible.
+    Parameters:
+      vector = Vector3d, Point3d, list, Point3f, Vector3f, str, uuid
+      raise_on_error [opt] = True or False
+    Returns:
+      a Rhino.Geometry.Vector3d
+    Example:
+    See Also:
+    """
+    return coerce3dvector(vector, True)
 
 
 def coerce3dpointlist(points, raise_on_error=False):
@@ -789,6 +814,17 @@ def coercexform(xform, raise_on_bad_input=False):
     if raise_on_bad_input: raise TypeError("%s can not be converted to a Transform"%xform)
 
 
+def CreateXform(xform):
+    """Convert input into a Rhino.Geometry.Transform object if possible.
+    The returned data is accessible by indexing, and that is the suggested method to interact with the type.
+    Parameters:
+      xform = the transform. This can be a 4x4 matrix, given as nested lists or tuples.
+    Example:
+    See Also:
+    """
+    return coercexform(xform, True)
+
+
 def coerceguid(id, raise_exception=False):
     if type(id) is System.Guid: return id
     if type(id) is str and len(id)>30:
@@ -822,11 +858,40 @@ def coerceboundingbox(bbox, raise_on_bad_input=False):
     if raise_on_bad_input: raise TypeError("%s can not be converted to a BoundingBox"%bbox)
 
 
+def CreateBoundingBox(bbox):
+    """Convert input into a System.Drawing.Color object if possible.
+    The returned data is accessible by indexing, and that is the suggested method to interact with the type.
+    Parameters:
+      xform = the xform
+      raise_on_bad_input [opt] = True or False
+    Example:
+    See Also:
+    """
+    return coerceboundingbox(bbox, True)
+
+
 def coercecolor(c, raise_if_bad_input=False):
     if type(c) is System.Drawing.Color: return c
     if type(c) is list or type(c) is tuple:
         if len(c)==3: return System.Drawing.Color.FromArgb(c[0], c[1], c[2])
         elif len(c)==4: return System.Drawing.Color.FromArgb(c[0], c[1], c[2], c[3])
+    if type(c)==type(1): return System.Drawing.Color.FromArgb(c)
+    if raise_if_bad_input: raise TypeError("%s can not be converted to a Color"%c)
+
+
+def CreateColor(color):
+    """Convert input into a System.Drawing.Color object if possible.
+    The returned data is accessible by indexing, and that is the suggested method to interact with the type.
+    Red index is [0], Green index is [1], Blue index is [2] and Alpha index is [3].
+    Parameters:
+      color = tuple, list or 3 or 4 items. Also, a single int can be passed and it will be bitwise-parsed.
+    Example:
+    See Also:
+    """
+    if type(c) is System.Drawing.Color: return c
+    if type(c) is list or type(c) is tuple:
+        if len(c)==3: return System.Drawing.Color.FromArgb(c[0], c[1], c[2])
+        elif len(c)==4: return System.Drawing.Color.FromArgb(c[1], c[2], c[3], c[0])
     if type(c)==type(1): return System.Drawing.Color.FromArgb(c)
     if raise_if_bad_input: raise TypeError("%s can not be converted to a Color"%c)
 
