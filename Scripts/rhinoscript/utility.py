@@ -659,7 +659,8 @@ def CreatePoint(point):
     Parameters:
       point = Point3d, Vector3d, Point3f, Vector3f, str, uuid
     Returns:
-      a Rhino.Geometry.Point3d
+      a Rhino.Geometry.Point3d. This can be seen as an object with three indices:
+      result[0]: X coordinate, result[1]: Y coordinate, result[2]: Z coordinate.
     Example:
     See Also:
     """
@@ -714,7 +715,8 @@ def CreateVector(vector):
       vector = Vector3d, Point3d, list, Point3f, Vector3f, str, uuid
       raise_on_error [opt] = True or False
     Returns:
-      a Rhino.Geometry.Vector3d
+      a Rhino.Geometry.Vector3d. This can be seen as an object with three indices:
+      result[0]: X component, result[1]: Y component, and result[2] Z component.
     Example:
     See Also:
     """
@@ -800,6 +802,22 @@ def coerceplane(plane, raise_on_bad_input=False):
     if raise_on_bad_input: raise TypeError("%s can not be converted to a Plane"%plane)
 
 
+def CreatePlane(plane):
+    """Converts input into a Rhino.Geometry.Plane object if possible.
+    If the provided object is already a plane, its value is copied.
+    The returned data is accessible by indexing[row, column], and that is the suggested method to interact with the type.
+    If the conversion fails, an error is raised.
+    Parameters:
+      xform = the transform. This can be seen as a 4x4 matrix, given as nested lists or tuples.
+    Returns:
+      A Rhino.Geometry.Transform. result[0,3] gives access to the first row, last column.
+    Example:
+    See Also:
+    """
+    if type(plane) is Rhino.Geometry.Plane: return plane.Clone()
+    return coerceplane(xform, True)
+
+
 def coercexform(xform, raise_on_bad_input=False):
     """Convert input into a Rhino.Transform if possible.
     Parameters:
@@ -821,11 +839,13 @@ def coercexform(xform, raise_on_bad_input=False):
 
 def CreateXform(xform):
     """Convert input into a Rhino.Geometry.Transform object if possible.
-    If the provided object is already a transform, it value is copied.
+    If the provided object is already a transform, its value is copied.
     The returned data is accessible by indexing[row, column], and that is the suggested method to interact with the type.
     If the conversion fails, an error is raised.
     Parameters:
-      xform = the transform. This can be a 4x4 matrix, given as nested lists or tuples.
+      xform = the transform. This can be seen as a 4x4 matrix, given as nested lists or tuples.
+    Returns:
+      A Rhino.Geometry.Transform. result[0,3] gives access to the first row, last column.
     Example:
     See Also:
     """
@@ -879,9 +899,11 @@ def CreateColor(color):
     """Convert input into a System.Drawing.Color object if possible.
     The returned data is accessible by indexing, and that is the suggested method to interact with the type.
     Red index is [0], Green index is [1], Blue index is [2] and Alpha index is [3].
-    If the provided object is already a color, it value is copied.
+    If the provided object is already a color, its value is copied.
     Parameters:
       color = tuple, list or 3 or 4 items. Also, a single int can be passed and it will be bitwise-parsed.
+    Returns:
+      An object that can be indexed for red, green, blu, alpha. Item[0] is red.
     Example:
     See Also:
     """
@@ -1019,12 +1041,12 @@ def coercerhinoobject(object_id, raise_if_bad_input=False, raise_if_missing=Fals
 
 def CreateInterval(interval):
     """Converts input into a Rhino.Geometry.Interval.
-    If the provided object is already an interval, it value is copied.
+    If the provided object is already an interval, its value is copied.
     In case the conversion fails, an error is raised.
     Parameters:
       interval = tuple, or list, or any item that can be accessed at index 0 and 1; an Interval
     Returns:
-      a Rhino.Geometry.Interval
+      a Rhino.Geometry.Interval. This can be seen as an object made of two items: [0] start, [1] end.
     Example:
     See Also:
     """
