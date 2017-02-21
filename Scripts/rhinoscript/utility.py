@@ -158,7 +158,7 @@ def ClipboardText(text=None):
 
 
 def ColorAdjustLuma(rgb, luma, scale=False):
-    """Change the luminance of a red-green-blue value. Hue and saturation are
+    """Changes the luminance of a red-green-blue value. Hue and saturation are
     not affected
     Parameters:
       rgb = initial rgb value
@@ -494,7 +494,6 @@ def Sleep(milliseconds):
     """
     time.sleep( milliseconds / 1000.0 )
     Rhino.RhinoApp.Wait() #keep the message pump alive
-    
 
 def SortPointList(points, tolerance=None):
     """Sorts list of points so they will be connected in a "reasonable" polyline order
@@ -627,7 +626,7 @@ def frange(start, stop, step):
 def coerce3dpoint(point, raise_on_error=False):
     """Convert input into a Rhino.Geometry.Point3d if possible.
     Parameters:
-      point = Point3d, Vector3d, Pointh3f, Vector3f, str, uuid
+      point = Point3d, Vector3d, Point3f, Vector3f, str, uuid
       raise_on_error [opt] = True or False
     Returns:
       a Rhino.Geometry.Point3d
@@ -651,6 +650,22 @@ def coerce3dpoint(point, raise_on_error=False):
             geom = rhobj.Geometry
             if isinstance(geom, Rhino.Geometry.Point): return geom.Location
     if raise_on_error: raise ValueError("Could not convert %s to a Point3d" % point)
+
+
+def CreatePoint(point):
+    """Converts input into a Rhino.Geometry.Point3d.
+    If the provided object is already a point, it value is copied.
+    In case the conversion fails, an error is raised.
+    Parameters:
+      point = Point3d, Vector3d, Point3f, Vector3f, str, uuid
+    Returns:
+      a Rhino.Geometry.Point3d. This can be seen as an object with three indices:
+      result[0]: X coordinate, result[1]: Y coordinate, result[2]: Z coordinate.
+    Example:
+    See Also:
+    """
+    if type(point) is System.Drawing.Color: return Rhino.Geometry.Point3d(point)
+    return coerce3dpoint(point, True)
 
 
 def coerce2dpoint(point, raise_on_error=False):
@@ -690,6 +705,23 @@ def coerce3dvector(vector, raise_on_error=False):
     point = coerce3dpoint(vector, False)
     if point: return Rhino.Geometry.Vector3d(point.X, point.Y, point.Z)
     if raise_on_error: raise ValueError("Could not convert %s to a Vector3d" % vector)
+
+
+def CreateVector(vector):
+    """Convert input into a Rhino.Geometry.Vector3d if possible.
+    If the provided object is already a vector, it value is copied.
+    If the conversion fails, an error is raised.
+    Parameters:
+      vector = Vector3d, Point3d, list, Point3f, Vector3f, str, uuid
+      raise_on_error [opt] = True or False
+    Returns:
+      a Rhino.Geometry.Vector3d. This can be seen as an object with three indices:
+      result[0]: X component, result[1]: Y component, and result[2] Z component.
+    Example:
+    See Also:
+    """
+    if type(vector) is Rhino.Geometry.Vector3d: return Rhino.Geometry.Vector3d(vector)
+    return coerce3dvector(vector, True)
 
 
 def coerce3dpointlist(points, raise_on_error=False):
@@ -770,6 +802,22 @@ def coerceplane(plane, raise_on_bad_input=False):
     if raise_on_bad_input: raise TypeError("%s can not be converted to a Plane"%plane)
 
 
+def CreatePlane(plane):
+    """Converts input into a Rhino.Geometry.Plane object if possible.
+    If the provided object is already a plane, its value is copied.
+    The returned data is accessible by indexing[row, column], and that is the suggested method to interact with the type.
+    If the conversion fails, an error is raised.
+    Parameters:
+      xform = the transform. This can be seen as a 4x4 matrix, given as nested lists or tuples.
+    Returns:
+      A Rhino.Geometry.Transform. result[0,3] gives access to the first row, last column.
+    Example:
+    See Also:
+    """
+    if type(plane) is Rhino.Geometry.Plane: return plane.Clone()
+    return coerceplane(xform, True)
+
+
 def coercexform(xform, raise_on_bad_input=False):
     """Convert input into a Rhino.Transform if possible.
     Parameters:
@@ -787,6 +835,22 @@ def coercexform(xform, raise_on_bad_input=False):
                 xf[i,j] = xform[i][j]
         return xf
     if raise_on_bad_input: raise TypeError("%s can not be converted to a Transform"%xform)
+
+
+def CreateXform(xform):
+    """Convert input into a Rhino.Geometry.Transform object if possible.
+    If the provided object is already a transform, its value is copied.
+    The returned data is accessible by indexing[row, column], and that is the suggested method to interact with the type.
+    If the conversion fails, an error is raised.
+    Parameters:
+      xform = the transform. This can be seen as a 4x4 matrix, given as nested lists or tuples.
+    Returns:
+      A Rhino.Geometry.Transform. result[0,3] gives access to the first row, last column.
+    Example:
+    See Also:
+    """
+    if type(xform) is Rhino.Geometry.Transform: return xform.Clone()
+    return coercexform(xform, True)
 
 
 def coerceguid(id, raise_exception=False):
@@ -826,9 +890,25 @@ def coercecolor(c, raise_if_bad_input=False):
     if type(c) is System.Drawing.Color: return c
     if type(c) is list or type(c) is tuple:
         if len(c)==3: return System.Drawing.Color.FromArgb(c[0], c[1], c[2])
-        elif len(c)==4: return System.Drawing.Color.FromArgb(c[0], c[1], c[2], c[3])
+        elif len(c)==4: return System.Drawing.Color.FromArgb(c[3], c[0], c[1], c[2])
     if type(c)==type(1): return System.Drawing.Color.FromArgb(c)
     if raise_if_bad_input: raise TypeError("%s can not be converted to a Color"%c)
+
+
+def CreateColor(color):
+    """Convert input into a System.Drawing.Color object if possible.
+    The returned data is accessible by indexing, and that is the suggested method to interact with the type.
+    Red index is [0], Green index is [1], Blue index is [2] and Alpha index is [3].
+    If the provided object is already a color, its value is copied.
+    Parameters:
+      color = tuple, list or 3 or 4 items. Also, a single int can be passed and it will be bitwise-parsed.
+    Returns:
+      An object that can be indexed for red, green, blu, alpha. Item[0] is red.
+    Example:
+    See Also:
+    """
+    if type(color) is System.Drawing.Color: return System.Drawing.Color(color.A, color.R, color.G, color.B)
+    return coercecolor(color, True)
 
 
 def coerceline(line, raise_if_bad_input=False):
@@ -958,3 +1038,19 @@ def coercerhinoobject(object_id, raise_if_bad_input=False, raise_if_missing=Fals
     rc = scriptcontext.doc.Objects.Find(object_id)
     if not rc and raise_if_missing: raise ValueError("%s does not exist in ObjectTable" % object_id)
     return rc
+
+def CreateInterval(interval):
+    """Converts input into a Rhino.Geometry.Interval.
+    If the provided object is already an interval, its value is copied.
+    In case the conversion fails, an error is raised.
+    Parameters:
+      interval = tuple, or list, or any item that can be accessed at index 0 and 1; an Interval
+    Returns:
+      a Rhino.Geometry.Interval. This can be seen as an object made of two items: [0] start, [1] end.
+    Example:
+    See Also:
+    """
+    try:
+        return Rhino.Geometry.Interval(interval[0], interval[1])
+    except:
+        raise ValueError("unable to convert %s into an Interval: it cannot be indexed."%interval)
