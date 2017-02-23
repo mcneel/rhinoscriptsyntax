@@ -5,6 +5,7 @@ import System.Windows.Forms.Clipboard
 import scriptcontext
 import math
 import string
+import numbers
 
 
 def ContextIsRhino():
@@ -652,10 +653,12 @@ def coerce3dpoint(point, raise_on_error=False):
     if raise_on_error: raise ValueError("Could not convert %s to a Point3d" % point)
 
 
-def CreatePoint(point):
-    """Converts input into a Rhino.Geometry.Point3d.
+def CreatePoint(point, y=None, z=None):
+    """Converts 'point' into a Rhino.Geometry.Point3d if possible.
     If the provided object is already a point, it value is copied.
     In case the conversion fails, an error is raised.
+    Alternatively, you can also pass two coordinates singularly for a
+    point on the XY plane, or three for a 3D point.
     Parameters:
       point = Point3d, Vector3d, Point3f, Vector3f, str, uuid
     Returns:
@@ -664,6 +667,7 @@ def CreatePoint(point):
     Example:
     See Also:
     """
+    if y is not None: return Rhino.Geometry.Point3d(point, y, z or 0.0)
     if type(point) is System.Drawing.Color: return Rhino.Geometry.Point3d(point)
     return coerce3dpoint(point, True)
 
@@ -707,10 +711,12 @@ def coerce3dvector(vector, raise_on_error=False):
     if raise_on_error: raise ValueError("Could not convert %s to a Vector3d" % vector)
 
 
-def CreateVector(vector):
-    """Convert input into a Rhino.Geometry.Vector3d if possible.
+def CreateVector(vector, y=None, z=None):
+    """Converts 'vector' into a Rhino.Geometry.Vector3d if possible.
     If the provided object is already a vector, it value is copied.
     If the conversion fails, an error is raised.
+    Alternatively, you can also pass two coordinates singularly for a
+    vector on the XY plane, or three for a 3D vector.
     Parameters:
       vector = Vector3d, Point3d, list, Point3f, Vector3f, str, uuid
       raise_on_error [opt] = True or False
@@ -720,6 +726,7 @@ def CreateVector(vector):
     Example:
     See Also:
     """
+    if y is not None: return Rhino.Geometry.Vector3d(vector, y, z or 0.0)
     if type(vector) is Rhino.Geometry.Vector3d: return Rhino.Geometry.Vector3d(vector)
     return coerce3dvector(vector, True)
 
@@ -838,7 +845,7 @@ def coercexform(xform, raise_on_bad_input=False):
 
 
 def CreateXform(xform):
-    """Convert input into a Rhino.Geometry.Transform object if possible.
+    """Converts input into a Rhino.Geometry.Transform object if possible.
     If the provided object is already a transform, its value is copied.
     The returned data is accessible by indexing[row, column], and that is the suggested method to interact with the type.
     If the conversion fails, an error is raised.
@@ -895,11 +902,13 @@ def coercecolor(c, raise_if_bad_input=False):
     if raise_if_bad_input: raise TypeError("%s can not be converted to a Color"%c)
 
 
-def CreateColor(color):
-    """Convert input into a System.Drawing.Color object if possible.
+def CreateColor(color, g=None, b=None, a=None):
+    """Converts 'color' into a native color object if possible.
     The returned data is accessible by indexing, and that is the suggested method to interact with the type.
     Red index is [0], Green index is [1], Blue index is [2] and Alpha index is [3].
     If the provided object is already a color, its value is copied.
+    Alternatively, you can also pass three coordinates singularly for an RGB color, or four
+    for an RGBA color point.
     Parameters:
       color = tuple, list or 3 or 4 items. Also, a single int can be passed and it will be bitwise-parsed.
     Returns:
@@ -907,7 +916,8 @@ def CreateColor(color):
     Example:
     See Also:
     """
-    if type(color) is System.Drawing.Color: return System.Drawing.Color(color.A, color.R, color.G, color.B)
+    if g is not None and b is not None: return System.Drawing.Color.FromArgb(a or 255, color, g, b)
+    if type(color) is System.Drawing.Color: return System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B)
     return coercecolor(color, True)
 
 
@@ -1039,10 +1049,12 @@ def coercerhinoobject(object_id, raise_if_bad_input=False, raise_if_missing=Fals
     if not rc and raise_if_missing: raise ValueError("%s does not exist in ObjectTable" % object_id)
     return rc
 
-def CreateInterval(interval):
-    """Converts input into a Rhino.Geometry.Interval.
+def CreateInterval(interval, y=None):
+    """Converts 'interval' into a Rhino.Geometry.Interval.
     If the provided object is already an interval, its value is copied.
     In case the conversion fails, an error is raised.
+    In case a single number is provided, it will be translated to an increasing interval that includes
+    the provided input and 0. If two values are provided, they will be used instead.
     Parameters:
       interval = tuple, or list, or any item that can be accessed at index 0 and 1; an Interval
     Returns:
@@ -1050,6 +1062,9 @@ def CreateInterval(interval):
     Example:
     See Also:
     """
+    if y is not None: return Rhino.Geometry.Interval(interval, y)
+    if isinstance(interval, numbers.Number):
+        return Rhino.Geometry.Interval(interval if interval < 0 else 0, interval if interval > 0 else 0)
     try:
         return Rhino.Geometry.Interval(interval[0], interval[1])
     except:
