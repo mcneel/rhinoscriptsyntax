@@ -650,6 +650,11 @@ def coerce3dpoint(point, raise_on_error=False):
         if rhobj:
             geom = rhobj.Geometry
             if isinstance(geom, Rhino.Geometry.Point): return geom.Location
+    if hasattr(point, "__len__") and len(point)==2 and hasattr(point, "__getitem__"):
+        try:
+            return Rhino.Geometry.Point3d(float(point[0]), float(point[1]), 0.0)
+        except:
+            if raise_on_error: raise
     if raise_on_error: raise ValueError("Could not convert %s to a Point3d" % point)
 
 
@@ -667,7 +672,7 @@ def CreatePoint(point, y=None, z=None):
     Example:
     See Also:
     """
-    if y is not None: return Rhino.Geometry.Point3d(point, y, z or 0.0)
+    if y is not None: return Rhino.Geometry.Point3d(float(point), float(y), float(z or 0.0))
     if type(point) is System.Drawing.Color: return Rhino.Geometry.Point3d(point)
     return coerce3dpoint(point, True)
 
@@ -726,7 +731,7 @@ def CreateVector(vector, y=None, z=None):
     Example:
     See Also:
     """
-    if y is not None: return Rhino.Geometry.Vector3d(vector, y, z or 0.0)
+    if y is not None: return Rhino.Geometry.Vector3d(float(vector), float(y), float(z or 0.0))
     if type(vector) is Rhino.Geometry.Vector3d: return Rhino.Geometry.Vector3d(vector)
     return coerce3dvector(vector, True)
 
@@ -916,7 +921,7 @@ def CreateColor(color, g=None, b=None, a=None):
     Example:
     See Also:
     """
-    if g is not None and b is not None: return System.Drawing.Color.FromArgb(a or 255, color, g, b)
+    if g is not None and b is not None: return System.Drawing.Color.FromArgb(int(a or 255), int(color), int(g), int(b))
     if type(color) is System.Drawing.Color: return System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B)
     return coercecolor(color, True)
 
@@ -1062,7 +1067,7 @@ def CreateInterval(interval, y=None):
     Example:
     See Also:
     """
-    if y is not None: return Rhino.Geometry.Interval(interval, y)
+    if y is not None: return Rhino.Geometry.Interval(float(interval), float(y))
     if isinstance(interval, numbers.Number):
         return Rhino.Geometry.Interval(interval if interval < 0 else 0, interval if interval > 0 else 0)
     try:
