@@ -11,12 +11,14 @@ import utility as rhutil
 def AddAlias(alias, macro):
     """Add new command alias to Rhino. Command aliases can be added manually by
     using Rhino's Options command and modifying the contents of the Aliases tab.
+    Syntax:
+      rhinoscriptsyntax.AddAlias (alias, macro)
     Parameters:
-      alias = name of new command alias. Cannot match command names or existing
+      alias = Required string. Name of new command alias. Cannot match command names or existing
               aliases.
-      macro = The macro to run when the alias is executed.
+      macro = Required string. The macro to run when the alias is executed.
     Returns:
-      True or False indicating success or failure.
+      Bool - True or False indicating success or failure.
     Example:
       import rhinoscriptsyntax as  rs
       rs.AddAlias("OriginLine",  "!_Line 0,0,0")
@@ -33,13 +35,15 @@ def AddAlias(alias, macro):
 def AddSearchPath(folder, index=-1):
     """Add new path to Rhino's search path list. Search paths can be added by
     using Rhino's Options command and modifying the contents of the files tab.
+    Syntax:
+      rhinoscriptsyntax.AddSearchPath (folder [,index])
     Parameters:
-      folder = A valid folder, or path, to add.
-      index [opt] = Zero-based position in the search path list to insert.
+      folder = Required string. A valid folder, or path, to add.
+      index = Optional number. Zero-based position in the search path list to insert.
                     If omitted, path will be appended to the end of the
                     search path list.
     Returns:
-      The index where the item was inserted if success.
+      Number - The index where the item was inserted if success.
       -1 on failure.
     Example:
       import rhinoscriptsyntax as rs
@@ -54,10 +58,12 @@ def AddSearchPath(folder, index=-1):
 
 def AliasCount():
     """Returns number of command aliases in Rhino.
+    Syntax:
+      rhinoscriptsyntax.AliasCount ()
     Parameters:
       None
     Returns:
-      the number of command aliases in Rhino.
+      Number - the number of command aliases in Rhino.
     Example:
       import rhinoscriptsyntax as rs
       print "alias count = ", rs.AliasCount()
@@ -73,13 +79,15 @@ def AliasCount():
 
 def AliasMacro(alias, macro=None):
     """Returns or modifies the macro of a command alias.
+    Syntax:
+      rhinoscriptsyntax.AliasMacro (alias [, macro])
     Parameters:
-      alias = The name of an existing command alias.
-      macro [opt] = The new macro to run when the alias is executed.
+      alias = Required string. The name of an existing command alias.
+      macro = Optional string. The new macro to run when the alias is executed. If omitted, the current alias macro is returned.
     Returns:
-      If a new macro is not specified, the existing macro if successful.
-      If a new macro is specified, the previous macro if successful.
-      None on error
+      String - If a new macro is not specified, the existing macro if successful.
+      String - If a new macro is specified, the previous macro if successful.
+      Null - None on error
     Example:
       import rhinoscriptsyntax as rs
       aliases = rs.AliasNames()
@@ -101,10 +109,12 @@ def AliasMacro(alias, macro=None):
 
 def AliasNames():
     """Returns a list of command alias names.
+    Syntax:
+      rhinoscriptsyntax.AliasNames ()
     Parameters:
       None
     Returns:
-      a list of command alias names.
+      String - a list of command alias names.
     Example:
       import rhinoscriptsyntax as rs
       aliases = rs.AliasNames()
@@ -121,8 +131,10 @@ def AliasNames():
 
 def AppearanceColor(item, color=None):
     """Returns or modifies an application interface item's color.
+    Syntax:
+      rhinoscriptsyntax.AppearanceColor (item[, color])
     Parameters:
-      item = Item number to either query or modify
+      item = Required number. Item number to either query or modify
              0  = View background
              1  = Major grid line
              2  = Minor grid line
@@ -137,10 +149,10 @@ def AppearanceColor(item, color=None):
              11 = Text
              12 = Text Background
              13 = Text hover
-      color[opt] = The new color value
+      color = Optonal tuple. The new color value in (r255,g255,b255). If omitted, the current item color is returned.
     Returns:
-      if color is not specified, the current item color
-      if color is specified, the previous item color
+      Tuple (r255,g255,b255) - if color is not specified, the current item color.
+      Tuple (r255,g255,b255) - if color is specified, the previous item color. (r255,g255,b255)
     Example:
       import rhinoscriptsyntax as rs
       oldColor = rs.AppearanceColor(0)
@@ -203,11 +215,13 @@ def AppearanceColor(item, color=None):
 
 def AutosaveFile(filename=None):
     """Returns or changes the file name used by Rhino's automatic file saving
+    Syntax:
+      rhinoscriptsyntax.AutosaveFile ([filename])
     Parameters:
-      filename [opt] = name of the new autosave file
+      filename = Optional string. Name of the new autosave file
     Returns:
-      if filename is not specified, the name of the current autosave file
-      if filename is specified, the name of the previous autosave file
+      String - if filename is not specified, the name of the current autosave file
+      String - if filename is specified, the name of the previous autosave file
     Example:
       import rhinoscriptsyntax as rs
       file = rs.AutosaveFile()
@@ -224,11 +238,13 @@ def AutosaveFile(filename=None):
 def AutosaveInterval(minutes=None):
     """Returns or changes how often the document will be saved when Rhino's
     automatic file saving mechanism is enabled
+    Sytnax:
+      rhinoscriptsyntax.AutosaveInterval ([minutes])
     Parameters:
-      minutes [opt] = the number of minutes between saves
+      minutes = Optional number. The number of minutes between saves
     Returns:
-      if minutes is not specified, the current interval in minutes
-      if minutes is specified, the previous interval in minutes
+      Number - if minutes is not specified, the current interval in minutes
+      Number - if minutes is specified, the previous interval in minutes
     Example:
       import rhinoscriptsyntax as rs
       minutes = rs.AutosaveInterval()
@@ -246,16 +262,18 @@ def AutosaveInterval(minutes=None):
 
 def BuildDate():
     """Returns the build date of Rhino
+    Syntax:
+      rhinoscriptsyntax.BuildDate ()
     Parameters:
       None
     Returns:
-      the build date of Rhino
+      Datetime.date - the build date of Rhino. Will be converted to a string by most functions.
     Example:
       import rhinoscriptsyntax as rs
       build = rs.BuildDate()
       print "Rhino Build:", build
     See Also:
-      
+      Python Datetime module
     """
     build = Rhino.RhinoApp.BuildDate
     return datetime.date(build.Year, build.Month, build.Day)
@@ -264,6 +282,8 @@ def BuildDate():
 def ClearCommandHistory():
     """Clears contents of Rhino's command history window. You can view the
     command history window by using the CommandHistory command in Rhino.
+    Sytnax:
+      rhinoscriptsyntax.ClearCommandHistory ()
     Parameters:
       None
     Returns:
@@ -283,11 +303,13 @@ def Command(commandString, echo=True):
     """Runs a Rhino command script. All Rhino commands can be used in command
     scripts. The command can be a built-in Rhino command or one provided by a
     3rd party plug-in.
+    Syntax:
+      rhinoscriptsyntax (commandString[, echo])
     Parameters:
-      commandString = a Rhino command including any arguments
-      echo[opt] = the command echo mode
+      commandString = Required string. A Rhino command including any arguments
+      echo = Optional bool. The command echo mode True will display the commands on the commandline. If ommitted, command prompts are echoed (True)
     Returns:
-      True or False indicating success or failure
+      Bool - True or False indicating success or failure
 
     Write command scripts just as you would type the command sequence at the
     command line. A space or a new line acts like pressing <Enter> at the
@@ -333,10 +355,12 @@ def Command(commandString, echo=True):
 
 def CommandHistory():
     """Returns the contents of Rhino's command history window
+    Syntax:
+      rhinoscriptsyntax.CommandHistory ()
     Parameters:
       None
     Returns:
-      the contents of Rhino's command history window
+      String - the contents of Rhino's command history window
     Example:
       import rhinoscriptsyntax as rs
       print rs.CommandHistory()
@@ -348,10 +372,12 @@ def CommandHistory():
 
 def DefaultRenderer(renderer=None):
     """Returns or changes the default render plug-in
+    Syntax:
+       rhinoscriptsyntax.DefaultRenderer ([renderer])
     Parameters:
-      renderer [opt] = the name of the renderer to set as default renderer
+      renderer = Optional string. The name of the renderer to set as default renderer.  If ommitted the Guid of the current renderer is returned.
     Returns:
-      uuid of default renderer
+      Guid - Unique identifier of default renderer
     Example:
       import rhinoscriptsyntax as rs
       rs.DefaultRenderer("MyRenderPlugIn")
@@ -369,10 +395,12 @@ def DefaultRenderer(renderer=None):
 
 def DeleteAlias(alias):
     """Delete an existing alias from Rhino.
+    Syntax:
+      rhinoscriptsyntax.DeleteAlias (alias)
     Parameters:
-      alias = the name of an existing alias
+      alias = Required string. The name of an existing alias.
     Returns:
-      True or False indicating success
+      Bool - True or False indicating success
     Example:
       import rhinoscriptsyntax as rs
       print rs.DeleteAlias("Hello")
@@ -419,7 +447,7 @@ def DisplayOleAlerts( enable ):
       objExcel = System.Activator.CreateObject(t)
       ...
     See Also:
-      
+
     """
     Rhino.Runtime.HostUtils.DisplayOleAlerts( enable )
 
@@ -604,7 +632,7 @@ def Exit():
       import rhinoscriptsyntax as rs
       rs.Exit()
     See Also:
-      
+
     """
     Rhino.RhinoApp.Exit()
 
@@ -624,7 +652,7 @@ def FindFile(filename):
       path = rs.FindFile("Rhino.exe")
       print path
     See Also:
-      
+
     """
     return Rhino.ApplicationSettings.FileSettings.FindFile(filename)
 
@@ -645,7 +673,7 @@ def GetPlugInObject(plug_in):
       if objPlugIn is not None:
       print objPlugIn.About()
     See Also:
-      
+
     """
     return Rhino.RhinoApp.GetPlugInObject(plug_in)
 
@@ -765,7 +793,7 @@ def IsRunningOnWindows():
       else:
       print "Running on Mac"
     See Also:
-      
+
     """
     return Rhino.Runtime.HostUtils.RunningOnWindows
 
@@ -852,7 +880,7 @@ def LocaleID():
       elif lcid==1045:
       print "message in Polish"
     See Also:
-      
+
     """
     return Rhino.ApplicationSettings.AppearanceSettings.LanguageIdentifier
 
@@ -1013,7 +1041,7 @@ def PlugIns(types=0, status=0):
       import rhinoscriptsyntax as rs
       plugins = rs.PlugIns(0, 1)
     See Also:
-      
+
     """
     filter = Rhino.PlugIns.PlugInType.None
     if types&1: filter |= Rhino.PlugIns.PlugInType.Render
@@ -1078,7 +1106,7 @@ def ScreenSize():
       print "Screen Width:", size[0], "pixels"
       print "Screen Height:", size[1], "pixels"
     See Also:
-      
+
     """
     sz = System.Windows.Forms.Screen.PrimaryScreen.Bounds
     return sz.Width, sz.Height
@@ -1095,7 +1123,7 @@ def SdkVersion():
       import rhinoscriptsyntax as rs
       print "Required SDK Version:", rs.SdkVersion()
     See Also:
-      
+
     """
     return Rhino.RhinoApp.SdkVersion
 
@@ -1324,7 +1352,7 @@ def WindowHandle():
       handle = rs.WindowHandle()
       print handle
     See Also:
-      
+
     """
     return Rhino.RhinoApp.MainWindowHandle()
 
