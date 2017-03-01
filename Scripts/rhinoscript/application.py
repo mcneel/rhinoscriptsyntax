@@ -307,7 +307,7 @@ def Command(commandString, echo=True):
       rhinoscriptsyntax (commandString[, echo])
     Parameters:
       commandString = Required string. A Rhino command including any arguments
-      echo = Optional bool. The command echo mode True will display the commands on the commandline. If ommitted, command prompts are echoed (True)
+      echo = Optional bool. The command echo mode True will display the commands on the commandline. If omitted, command prompts are echoed (True)
     Returns:
       Bool - True or False indicating success or failure
 
@@ -375,7 +375,7 @@ def DefaultRenderer(renderer=None):
     Syntax:
        rhinoscriptsyntax.DefaultRenderer ([renderer])
     Parameters:
-      renderer = Optional string. The name of the renderer to set as default renderer.  If ommitted the Guid of the current renderer is returned.
+      renderer = Optional string. The name of the renderer to set as default renderer.  If omitted the Guid of the current renderer is returned.
     Returns:
       Guid - Unique identifier of default renderer
     Example:
@@ -933,7 +933,7 @@ def OsnapDialog(visible=None):
       visible [opt] = the new visibility state (True or False)
     Returns:
       if visible is not specified, then the current visible state
-      if visible is secified, then the previous visible state
+      if visible is specified, then the previous visible state
     Example:
       import rhinoscriptsyntax as rs
       if not rs.OsnapDialog(): rs.OsnapDialog(True)
@@ -996,7 +996,7 @@ def Planar(enable=None):
       enable = the new enable status (True or False)
     Returns:
       if enable is not specified, then the current planar status
-      if enable is secified, then the previous planar status
+      if enable is specified, then the previous planar status
     Example:
       import rhinoscriptsyntax as rs
       if not rs.Planar(): rs.Planar(True)
@@ -1260,7 +1260,7 @@ def StatusBarPoint(point=None):
 def StatusBarProgressMeterShow(label, lower, upper, embed_label=True, show_percent=True):
     """Start the Rhino status bar progress meter
     Parameters:
-      label = short description of the progesss
+      label = short description of the progess
       lower = lower limit of the progress meter's range
       upper = upper limit of the progress meter's range
       embed_label[opt] = if True, the label will show inside the meter.
