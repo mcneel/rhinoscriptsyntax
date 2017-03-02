@@ -1114,7 +1114,7 @@ def SendKeystrokes(keys=None, add_return=True):
     """Sends a string of printable characters to Rhino's command line
     Parameters:
       keys (str, optional): A string of characters to send to the command line.
-      add_returns (bool, optional): Append a return character to the end of the string. If omitted an return character will be added (True)
+      add_return (bool, optional): Append a return character to the end of the string. If omitted an return character will be added (True)
     Returns:
       none
     Example:
