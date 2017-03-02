@@ -11,14 +11,12 @@ import utility as rhutil
 def AddAlias(alias, macro):
     """Add new command alias to Rhino. Command aliases can be added manually by
     using Rhino's Options command and modifying the contents of the Aliases tab.
-    Syntax:
-      rhinoscriptsyntax.AddAlias (alias, macro)
     Parameters:
-      alias = Required string. Name of new command alias. Cannot match command names or existing
+      alias (str): Name of new command alias. Cannot match command names or existing
               aliases.
-      macro = Required string. The macro to run when the alias is executed.
+      macro (str): The macro to run when the alias is executed.
     Returns:
-      Bool - True or False indicating success or failure.
+      bool: True or False indicating success or failure.
     Example:
       import rhinoscriptsyntax as  rs
       rs.AddAlias("OriginLine",  "!_Line 0,0,0")
@@ -35,16 +33,14 @@ def AddAlias(alias, macro):
 def AddSearchPath(folder, index=-1):
     """Add new path to Rhino's search path list. Search paths can be added by
     using Rhino's Options command and modifying the contents of the files tab.
-    Syntax:
-      rhinoscriptsyntax.AddSearchPath (folder [,index])
     Parameters:
-      folder = Required string. A valid folder, or path, to add.
-      index = Optional number. Zero-based position in the search path list to insert.
-                    If omitted, path will be appended to the end of the
-                    search path list.
+      folder (str): A valid folder, or path, to add.
+      index (number, optional): Zero-based position in the search path list to insert.
+                             If omitted, path will be appended to the end of the
+                             search path list.
     Returns:
-      Number - The index where the item was inserted if success.
-      -1 on failure.
+      number: The index where the item was inserted if success.
+           -1 on failure.
     Example:
       import rhinoscriptsyntax as rs
       rs.AddSearchPath("C:\\My Python Scripts")
@@ -58,12 +54,10 @@ def AddSearchPath(folder, index=-1):
 
 def AliasCount():
     """Returns number of command aliases in Rhino.
-    Syntax:
-      rhinoscriptsyntax.AliasCount ()
     Parameters:
-      None
+      (none)
     Returns:
-      Number - the number of command aliases in Rhino.
+      number: the number of command aliases in Rhino.
     Example:
       import rhinoscriptsyntax as rs
       print "alias count = ", rs.AliasCount()
@@ -79,15 +73,13 @@ def AliasCount():
 
 def AliasMacro(alias, macro=None):
     """Returns or modifies the macro of a command alias.
-    Syntax:
-      rhinoscriptsyntax.AliasMacro (alias [, macro])
     Parameters:
-      alias = Required string. The name of an existing command alias.
-      macro = Optional string. The new macro to run when the alias is executed. If omitted, the current alias macro is returned.
+      alias (str): The name of an existing command alias.
+      macro (str, optional): The new macro to run when the alias is executed. If omitted, the current alias macro is returned.
     Returns:
-      String - If a new macro is not specified, the existing macro if successful.
-      String - If a new macro is specified, the previous macro if successful.
-      Null - None on error
+      str:  If a new macro is not specified, the existing macro if successful.
+      str:  If a new macro is specified, the previous macro if successful.
+      null:  None on error
     Example:
       import rhinoscriptsyntax as rs
       aliases = rs.AliasNames()
@@ -109,12 +101,10 @@ def AliasMacro(alias, macro=None):
 
 def AliasNames():
     """Returns a list of command alias names.
-    Syntax:
-      rhinoscriptsyntax.AliasNames ()
     Parameters:
-      None
+      (none)
     Returns:
-      String - a list of command alias names.
+      str: a list of command alias names.
     Example:
       import rhinoscriptsyntax as rs
       aliases = rs.AliasNames()
@@ -132,9 +122,9 @@ def AliasNames():
 def AppearanceColor(item, color=None):
     """Returns or modifies an application interface item's color.
     Syntax:
-      rhinoscriptsyntax.AppearanceColor (item[, color])
+      rhinoscriptsyntax.AppearanceColor(item[, color])
     Parameters:
-      item = Required number. Item number to either query or modify
+      item (number): Item number to either query or modify
              0  = View background
              1  = Major grid line
              2  = Minor grid line
@@ -149,10 +139,10 @@ def AppearanceColor(item, color=None):
              11 = Text
              12 = Text Background
              13 = Text hover
-      color = Optonal tuple. The new color value in (r255,g255,b255). If omitted, the current item color is returned.
+      color (tuple (r255,g255,b255), optional): The new color value in (r255,g255,b255). If omitted, the current item color is returned.
     Returns:
-      Tuple (r255,g255,b255) - if color is not specified, the current item color.
-      Tuple (r255,g255,b255) - if color is specified, the previous item color. (r255,g255,b255)
+      tuple (r255,g255,b255): if color is not specified, the current item color.
+      tuple (r255,g255,b255): if color is specified, the previous item color.
     Example:
       import rhinoscriptsyntax as rs
       oldColor = rs.AppearanceColor(0)
@@ -215,13 +205,11 @@ def AppearanceColor(item, color=None):
 
 def AutosaveFile(filename=None):
     """Returns or changes the file name used by Rhino's automatic file saving
-    Syntax:
-      rhinoscriptsyntax.AutosaveFile ([filename])
     Parameters:
-      filename = Optional string. Name of the new autosave file
+      filename (str, optional): Name of the new autosave file
     Returns:
-      String - if filename is not specified, the name of the current autosave file
-      String - if filename is specified, the name of the previous autosave file
+      (str): if filename is not specified, the name of the current autosave file
+      (str): if filename is specified, the name of the previous autosave file
     Example:
       import rhinoscriptsyntax as rs
       file = rs.AutosaveFile()
@@ -238,13 +226,11 @@ def AutosaveFile(filename=None):
 def AutosaveInterval(minutes=None):
     """Returns or changes how often the document will be saved when Rhino's
     automatic file saving mechanism is enabled
-    Sytnax:
-      rhinoscriptsyntax.AutosaveInterval ([minutes])
     Parameters:
-      minutes = Optional number. The number of minutes between saves
+      minutes (number, optional): The number of minutes between saves
     Returns:
-      Number - if minutes is not specified, the current interval in minutes
-      Number - if minutes is specified, the previous interval in minutes
+      (number): if minutes is not specified, the current interval in minutes
+      (number): if minutes is specified, the previous interval in minutes
     Example:
       import rhinoscriptsyntax as rs
       minutes = rs.AutosaveInterval()
@@ -262,12 +248,10 @@ def AutosaveInterval(minutes=None):
 
 def BuildDate():
     """Returns the build date of Rhino
-    Syntax:
-      rhinoscriptsyntax.BuildDate ()
     Parameters:
-      None
+      (none)
     Returns:
-      Datetime.date - the build date of Rhino. Will be converted to a string by most functions.
+      (Datetime.date): the build date of Rhino. Will be converted to a string by most functions.
     Example:
       import rhinoscriptsyntax as rs
       build = rs.BuildDate()
@@ -282,12 +266,10 @@ def BuildDate():
 def ClearCommandHistory():
     """Clears contents of Rhino's command history window. You can view the
     command history window by using the CommandHistory command in Rhino.
-    Sytnax:
-      rhinoscriptsyntax.ClearCommandHistory ()
     Parameters:
-      None
+      (none)
     Returns:
-      None
+      (none)
     Example:
       import rhinoscriptsyntax as rs
       rs.ClearCommandHistory()
@@ -303,13 +285,11 @@ def Command(commandString, echo=True):
     """Runs a Rhino command script. All Rhino commands can be used in command
     scripts. The command can be a built-in Rhino command or one provided by a
     3rd party plug-in.
-    Syntax:
-      rhinoscriptsyntax (commandString[, echo])
     Parameters:
-      commandString = Required string. A Rhino command including any arguments
-      echo = Optional bool. The command echo mode True will display the commands on the commandline. If omitted, command prompts are echoed (True)
+      commandString (str): A Rhino command including any arguments
+      echo (bool, optional): The command echo mode True will display the commands on the commandline. If omitted, command prompts are echoed (True)
     Returns:
-      Bool - True or False indicating success or failure
+      (bool): True or False indicating success or failure
 
     Write command scripts just as you would type the command sequence at the
     command line. A space or a new line acts like pressing <Enter> at the
@@ -355,12 +335,10 @@ def Command(commandString, echo=True):
 
 def CommandHistory():
     """Returns the contents of Rhino's command history window
-    Syntax:
-      rhinoscriptsyntax.CommandHistory ()
     Parameters:
-      None
+      (none)
     Returns:
-      String - the contents of Rhino's command history window
+      (str): the contents of Rhino's command history window
     Example:
       import rhinoscriptsyntax as rs
       print rs.CommandHistory()
@@ -372,12 +350,10 @@ def CommandHistory():
 
 def DefaultRenderer(renderer=None):
     """Returns or changes the default render plug-in
-    Syntax:
-       rhinoscriptsyntax.DefaultRenderer ([renderer])
     Parameters:
-      renderer = Optional string. The name of the renderer to set as default renderer.  If omitted the Guid of the current renderer is returned.
+      renderer (str, optional): The name of the renderer to set as default renderer.  If omitted the Guid of the current renderer is returned.
     Returns:
-      Guid - Unique identifier of default renderer
+      (guid): Unique identifier of default renderer
     Example:
       import rhinoscriptsyntax as rs
       rs.DefaultRenderer("MyRenderPlugIn")
@@ -395,12 +371,10 @@ def DefaultRenderer(renderer=None):
 
 def DeleteAlias(alias):
     """Delete an existing alias from Rhino.
-    Syntax:
-      rhinoscriptsyntax.DeleteAlias (alias)
     Parameters:
-      alias = Required string. The name of an existing alias.
+      alias (str): The name of an existing alias.
     Returns:
-      Bool - True or False indicating success
+      (bool): True or False indicating success
     Example:
       import rhinoscriptsyntax as rs
       print rs.DeleteAlias("Hello")
@@ -419,9 +393,9 @@ def DeleteSearchPath(folder):
     can be removed manually by using Rhino's options command and modifying the
     contents of the files tab
     Parameters:
-      folder = a folder to remove
+      folder (str): A folder to remove
     Returns:
-      True or False indicating success
+      (bool): True or False indicating success
     Example:
       import rhinoscriptsyntax as rs
       rs.DeleteSearchPath("C:\\My RhinoScripts")
@@ -433,12 +407,12 @@ def DeleteSearchPath(folder):
     return Rhino.ApplicationSettings.FileSettings.DeleteSearchPath(folder)
 
 
-def DisplayOleAlerts( enable ):
+def DisplayOleAlerts(enable):
     """Enables/disables OLE Server Busy/Not Responding dialog boxes
     Parameters:
-      enable = whether alerts should be visible (True or False)
+      enable (bool): Whether alerts should be visible (True or False)
     Returns:
-      None
+      (none)
     Example:
       import System
       import rhinoscriptsyntax as rs
@@ -455,10 +429,10 @@ def DisplayOleAlerts( enable ):
 def EdgeAnalysisColor(color=None):
     """Returns or modifies edge analysis color displayed by the ShowEdges command
     Parameters:
-      color [opt] = the new color
+      color (tuple (r255,g255,b255), optional): The new color for the analysis.
     Returns:
-      if color is not specified, the current edge analysis color
-      if color is specified, the previous edge analysis color
+      (tuple (r255,g255,b255)): if color is not specified, the current edge analysis color
+      (tuple (r255,g255,b255)): if color is specified, the previous edge analysis color
     Example:
       import rhinoscriptsyntax as rs
       oldcolor = rs.EdgeAnalysisColor()
@@ -478,12 +452,12 @@ def EdgeAnalysisColor(color=None):
 def EdgeAnalysisMode(mode=None):
     """Returns or modifies edge analysis mode displayed by the ShowEdges command
     Parameters:
-      mode [opt] = the new display mode. The available modes are
+      mode (number, optional): The new display mode. The available modes are
                    0 - display all edges
                    1 - display naked edges
     Returns:
-      if mode is not specified, the current edge analysis mode
-      if mode is specified, the previous edge analysis mode
+      (number): if mode is not specified, the current edge analysis mode
+      (number): if mode is specified, the previous edge analysis mode
     Example:
       import rhinoscriptsyntax as rs
       previous_mode = rs.EdgeAnalysisMode(1)
@@ -499,9 +473,9 @@ def EdgeAnalysisMode(mode=None):
 def EnableAutosave(enable=True):
     """Enables or disables Rhino's automatic file saving mechanism
     Parameters:
-      enable = the autosave state
+      enable (bool, optional): The autosave state. If omitted automatic saving is enabled (True)
     Returns:
-      the previous autosave state
+      (bool): the previous autosave state
     Example:
       import rhinoscriptsyntax as rs
       prevstate = rs.EnableAutosave()
@@ -517,10 +491,10 @@ def EnableAutosave(enable=True):
 def EnablePlugIn(plugin, enable=None):
     """Enables or disables a Rhino plug-in
       Parameters:
-        plugin = id of the plugin
-        enable [opt] = load silently if True
+        plugin (guid): The unique Guid id of the plugin.
+        enable (bool, optional): Load silently if True. If omitted Load silently is False.
       Returns:
-        True if set to load silently otherwise False
+        (bool): True if set to load silently otherwise False
       Example:
         import rhinoscriptsyntax as rs
         print rs.EnablePlugIn("RhinoCrasher", False)
@@ -540,9 +514,9 @@ def EnablePlugIn(plugin, enable=None):
 def ExeFolder():
     """Returns the full path to Rhino's executable folder.
     Parameters:
-      None
+      (none)
     Returns:
-      the full path to Rhino's executable folder.
+      (str): the full path to Rhino's executable folder.
     Example:
       import rhinoscriptsyntax as rs
       folder = rs.ExeFolder()
@@ -556,9 +530,9 @@ def ExeFolder():
 def ExePlatform():
     """Returns the platform of the Rhino executable
     Parameters:
-      None
+      (none)
     Returns:
-      the platform of the Rhino executable
+      (str) - the platform of the Rhino executable
     Example:
       import rhinoscriptsyntax as rs
       if rs.ExePlatform() == 1:
@@ -577,9 +551,9 @@ def ExePlatform():
 def ExeServiceRelease():
     """Returns the service release number of the Rhino executable
     Parameters:
-      None
+      (none)
     Returns:
-      the service release number of the Rhino executable
+      (str): the service release number of the Rhino executable
     Example:
       import rhinoscriptsyntax as rs
       print "Build date:", rs.BuildDate()
@@ -601,9 +575,9 @@ def ExeServiceRelease():
 def ExeVersion():
     """Returns the major version number of the Rhino executable
     Parameters:
-      None
+      (none)
     Returns:
-      the major version number of the Rhino executable
+      (str): the major version number of the Rhino executable
     Example:
       import rhinoscriptsyntax as rs
       print "Build date:", rs.BuildDate()
@@ -625,9 +599,9 @@ def ExeVersion():
 def Exit():
     """Closes the rhino application
     Parameters:
-      None
+      (none)
     Returns:
-      None
+      (none)
     Example:
       import rhinoscriptsyntax as rs
       rs.Exit()
@@ -644,9 +618,9 @@ def FindFile(filename):
       2. Folder's specified in Options dialog, File tab.
       3. Rhino's System folders
     Parameters:
-      filename = short file name to search for
+      filename (str): A short file name to search for
     Returns:
-      full path on success
+      (str): full path on success
     Example:
       import rhinoscriptsyntax as rs
       path = rs.FindFile("Rhino.exe")
@@ -662,11 +636,11 @@ def GetPlugInObject(plug_in):
     contain scriptable objects. Check with the manufacturer of your plug-in
     to see if they support this capability.
     Parameters:
-      plug_in = name or Id of a registered plug-in that supports scripting.
-                If the plug-in is registered but not loaded, it will be loaded
+      plug_in (str or guid): The name or Id of a registered plug-in that supports scripting.
+                             If the plug-in is registered but not loaded, it will be loaded
     Returns:
-      scriptable object if successful
-      None on error
+      (guid): scriptable object if successful
+      (null): None on error
     Example:
       import rhinoscriptsyntax as rs
       objPlugIn = rs.GetPlugInObject("SomePlugIn")
@@ -683,10 +657,11 @@ def InCommand(ignore_runners=True):
     for transparent commands (commands run from inside of other commands), this
     method returns the total number of active commands.
     Parameters:
-      ignore_runners [opt] = If true, script running commands, such as
-          LoadScript, RunScript, and ReadCommandFile will not counted.
+      ignore_runners (bool, optional): If True, script running commands, such as
+                                       LoadScript, RunScript, and ReadCommandFile will not counted.
+                                       If omitted the default is not to count script running command (True).
     Returns:
-      the number of active commands
+      (number): the number of active commands
     Example:
       import rhinoscriptsyntax as rs
       commands = rs.InCommand()
@@ -705,9 +680,9 @@ def InCommand(ignore_runners=True):
 def InstallFolder():
     """The full path to Rhino's installation folder
     Parameters:
-      None
+      (none)
     Returns:
-      the full path to Rhino's installation folder
+      (str): the full path to Rhino's installation folder
     Example:
       import rhinoscriptsyntax as rs
       print rs.InstallFolder()
@@ -720,9 +695,9 @@ def InstallFolder():
 def IsAlias(alias):
     """Verifies that a command alias exists in Rhino
     Parameters:
-      alias = the name of an existing command alias
+      alias (str): The name of an existing command alias
     Returns:
-      True or False
+      (bool): True if exists or False if the alias does not exist.
     Example:
       import rhinoscriptsyntax as rs
       print rs.IsAlias("Hello")
@@ -740,9 +715,9 @@ def IsCommand(command_name):
     """Verifies that a command exists in Rhino. Useful when scripting commands
     found in 3rd party plug-ins.
     Parameters:
-      command_name = the command name to test
+      command_name (str): The command name to test
     Returns:
-      True of False
+      (bool): True if the string is a command or False if it is not a command.
     Example:
       import rhinoscriptsyntax as rs
       GetString("Command name to test")
@@ -762,9 +737,9 @@ def IsCommand(command_name):
 def IsPlugIn(plugin):
     """Verifies that a plug-in is registered
     Parameters:
-      plugin = id of the plug-in
+      plugin (guid): The unique id of the plug-in
     Returns:
-      True or False
+      (bool): True if the Guid is registered or False if it is not.
     Example:
       import rhinoscriptsyntax as rs
       plugin = rs.GetString("Plug-in name")
@@ -783,9 +758,9 @@ def IsPlugIn(plugin):
 def IsRunningOnWindows():
     """Returns True if this script is being executed on a Windows platform
     Parameters:
-      None
+      (none)
     Returns:
-      True or False
+      (bool): True if currently running on the Widnows platform. False if it is not Windows.
     Example:
       import rhinoscriptsyntax as rs
       if rs.IsRunngingOnWindows():
@@ -801,9 +776,9 @@ def IsRunningOnWindows():
 def LastCommandName():
     """Returns the name of the last executed command
     Parameters:
-      None
+      (none)
     Returns:
-      the name of the last executed command
+      (str): the name of the last executed command
     Example:
       import rhinoscriptsyntax as rs
       rs.Command( "Line" )
@@ -819,15 +794,15 @@ def LastCommandName():
 
 def LastCommandResult():
     """Returns the result code for the last executed command
-    0 = success (command successfully completed)
-    1 = cancel (command was cancelled by the user)
-    2 = nothing (command did nothing, but was not cancelled)
-    3 = failure (command failed due to bad input, computational problem...)
-    4 = unknown command (the command was not found)
     Parameters:
-      None
+      (none)
     Returns:
-      the result code for the last executed command
+      (number): the result code for the last executed command.
+                0 = success (command successfully completed)
+                1 = cancel (command was cancelled by the user)
+                2 = nothing (command did nothing, but was not cancelled)
+                3 = failure (command failed due to bad input, computational problem...)
+                4 = unknown command (the command was not found)
     Example:
       import rhinoscriptsyntax as rs
       rs.Command( "Line" )
@@ -847,19 +822,19 @@ def LastCommandResult():
 def LocaleID():
     """Returns the current language used for the Rhino interface.  The current
     language is returned as a locale ID, or LCID, value.
-      1029  Czech
-      1031  German-Germany
-      1033  English-United States
-      1034  Spanish-Spain
-      1036  French-France
-      1040  Italian-Italy
-      1041  Japanese
-      1042  Korean
-      1045  Polish
     Parameters:
-      None
+      (none)
     Returns:
-      the current language used fro the Rhino interface as a locale ID, or LCID.
+      (number): the current language used for the Rhino interface as a locale ID, or LCID.
+                1029  Czech
+                1031  German-Germany
+                1033  English-United States
+                1034  Spanish-Spain
+                1036  French-France
+                1040  Italian-Italy
+                1041  Japanese
+                1042  Korean
+                1045  Polish
     Example:
       import rhinoscriptsyntax as rs
       lcid = rs.LocaleID()
@@ -888,10 +863,10 @@ def LocaleID():
 def Ortho(enable=None):
     """Enables or disables Rhino's ortho modeling aid.
     Parameters:
-      enable [opt] = the new enabled status (True or False)
+      enable (bool, optional): The new enabled status (True or False). If omitted the current state is returned.
     Returns:
-      if enable is not specified, then the current ortho status
-      if enable is secified, then the previous ortho status
+      (bool): if enable is not specified, then the current ortho status
+      (bool): if enable is secified, then the previous ortho status
     Example:
       import rhinoscriptsyntax as rs
       if not rs.Ortho(): rs.Ortho(True)
@@ -909,10 +884,10 @@ def Osnap(enable=None):
     """Enables or disables Rhino's object snap modeling aid.
     Object snaps are tools for specifying points on existing objects.
     Parameters:
-      enable [opt] = the new enabled status (True or False)
+      enable (bool, optional): The new enabled status.
     Returns:
-      if enable is not specified, then the current osnap status
-      if enable is secified, then the previous osnap status
+      (bool): if enable is not specified, then the current osnap status
+      (bool): if enable is specified, then the previous osnap status
     Example:
       import rhinoscriptsyntax as rs
       if not rs.Osnap(): rs.Osnap(True)
@@ -930,10 +905,10 @@ def Osnap(enable=None):
 def OsnapDialog(visible=None):
     """Shows or hides Rhino's dockable object snap bar
     Parameters:
-      visible [opt] = the new visibility state (True or False)
+      visible (bool, optional): The new visibility state. If omitted then the current state is returned.
     Returns:
-      if visible is not specified, then the current visible state
-      if visible is specified, then the previous visible state
+      (bool): if visible is not specified, then the current visible state
+      (bool): if visible is secified, then the previous visible state
     Example:
       import rhinoscriptsyntax as rs
       if not rs.OsnapDialog(): rs.OsnapDialog(True)
@@ -951,24 +926,24 @@ def OsnapMode(mode=None):
     """Returns or sets the object snap mode. Object snaps are tools for
     specifying points on existing objects
     Parameters:
-      mode [opt] = The object snap mode or modes to set. Object snap modes
-                   can be added together to set multiple modes
-                   0     None
-                   1     Near
-                   2     Focus
-                   4     Center
-                   8     Knot
-                   16    Quadrant
-                   32    Midpoint
-                   64    Intersection
-                   128   End
-                   256   Perpendicular
-                   512   Tangent
-                   1024  Point
-                   2048  Vertex
+      mode (number, optional): The object snap mode or modes to set. Object snap modes
+                     can be added together to set multiple modes
+                     0     None
+                     1     Near
+                     2     Focus
+                     4     Center
+                     8     Knot
+                     16    Quadrant
+                     32    Midpoint
+                     64    Intersection
+                     128   End
+                     256   Perpendicular
+                     512   Tangent
+                     1024  Point
+                     2048  Vertex
     Returns:
-      if mode is not specified, then the current object snap mode(s)
-      if mode is specified, then the previous object snap mode(s)
+      (number): if mode is not specified, then the current object snap mode(s)
+      (number): if mode is specified, then the previous object snap mode(s)
     Example:
       import rhinoscriptsyntax as rs
       rhOsnapModeEnd = 128
@@ -993,10 +968,10 @@ def OsnapMode(mode=None):
 def Planar(enable=None):
     """Enables or disables Rhino's planar modeling aid
     Parameters:
-      enable = the new enable status (True or False)
+      enable (bool, optional): The new enable status.  If omitted the current state is returned.
     Returns:
-      if enable is not specified, then the current planar status
-      if enable is specified, then the previous planar status
+      (bool): if enable is not specified, then the current planar status
+      (bool): if enable is secified, then the previous planar status
     Example:
       import rhinoscriptsyntax as rs
       if not rs.Planar(): rs.Planar(True)
@@ -1013,9 +988,10 @@ def Planar(enable=None):
 def PlugInId(plugin):
     """Returns the identifier of a plug-in given the plug-in name
     Parameters:
-      plugin = name of the plug-in
+      plugin (guid): Unique id of the plug-in
     Returns:
-      the id of the plug-in or None if the plug-in isn't valid
+      (guid): the id of the plug-in
+      (none): None if the plug-in isn't valid
     Example:
       import rhinoscriptsyntax as rs
       plugins = rs.PlugIns(0, 1)
@@ -1032,11 +1008,17 @@ def PlugInId(plugin):
 def PlugIns(types=0, status=0):
     """Returns a list of registered Rhino plug-ins
     Parameters:
-      types [opt] = type of plug-ins to return. 0=all, 1=render, 2=file export,
-        4=file import, 8=digitizer, 16=utility
-      status [opt] = 0=both loaded and unloaded, 1=loaded, 2=unloaded
+      types (number, optional): The type of plug-ins to return.
+                                0=all
+                                1=render
+                                2=file export
+                                4=file import
+                                8=digitizer
+                                16=utility.
+                                If omitted, all are returned.
+      status (number, optional): 0=both loaded and unloaded, 1=loaded, 2=unloaded.  If omitted both status is returned.
     Returns:
-      list of registered Rhino plug-ins
+      (list): list of registered Rhino plug-ins
     Example:
       import rhinoscriptsyntax as rs
       plugins = rs.PlugIns(0, 1)
@@ -1059,10 +1041,9 @@ def PlugIns(types=0, status=0):
 def ProjectOsnaps(enable=None):
     """Enables or disables object snap projection
     Parameters:
-      enable [opt] = the new enabled status (True or False)
+      enable (bool, optional): The new enabled status.  If omitted the current status is returned.
     Returns:
-      if enable is not specified, the current object snap projection status
-      if enable is specified, the previous object snap projection status
+      (bool): the current object snap projection status
     Example:
       import rhinoscriptsyntax as rs
       if not rs.ProjectOsnaps(): rs.ProjectOsnaps(True)
@@ -1079,9 +1060,9 @@ def ProjectOsnaps(enable=None):
 def Prompt(message=None):
     """Change Rhino's command window prompt
     Parameters:
-      message [opt] = the new prompt
+      message (str, optional): The new prompt on the commandline.  If omitted the prompt will be blank.
     Returns:
-      None
+      (none)
     Example:
       import rhinoscriptsyntax as rs
       rs.Prompt("Hello Rhino!")
@@ -1097,9 +1078,9 @@ def Prompt(message=None):
 def ScreenSize():
     """Returns current width and height, of the screen of the primary monitor.
     Parameters:
-      None
+      (none)
     Returns:
-      Tuple containing two numbers identifying the width and height
+      (tuple (width, height)): containing two numbers identifying the width and height in pixels
     Example:
       import rhinoscriptsyntax as rs
       size = rs.ScreenSize()
@@ -1114,11 +1095,10 @@ def ScreenSize():
 
 def SdkVersion():
     """Returns version of the Rhino SDK supported by the executing Rhino.
-    Rhino SDK versions are 9 digit numbers in the form of YYYYMMDDn.
     Parameters:
-      None
+      (none)
     Returns:
-      the version of the Rhino SDK supported by the executing Rhino
+      (str): the version of the Rhino SDK supported by the executing Rhino. Rhino SDK versions are 9 digit numbers in the form of YYYYMMDDn.
     Example:
       import rhinoscriptsyntax as rs
       print "Required SDK Version:", rs.SdkVersion()
@@ -1132,9 +1112,9 @@ def SearchPathCount():
     """Returns the number of path items in Rhino's search path list.
     See "Options Files settings" in the Rhino help file for more details.
     Parameters:
-      None
+      (none)
     Returns:
-      the number of path items in Rhino's search path list
+      (number): the number of path items in Rhino's search path list
     Example:
       import rhinoscriptsyntax as rs
       count = rs.SearchPathCount()
@@ -1152,9 +1132,9 @@ def SearchPathList():
     """Returns all of the path items in Rhino's search path list.
     See "Options Files settings" in the Rhino help file for more details.
     Parameters:
-      None
+      (none)
     Returns:
-      list of search paths
+      (list (str)): list of search paths
     Example:
       import rhinoscriptsyntax as rs
       count = rs.SearchPathCount()
@@ -1171,10 +1151,10 @@ def SearchPathList():
 def SendKeystrokes(keys=None, add_return=True):
     """Sends a string of printable characters to Rhino's command line
     Parameters:
-      keys [opt] = A string of characters to send to the command line.
-      add_returns [opt] = Append a return character to the end of the string.
+      keys (str, optional): A string of characters to send to the command line.
+      add_returns (bool, optional): Append a return character to the end of the string. If omitted an return character will be added (True)
     Returns:
-      None
+      (none)
     Example:
       import rhinoscriptsyntax as rs
       rs.SendKeystroke( "Hello Rhino!" )
@@ -1188,10 +1168,9 @@ def SendKeystrokes(keys=None, add_return=True):
 def Snap(enable=None):
     """Enables or disables Rhino's grid snap modeling aid
     Parameters:
-      enable [opt] = the new enabled status (True or False)
+      enable (bool, optional): The new enabled status. If omitted the current status is returned.
     Returns:
-      if enable is not specified, the current grid snap status
-      if enable is specified, the previous grid snap status
+      (bool): the current grid snap status
     Example:
       import rhinoscriptsyntax as rs
       if not rs.Snap(): rs.Snap(True)
@@ -1209,9 +1188,9 @@ def Snap(enable=None):
 def StatusBarDistance(distance=0):
     """Sets Rhino's status bar distance pane
     Parameters:
-      distance [opt] = distance to set the status bar
+      distance (number, optional): The distance to set the status bar.  If omitted the distance will be set to 0.
     Returns:
-      None
+      (none)
     Example:
       import rhinoscriptsyntax as rs
       rs.StatusBarDistance(3.14159)
@@ -1225,9 +1204,9 @@ def StatusBarDistance(distance=0):
 def StatusBarMessage(message=None):
     """Sets Rhino's status bar message pane
       Parameters:
-        message [opt] = message value
+        message (str, optional): The message to display.
       Returns:
-        None
+        (none)
       Example:
         import rhinoscriptsyntax as rs
         rs.StatusBarMessage("Hello Rhino!")
@@ -1241,9 +1220,9 @@ def StatusBarMessage(message=None):
 def StatusBarPoint(point=None):
     """Sets Rhino's status bar point coordinate pane
     Parameters:
-      point [opt] = point value
+      point (point3d, optional): The 3d coordinates of the status bar.  If omitted the current poition is set to (0,0,0).
     Returns:
-      None
+      (none)
     Example:
       import rhinoscriptsyntax as rs
       pt = (1.1, 2.2, 3.3)
@@ -1260,14 +1239,15 @@ def StatusBarPoint(point=None):
 def StatusBarProgressMeterShow(label, lower, upper, embed_label=True, show_percent=True):
     """Start the Rhino status bar progress meter
     Parameters:
-      label = short description of the progess
-      lower = lower limit of the progress meter's range
-      upper = upper limit of the progress meter's range
-      embed_label[opt] = if True, the label will show inside the meter.
-        If false, the label will show to the left of the meter
-      show_percent[opt] = show the percent complete
+      label (str): Short description of the progesss
+      lower (str): Lower limit of the progress meter's range
+      upper (str): Upper limit of the progress meter's range
+      embed_label (bool, optional): If True, the label will show inside the meter.
+                                    If false, the label will show to the left of the meter.
+                                    If omitted the label will show inside the meter (True)
+      show_percent (bool): Show the percent complete if True. If omitted the percnetage will be shown (True)
     Returns:
-      True or False indicating success or failure
+      (bool): True or False indicating success or failure
     Example:
     See Also:
     """
@@ -1278,10 +1258,10 @@ def StatusBarProgressMeterShow(label, lower, upper, embed_label=True, show_perce
 def StatusBarProgressMeterUpdate(position, absolute=True):
     """Set the current position of the progress meter
     Parameters:
-      position = new position in the progress meter
-      absolute[opt] = position is an absolute or relative
+      position (number): The new position in the progress meter
+      absolute (bool, optional): The position is set absolute (True) or relative (False) to its current position. If omitted the absolute (True) is used.
     Returns:
-      previous position setting
+      (number): previous position setting.
     Example:
     See Also:
     """
@@ -1291,9 +1271,9 @@ def StatusBarProgressMeterUpdate(position, absolute=True):
 def StatusBarProgressMeterHide():
     """Hide the progress meter
     Parameters:
-      None
+      (none)
     Returns:
-      None
+      (none)
     Example:
     See Also:
     """
@@ -1304,10 +1284,10 @@ def TemplateFile(filename=None):
     """Returns or sets Rhino's default template file. This is the file used
     when Rhino starts.
     Parameters:
-      filename[opt] = The name of the new default template file (must exist)
+      filename (str, optional): The name of the new default template file. If omitted the current default template name is returned.
     Returns:
-      if filename is not specified, then the current default template file
-      if filename is specified, then the previous default template file
+      (str): if filename is not specified, then the current default template file
+      (str): if filename is specified, then the previous default template file
     Example:
       import rhinoscriptsyntax as rs
       folder = rs.TemplateFolder()
@@ -1324,10 +1304,10 @@ def TemplateFile(filename=None):
 def TemplateFolder(folder=None):
     """Returns or sets the location of Rhino's template folder
     Parameters:
-      The location of Rhino's template files. Note, the location must exist
+      folder (str, optional): The location of Rhino's template files. Note, the location must exist.
     Returns:
-      if folder is not specified, then the current template file folder
-      if folder is specified, then the previous template file folder
+      (str): if folder is not specified, then the current template file folder
+      (str): if folder is specified, then the previous template file folder
     Example:
       import rhinoscriptsyntax as rs
       folder = rs.TemplateFolder()
@@ -1344,9 +1324,9 @@ def TemplateFolder(folder=None):
 def WindowHandle():
     """Returns the windows handle of Rhino's main window
     Parameters:
-      None
+      (none)
     Returns:
-      the windows handle of Rhino's main window
+      (IntPt): the Window's handle of Rhino's main window. IntPtr is a platform-specific type that is used to represent a pointer or a handle.
     Example:
       import rhinoscriptsyntax as rs
       handle = rs.WindowHandle()
@@ -1361,10 +1341,10 @@ def WorkingFolder(folder=None):
     """Returns or sets Rhino's working folder (directory).
     The working folder is the default folder for all file operations.
     Parameters:
-      folder[opt] = the new working folder
+      folder (str, optional): The new working folder for the current Rhino session.
     Returns:
-      if folder is not specified, then the current working folder
-      if folder is specified, then the previous working folder
+      (str): if folder is not specified, then the current working folder
+      (str): if folder is specified, then the previous working folder
     Example:
       import rhinoscriptsyntax as  rs
       folder = rs.WorkingFolder()
