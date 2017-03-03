@@ -2650,10 +2650,10 @@ def FairCurve(curve_id, tolerance=1.0):
     be no more than the specified tolerance. Sometimes several applications of
     this method are necessary to remove nasty curvature problems.
     Parameters:
-      curve_id = curve to fair
-      tolerance[opt] = fairing tolerance
+      curve_id (guid): curve to fair
+      tolerance (number, optional): fairing tolerance
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       curves = rs.GetObjects("Select curves to fair", rs.filter.curve)
@@ -2682,19 +2682,19 @@ def FitCurve(curve_id, degree=3, distance_tolerance=-1, angle_tolerance=-1):
     general shape. Use this function for replacing curves with many control
     points. For more information, see the Rhino help for the FitCrv command.
     Parameters:
-      curve_id = Identifier of the curve object
-      degree [opt] = The curve degree, which must be greater than 1.
+      curve_id (guid): Identifier of the curve object
+      degree (number, optional): The curve degree, which must be greater than 1.
                      The default is 3.
-      distance_tolerance [opt] = The fitting tolerance. If distance_tolerance
+      distance_tolerance (number, optional): The fitting tolerance. If distance_tolerance
           is not specified or <= 0.0, the document absolute tolerance is used.
-      angle_tolerance [opt] = The kink smoothing tolerance in degrees. If
+      angle_tolerance (number, optional) The kink smoothing tolerance in degrees. If
           angle_tolerance is 0.0, all kinks are smoothed. If angle_tolerance
           is > 0.0, kinks smaller than angle_tolerance are smoothed. If
           angle_tolerance is not specified or < 0.0, the document angle
           tolerance is used for the kink smoothing.
     Returns:
-      The identifier of the new object
-      None if not successful, or on error.
+      guid: The identifier of the new object
+      none: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       oldCurve = rs.GetObject("Select curve to fit", rs.filter.curve)
@@ -2726,12 +2726,12 @@ def FitCurve(curve_id, degree=3, distance_tolerance=-1, angle_tolerance=-1):
 def InsertCurveKnot(curve_id, parameter, symmetrical=False ):
     """Inserts a knot into a curve object
     Parameters:
-      curve_id = identifier of the curve object
-      parameter = parameter on the curve
-      symmetrical[opt] = if True, then knots are added on both sides of
+      curve_id (guid): identifier of the curve object
+      parameter (number): parameter on the curve
+      symmetrical (bool, optional): if True, then knots are added on both sides of
           the center of the curve
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select curve for knot insertion", rs.filter.curve)
@@ -2766,10 +2766,10 @@ def InsertCurveKnot(curve_id, parameter, symmetrical=False ):
 def IsArc(curve_id, segment_index=-1):
     """Verifies an object is an open arc curve
     Parameters:
-      curve_id = Identifier of the curve object
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve
+      curve_id (guid): Identifier of the curve object
+      segment_index (number): the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select an arc")
@@ -2791,12 +2791,12 @@ def IsArc(curve_id, segment_index=-1):
 def IsCircle(curve_id, tolerance=None):
     """Verifies an object is a circle curve
     Parameters:
-      curve_id = Identifier of the curve object
-      tolerance [opt] = If the curve is not a circle, then the tolerance used
+      curve_id (guid): Identifier of the curve object
+      tolerance (number, optional) If the curve is not a circle, then the tolerance used
         to determine whether or not the NURBS form of the curve has the
         properties of a circle. If omitted, Rhino's internal zero tolerance is used
     Returns:
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a circle")
@@ -2820,9 +2820,9 @@ def IsCircle(curve_id, tolerance=None):
 def IsCurve(object_id):
     """Verifies an object is a curve
     Parameters:
-      object_id = the object's identifier
+      object_id (guid): the object's identifier
     Returns:
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       object = rs.GetObject("Select a curve")
@@ -2844,11 +2844,11 @@ def IsCurveClosable(curve_id, tolerance=None):
     to the start point based on start-end gap size and length of curve as
     approximated by chord defined by 6 points
     Parameters:
-      curve_id = identifier of the curve object
+      curve_id (guid): identifier of the curve object
       tolerance[opt] = maximum allowable distance between start point and end
         point. If omitted, the document's current absolute tolerance is used
     Returns:
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       crv = rs.GetObject("Select curve", rs.filter.curve)
@@ -2865,9 +2865,9 @@ def IsCurveClosable(curve_id, tolerance=None):
 def IsCurveClosed(object_id):
     """Verifies an object is a closed curve object
     Parameters:
-      object_id = the object's identifier
+      object_id (guid): the object's identifier
     Returns:
-      True if succussful otherwise False.  None on error
+      bool: True if successful otherwise False.  None on error
     Example:
       import rhinoscriptsyntax as rs
       object = rs.GetObject("Select a curve")
@@ -2891,10 +2891,10 @@ def IsCurveClosed(object_id):
 def IsCurveInPlane(object_id, plane=None):
     """Test a curve to see if it lies in a specific plane
     Parameters:
-      object_id = the object's identifier
-      plane[opt] = plane to test. If omitted, the active construction plane is used
+      object_id (guid): the object's identifier
+      plane (plane, optional): plane to test. If omitted, the active construction plane is used
     Returns:
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -2920,10 +2920,10 @@ def IsCurveInPlane(object_id, plane=None):
 def IsCurveLinear(object_id, segment_index=-1):
     """Verifies an object is a linear curve
     Parameters:
-      curve_id = identifier of the curve object
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve
+      curve_id (guid):identifier of the curve object
+      segment_index (number): the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a curve")
@@ -2947,10 +2947,10 @@ def IsCurveLinear(object_id, segment_index=-1):
 def IsCurvePeriodic(curve_id, segment_index=-1):
     """Verifies an object is a periodic curve object
     Parameters:
-      curve_id = identifier of the curve object
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve
+      curve_id (guid): identifier of the curve object
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -2974,10 +2974,10 @@ def IsCurvePeriodic(curve_id, segment_index=-1):
 def IsCurvePlanar(curve_id, segment_index=-1):
     """Verifies an object is a planar curve
     Parameters:
-      curve_id = identifier of the curve object
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve
+      curve_id (guid): identifier of the curve object
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -3002,10 +3002,10 @@ def IsCurvePlanar(curve_id, segment_index=-1):
 def IsCurveRational(curve_id, segment_index=-1):
     """Verifies an object is a rational NURBS curve
     Parameters:
-      curve_id = identifier of the curve object
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve
+      curve_id (guid): identifier of the curve object
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -3030,10 +3030,10 @@ def IsCurveRational(curve_id, segment_index=-1):
 def IsEllipse(object_id, segment_index=-1):
     """Verifies an object is an elliptical-shaped curve
     Parameters:
-      curve_id = identifier of the curve object
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve
+      curve_id (guid): identifier of the curve object
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select an ellipse")
@@ -3052,10 +3052,10 @@ def IsEllipse(object_id, segment_index=-1):
 def IsLine(object_id, segment_index=-1):
     """Verifies an object is a line curve
     Parameters:
-      curve_id = identifier of the curve object
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve
+      curve_id (guid): identifier of the curve object
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a line")
@@ -3076,11 +3076,11 @@ def IsLine(object_id, segment_index=-1):
 def IsPointOnCurve(object_id, point, segment_index=-1):
     """Verifies that a point is on a curve
     Parameters:
-      curve_id = identifier of the curve object
-      point = the test point
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve
+      curve_id (guid): identifier of the curve object
+      point (point): the test point
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -3103,10 +3103,10 @@ def IsPointOnCurve(object_id, point, segment_index=-1):
 def IsPolyCurve(object_id, segment_index=-1):
     """Verifies an object is a PolyCurve curve
     Parameters:
-      curve_id = identifier of the curve object
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve
+      curve_id (guid): identifier of the curve object
+      segment_index (number, optional) the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a polycurve")
@@ -3124,10 +3124,10 @@ def IsPolyCurve(object_id, segment_index=-1):
 def IsPolyline( object_id, segment_index=-1 ):
     """Verifies an object is a Polyline curve object
     Parameters:
-      curve_id = identifier of the curve object
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve
+      curve_id (guid): identifier of the curve object
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a polyline")
@@ -3146,12 +3146,12 @@ def IsPolyline( object_id, segment_index=-1 ):
 def JoinCurves(object_ids, delete_input=False, tolerance=None):
     """Joins multiple curves together to form one or more curves or polycurves
     Parameters:
-      object_ids = list of multiple curves
-      delete_input[opt] = delete input objects after joining
-      tolerance[opt] = join tolerance. If omitted, 2.1 * document absolute
+      object_ids (guid): list of multiple curves
+      delete_input (bool, optional): delete input objects after joining
+      tolerance (number, optional): join tolerance. If omitted, 2.1 * document absolute
           tolerance is used
     Returns:
-      List of Guids representing the new curves
+      list(guid, ...): Object id representing the new curves
     Example:
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select curves to join", rs.filter.curve)
@@ -3180,9 +3180,9 @@ def JoinCurves(object_ids, delete_input=False, tolerance=None):
 def LineFitFromPoints(points):
     """Returns a line that was fit through an array of 3D points
     Parameters:
-      points = a list of at least two 3D points
+      points ([point, point, ...]): a list of at least two 3D points
     Returns:
-      line on success
+      line: line on success
     Example:
       import rhinoscriptsyntax as rs
       points = rs.GetPoints()
@@ -3204,11 +3204,11 @@ def MakeCurveNonPeriodic(curve_id, delete_input=False):
     """Makes a periodic curve non-periodic. Non-periodic curves can develop
     kinks when deformed
     Parameters:
-      curve_id = identifier of the curve object
-      delete_input[opt] = delete the input curve
+      curve_id (guid): identifier of the curve object
+      delete_input (bool): delete the input curve. If omitted, the input curve will not be deleted.
     Returns:
-      id of the new or modified curve if successful
-      None on error
+      guid: id of the new or modified curve if successful
+      none: on error
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select a curve", rs.filter.curve)
@@ -3242,11 +3242,11 @@ def MakeCurveNonPeriodic(curve_id, delete_input=False):
 def MeanCurve(curve0, curve1, tolerance=None):
     """Creates an average curve from two curves
     Parameters:
-      curve0, curve1 = identifiers of two curves
-      tolerance[opt] = angle tolerance used to match kinks between curves
+      curve0, curve1 (guid): identifiers of two curves
+      tolerance (number, optional): angle tolerance used to match kinks between curves
     Returns:
-      id of the new or modified curve if successful
-      None on error
+      guid: id of the new or modified curve if successful
+      none: on error
     Example:
       import rhinoscriptsyntax as rs
       curve0 = rs.GetObject("Select the first curve", rs.filter.curve)
@@ -3268,10 +3268,10 @@ def MeshPolyline(polyline_id):
     """Creates a polygon mesh object based on a closed polyline curve object.
     The created mesh object is added to the document
     Parameters:
-      polyline_id = identifier of the polyline curve object
+      polyline_id (guid): identifier of the polyline curve object
     Returns:
-      identifier of the new mesh object
-      None on error
+      guid: identifier of the new mesh object
+      none: on error
     Example:
       import rhinoscriptsyntax as rs
       polyline = rs.GetObject("Select a polyline", rs.filter.curve)
@@ -3295,16 +3295,20 @@ def MeshPolyline(polyline_id):
 def OffsetCurve(object_id, direction, distance, normal=None, style=1):
     """Offsets a curve by a distance. The offset curve will be added to Rhino
     Parameters:
-      object_id = identifier of a curve object
-      direction = point describing direction of the offset
-      distance = distance of the offset
-      normal[opt] = normal of the plane in which the offset will occur.
+      object_id (guid): identifier of a curve object
+      direction (point): point describing direction of the offset
+      distance (number): distance of the offset
+      normal (vector, optional): normal of the plane in which the offset will occur.
           If omitted, the normal of the active construction plane will be used
-      style[opt] = the corner style
-          0 = None, 1 = Sharp, 2 = Round, 3 = Smooth, 4 = Chamfer
+      style (number, optional): the corner style. If omitted, the style is sharp.
+                                0 = None
+                                1 = Sharp
+                                2 = Round
+                                3 = Smooth
+                                4 = Chamfer
     Returns:
-      List of ids for the new curves on success
-      None on error
+      list(guid, ...): list of ids for the new curves on success
+      none: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve", rs.filter.curve)
@@ -3333,15 +3337,15 @@ def OffsetCurveOnSurface(curve_id, surface_id, distance_or_parameter):
     """Offset a curve on a surface. The source curve must lie on the surface.
     The offset curve or curves will be added to Rhino
     Parameters:
-      curve_id, surface_id = curve and surface identifiers
-      distance_or_parameter = If a single number is passed, then this is the
+      curve_id, surface_id (guid): curve and surface identifiers
+      distance_or_parameter (number|tuple(number, number)): If a single number is passed, then this is the
         distance of the offset. Based on the curve's direction, a positive value
         will offset to the left and a negative value will offset to the right.
         If a tuple of two values is passed, this is interpreted as the surface
         U,V parameter that the curve will be offset through
     Returns:
-      Identifiers of the new curves if successful
-      None on error
+      list(guid, ...): identifiers of the new curves if successful
+      none: on error
     Example:
       import rhinoscriptsyntax as rs
       def TestOffset():
@@ -3379,17 +3383,17 @@ def PlanarClosedCurveContainment(curve_a, curve_b, plane=None, tolerance=None):
     """Determines the relationship between the regions bounded by two coplanar
     simple closed curves
     Parameters:
-      curve_a, curve_b = identifiers of two planar, closed curves
-      plane[opt] = test plane. If omitted, the currently active construction
+      curve_a, curve_b (guid): identifiers of two planar, closed curves
+      plane (plane, optional): test plane. If omitted, the currently active construction
         plane is used
-      tolerance[opt] = if omitted, the document absolute tolerance is used
+      tolerance (number, optional): if omitted, the document absolute tolerance is used
     Returns:
-      a number identifying the relationship if successful
+      number: a number identifying the relationship if successful
         0 = the regions bounded by the curves are disjoint
         1 = the two curves intersect
         2 = the region bounded by curve_a is inside of curve_b
         3 = the region bounded by curve_b is inside of curve_a
-      None if not successful
+      none: if not successful
     Example:
       import rhinoscriptsyntax as rs
       curve1 = rs.GetObject("Select first curve", rs.filter.curve )
@@ -3416,12 +3420,12 @@ def PlanarClosedCurveContainment(curve_a, curve_b, plane=None, tolerance=None):
 def PlanarCurveCollision(curve_a, curve_b, plane=None, tolerance=None):
     """Determines if two coplanar curves intersect
     Parameters:
-      curve_a, curve_b = identifiers of two planar curves
-      plane[opt] = test plane. If omitted, the currently active construction
+      curve_a, curve_b (guid): identifiers of two planar curves
+      plane (plane, optional): test plane. If omitted, the currently active construction
         plane is used
-      tolerance[opt] = if omitted, the document absolute tolerance is used
+      tolerance (number, optional): if omitted, the document absolute tolerance is used
     Returns:
-      True if the curves intersect; otherwise False
+      bool: True if the curves intersect; otherwise False
     Example:
       import rhinoscriptsyntax as rs
       curve1 = rs.GetObject("Select first curve")
@@ -3449,16 +3453,16 @@ def PointInPlanarClosedCurve(point, curve, plane=None, tolerance=None):
     """Determines if a point is inside of a closed curve, on a closed curve, or
     outside of a closed curve
     Parameters:
-      point = text point
-      curve = identifier of a curve object
-      plane[opt] = plane containing the closed curve and point. If omitted,
+      point (point|guid): text point
+      curve (guid): identifier of a curve object
+      plane (plane, optional): plane containing the closed curve and point. If omitted,
           the currently active construction plane is used
-      tolerance[opt] = it omitted, the document abosulte tolerance is used
+      tolerance (number, optional) it omitted, the document abosulte tolerance is used
     Returns:
-      number identifying the result if successful
-          0 = point is outside of the curve
-          1 = point is inside of the curve
-          2 = point in on the curve
+      number: number identifying the result if successful
+              0 = point is outside of the curve
+              1 = point is inside of the curve
+              2 = point in on the curve
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select a planar, closed curve", rs.filter.curve)
@@ -3488,10 +3492,11 @@ def PointInPlanarClosedCurve(point, curve, plane=None, tolerance=None):
 def PolyCurveCount(curve_id, segment_index=-1):
     """Returns the number of curve segments that make up a polycurve
     Parameters:
-      curve_id = the object's identifier
-      segment_index [opt] = if curve_id identifies a polycurve object, then segment_index identifies the curve segment of the polycurve to query.
+      curve_id (guid): the object's identifier
+      segment_index (number, optional): if `curve_id` identifies a polycurve object, then `segment_index` identifies the curve segment of the polycurve to query.
     Returns:
-      the number of curve segments in a polycurve if successful, otherwise None
+      number: the number of curve segments in a polycurve if successful
+      none: if not successful
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a polycurve")
@@ -3509,10 +3514,11 @@ def PolyCurveCount(curve_id, segment_index=-1):
 def PolylineVertices(curve_id, segment_index=-1):
     """Returns the vertices of a polyline curve on success
     Parameters:
-      curve_id = the object's identifier
-      segment_index [opt] = if curve_id identifies a polycurve object, then segment_index identifies the curve segment of the polycurve to query.
+      curve_id (guid): the object's identifier
+      segment_index (number, optional): if curve_id identifies a polycurve object, then segment_index identifies the curve segment of the polycurve to query.
     Returns:
-      an  array of Point3d vertex points if successful, otherwise None
+      list(point, ...): an list of Point3d vertex points if successful
+      none: if not successful
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a polyline")
@@ -3533,11 +3539,11 @@ def PolylineVertices(curve_id, segment_index=-1):
 def ProjectCurveToMesh(curve_ids, mesh_ids, direction):
     """Projects one or more curves onto one or more surfaces or meshes
     Parameters:
-      curve_ids = identifiers of curves to project
-      mesh_ids = identifiers of meshes to project onto
-      direction = projection direction
+      curve_ids ([guid, ...]): identifiers of curves to project
+      mesh_ids ([guid, ...]): identifiers of meshes to project onto
+      direction (vector): projection direction
     Returns:
-      list of identifiers
+      list(guid, ...): list of identifiers for the resulting curves.
     Example:
       import rhinoscriptsyntax as rs
       mesh = rs.GetObject("Select mesh to project onto", rs.filter.mesh)
@@ -3564,11 +3570,11 @@ def ProjectCurveToMesh(curve_ids, mesh_ids, direction):
 def ProjectCurveToSurface(curve_ids, surface_ids, direction):
     """Projects one or more curves onto one or more surfaces or polysurfaces
     Parameters:
-      curve_ids = identifiers of curves to project
-      surface_ids = identifiers of surfaces to project onto
-      direction = projection direction
+      curve_ids ([guid, ...]): identifiers of curves to project
+      surface_ids ([guid, ...]): identifiers of surfaces to project onto
+      direction (vector): projection direction
     Returns:
-      list of identifiers
+      list(guid, ...): list of identifiers
     Example:
       import rhinoscriptsyntax as rs
       surface = rs.GetObject("Select surface to project onto", rs.filter.surface)
@@ -3596,11 +3602,11 @@ def RebuildCurve(curve_id, degree=3, point_count=10):
     """Rebuilds a curve to a given degree and control point count. For more
     information, see the Rhino help for the Rebuild command.
     Parameters:
-      curve_id = identifier of the curve object
-      degree[opt] = new degree (must be greater than 0)
-      point_count [opt] = new point count, which must be bigger than degree.
+      curve_id (guid): identifier of the curve object
+      degree (number, optional): new degree (must be greater than 0)
+      point_count (number, optional) new point count, which must be bigger than degree.
     Returns:
-      True of False indicating success or failure
+      bool: True of False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select curve to rebuild", rs.filter.curve)
@@ -3620,9 +3626,9 @@ def RebuildCurve(curve_id, degree=3, point_count=10):
 def ReverseCurve(curve_id):
     """Reverses the direction of a curve object. Same as Rhino's Dir command
     Parameters:
-      curve_id = identifier of the curve object
+      curve_id (guid): identifier of the curve object
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select a curve to reverse")
@@ -3650,7 +3656,10 @@ def SimplifyCurve(curve_id, flags=0):
      - Segments that meet with G1-continuity have there ends tuned up so that they meet with G1-continuity to within machine precision.
      - If the polycurve is a polyline, a polyline will be created
 
-        flag options
+
+    Parameters:
+      curve_id (guid): the object's identifier
+      flags (number, optional): the simplification methods to use. By default, all methods are used (flags = 0)
         Value Description
         0     Use all methods.
         1     Do not split NURBS curves at fully multiple knots.
@@ -3660,11 +3669,8 @@ def SimplifyCurve(curve_id, flags=0):
         16    Do not adjust curves at G1-joins.
         32    Do not merge adjacent co-linear lines or co-circular arcs or combine consecutive line segments into a polyline.
 
-    Parameters:
-      curve_id = the object's identifier
-      flags [opt] = the simplification methods to use. By default, all methods are used (flags = 0)
     Returns:
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select a curve to simplify", rs.filter.curve)
@@ -3695,12 +3701,12 @@ def SplitCurve(curve_id, parameter, delete_input=True):
     """Splits, or divides, a curve at a specified parameter. The parameter must
     be in the interior of the curve's domain
     Parameters:
-      curve_id = the curve to split
-      parameter = one or more parameters to split the curve at
-      delete_input[opt] = delete the input curve
+      curve_id (guid): the curve to split
+      parameter ({number, ...]) one or more parameters to split the curve at
+      delete_input (bool, optional): delete the input curve
     Returns:
-      list of new curves on success
-      None on error
+      list(guid, ....): list of new curves on success
+      none: on error
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select a curve to split", rs.filter.curve)
@@ -3728,16 +3734,16 @@ def SplitCurve(curve_id, parameter, delete_input=True):
 def TrimCurve(curve_id, interval, delete_input=True):
     """Trims a curve by removing portions of the curve outside a specified interval
     Parameters:
-      curve_id = the curve to trim
-      interval = two numbers indentifying the interval to keep. Portions of
+      curve_id (guid):the curve to trim
+      interval ([number, number]): two numbers identifying the interval to keep. Portions of
         the curve before domain[0] and after domain[1] will be removed. If the
         input curve is open, the interval must be increasing. If the input
         curve is closed and the interval is decreasing, then the portion of
         the curve across the start and end of the curve is returned
-      delete_input[opt] = delete the input curve
+      delete_input (bool): delete the input curve. If omitted the input curve is deleted.
     Returns:
-      identifier of the new curve on success
-      None on failure
+      list(guid, ...): identifier of the new curve on success
+      none: on failure
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select a curve to trim", rs.filter.curve)
@@ -3766,12 +3772,11 @@ def TrimCurve(curve_id, interval, delete_input=True):
 def ChangeCurveDegree(object_id, degree):
   """Changes the degree of a curve object. For more information see the Rhino help file for the ChangeDegree command.
   Parameters:
-    object_id = the object's identifier.
-    degree =  the new degree.
+    object_id (guid): the object's identifier.
+    degree (number): the new degree.
   Returns:
-  Boolean
-   True of False indicating success or failure.
-   None on failure
+    bool: True of False indicating success or failure.
+    none: on failure
   Example:
     
   See Also:
