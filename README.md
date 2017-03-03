@@ -1,16 +1,15 @@
 RhinoPython Scripts
 ===================
 
-Library of python scripts used by the python scripting engine in Rhinoceros and Grasshopper. Discussions for help on using these scripts can be found at:
+This is the repository for the RhinoScriptSyntax.  This is a library of python scripts used by the python scripting engine in [Rhinoceros](http://www.rhino3d.com/) and [Grasshopper](http://www.grasshopper3d.com/). For details on using python, go to [Rhino.Python including Guides, Samples and Documentation](http://developer.rhino3d.com/guides/rhinopython/).
 
-* http://python.rhino3d.com/
-
+Discussions for help on using these scripts can be found at: [Rhino Scripting Forum](https://discourse.mcneel.com/c/scripting)
 
 Get Involved
 ------------
 There are many ways to contribute to this project:
 
-* Become active on the RhinoPython discussion forum at http://python.rhino3d.com/
+* Become active on the RhinoPython discussion forum at [Rhino Scripting Forum](https://discourse.mcneel.com/c/scripting)
 * Report bugs/wishes to the issue list at http://mcneel.myjetbrains.com/youtrack/dashboard
 * Directly edit the source code using git. If you need help with this, please let us know.
 
