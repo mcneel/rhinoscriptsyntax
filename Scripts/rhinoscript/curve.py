@@ -7,13 +7,13 @@ import System.Guid, System.Array, System.Enum
 def AddArc(plane, radius, angle_degrees):
     """Adds an arc curve to the document
     Parameters:
-      plane = plane on which the arc will lie. The origin of the plane will be
+      plane (str): plane on which the arc will lie. The origin of the plane will be
         the center point of the arc. x-axis of the plane defines the 0 angle
         direction.
-      radius = radius of the arc
-      angle_degrees = interval of arc
+      radius(number): radius of the arc
+      angle_degrees (number): interval of arc in degrees
     Returns:
-      id of the new curve object
+      guid: id of the new curve object
     Example:
       import rhinoscriptsyntax as  rs
       plane = rs.WorldXYPlane()
@@ -39,10 +39,10 @@ def AddArc(plane, radius, angle_degrees):
 def AddArc3Pt(start, end, point_on_arc):
     """Adds a 3-point arc curve to the document
     Parameters:
-      start, end = endpoints of the arc
-      point_on_arc = a point on the arc
+      start, end (point|guid): endpoints of the arc
+      point_on_arc (point|guid): a point on the arc
     Returns:
-      id of the new curve object
+      guid: id of the new curve object
     Example:
       import rhinoscriptsyntax as rs
       start = rs.GetPoint("Start of arc")
@@ -74,11 +74,11 @@ def AddArcPtTanPt(start, direction, end):
     """Adds an arc curve, created from a start point, a start direction, and an
     end point, to the document
     Parameters:
-      start = the starting point of the arc
-      direction = the arc direction at start
-      end = the ending point of the arc
+      start (point): the starting point of the arc
+      direction (vector): the arc direction at start
+      end (point): the ending point of the arc
     Returns:
-      id of the new curve object
+      guid: id of the new curve object
     Example:
       import rhinoscriptsyntax as  rs
       pick = rs.GetCurveObject("Select  curve to extend")
@@ -109,13 +109,15 @@ def AddArcPtTanPt(start, direction, end):
 def AddBlendCurve(curves, parameters, reverses, continuities):
     """Makes a curve blend between two curves
     Parameters:
-      curves = two curves
-      parameters = two curve parameters defining the blend end points
-      reverses = two boolean values specifying to use the natural or opposite direction of the curve
-      continuities = two numbers specifying continuity at end points
-        0 = position, 1 = tangency, 2 = curvature
+      curves ([guid|curve, guid|curve]): list of two curves
+      parameters ([number, number]): list of two curve parameters defining the blend end points
+      reverses ([bool, bool]): list of two boolean values specifying to use the natural or opposite direction of the curve
+      continuities ([number, number]): list of two numbers specifying continuity at end points
+                                            0 = position
+                                            1 = tangency
+                                            2 = curvature
     Returns:
-      identifier of new curve on success
+      guid: identifier of new curve on success
     Example:
       import rhinoscriptsyntax as rs
       curve0 = rs.AddLine((0,0,0), (0,9,0))
@@ -144,12 +146,12 @@ def AddBlendCurve(curves, parameters, reverses, continuities):
 def AddCircle(plane_or_center, radius):
     """Adds a circle curve to the document
     Parameters:
-      plane_or_center = plane on which the circle will lie. If a point is
+      plane_or_center (point|plane): plane on which the circle will lie. If a point is
         passed, this will be the center of the circle on the active
         construction plane
-      radius = the radius of the circle
+      radius (number): the radius of the circle
     Returns:
-      id of the new curve object
+      guid: id of the new curve object
     Example:
       import rhinoscriptsyntax as rs
       plane = rs.WorldXYPlane()
@@ -181,9 +183,9 @@ def AddCircle(plane_or_center, radius):
 def AddCircle3Pt(first, second, third):
     """Adds a 3-point circle curve to the document
     Parameters:
-      first, second, third = points on the circle
+      first, second, third (point|guid): points on the circle
     Returns:
-      id of the new curve object
+      guid: id of the new curve object
     Example:
       import rhinoscriptsyntax as rs
       point1 = rs.GetPoint("First point on circle")
@@ -213,10 +215,10 @@ def AddCircle3Pt(first, second, third):
 def AddCurve(points, degree=3):
     """Adds a control points curve object to the document
     Parameters:
-      points = a list of points
-      degree[opt] = degree of the curve
+      points ([point|guid, ...]) a list of points
+      degree (number): degree of the curve
     Returns:
-      id of the new curve object
+      guid: id of the new curve object
     Example:
       import rhinoscriptsyntax as rs
       points = rs.GetPoints(True, message1="Pick curve point")
@@ -237,11 +239,11 @@ def AddCurve(points, degree=3):
 def AddEllipse(plane, radiusX, radiusY):
     """Adds an elliptical curve to the document
     Parameters:
-      plane = the plane on which the ellipse will lie. The origin of
+      plane (plane) the plane on which the ellipse will lie. The origin of
               the plane will be the center of the ellipse
-      radiusX, radiusY = radius in the X and Y axis directions
+      radiusX, radiusY (number): radius in the X and Y axis directions
     Returns:
-      id of the new curve object if successful
+      guid: id of the new curve object if successful
     Example:
       import rhinoscriptsyntax as rs
       plane = rs.WorldXYPlane()
@@ -263,11 +265,11 @@ def AddEllipse(plane, radiusX, radiusY):
 def AddEllipse3Pt(center, second, third):
     """Adds a 3-point elliptical curve to the document
     Parameters:
-      center = center point of the ellipse
-      second = end point of the x axis
-      third  = end point of the y axis
+      center (point|guid): center point of the ellipse
+      second (point|guid): end point of the x axis
+      third  (point|guid): end point of the y axis
     Returns:
-      id of the new curve object if successful
+      guid: id of the new curve object if successful
     Example:
       import rhinoscriptsyntax as rs
       center = (0,0,0)
@@ -293,15 +295,15 @@ def AddEllipse3Pt(center, second, third):
 def AddFilletCurve(curve0id, curve1id, radius=1.0, base_point0=None, base_point1=None):
     """Adds a fillet curve between two curve objects
     Parameters:
-      curve0id = identifier of the first curve object
-      curve1id = identifier of the second curve object
-      radius [opt] = fillet radius
-      base_point0 [opt] = base point of the first curve. If omitted,
+      curve0id (guid): identifier of the first curve object
+      curve1id (guid): identifier of the second curve object
+      radius (number, optional): fillet radius
+      base_point0 (point|guid, optional): base point of the first curve. If omitted,
                           starting point of the curve is used
-      base_point1 [opt] = base point of the second curve. If omitted,
+      base_point1 (point|guid, optional): base point of the second curve. If omitted,
                           starting point of the curve is used
     Returns:
-      id of the new curve object if successful
+      guid: id of the new curve object if successful
     Example:
       import rhinoscriptsyntax as rs
       curve0 = rs.AddLine([0,0,0], [5,1,0])
@@ -342,11 +344,11 @@ def AddInterpCrvOnSrf(surface_id, points):
     surface.  Note, this function will not create periodic curves,
     but it will create closed curves.
     Parameters:
-      surface_id = identifier of the surface to create the curve on
-      points = list of 3D points that lie on the specified surface.
+      surface_id (guid): identifier of the surface to create the curve on
+      points ([point|guid, point|guid, ...])list of 3D points that lie on the specified surface.
                The list must contain at least 2 points
     Returns:
-      id of the new curve object if successful
+      guid: id of the new curve object if successful
     Example:
       import rhinoscriptsyntax as rs
       surface_id = rs.GetObject("Select surface to draw curve on", rs.filter.surface)
@@ -377,11 +379,11 @@ def AddInterpCrvOnSrfUV(surface_id, points):
     that lies on a specified surface. Note, this function will not
     create periodic curves, but it will create closed curves.
     Parameters:
-      surface_id = identifier of the surface to create the curve on
-      points = list of 2D surface parameters. The list must contain
-               at least 2 sets of parameters
+      surface_id (guid): identifier of the surface to create the curve on
+      points ([[number, number}, [number,number], ...]): a list of 2D surface parameters. The list must contain
+                                                         at least 2 sets of parameters
     Returns:
-      id of the new curve object if successful
+      guid: id of the new curve object if successful
     Example:
       import rhinoscriptsyntax as rs
       surface_id = rs.GetObject("Select surface to draw curve on", rs.filter.surface)
@@ -413,10 +415,10 @@ def AddInterpCurve(points, degree=3, knotstyle=0, start_tangent=None, end_tangen
     a periodic curve or to specify the tangent at the endpoints. The resulting
     curve is a non-rational NURBS curve of the specified degree.
     Parameters:
-      points = list containing 3D points to interpolate. For periodic curves,
+      points (point|guid, point|guid, ...]): a list containing 3D points to interpolate. For periodic curves,
           if the final point is a duplicate of the initial point, it is
           ignored. The number of control points must be >= (degree+1).
-      degree[opt] = The degree of the curve (must be >=1).
+      degree (number, optional): The degree of the curve (must be >=1).
           Periodic curves must have a degree >= 2. For knotstyle = 1 or 2,
           the degree must be 3. For knotstyle = 4 or 5, the degree must be odd
       knotstyle[opt]
@@ -426,12 +428,12 @@ def AddInterpCurve(points, degree=3, knotstyle=0, start_tangent=None, end_tangen
           3 Periodic with uniform spacing.
           4 Periodic with chord length spacing.  Requires an odd degree value.
           5 Periodic with sqrt (chord length) spacing.  Requires an odd degree value.
-      start_tangent [opt] = 3d vector that specifies a tangency condition at the
+      start_tangent (vector, optional): a vector that specifies a tangency condition at the
           beginning of the curve. If the curve is periodic, this argument must be omitted.
-      end_tangent [opt] = 3d vector that specifies a tangency condition at the
+      end_tangent (vector, optional): 3d vector that specifies a tangency condition at the
           end of the curve. If the curve is periodic, this argument must be omitted.
     Returns:
-      id of the new curve object if successful
+      guid: id of the new curve object if successful
     Example:
       import rhinoscriptsyntax as rs
       points = (0,0,0), (1,1,0), (2,0,0), (3,1,0), (4,0,0), (5,1,0)
@@ -458,9 +460,9 @@ def AddInterpCurve(points, degree=3, knotstyle=0, start_tangent=None, end_tangen
 def AddLine(start, end):
     """Adds a line curve to the current model.
     Parameters:
-      start, end = end points of the line
+      start, end (point|guid) end points of the line
     Returns:
-      id of the new curve object
+      guid: id of the new curve object
     Example:
       import rhinoscriptsyntax as rs
       start = rs.GetPoint("Start of line")
@@ -483,14 +485,14 @@ def AddLine(start, end):
 def AddNurbsCurve(points, knots, degree, weights=None):
     """Adds a NURBS curve object to the document
     Parameters:
-      points = list containing 3D control points
-      knots = Knot values for the curve. The number of elements in knots must
+      points ([guid|point, guid|point, ...]): a list containing 3D control points
+      knots ([number, number, ...]): Knot values for the curve. The number of elements in knots must
           equal the number of elements in points plus degree minus 1
-      degree = degree of the curve. must be greater than of equal to 1
-      weights[opt] = weight values for the curve. Number of elements should
+      degree (number): degree of the curve. must be greater than of equal to 1
+      weights([number, number, ...], optional) weight values for the curve. Number of elements should
           equal the number of elements in points. Values must be greater than 0
     Returns:
-      the identifier of the new object if successful, otherwise None
+      guid: the identifier of the new object if successful, otherwise None
     Example:
       import rhinoscriptsyntax as rs
       curve_id = rs.GetObject("Pick a curve", rs.filter.curve)
@@ -532,14 +534,14 @@ def AddNurbsCurve(points, knots, degree, weights=None):
 def AddPolyline(points, replace_id=None):
     """Adds a polyline curve to the current model
     Parameters:
-      points = list of 3D points. Duplicate, consecutive points will be
+      points ([guid|point, guid|point, ...]): list of 3D points. Duplicate, consecutive points will be
                removed. The list must contain at least two points. If the
                list contains less than four points, then the first point and
                last point must be different.
-      replace_id[opt] = If set to the id of an existing object, the object
+      replace_id (guid, optional): If set to the id of an existing object, the object
                will be replaced by this polyline
     Returns:
-      id of the new curve object if successful
+      guid: id of the new curve object if successful
     Example:
       import rhinoscriptsyntax as rs
       points = rs.GetPoints(True)
@@ -565,11 +567,11 @@ def AddPolyline(points, replace_id=None):
 def AddRectangle(plane, width, height):
     """Add a rectangular curve to the document
     Parameters:
-      plane = plane on which the rectangle will lie
-      width, height = width and height of rectangle as measured along the plane's
+      plane (plane) plane on which the rectangle will lie
+      width, height (number): width and height of rectangle as measured along the plane's
         x and y axes
     Returns:
-      id of new rectangle
+      guid: id of new rectangle
     Example:
       import rhinoscriptsyntax as rs
       plane = rs.WorldXYPlane()
@@ -590,14 +592,15 @@ def AddRectangle(plane, width, height):
 def AddSpiral(point0, point1, pitch, turns, radius0, radius1=None):
     """Adds a spiral or helical curve to the document
     Parameters:
-      point0 = helix axis start point or center of spiral
-      point1 = helix axis end point or point normal on spiral plane
-      pitch = distance between turns. If 0, then a spiral. If > 0 then the
+      point0 (point|guid): helix axis start point or center of spiral
+      point1 (point|guid): helix axis end point or point normal on spiral plane
+      pitch (number): distance between turns. If 0, then a spiral. If > 0 then the
               distance between helix "threads"
-      turns = number of turns
-      radius0, radius1 = starting and ending radius
+      turns (number): number of turns
+      radius0 (number): starting radius of spiral
+      radius1 (number, optional): ending radius of spiral. If omitted, the starting radius is used for the complete spiral.
     Returns:
-      id of new curve on success
+      guid: id of new curve on success
     Example:
       import rhinoscriptsyntax as rs
       point0 = (0,0,0)
@@ -627,10 +630,10 @@ def AddSubCrv(curve_id, param0, param1):
     """Add a curve object based on a portion, or interval of an existing curve
     object. Similar in operation to Rhino's SubCrv command
     Parameters:
-      curve_id = identifier of a closed planar curve object
-      param0, param1 = first and second parameters on the source curve
+      curve_id (guid): identifier of a closed planar curve object
+      param0, param1 (number): first and second parameters on the source curve
     Returns:
-      id of the new curve object if successful
+      guid: id of the new curve object if successful
     Example:
       import rhinoscriptsyntax as rs
       getresult = rs.GetCurveObject()
@@ -660,11 +663,11 @@ def AddSubCrv(curve_id, param0, param1):
 def ArcAngle(curve_id, segment_index=-1):
     """Returns the angle of an arc curve object.
     Parameters:
-      curve_id = identifier of a curve object
-      segment_index [opt] = identifies the curve segment if 
-      curve_id identifies a polycurve
+      curve_id (guid): identifier of a curve object
+      segment_index (number, optional): identifies the curve segment if
+      curve_id (guid): identifies a polycurve
     Returns:
-      The angle in degrees if successful.
+      number: The angle in degrees if successful.
     Example:
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select arc")
@@ -687,11 +690,10 @@ def ArcAngle(curve_id, segment_index=-1):
 def ArcCenterPoint(curve_id, segment_index=-1):
     """Returns the center point of an arc curve object
     Parameters:
-      curve_id = identifier of a curve object
-      segment_index [opt] = identifies the curve segment if
-      curve_id identifies a polycurve
+      curve_id (guid): identifier of a curve object
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      The 3D center point of the arc if successful.
+      point: The 3D center point of the arc if successful.
     Example:
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select arc")
@@ -714,11 +716,10 @@ def ArcCenterPoint(curve_id, segment_index=-1):
 def ArcMidPoint(curve_id, segment_index=-1):
     """Returns the mid point of an arc curve object
     Parameters:
-      curve_id = identifier of a curve object
-      segment_index [opt] = identifies the curve segment if
-      curve_id identifies a polycurve
+      curve_id (guid): identifier of a curve object
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      The 3D mid point of the arc if successful.
+      point: The 3D mid point of the arc if successful.
     Example:
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select arc")
@@ -741,11 +742,10 @@ def ArcMidPoint(curve_id, segment_index=-1):
 def ArcRadius(curve_id, segment_index=-1):
     """Returns the radius of an arc curve object
     Parameters:
-      curve_id = identifier of a curve object
-      segment_index [opt] = identifies the curve segment if 
-      curve_id identifies a polycurve
+      curve_id (guid): identifier of a curve object
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      The radius of the arc if successful.
+      number: The radius of the arc if successful.
     Example:
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select arc")
@@ -767,13 +767,12 @@ def ArcRadius(curve_id, segment_index=-1):
 def CircleCenterPoint(curve_id, segment_index=-1, return_plane=False):
     """Returns the center point of a circle curve object
     Parameters:
-      curve_id = identifier of a curve object
-      segment_index [opt] = identifies the curve segment if
-      return_plane [opt] = if True, the circle's plane is returned
-      curve_id identifies a polycurve
+      curve_id (guid): identifier of a curve object
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
+      return_plane (bool, optional): if True, the circle's plane is returned. If omitted the plane is not returned.
     Returns:
-      The 3D center point of the circle if successful.
-      The plane of the circle if return_plane is True
+      point: The 3D center point of the circle if successful.
+      plane: The plane of the circle if return_plane is True
     Example:
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select circle")
@@ -797,11 +796,10 @@ def CircleCenterPoint(curve_id, segment_index=-1, return_plane=False):
 def CircleCircumference(curve_id, segment_index=-1):
     """Returns the circumference of a circle curve object
     Parameters:
-      curve_id = identifier of a curve object
-      segment_index [opt] = identifies the curve segment if
-      curve_id identifies a polycurve
+      curve_id (guid): identifier of a curve object
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      The circumference of the circle if successful.
+      number: The circumference of the circle if successful.
     Example:
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select circle")
@@ -823,11 +821,10 @@ def CircleCircumference(curve_id, segment_index=-1):
 def CircleRadius(curve_id, segment_index=-1):
     """Returns the radius of a circle curve object
     Parameters:
-      curve_id = identifier of a curve object
-      segment_index [opt] = identifies the curve segment if
-      curve_id identifies a polycurve
+      curve_id (guid): identifier of a curve object
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      The radius of the circle if successful.
+      number: The radius of the circle if successful.
     Example:
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select circle")
@@ -850,11 +847,11 @@ def CloseCurve(curve_id, tolerance=-1.0):
     """Closes an open curve object by making adjustments to the end points so
     they meet at a point
     Parameters:
-      curve_id = identifier of a curve object
-      tolerance[opt] = maximum allowable distance between start and end
-          point. If omitted, the current absolute tolerance is used
+      curve_id (guid): identifier of a curve object
+      tolerance (number, optional): maximum allowable distance between start and end
+                                    point. If omitted, the current absolute tolerance is used
     Returns:
-      id of the new curve object if successful
+      guid: id of the new curve object if successful
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select curve", rs.filter.curve)
@@ -877,13 +874,13 @@ def ClosedCurveOrientation(curve_id, direction=(0,0,1)):
     """Determine the orientation (counter-clockwise or clockwise) of a closed,
     planar curve
     Parameters:
-      curve_id = identifier of a curve object
-      direction[opt] = 3d vector that identifies up, or Z axs, direction of
-          the plane to test against
+      curve_id (guid): identifier of a curve object
+      direction (vector, optional): 3d vector that identifies up, or Z axs, direction of
+                                    the plane to test against
     Returns:
-      1 if the curve's orientation is clockwise
-      -1 if the curve's orientation is counter-clockwise
-      0 if unable to compute the curve's orientation
+      number: 1 if the curve's orientation is clockwise
+             -1 if the curve's orientation is counter-clockwise
+              0 if unable to compute the curve's orientation
     Example:
     See Also:
     """
@@ -897,17 +894,15 @@ def ClosedCurveOrientation(curve_id, direction=(0,0,1)):
 def ConvertCurveToPolyline(curve_id, angle_tolerance=5.0, tolerance=0.01, delete_input=False, min_edge_length=0, max_edge_length=0):
     """Convert curve to a polyline curve
     Parameters:
-      curve_id = identifier of a curve object
-      angle_tolerance [opt] = The maximum angle between curve tangents at line
-        endpoints. If omitted, the angle tolerance is set to 5.0.
-      tolerance[opt] = The distance tolerance at segment midpoints. If omitted,
-        the tolerance is set to 0.01.
-      delete_input[opt] = Delete the curve object specified by curve_id. If
-        omitted, curve_id will not be deleted.
-      min_edge_length[opt] = Minimum segment length
-      max_edge_length[opt] = Maximum segment length
+      curve_id (guid): identifier of a curve object
+      angle_tolerance (number, optional): The maximum angle between curve tangents at line endpoints.
+                                          If omitted, the angle tolerance is set to 5.0.
+      tolerance(number, optional): The distance tolerance at segment midpoints. If omitted, the tolerance is set to 0.01.
+      delete_input(bool, optional): Delete the curve object specified by curve_id. If omitted, curve_id will not be deleted.
+      min_edge_length (number, optional): Minimum segment length
+      max_edge_length (number, optonal): Maximum segment length
     Returns:
-      The new curve if successful.
+      guid: The new curve if successful.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -936,13 +931,13 @@ def CurveArcLengthPoint(curve_id, length, from_start=True):
     """Returns the point on the curve that is a specified arc length
     from the start of the curve.
     Parameters:
-      curve_id = identifier of a curve object
-      length = The arc length from the start of the curve to evaluate.
-      from_start[opt] = If not specified or True, then the arc length point is
+      curve_id (guid): identifier of a curve object
+      length (number): The arc length from the start of the curve to evaluate.
+      from_start (bool, optional): If not specified or True, then the arc length point is
           calculated from the start of the curve. If False, the arc length
           point is calculated from the end of the curve.
     Returns:
-      Point3d if successful
+      point: on curve if successful
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -974,13 +969,13 @@ def CurveArea(curve_id):
     """Returns area of closed planar curves. The results are based on the
     current drawing units.
     Parameters:
-      curve_id = The identifier of a closed, planar curve object.
+      curve_id (guid): The identifier of a closed, planar curve object.
     Returns:
-      List of area information. The list will contain the following information:
+      list[number, number]: List of area information. The list will contain the following information:
         Element  Description
-        0        The area. If more than one curve was specified, the
-                 value will be the cumulative area.
-        1        The absolute (+/-) error bound for the area.
+        [0]      The area. If more than one curve was specified, the
+                   value will be the cumulative area.
+        [1]      The absolute (+/-) error bound for the area.
     Example:
       import rhinocsriptsyntax as rs
       id = rs.GetObject("Select a curve", rs.filter.curve)
@@ -1004,13 +999,13 @@ def CurveAreaCentroid(curve_id):
     """Returns area centroid of closed, planar curves. The results are based
     on the current drawing units.
     Parameters:
-      curve_id = The identifier of a closed, planar curve object.
+      curve_id (guid)The identifier of a closed, planar curve object.
     Returns:
-      Tuple of area centroid information containing the following information:
+      tuple(point, vector): of area centroid information containing the following information:
         Element  Description
-        0        The 3d centroid point. If more than one curve was specified,
+        [0]        The 3d centroid point. If more than one curve was specified,
                  the value will be the cumulative area.
-        1        A 3d vector with the absolute (+/-) error bound for the area
+        [1]        A 3d vector with the absolute (+/-) error bound for the area
                  centroid.
     Example:
       import rhinoscriptsyntax as rs
@@ -1034,15 +1029,15 @@ def CurveAreaCentroid(curve_id):
 def CurveArrows(curve_id, arrow_style=None):
     """Enables or disables a curve object's annotation arrows
     Parameters:
-      curve_id = identifier of a curve
-      arrow_style[opt] = the style of annotation arrow to be displayed
+      curve_id (guid): identifier of a curve
+      arrow_style (number, optional): the style of annotation arrow to be displayed. If omitted the current type is returned.
         0 = no arrows
         1 = display arrow at start of curve
         2 = display arrow at end of curve
         3 = display arrow at both start and end of curve
       Returns:
-        if arrow_style is not specified, the current annotation arrow style
-        if arrow_style is specified, the previos arrow style
+        number: if arrow_style is not specified, the current annotation arrow style
+        number: if arrow_style is specified, the previous arrow style
     Example:
       import rhinoscriptsyntax as rs
     See Also:
@@ -1074,10 +1069,10 @@ def CurveBooleanDifference(curve_id_0, curve_id_1):
     """Calculates the difference between two closed, planar curves and
     adds the results to the document. Note, curves must be coplanar.
     Parameters:
-      curve_id_0 = identifier of the first curve object.
-      curve_id_1 = identifier of the second curve object.
+      curve_id_0 (guid): identifier of the first curve object.
+      curve_id_1 (guid): identifier of the second curve object.
     Returns:
-      The identifiers of the new objects if successful, None on error.
+      list(guid, ...): The identifiers of the new objects if successful, None on error.
     Example:
       import rhinoscriptsyntax as rs
       curveA = rs.GetObject("Select first curve", rs.filter.curve)
@@ -1109,10 +1104,10 @@ def CurveBooleanIntersection(curve_id_0, curve_id_1):
     """Calculates the intersection of two closed, planar curves and adds
     the results to the document. Note, curves must be coplanar.
     Parameters:
-      curve_id_0 = identifier of the first curve object.
-      curve_id_1 = identifier of the second curve object.
+      curve_id_0 (guid): identifier of the first curve object.
+      curve_id_1 (guid): identifier of the second curve object.
     Returns:
-      The identifiers of the new objects.
+      list(guid, ...): The identifiers of the new objects.
     Example:
       import rhinoscriptsyntax as rs
       curveA = rs.GetObject("Select first curve", rs.filter.curve)
@@ -1144,9 +1139,9 @@ def CurveBooleanUnion(curve_id):
     """Calculate the union of two or more closed, planar curves and
     add the results to the document. Note, curves must be coplanar.
     Parameters:
-      curve_id = list of two or more close planar curves identifiers
+      curve_id ([guid, guid, ...])list of two or more close planar curves identifiers
     Returns:
-      The identifiers of the new objects.
+      list(guid, ...): The identifiers of the new objects.
     Example:
       import rhinoscriptsyntax as rs
       curve_ids = rs.GetObjects("Select curves to union", rs.filter.curve)
@@ -1176,13 +1171,13 @@ def CurveBrepIntersect(curve_id, brep_id, tolerance=None):
     """Intersects a curve object with a brep object. Note, unlike the
     CurveSurfaceIntersection function, this function works on trimmed surfaces.
     Parameters:
-      curve_id = identifier of a curve object
-      brep_id = identifier of a brep object
-      tolerance [opt] = distance tolerance at segment midpoints.
+      curve_id (guid): identifier of a curve object
+      brep_id (guid): identifier of a brep object
+      tolerance (number, optional): distance tolerance at segment midpoints.
                         If omitted, the current absolute tolerance is used.
     Returns:
-      List of identifiers for the newly created intersection curve and
-      point objects if successful. None on error.            
+      list(guid, ...): identifiers for the newly created intersection objects if successful.
+      none: on error.
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select a curve", rs.filter.curve)
@@ -1221,15 +1216,15 @@ def CurveClosestObject(curve_id, object_ids):
     each other. Note, this function provides similar functionality to that of
     Rhino's ClosestPt command.
     Parameters:
-      curve_id = identifier of the curve object to test
-      object_ids = list of identifiers of point cloud, curve, surface, or
+      curve_id (guid):identifier of the curve object to test
+      object_ids ([guid, ...]) list of identifiers of point cloud, curve, surface, or
         polysurface to test against
     Returns:
-      Tuple containing the results of the closest point calculation.
+      tuple[guid, point, point]: containing the results of the closest point calculation.
       The elements are as follows:
-        0    The identifier of the closest object.
-        1    The 3-D point that is closest to the closest object. 
-        2    The 3-D point that is closest to the test curve.
+        [0]    The identifier of the closest object.
+        [1]    The 3-D point that is closest to the closest object.
+        [2]    The 3-D point that is closest to the test curve.
     Example:
       import rhinoscriptsyntax as rs
       filter = rs.filter.curve | rs.filter.pointcloud | rs.filter.surface | rs.filter.polysurface
@@ -1262,11 +1257,11 @@ def CurveClosestObject(curve_id, object_ids):
 def CurveClosestPoint(curve_id, test_point, segment_index=-1 ):
     """Returns parameter of the point on a curve that is closest to a test point.
     Parameters:
-      curve_id = identifier of a curve object
-      point = sampling point
-      segment_index [opt] = curve segment if curve_id identifies a polycurve
+      curve_id (guid): identifier of a curve object
+      point (point): sampling point
+      segment_index (number, optional): curve segment index if `curve_id` identifies a polycurve
     Returns:
-      The parameter of the closest point on the curve
+      number: The parameter of the closest point on the curve
     Example:
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a curve")
@@ -1289,14 +1284,14 @@ def CurveClosestPoint(curve_id, test_point, segment_index=-1 ):
 def CurveContourPoints(curve_id, start_point, end_point, interval=None):
     """Returns the 3D point locations calculated by contouring a curve object.
     Parameters:
-      curve_id = identifier of a curve object.
-      start_point = 3D starting point of a center line.
-      end_point = 3D ending point of a center line.
-      interval [opt] = The distance between contour curves. If omitted, 
+      curve_id (guid): identifier of a curve object.
+      start_point (point): 3D starting point of a center line.
+      end_point (point): 3D ending point of a center line.
+      interval (number, optional): The distance between contour curves. If omitted,
       the interval will be equal to the diagonal distance of the object's
       bounding box divided by 50.
     Returns:
-      A list of 3D points, one for each contour
+      list(point, ....): A list of 3D points, one for each contour
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select curve", rs.filter.curve)
@@ -1324,16 +1319,16 @@ def CurveCurvature(curve_id, parameter):
     """Returns the curvature of a curve at a parameter. See the Rhino help for
     details on curve curvature
     Parameters:
-      curve_id = identifier of the curve
-      parameter = parameter to evaluate
+      curve_id (guid): identifier of the curve
+      parameter (number): parameter to evaluate
     Returns:
-      Tuple of curvature information on success
-        element 0 = point at specified parameter
-        element 1 = tangent vector
-        element 2 = center of radius of curvature
-        element 3 = radius of curvature
-        element 4 = curvature vector
-      None on failure
+      tuple[point, vector, point, number, vector]: of curvature information on success
+        [0] = point at specified parameter
+        [1] = tangent vector
+        [2] = center of radius of curvature
+        [3] = radius of curvature
+        [4] = curvature vector
+      none: on failure
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -1370,13 +1365,13 @@ def CurveCurvature(curve_id, parameter):
 def CurveCurveIntersection(curveA, curveB=None, tolerance=-1):
     """Calculates intersection of two curve objects.
     Parameters:
-      curveA = identifier of the first curve object.
-      curveB = identifier of the second curve object. If omitted, then a
+      curveA (guid): identifier of the first curve object.
+      curveB  (guid, optional): identifier of the second curve object. If omitted, then a
                self-intersection test will be performed on curveA.
-      tolerance [opt] = absolute tolerance in drawing units. If omitted,
+      tolerance (number, optional): absolute tolerance in drawing units. If omitted,
                         the document's current absolute tolerance is used.
     Returns:
-      List of tuples of intersection information if successful.
+      list of tuples: containing intersection information if successful.
       The list will contain one or more of the following elements:
         Element Type     Description
         [n][0]  Number   The intersection event type, either Point (1) or Overlap (2).
@@ -1456,10 +1451,11 @@ def CurveCurveIntersection(curveA, curveB=None, tolerance=-1):
 def CurveDegree(curve_id, segment_index=-1):
     """Returns the degree of a curve object.
     Parameters:
-      curve_id = identifier of a curve object.
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve.
+      curve_id (guid): identifier of a curve object.
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve.
     Returns:
-      The degree of the curve if successful. None on error.
+      number: The degree of the curve if successful.
+      none: on error.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -1477,15 +1473,15 @@ def CurveDegree(curve_id, segment_index=-1):
 def CurveDeviation(curve_a, curve_b):
     """Returns the minimum and maximum deviation between two curve objects
     Parameters:
-      curve_a, curve_b = identifiers of two curves
+      curve_a, curve_b (guid): identifiers of two curves
     Returns:
-      tuple of deviation information on success
-        element 0 = curve_a parameter at maximum overlap distance point
-        element 1 = curve_b parameter at maximum overlap distance point
-        element 2 = maximum overlap distance
-        element 3 = curve_a parameter at minimum overlap distance point
-        element 4 = curve_b parameter at minimum overlap distance point
-        element 5 = minimum distance between curves
+      tuple[number, number, number, number, number, number]: of deviation information on success
+        [0] = curve_a parameter at maximum overlap distance point
+        [1] = curve_b parameter at maximum overlap distance point
+        [2] = maximum overlap distance
+        [3] = curve_a parameter at minimum overlap distance point
+        [4] = curve_b parameter at minimum overlap distance point
+        [5] = minimum distance between curves
       None on error
     Example:
       import rhinoscriptsyntax as rs
@@ -1516,10 +1512,10 @@ def CurveDeviation(curve_a, curve_b):
 def CurveDim(curve_id, segment_index=-1):
     """Returns the dimension of a curve object
     Parameters:
-      curve_id = identifier of a curve object.
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve.
+      curve_id (guid): identifier of a curve object.
+      segment_index (number, optional): the curve segment if `curve_id` identifies a polycurve.
     Returns:
-      The dimension of the curve if successful. None on error.
+      number: The dimension of the curve if successful. None on error.
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select a curve")
@@ -1539,10 +1535,10 @@ def CurveDirectionsMatch(curve_id_0, curve_id_1):
     curve directions, both curves must be either open or closed - you cannot test
     one open curve and one closed curve.
     Parameters:
-      curve_id_0 = identifier of first curve object
-      curve_id_1 = identifier of second curve object
+      curve_id_0 (guid): identifier of first curve object
+      curve_id_1 (guid): identifier of second curve object
     Returns:
-      True if the curve directions match, otherwise False. 
+      bool: True if the curve directions match, otherwise False.
     Example:
       import rhinoscriptsyntax as rs
       curve1 = rs.GetObject("Select first curve to compare", rs.filter.curve)
@@ -1563,8 +1559,8 @@ def CurveDiscontinuity(curve_id, style):
     """Search for a derivatitive, tangent, or curvature discontinuity in
     a curve object.
     Parameters:
-      curve_id = identifier of curve object
-      style = The type of continuity to test for. The types of
+      curve_id (guid): identifier of curve object
+      style (number): The type of continuity to test for. The types of
           continuity are as follows:
           Value    Description
           1        C0 - Continuous function
@@ -1573,7 +1569,7 @@ def CurveDiscontinuity(curve_id, style):
           4        G1 - Continuous unit tangent
           5        G2 - Continuous unit tangent and curvature
     Returns:
-      List 3D points where the curve is discontinuous
+      list(point, ...): 3D points where the curve is discontinuous
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select a curve", rs.filter.curve)
@@ -1600,10 +1596,13 @@ def CurveDiscontinuity(curve_id, style):
 def CurveDomain(curve_id, segment_index=-1):
     """Returns the domain of a curve object.
     Parameters:
-      curve_id = identifier of the curve object
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve.
+      curve_id (guid): identifier of the curve object
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve.
     Returns:
-      the domain of the curve if successful, otherwise None
+      list(number, number): the domain of the curve if successful.
+         [0] Domain minimum
+         [1] Domain maximum
+      none: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -1623,12 +1622,12 @@ def CurveEditPoints(curve_id, return_parameters=False, segment_index=-1):
     """Returns the edit, or Greville, points of a curve object. 
     For each curve control point, there is a corresponding edit point.
     Parameters:
-      curve_id = identifier of the curve object
-      return_parameters[opt] = if True, return as a list of curve parameters.
-        If False, return as a list of 3d points
-      segment_index[opt] = the curve segment is curve_id identifies a polycurve
+      curve_id (guid): identifier of the curve object
+      return_parameters (bool, optional): if True, return as a list of curve parameters.
+                                          If False, return as a list of 3d points
+      segment_index (number, optional): the curve segment index is `curve_id` identifies a polycurve
     Returns:
-      curve parameters of 3d points on success
+      list(point, ....): curve edit points on success
       None on error
     Example:
       import rhinoscriptsyntax as rs
@@ -1650,10 +1649,11 @@ def CurveEditPoints(curve_id, return_parameters=False, segment_index=-1):
 def CurveEndPoint(curve_id, segment_index=-1):
     """Returns the end point of a curve object
     Parameters:
-      curve_id = identifier of the curve object
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve
+      curve_id (guid): identifier of the curve object
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      The 3-D end point of the curve if successful.
+      point: The 3d endpoint of the curve if successful.
+      none: on error
     Example:
       import rhinoscriptsyntax as rs
       object = rs.GetObject("Select a curve")
@@ -1678,32 +1678,31 @@ def CurveFilletPoints(curve_id_0, curve_id_1, radius=1.0, base_point_0=None, bas
     base_point_1. Distance from the base point is measured by the sum of arc
     lengths along the two curves. 
     Parameters:
-      curve_id_0 = identifier of the first curve object.
-      curve_id_1 = identifier of the second curve object.
-      radius [opt] = The fillet radius. If omitted, a radius
+      curve_id_0 (guid): identifier of the first curve object.
+      curve_id_1 (guid): identifier of the second curve object.
+      radius (number, optional): The fillet radius. If omitted, a radius
                      of 1.0 is specified.
-      base_point_0 [opt] = The base point on the first curve.
+      base_point_0 (point, optional): The base point on the first curve.
                      If omitted, the starting point of the curve is used.
-      base_point_1 [opt] = The base point on the second curve. If omitted,
+      base_point_1 (point, optional): The base point on the second curve. If omitted,
                      the starting point of the curve is used.
-      return_points [opt] = If True (Default), then fillet points are
+      return_points (bool, optional): If True (Default), then fillet points are
                      returned. Otherwise, a fillet curve is created and
                      it's identifier is returned.
     Returns:
-      If return_points is True, then a list of point and vector values
+      list(point, point, point, vector, vector, vector): If return_points is True, then a list of point and vector values
       if successful. The list elements are as follows:
+          [0]    A point on the first curve at which to cut (point).
+          [1]    A point on the second curve at which to cut (point).
+          [2]    The fillet plane's origin (point). This point is also
+                   the center point of the fillet
+          [3]    The fillet plane's X axis (vector).
+          [4]    The fillet plane's Y axis (vector).
+          [5]    The fillet plane's Z axis (vector).
       
-      0    A point on the first curve at which to cut (arrPoint0).
-      1    A point on the second curve at which to cut (arrPoint1).
-      2    The fillet plane's origin (3-D point). This point is also
-           the center point of the fillet
-      3    The fillet plane's X axis (3-D vector).
-      4    The fillet plane's Y axis (3-D vector).
-      5    The fillet plane's Z axis (3-D vector).
-      
-      If return_points is False, then the identifier of the fillet curve
-      if successful.
-      None if not successful, or on error.                  
+      guid: If return_points is False, then the identifier of the fillet curve
+            if successful.
+      none: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       curve0 = rs.AddLine([0,0,0], [5,1,0])
@@ -1742,12 +1741,12 @@ def CurveFrame(curve_id, parameter, segment_index=-1):
     """Returns the plane at a parameter of a curve. The plane is based on the
     tangent and curvature vectors at a parameter.
     Parameters:
-      curve_id = identifier of the curve object.
-      parameter = parameter to evaluate.
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve
+      curve_id (guid): identifier of the curve object.
+      parameter (number): parameter to evaluate.
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      The plane at the specified parameter if successful. 
-      None if not successful, or on error.
+      plane: The plane at the specified parameter if successful.
+      none: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetCurveObject("Select a curve")
@@ -1775,11 +1774,11 @@ def CurveFrame(curve_id, parameter, segment_index=-1):
 def CurveKnotCount(curve_id, segment_index=-1):
     """Returns the knot count of a curve object.
     Parameters:
-      curve_id = identifier of the curve object.
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve.
+      curve_id (guid): identifier of the curve object.
+      segment_index (number, optional): the curve segment if `curve_id` identifies a polycurve.
     Returns:
-      The number of knots if successful.
-      None if not successful or on error.
+      number: The number of knots if successful.
+      none: if not successful or on error.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -1799,17 +1798,17 @@ def CurveKnotCount(curve_id, segment_index=-1):
 def CurveKnots(curve_id, segment_index=-1):
     """Returns the knots, or knot vector, of a curve object
     Parameters:
-      curve_id = identifier of the curve object.
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve.
+      curve_id (guid): identifier of the curve object.
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve.
     Returns:
-      knot values if successful.
-      None if not successful or on error.
+      list(number, ....): knot values if successful.
+      none: if not successful or on error.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
       if rs.IsCurve(obj):
       knots = rs.CurveKnots(obj)
-      if knots:
+      if knots: print(knots)
     See Also:
       CurveKnotCount
       IsCurve
@@ -1824,15 +1823,15 @@ def CurveKnots(curve_id, segment_index=-1):
 def CurveLength(curve_id, segment_index=-1, sub_domain=None):
     """Returns the length of a curve object.
     Parameters:
-      curve_id = identifier of the curve object
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve
-      sub_domain [opt] = list of two numbers identifing the sub-domain of the
+      curve_id (guid): identifier of the curve object
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
+      sub_domain ([number, number], optional): list of two numbers identifying the sub-domain of the
           curve on which the calculation will be performed. The two parameters
           (sub-domain) must be non-decreasing. If omitted, the length of the
           entire curve is returned.
     Returns:
-      The length of the curve if successful.
-      None if not successful, or on error.
+      number: The length of the curve if successful.
+      none: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       object = rs.GetObject("Select a curve")
@@ -1855,11 +1854,11 @@ def CurveLength(curve_id, segment_index=-1, sub_domain=None):
 def CurveMidPoint(curve_id, segment_index=-1):
     """Returns the mid point of a curve object.
     Parameters:
-      curve_id = identifier of the curve object
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve
+      curve_id (guid): identifier of the curve object
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      The 3D mid point of the curve if successful.
-      None if not successful, or on error.
+      point: The 3D midpoint of the curve if successful.
+      none: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       object = rs.GetObject("Select a curve")
@@ -1880,11 +1879,11 @@ def CurveMidPoint(curve_id, segment_index=-1):
 def CurveNormal(curve_id, segment_index=-1):
     """Returns the normal direction of the plane in which a planar curve object lies.
     Parameters:
-      curve_id = identifier of the curve object
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve
+      curve_id (guid): identifier of the curve object
+      segment_index (number, optional): the curve segment if curve_id identifies a polycurve
     Returns:
-      The 3D normal vector if sucessful.
-      None if not successful, or on error.
+      vector: The 3D normal vector if successful.
+      none: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       object = rs.GetObject("Select a planar curve")
@@ -1906,10 +1905,10 @@ def CurveNormalizedParameter(curve_id, parameter):
     """Converts a curve parameter to a normalized curve parameter;
     one that ranges between 0-1
     Parameters:
-      curve_id = identifier of the curve object
-      parameter = the curve parameter to convert
+      curve_id (guid): identifier of the curve object
+      parameter (number): the curve parameter to convert
     Returns:
-      normalized curve parameter
+      number: normalized curve parameter
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select curve")
@@ -1931,10 +1930,10 @@ def CurveParameter(curve_id, parameter):
     """Converts a normalized curve parameter to a curve parameter;
     one within the curve's domain
     Parameters:
-      curve_id = identifier of the curve object
-      parameter = the normalized curve parameter to convert
+      curve_id (guid): identifier of the curve object
+      parameter (number): the normalized curve parameter to convert
     Returns:
-      curve parameter
+      number: curve parameter
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select curve")
@@ -1955,11 +1954,11 @@ def CurvePerpFrame(curve_id, parameter):
     """Returns the perpendicular plane at a parameter of a curve. The result
     is relatively parallel (zero-twisting) plane
     Parameters:
-      curve_id = identifier of the curve object
-      parameter = parameter to evaluate
+      curve_id (guid): identifier of the curve object
+      parameter (number): parameter to evaluate
     Returns:
-      Plane on success
-      None on error
+      plane: Plane on success
+      none: on error
     Example:
       import rhinoscriptsyntax as rs
       crv = rs.GetCurveObject("Select a curve")
@@ -1979,11 +1978,11 @@ def CurvePlane(curve_id, segment_index=-1):
     """Returns the plane in which a planar curve lies. Note, this function works
     only on planar curves.
     Parameters:
-      curve_id = identifier of the curve object
-      segment_index[opt] = the curve segment if curve_id identifies a polycurve
+      curve_id (guid): identifier of the curve object
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      The plane in which the curve lies if successful.
-      None if not successful, or on error.
+      plane: The plane in which the curve lies if successful.
+      none: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select a curve", rs.filter.curve)
@@ -2004,11 +2003,11 @@ def CurvePlane(curve_id, segment_index=-1):
 def CurvePointCount(curve_id, segment_index=-1):
     """Returns the control points count of a curve object.
     Parameters:
-      curve_id = identifier of the curve object
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve
+      curve_id (guid) identifier of the curve object
+      segment_index (number, optional): the curve segment if `curve_id` identifies a polycurve
     Returns:
-      Number of control points if successful.
-      None if not successful
+      number: Number of control points if successful.
+      none: if not successful
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -2030,10 +2029,10 @@ def CurvePoints(curve_id, segment_index=-1):
     If the curve is a rational NURBS curve, the euclidean control vertices
     are returned.
     Parameters:
-      curve_id = the object's identifier
-      segment_index [opt] = if curve_id identifies a polycurve object, then intIndex identifies the curve segment of the polycurve to query
+      curve_id (guid): the object's identifier
+      segment_index (number, optional): the curve segment if `curve_id` identifies a polycurve
     Returns:
-      the control points, or control vertices, of a curve object
+      list(point, ...): the control points, or control vertices, of a curve object
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -2054,12 +2053,12 @@ def CurvePoints(curve_id, segment_index=-1):
 def CurveRadius(curve_id, test_point, segment_index=-1):
     """Returns the radius of curvature at a point on a curve.
     Parameters:
-      curve_id = identifier of the curve object
-      test_point = sampling point
-      segment_index[opt] = the curve segment if curve_id identifies a polycurve
+      curve_id (guid): identifier of the curve object
+      test_point (point): sampling point
+      segment_index (number, optional): the curve segment if curve_id identifies a polycurve
     Returns:
-      The radius of curvature at the point on the curve if successful.
-      None if not successful, or on error.
+      number: The radius of curvature at the point on the curve if successful.
+      none: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -2084,12 +2083,12 @@ def CurveRadius(curve_id, test_point, segment_index=-1):
 def CurveSeam(curve_id, parameter):
     """Adjusts the seam, or start/end, point of a closed curve.
     Parameters:
-      curve_id = identifier of the curve object
-      parameter = The parameter of the new start/end point. 
+      curve_id (guid): identifier of the curve object
+      parameter (number): The parameter of the new start/end point.
                   Note, if successful, the resulting curve's
-                  domain will start at dblParameter.
+                  domain will start at `parameter`.
     Returns:
-      True or False indicating success or failure.
+      bool: True or False indicating success or failure.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select closed curve", rs.filter.curve)
@@ -2116,11 +2115,11 @@ def CurveSeam(curve_id, parameter):
 def CurveStartPoint(curve_id, segment_index=-1, point=None):
     """Returns the start point of a curve object
     Parameters:
-      curve_id = identifier of the curve object
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve
-      point [opt] = new start point
+      curve_id (guid): identifier of the curve object
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
+      point (point, optional): new start point
     Returns:
-      The 3D starting point of the curve if successful.
+      point: The 3D starting point of the curve if successful.
     Example:
       import rhinoscriptsyntax as rs
       object = rs.GetObject("Select a curve")
@@ -2147,47 +2146,47 @@ def CurveSurfaceIntersection(curve_id, surface_id, tolerance=-1, angle_tolerance
     """Calculates intersection of a curve object with a surface object.
     Note, this function works on the untrimmed portion of the surface.
     Parameters:
-      curve_id = The identifier of the first curve object.
-      surface_id = The identifier of the second curve object. If omitted,
+      curve_id (guid): The identifier of the first curve object.
+      surface_id (guid): The identifier of the second curve object. If omitted,
           the a self-intersection test will be performed on curve.
-      tolerance [opt] = The absolute tolerance in drawing units. If omitted, 
+      tolerance (number, optional): The absolute tolerance in drawing units. If omitted,
           the document's current absolute tolerance is used.
-      angle_tolerance [opt] = angle tolerance in degrees. The angle
+      angle_tolerance (number, optional) angle tolerance in degrees. The angle
           tolerance is used to determine when the curve is tangent to the
           surface. If omitted, the document's current angle tolerance is used.
     Returns:
-      Two-dimensional list of intersection information if successful.
+      list(list(point, point, point, point, number, number, number, number, number, number), ...): of intersection information if successful.
       The list will contain one or more of the following elements:
         Element Type     Description
-        (n, 0)  Number   The intersection event type, either Point(1) or Overlap(2).
-        (n, 1)  Point3d  If the event type is Point(1), then the intersection point 
+        [n][0]  Number   The intersection event type, either Point(1) or Overlap(2).
+        [n][1]  Point3d  If the event type is Point(1), then the intersection point
                          on the first curve. If the event type is Overlap(2), then
                          intersection start point on the first curve.
-        (n, 2)  Point3d  If the event type is Point(1), then the intersection point
+        [n][2]  Point3d  If the event type is Point(1), then the intersection point
                          on the first curve. If the event type is Overlap(2), then
                          intersection end point on the first curve.
-        (n, 3)  Point3d  If the event type is Point(1), then the intersection point 
+        [n][3]  Point3d  If the event type is Point(1), then the intersection point
                          on the second curve. If the event type is Overlap(2), then
                          intersection start point on the surface.
-        (n, 4)  Point3d  If the event type is Point(1), then the intersection point
+        [n][4]  Point3d  If the event type is Point(1), then the intersection point
                          on the second curve. If the event type is Overlap(2), then
                          intersection end point on the surface.
-        (n, 5)  Number   If the event type is Point(1), then the first curve parameter.
+        [n][5]  Number   If the event type is Point(1), then the first curve parameter.
                          If the event type is Overlap(2), then the start value of the
                          first curve parameter range.
-        (n, 6)  Number   If the event type is Point(1), then the first curve parameter.
+        [n][6]  Number   If the event type is Point(1), then the first curve parameter.
                          If the event type is Overlap(2), then the end value of the
                          curve parameter range.
-        (n, 7)  Number   If the event type is Point(1), then the U surface parameter.
+        [n][7]  Number   If the event type is Point(1), then the U surface parameter.
                          If the event type is Overlap(2), then the U surface parameter
                          for curve at (n, 5).
-        (n, 8)  Number   If the event type is Point(1), then the V surface parameter.
+        [n][8]  Number   If the event type is Point(1), then the V surface parameter.
                          If the event type is Overlap(2), then the V surface parameter
                          for curve at (n, 5).
-        (n, 9)  Number   If the event type is Point(1), then the U surface parameter.
+        [n][9]  Number   If the event type is Point(1), then the U surface parameter.
                          If the event type is Overlap(2), then the U surface parameter
                          for curve at (n, 6).
-        (n, 10) Number   If the event type is Point(1), then the V surface parameter.
+        [n][10] Number   If the event type is Point(1), then the V surface parameter.
                          If the event type is Overlap(2), then the V surface parameter
                          for curve at (n, 6).
     Example:
@@ -2245,12 +2244,12 @@ def CurveSurfaceIntersection(curve_id, surface_id, tolerance=-1, angle_tolerance
 def CurveTangent(curve_id, parameter, segment_index=-1):
     """Returns a 3D vector that is the tangent to a curve at a parameter.
     Parameters:
-      curve_id = identifier of the curve object
-      parameter = parameter to evaluate
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve
+      curve_id (guid): identifier of the curve object
+      parameter (number) parameter to evaluate
+      segment_index (number, optional) the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      A 3D vector if successful.
-      None on error.
+      vector: A 3D vector if successful.
+      none: on error.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve", rs.filter.curve)
@@ -2274,11 +2273,11 @@ def CurveTangent(curve_id, parameter, segment_index=-1):
 def CurveWeights(curve_id, segment_index=-1):
     """Returns list of weights that are assigned to the control points of a curve
     Parameters:
-      curve_id = identifier of the curve object
-      segment_index[opt] = the curve segment if curve_id identifies a polycurve
+      curve_id (guid): identifier of the curve object
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      The weight values of the curve if successful.
-      None if not successful, or on error.
+      number: The weight values of the curve if successful.
+      none: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -2302,18 +2301,16 @@ def CurveWeights(curve_id, segment_index=-1):
 def DivideCurve(curve_id, segments, create_points=False, return_points=True):
     """Divides a curve object into a specified number of segments.
     Parameters:
-      curve_id = identifier of the curve object
-      segments = The number of segments.
-      create_points [opt] = Create the division points. If omitted or False,
+      curve_id (guid):identifier of the curve object
+      segments (number): The number of segments.
+      create_points (bool, optional): Create the division points. If omitted or False,
           points are not created.
-      return_points [opt] = If omitted or True, points are returned.
+      return_points (bool, optional): If omitted or True, points are returned.
           If False, then a list of curve parameters are returned.
     Returns:
-      If return_points is not specified or True, then a list containing 3D
-      division points.
-      If return_points is False, then an array containing division curve
-      parameters.
-      None if not successful, or on error.
+      list(point|number, ...): If `return_points` is not specified or True, then a list containing 3D division points.
+      list(point|number, ...): If `return_points` is False, then an array containing division curve parameters.
+      none: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -2339,14 +2336,14 @@ def DivideCurve(curve_id, segments, create_points=False, return_points=True):
 def DivideCurveEquidistant(curve_id, distance, create_points=False, return_points=True):
     """Divides a curve such that the linear distance between the points is equal.
     Parameters:
-      curve_id = the object's identifier
-      distance = linear distance between division points
-      create_points[opt] = create the division points
-      return_points[opt] = If True, return a list of points.
-          If False, return a list of curve parameters
+      curve_id (guid): the object's identifier
+      distance (number): linear distance between division points
+      create_points (bool, optional): create the division points if True.
+      return_points (bool, optional): If True, return a list of points.
+                                      If False, return a list of curve parameters
     Returns:
-      A list of points or curve parameters based on the value of return_points
-      None on error
+      list(point|number, ...): points or curve parameters based on the value of return_points
+      none on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve", rs.filter.curve)
@@ -2373,18 +2370,16 @@ def DivideCurveEquidistant(curve_id, distance, create_points=False, return_point
 def DivideCurveLength(curve_id, length, create_points=False, return_points=True):
     """Divides a curve object into segments of a specified length.
     Parameters:
-      curve_id = identifier of the curve object
-      length = The length of each segment.
-      create_points [opt] = Create the division points. If omitted or False,
+      curve_id (guid): identifier of the curve object
+      length (number): The length of each segment.
+      create_points (bool, optional): Create the division points. If omitted or False,
           points are not created.
-      return_points [opt] = If omitted or True, points are returned.
+      return_points (bool, optional): If omitted or True, points are returned.
           If False, then a list of curve parameters are returned.
     Returns:
-      If return_points is not specified or True, then a list containing 3D
-      division points if successful.
-      If return_points is False, then an array containing division curve
-      parameters if successful.
-      None if not successful, or on error.
+      list(point, ...): If return_points is not specified or True, then a list containing division points.
+      list(number, ...): If return_points is False, then an array containing division curve parameters.
+      none: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -2411,9 +2406,9 @@ def DivideCurveLength(curve_id, length, create_points=False, return_points=True)
 def EllipseCenterPoint(curve_id):
     """Returns the center point of an elliptical-shaped curve object.
     Parameters:
-      curve_id = identifier of the curve object.    
+      curve_id (guid): identifier of the curve object.
     Returns:
-      The 3D center point of the ellipse if successful.
+      point: The 3D center point of the ellipse if successful.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select ellipse")
@@ -2433,9 +2428,9 @@ def EllipseCenterPoint(curve_id):
 def EllipseQuadPoints(curve_id):
     """Returns the quadrant points of an elliptical-shaped curve object.
     Parameters:
-      curve_id = identifier of the curve object.
+      curve_id (guid): identifier of the curve object.
     Returns:
-      Four 3D points identifying the quadrants of the ellipse
+      list(point, point, point, point): Four points identifying the quadrants of the ellipse
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select ellipse")
@@ -2457,11 +2452,12 @@ def EllipseQuadPoints(curve_id):
 def EvaluateCurve(curve_id, t, segment_index=-1):
     """Evaluates a curve at a parameter and returns a 3D point
     Parameters:
-      curve_id = identifier of the curve object
-      t = the parameter to evaluate
-      segment_index [opt] = the curve segment if curve_id identifies a polycurve
+      curve_id (guid): identifier of the curve object
+      t (number): the parameter to evaluate
+      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
-      a 3-D point if successful, otherwise None
+      point: a 3-D point if successful
+      none: if not successful
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -2483,10 +2479,10 @@ def ExplodeCurves(curve_ids, delete_input=False):
     segments. Polylines will be exploded into line segments. ExplodeCurves will
     return the curves in topological order. 
     Parameters:
-      curve_ids = the curve object(s) to explode.
-      delete_input[opt] = Delete input objects after exploding.
+      curve_ids (guid): the curve object(s) to explode.
+      delete_input (bool, optional): Delete input objects after exploding if True.
     Returns:
-      List identifying the newly created curve objects
+      list(guid, ...): identifying the newly created curve objects
     Example:
       import rhinoscriptsyntax as rs
       crv = rs.GetObject("Select curve to explode", rs.filter.curve)
@@ -2517,13 +2513,18 @@ def ExtendCurve(curve_id, extension_type, side, boundary_object_ids):
     """Extends a non-closed curve object by a line, arc, or smooth extension
     until it intersects a collection of objects.
     Parameters:
-      curve_id: identifier of curve to extend
-      extension_type: 0 = line, 1 = arc, 2 = smooth
-      side: 0=extend from the start of the curve, 1=extend from the end of the curve
-      boundary_object_ids: curve, surface, and polysurface objects to extend to
+      curve_id (guid): identifier of curve to extend
+      extension_type (number):
+        0 = line
+        1 = arc
+        2 = smooth
+      side (number):
+        0=extend from the start of the curve
+        1=extend from the end of the curve
+      boundary_object_ids (guid): curve, surface, and polysurface objects to extend to
     Returns:
-      The identifier of the new object if successful.
-      None if not successful
+      guid: The identifier of the new object if successful.
+      none: if not successful
     Example:
       import rhinoscriptsyntax as rs
       filter = rs.filter.curve | rs.filter.surface | rs.filter.polysurface
@@ -2561,13 +2562,19 @@ def ExtendCurveLength(curve_id, extension_type, side, length):
     """Extends a non-closed curve by a line, arc, or smooth extension for a
     specified distance
     Parameters:
-      curve_id: curve to extend
-      extension_type: 0 = line, 1 = arc, 2 = smooth
-      side: 0=extend from start of the curve, 1=extend from end of the curve, 2=Extend from both ends
-      length: distance to extend
+      curve_id (guid): curve to extend
+      extension_type (number):
+        0 = line
+        1 = arc
+        2 = smooth
+      side (number):
+        0=extend from start of the curve
+        1=extend from end of the curve
+        2=Extend from both ends
+      length (number): distance to extend
     Returns:
-      The identifier of the new object
-      None if not successful
+      guid: The identifier of the new object
+      none: if not successful
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select curve to extend", rs.filter.curve)
@@ -2601,12 +2608,14 @@ def ExtendCurveLength(curve_id, extension_type, side, length):
 def ExtendCurvePoint(curve_id, side, point):
     """Extends a non-closed curve by smooth extension to a point
     Parameters:
-      curve_id: curve to extend
-      side: 0=extend from start of the curve, 1=extend from end of the curve
-      point: point to extend to
+      curve_id (guid): curve to extend
+      side (number):
+        0=extend from start of the curve
+        1=extend from end of the curve
+      point (guid|point): point to extend to
     Returns:
-      The identifier of the new object if successful.
-      None if not successful, or on error.
+      guid: The identifier of the new object if successful.
+      none: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select curve to extend", rs.filter.curve)

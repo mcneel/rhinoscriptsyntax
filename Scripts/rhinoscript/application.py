@@ -82,7 +82,7 @@ def AliasMacro(alias, macro=None):
       import rhinoscriptsyntax as rs
       aliases = rs.AliasNames()
       for alias in aliases:
-      print alias, " -> ", rs.AliasMacro(alias)
+      print alias, " -> ", rs.AliasMacro(alias)(guid
     See Also:
       AddAlias
       AliasCount
@@ -117,8 +117,6 @@ def AliasNames():
 
 def AppearanceColor(item, color=None):
     """Returns or modifies an application interface item's color.
-    Syntax:
-      rhinoscriptsyntax.AppearanceColor(item[, color])
     Parameters:
       item (number): Item number to either query or modify
              0  = View background
@@ -135,7 +133,7 @@ def AppearanceColor(item, color=None):
              11 = Text
              12 = Text Background
              13 = Text hover
-      color (tuple (r255,g255,b255), optional): The new color value in (r255,g255,b255). If omitted, the current item color is returned.
+      color ([r255,g255,b255], optional): The new color value in (r255,g255,b255). If omitted, the current item color is returned.
     Returns:
       tuple (r255,g255,b255): if color is not specified, the current item color.
       tuple (r255,g255,b255): if color is specified, the previous item color.
