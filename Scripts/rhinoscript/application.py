@@ -959,7 +959,7 @@ def PlugInId(plugin):
       plugin (guid): Unique id of the plug-in
     Returns:
       guid: the id of the plug-in
-      none: None if the plug-in isn't valid
+      None: None if the plug-in isn't valid
     Example:
       import rhinoscriptsyntax as rs
       plugins = rs.PlugIns(0, 1)

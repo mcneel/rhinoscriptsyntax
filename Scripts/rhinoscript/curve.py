@@ -1177,7 +1177,7 @@ def CurveBrepIntersect(curve_id, brep_id, tolerance=None):
                         If omitted, the current absolute tolerance is used.
     Returns:
       list(guid, ...): identifiers for the newly created intersection objects if successful.
-      none: on error.
+      None: on error.
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select a curve", rs.filter.curve)
@@ -1328,7 +1328,7 @@ def CurveCurvature(curve_id, parameter):
         [2] = center of radius of curvature
         [3] = radius of curvature
         [4] = curvature vector
-      none: on failure
+      None: on failure
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -1455,7 +1455,7 @@ def CurveDegree(curve_id, segment_index=-1):
       segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve.
     Returns:
       number: The degree of the curve if successful.
-      none: on error.
+      None: on error.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -1602,7 +1602,7 @@ def CurveDomain(curve_id, segment_index=-1):
       list(number, number): the domain of the curve if successful.
          [0] Domain minimum
          [1] Domain maximum
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -1653,7 +1653,7 @@ def CurveEndPoint(curve_id, segment_index=-1):
       segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
       point: The 3d endpoint of the curve if successful.
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       object = rs.GetObject("Select a curve")
@@ -1702,7 +1702,7 @@ def CurveFilletPoints(curve_id_0, curve_id_1, radius=1.0, base_point_0=None, bas
       
       guid: If return_points is False, then the identifier of the fillet curve
             if successful.
-      none: if not successful, or on error.
+      None: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       curve0 = rs.AddLine([0,0,0], [5,1,0])
@@ -1746,7 +1746,7 @@ def CurveFrame(curve_id, parameter, segment_index=-1):
       segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
       plane: The plane at the specified parameter if successful.
-      none: if not successful, or on error.
+      None: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetCurveObject("Select a curve")
@@ -1778,7 +1778,7 @@ def CurveKnotCount(curve_id, segment_index=-1):
       segment_index (number, optional): the curve segment if `curve_id` identifies a polycurve.
     Returns:
       number: The number of knots if successful.
-      none: if not successful or on error.
+      None: if not successful or on error.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -1802,7 +1802,7 @@ def CurveKnots(curve_id, segment_index=-1):
       segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve.
     Returns:
       list(number, ....): knot values if successful.
-      none: if not successful or on error.
+      None: if not successful or on error.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -1831,7 +1831,7 @@ def CurveLength(curve_id, segment_index=-1, sub_domain=None):
           entire curve is returned.
     Returns:
       number: The length of the curve if successful.
-      none: if not successful, or on error.
+      None: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       object = rs.GetObject("Select a curve")
@@ -1858,7 +1858,7 @@ def CurveMidPoint(curve_id, segment_index=-1):
       segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
       point: The 3D midpoint of the curve if successful.
-      none: if not successful, or on error.
+      None: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       object = rs.GetObject("Select a curve")
@@ -1883,7 +1883,7 @@ def CurveNormal(curve_id, segment_index=-1):
       segment_index (number, optional): the curve segment if curve_id identifies a polycurve
     Returns:
       vector: The 3D normal vector if successful.
-      none: if not successful, or on error.
+      None: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       object = rs.GetObject("Select a planar curve")
@@ -1958,7 +1958,7 @@ def CurvePerpFrame(curve_id, parameter):
       parameter (number): parameter to evaluate
     Returns:
       plane: Plane on success
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       crv = rs.GetCurveObject("Select a curve")
@@ -1982,7 +1982,7 @@ def CurvePlane(curve_id, segment_index=-1):
       segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
       plane: The plane in which the curve lies if successful.
-      none: if not successful, or on error.
+      None: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select a curve", rs.filter.curve)
@@ -2007,7 +2007,7 @@ def CurvePointCount(curve_id, segment_index=-1):
       segment_index (number, optional): the curve segment if `curve_id` identifies a polycurve
     Returns:
       number: Number of control points if successful.
-      none: if not successful
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -2058,7 +2058,7 @@ def CurveRadius(curve_id, test_point, segment_index=-1):
       segment_index (number, optional): the curve segment if curve_id identifies a polycurve
     Returns:
       number: The radius of curvature at the point on the curve if successful.
-      none: if not successful, or on error.
+      None: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -2249,7 +2249,7 @@ def CurveTangent(curve_id, parameter, segment_index=-1):
       segment_index (number, optional) the curve segment index if `curve_id` identifies a polycurve
     Returns:
       vector: A 3D vector if successful.
-      none: on error.
+      None: on error.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve", rs.filter.curve)
@@ -2277,7 +2277,7 @@ def CurveWeights(curve_id, segment_index=-1):
       segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
       number: The weight values of the curve if successful.
-      none: if not successful, or on error.
+      None: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -2310,7 +2310,7 @@ def DivideCurve(curve_id, segments, create_points=False, return_points=True):
     Returns:
       list(point|number, ...): If `return_points` is not specified or True, then a list containing 3D division points.
       list(point|number, ...): If `return_points` is False, then an array containing division curve parameters.
-      none: if not successful, or on error.
+      None: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -2379,7 +2379,7 @@ def DivideCurveLength(curve_id, length, create_points=False, return_points=True)
     Returns:
       list(point, ...): If return_points is not specified or True, then a list containing division points.
       list(number, ...): If return_points is False, then an array containing division curve parameters.
-      none: if not successful, or on error.
+      None: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -2457,7 +2457,7 @@ def EvaluateCurve(curve_id, t, segment_index=-1):
       segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
     Returns:
       point: a 3-D point if successful
-      none: if not successful
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -2524,7 +2524,7 @@ def ExtendCurve(curve_id, extension_type, side, boundary_object_ids):
       boundary_object_ids (guid): curve, surface, and polysurface objects to extend to
     Returns:
       guid: The identifier of the new object if successful.
-      none: if not successful
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       filter = rs.filter.curve | rs.filter.surface | rs.filter.polysurface
@@ -2574,7 +2574,7 @@ def ExtendCurveLength(curve_id, extension_type, side, length):
       length (number): distance to extend
     Returns:
       guid: The identifier of the new object
-      none: if not successful
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select curve to extend", rs.filter.curve)
@@ -2615,7 +2615,7 @@ def ExtendCurvePoint(curve_id, side, point):
       point (guid|point): point to extend to
     Returns:
       guid: The identifier of the new object if successful.
-      none: if not successful, or on error.
+      None: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select curve to extend", rs.filter.curve)
@@ -2694,7 +2694,7 @@ def FitCurve(curve_id, degree=3, distance_tolerance=-1, angle_tolerance=-1):
           tolerance is used for the kink smoothing.
     Returns:
       guid: The identifier of the new object
-      none: if not successful, or on error.
+      None: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       oldCurve = rs.GetObject("Select curve to fit", rs.filter.curve)
@@ -3208,7 +3208,7 @@ def MakeCurveNonPeriodic(curve_id, delete_input=False):
       delete_input (bool): delete the input curve. If omitted, the input curve will not be deleted.
     Returns:
       guid: id of the new or modified curve if successful
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select a curve", rs.filter.curve)
@@ -3246,7 +3246,7 @@ def MeanCurve(curve0, curve1, tolerance=None):
       tolerance (number, optional): angle tolerance used to match kinks between curves
     Returns:
       guid: id of the new or modified curve if successful
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       curve0 = rs.GetObject("Select the first curve", rs.filter.curve)
@@ -3271,7 +3271,7 @@ def MeshPolyline(polyline_id):
       polyline_id (guid): identifier of the polyline curve object
     Returns:
       guid: identifier of the new mesh object
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       polyline = rs.GetObject("Select a polyline", rs.filter.curve)
@@ -3308,7 +3308,7 @@ def OffsetCurve(object_id, direction, distance, normal=None, style=1):
                                 4 = Chamfer
     Returns:
       list(guid, ...): list of ids for the new curves on success
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve", rs.filter.curve)
@@ -3345,7 +3345,7 @@ def OffsetCurveOnSurface(curve_id, surface_id, distance_or_parameter):
         U,V parameter that the curve will be offset through
     Returns:
       list(guid, ...): identifiers of the new curves if successful
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       def TestOffset():
@@ -3393,7 +3393,7 @@ def PlanarClosedCurveContainment(curve_a, curve_b, plane=None, tolerance=None):
         1 = the two curves intersect
         2 = the region bounded by curve_a is inside of curve_b
         3 = the region bounded by curve_b is inside of curve_a
-      none: if not successful
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       curve1 = rs.GetObject("Select first curve", rs.filter.curve )
@@ -3496,7 +3496,7 @@ def PolyCurveCount(curve_id, segment_index=-1):
       segment_index (number, optional): if `curve_id` identifies a polycurve object, then `segment_index` identifies the curve segment of the polycurve to query.
     Returns:
       number: the number of curve segments in a polycurve if successful
-      none: if not successful
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a polycurve")
@@ -3518,7 +3518,7 @@ def PolylineVertices(curve_id, segment_index=-1):
       segment_index (number, optional): if curve_id identifies a polycurve object, then segment_index identifies the curve segment of the polycurve to query.
     Returns:
       list(point, ...): an list of Point3d vertex points if successful
-      none: if not successful
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a polyline")
@@ -3706,7 +3706,7 @@ def SplitCurve(curve_id, parameter, delete_input=True):
       delete_input (bool, optional): delete the input curve
     Returns:
       list(guid, ....): list of new curves on success
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select a curve to split", rs.filter.curve)
@@ -3743,7 +3743,7 @@ def TrimCurve(curve_id, interval, delete_input=True):
       delete_input (bool): delete the input curve. If omitted the input curve is deleted.
     Returns:
       list(guid, ...): identifier of the new curve on success
-      none: on failure
+      None: on failure
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select a curve to trim", rs.filter.curve)
@@ -3776,7 +3776,7 @@ def ChangeCurveDegree(object_id, degree):
     degree (number): the new degree.
   Returns:
     bool: True of False indicating success or failure.
-    none: on failure
+    None: on failure
   Example:
     
   See Also:

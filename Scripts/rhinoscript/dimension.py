@@ -15,7 +15,7 @@ def AddAlignedDimension(start_point, end_point, point_on_dimension_line, style=N
       style (str, optional): name of dimension style
     Returns:
       guid: identifier of new dimension on success
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       origin = 1, 1, 0
@@ -51,7 +51,7 @@ def AddDimStyle(dimstyle_name=None):
       dimstyle_name (str, optional): name of the new dimension style. If omitted, Rhino automatically generates the dimension style name
     Returns:
       str: name of the new dimension style on success
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       print "New dimension style: ", rs.AddDimStyle()
@@ -79,7 +79,7 @@ def AddLeader(points, view_or_plane=None, text=None):
       text (str, optional): leader's text string
     Returns:
       guid: identifier of the new leader on success
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       points = rs.GetPoints(True, False, "Select leader points")
@@ -130,7 +130,7 @@ def AddLinearDimension(plane, start_point, end_point, point_on_dimension_line):
       point_on_dimension_line (point): A point that lies on the dimension line.
     Returns:
       guid: identifier of the new object on success
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as  rs
       points = rs.GetPoints(True,  False, "Select 3 dimension points")
@@ -171,7 +171,7 @@ def CurrentDimStyle(dimstyle_name=None):
     Returns:
       str: if dimstyle_name is not specified, name of the current dimension style
       str: if dimstyle_name is specified, name of the previous dimension style
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       rs.AddDimStyle("MyDimStyle")
@@ -197,7 +197,7 @@ def DeleteDimStyle(dimstyle_name):
       dimstyle_name (str): the name of an unreferenced dimension style
     Returns:
       str: The name of the deleted dimension style if successful
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       dimstyle = rs.GetString("Dimension style to remove")
@@ -228,7 +228,7 @@ def DimensionStyle(object_id, dimstyle_name=None):
     Returns:
       str: if dimstyle_name is specified, the object's current dimension style name
       str: if dimstyle_name is not specified, the object's previous dimension style name
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a dimension")
@@ -361,7 +361,7 @@ def DimStyleArrowSize(dimstyle, size=None):
     Returns:
       number: If size is not specified, the current arrow size
       number: If size is specified, the previous arrow size
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
@@ -409,7 +409,7 @@ def DimStyleExtension(dimstyle, extension=None):
     Returns:
       number: if extension is not specified, the current extension line extension
       number: if extension is specified, the previous extension line extension
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
@@ -442,7 +442,7 @@ def DimStyleFont(dimstyle, font=None):
     Returns:
       str: if font is not specified, the current font if successful
       str: if font is specified, the previous font if successful
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
@@ -476,7 +476,7 @@ def DimStyleLeaderArrowSize(dimstyle, size=None):
     Returns:
       number: if size is not specified, the current leader arrow size
       number: if size is specified, the previous leader arrow size
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
@@ -511,7 +511,7 @@ def DimStyleLengthFactor(dimstyle, factor=None):
     Returns:
       number: if factor is not defined, the current length factor
       number: if factor is defined, the previous length factor
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
@@ -538,7 +538,7 @@ def DimStyleLinearPrecision(dimstyle, precision=None):
     Returns:
       number: if precision is not specified, the current linear precision value
       number: if precision is specified, the previous linear precision value
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
@@ -594,7 +594,7 @@ def DimStyleNumberFormat(dimstyle, format=None):
     Returns:
       number: if format is not specified, the current display format
       number: if format is specified, the previous display format
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
@@ -629,7 +629,7 @@ def DimStyleOffset(dimstyle, offset=None):
     Returns:
       number: if offset is not specified, the current extension line offset
       number: if offset is specified, the previous extension line offset
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
@@ -663,7 +663,7 @@ def DimStylePrefix(dimstyle, prefix=None):
     Returns:
       str: if prefix is not specified, the current prefix
       str: if prefix is specified, the previous prefix
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
@@ -691,7 +691,7 @@ def DimStyleSuffix(dimstyle, suffix=None):
     Returns:
       str: if suffix is not specified, the current suffix
       str: if suffix is specified, the previous suffix
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
@@ -722,7 +722,7 @@ def DimStyleTextAlignment(dimstyle, alignment=None):
     Returns:
       number: if alignment is not specified, the current text alignment
       number: if alignment is specified, the previous text alignment
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
@@ -758,7 +758,7 @@ def DimStyleTextGap(dimstyle, gap=None):
     Returns:
       number: if gap is not specified, the current text gap
       number: if gap is specified, the previous text gap
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
@@ -792,7 +792,7 @@ def DimStyleTextHeight(dimstyle, height=None):
     Returns:
       number: if height is not specified, the current text height
       number: if height is specified, the previous text height
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
@@ -852,7 +852,7 @@ def IsAngularDimension(object_id):
       object_id (guid): the object's identifier
     Returns:
       bool: True or False.
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a dimension")
@@ -880,7 +880,7 @@ def IsDiameterDimension(object_id):
       object_id (guid): the object's identifier
     Returns:
       bool: True or False.
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a dimension")
@@ -910,7 +910,7 @@ def IsDimension(object_id):
       object_id (guid): the object's identifier
     Returns:
       bool: True or False.
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a dimension")
@@ -938,7 +938,7 @@ def IsDimStyle(dimstyle):
       dimstyle (str): the name of a dimstyle to test for
     Returns:
       bool: True or False.
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       dimstyle = rs.GetString("Dimension style to test")
@@ -962,7 +962,7 @@ def IsDimStyleReference(dimstyle):
       dimstyle (str): the name of an existing dimension style
     Returns:
       bool: True or False.
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       dimstyle = rs.GetString("Dimension style to test")
@@ -987,7 +987,7 @@ def IsLeader(object_id):
       object_id (guid): the object's identifier
     Returns:
       bool: True or False.
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a leader")
@@ -1011,7 +1011,7 @@ def IsLinearDimension(object_id):
       object_id (guid): the object's identifier
     Returns:
       bool: True or False.
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a dimension")
@@ -1039,7 +1039,7 @@ def IsOrdinateDimension(object_id):
       object_id (guid): the object's identifier
     Returns:
       bool: True or False.
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a dimension")
@@ -1067,7 +1067,7 @@ def IsRadialDimension(object_id):
       object_id (guid): the object's identifier
     Returns:
       bool: True or False.
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a dimension")
@@ -1125,7 +1125,7 @@ def RenameDimStyle(oldstyle, newstyle):
       newstyle (str): the new dimension style name
     Returns:
       str: the new dimension style name if successful
-      none: on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       oldstyle = rs.GetString("Old dimension style name")
