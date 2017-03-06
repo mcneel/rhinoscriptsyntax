@@ -7,11 +7,11 @@ def EnableObjectGrips(object_id, enable=True):
     """Enables or disables an object's grips. For curves and surfaces, these are
     also called control points.
     Parameters:
-      object_id = identifier of the object
-      enable [opt] = if True, the specified object's grips will be turned on.
+      object_id (guid): identifier of the object
+      enable (bool, optional): if True, the specified object's grips will be turned on.
         Otherwise, they will be turned off
     Returns:
-      True on success, False on failure
+      bool: True on success, False on failure
     Example:
       import rhinoscriptsyntax as  rs
       objects = rs.GetObjects("Select  objects")
@@ -32,15 +32,15 @@ def EnableObjectGrips(object_id, enable=True):
 def GetObjectGrip(message=None, preselect=False, select=False):
     """Prompts the user to pick a single object grip
     Parameters:
-      message [opt] = prompt for picking
-      preselect [opt] = allow for selection of pre-selected object grip.
-      select [opt] = select the picked object grip.
+      message (str, optional): prompt for picking
+      preselect (bool, optional): allow for selection of pre-selected object grip.
+      select (bool, optional): select the picked object grip.
     Returns:
-      tuple defining a grip record.
-        grip_record[0] = identifier of the object that owns the grip
-        grip_record[1] = index value of the grip
-        grip_record[2] = location of the grip
-      None on error
+      tuple(guid, number, point): defining a grip record.
+         [0] = identifier of the object that owns the grip
+         [1] = index value of the grip
+         [2] = location of the grip
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select a curve", rs.filter.curve)
@@ -65,15 +65,15 @@ def GetObjectGrip(message=None, preselect=False, select=False):
 def GetObjectGrips(message=None, preselect=False, select=False):
     """Prompts user to pick one or more object grips from one or more objects.
     Parameters:
-      message [opt] = prompt for picking
-      preselect [opt] = allow for selection of pre-selected object grips
-      select [opt] = select the picked object grips
+      message (str, optional): prompt for picking
+      preselect (bool, optional): allow for selection of pre-selected object grips
+      select (bool, optional) select the picked object grips
     Returns:
-      list containing one or more grip records. Each grip record is a tuple
-        grip_record[0] = identifier of the object that owns the grip
-        grip_record[1] = index value of the grip
-        grip_record[2] = location of the grip
-      None on error
+      list((guid, number, point), ...) containing one or more grip records. Each grip record is a tuple
+        [n][0] = identifier of the object that owns the grip
+        [n][1] = index value of the grip
+        [n][2] = location of the grip
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       curves = rs.GetObjects("Select curves", rs.filter.curves)
@@ -120,12 +120,13 @@ def __neighborgrip(i, object_id, index, direction, enable):
 def NextObjectGrip(object_id, index, direction=0, enable=True):
     """Returns the next grip index from a specified grip index of an object
     Parameters:
-      object_id = identifier of the object
-      index = zero based grip index from which to get the next grip index
-      direction[opt] = direction to get the next grip index (0=U, 1=V)
-      enable[opt] = if True, the next grip index found will be selected
+      object_id (guid): identifier of the object
+      index (number): zero based grip index from which to get the next grip index
+      direction ([number, number], optional): direction to get the next grip index (0=U, 1=V)
+      enable (bool, optional): if True, the next grip index found will be selected
     Returns:
-      index of the next grip on success, None on failure
+      number: index of the next grip on success
+      None: on failure
     Example:
       import rhinoscriptsyntax as rs
       object_id = rs.GetObject("Select curve", rs.filter.curve)
@@ -143,10 +144,10 @@ def NextObjectGrip(object_id, index, direction=0, enable=True):
 def ObjectGripCount(object_id):
     """Returns number of grips owned by an object
     Parameters:
-      object_id = identifier of the object
+      object_id (guid): identifier of the object
     Returns:
-      number of grips if successful
-      None on error  
+      number: number of grips if successful
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
@@ -168,13 +169,13 @@ def ObjectGripCount(object_id):
 def ObjectGripLocation(object_id, index, point=None):
     """Returns or modifies the location of an object's grip
     Parameters:
-      object_id = identifier of the object
-      index = index of the grip to either query or modify
-      point [opt] = 3D point defining new location of the grip
+      object_id (guid) identifier of the object
+      index (number): index of the grip to either query or modify
+      point (point, optional): 3D point defining new location of the grip
     Returns:
-      if point is not specified, the current location of the grip referenced by index
-      if point is specified, the previous location of the grip referenced by index
-      None on error
+      point: if point is not specified, the current location of the grip referenced by index
+      point: if point is specified, the previous location of the grip referenced by index
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select curve", rs.filter.curve)
@@ -208,12 +209,12 @@ def ObjectGripLocations(object_id, points=None):
     the grips, you must provide a list of points that contain the same number
     of points at grips
     Parameters:
-      object_id = identifier of the object
-      points [opt] = list of 3D points identifying the new grip locations
+      object_id (guid): identifier of the object
+      points ([point, ...], optional) list of 3D points identifying the new grip locations
     Returns:
-      if points is not specified, the current location of all grips
-      if points is specified, the previous location of all grips
-      None if not successful
+      list(point, ...): if points is not specified, the current location of all grips
+      list(point, ...): if points is specified, the previous location of all grips
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select curve", rs.filter.curve)
@@ -243,10 +244,10 @@ def ObjectGripLocations(object_id, points=None):
 def ObjectGripsOn(object_id):
     """Verifies that an object's grips are turned on
     Parameters:
-      object_id = identifier of the object
+      object_id (guid): identifier of the object
     Returns:
-      True or False indcating Grips state
-      None on error
+      bool: True or False indicating Grips state
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
@@ -267,9 +268,9 @@ def ObjectGripsSelected(object_id):
     """Verifies that an object's grips are turned on and at least one grip
     is selected
     Parameters:
-      object_id = identifier of the object
+      object_id (guid): identifier of the object
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
@@ -292,14 +293,15 @@ def ObjectGripsSelected(object_id):
 
 
 def PrevObjectGrip(object_id, index, direction=0, enable=True):
-    """Returns the prevoius grip index from a specified grip index of an object
+    """Returns the previous grip index from a specified grip index of an object
     Parameters:
-      object_id = identifier of the object
-      index = zero based grip index from which to get the previous grip index
-      direction[opt] = direction to get the next grip index (0=U, 1=V)
-      enable[opt] = if True, the next grip index found will be selected
+      object_id (guid): identifier of the object
+      index (number): zero based grip index from which to get the previous grip index
+      direction ([number, number], optional): direction to get the next grip index (0=U, 1=V)
+      enable (bool, optional): if True, the next grip index found will be selected
     Returns:
-      index of the next grip on success, None on failure
+      number: index of the next grip on success
+      None: on failure
     Example:
       import rhinoscriptsyntax as rs
       object_id = rs.GetObject("Select curve", rs.filter.curve)
@@ -317,10 +319,10 @@ def PrevObjectGrip(object_id, index, direction=0, enable=True):
 def SelectedObjectGrips(object_id):
     """Returns a list of grip indices indentifying an object's selected grips
     Parameters:
-      object_id = identifier of the object
+      object_id (guid): identifier of the object
     Returns:
-      list of indices on success
-      None on failure or if no grips are selected
+      list(number): list of indices on success
+      None: on failure or if no grips are selected
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select curve", rs.filter.curve)
@@ -349,10 +351,10 @@ def SelectObjectGrip(object_id, index):
     """Selects a single grip owned by an object. If the object's grips are
     not turned on, the grips will not be selected
     Parameters:
-      object_id = identifier of the object
-      index = index of the grip to select
+      object_id (guid) identifier of the object
+      index (number): index of the grip to select
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select curve", rs.filter.curve)
@@ -380,10 +382,10 @@ def SelectObjectGrips(object_id):
     """Selects an object's grips. If the object's grips are not turned on,
     they will not be selected
     Parameters:
-      object_id = identifier of the object
+      object_id (guid): identifier of the object
     Returns:
-      Number of grips selected on success
-      None on failure
+      number: Number of grips selected on success
+      None: on failure
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
@@ -411,10 +413,10 @@ def UnselectObjectGrip(object_id, index):
     """Unselects a single grip owned by an object. If the object's grips are
     not turned on, the grips will not be unselected
     Parameters:
-      object_id = identifier of the object
-      index = index of the grip to unselect
+      object_id (guid): identifier of the object
+      index (number): index of the grip to unselect
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select curve", rs.filter.curve)
@@ -442,10 +444,10 @@ def UnselectObjectGrip(object_id, index):
 def UnselectObjectGrips(object_id):
     """Unselects an object's grips. Note, the grips will not be turned off.
     Parameters:
-      object_id = identifier of the object
+      object_id (guid): identifier of the object
     Returns:
-      Number of grips unselected on success
-      None on failure
+      number: Number of grips unselected on success
+      None: on failure
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
