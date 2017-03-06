@@ -8,13 +8,13 @@ def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
     """Create a clipping plane for visibly clipping away geometry in a specific
     view. Note, clipping planes are infinite
     Parameters:
-      plane = the plane
-      u_magnitude, v_magnitude = size of the plane
-      views[opt]= Titles or ids the the view(s) to clip. If omitted, the active
+      plane (plane): the plane
+      u_magnitude, v_magnitude (number): size of the plane
+      views ([str|guid, ...]): Titles or ids the the view(s) to clip. If omitted, the active
         view is used.
     Returns:
-      object identifier on success
-      None on failure  
+      guid: object identifier on success
+      None: on failure
     Example:
       import rhinoscriptsyntax as rs
       rs.AddClippingPlane( rs.WorldXYPlane(), 5.0, 3.0 )
@@ -55,17 +55,17 @@ def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
 def AddPictureFrame(plane, filename, width=0.0, height=0.0, self_illumination=True, embed=False, use_alpha=False, make_mesh=False):
   """Creates a picture frame and adds it to the document.
   Parameters:
-    plane = The plane in which the PictureFrame will be created.  The bottom-left corner of picture will be at plane's origin. The width will be in the plane's X axis direction, and the height will be in the plane's Y axis direction.
-    filename = The path to a bitmap or image file.
-    width = If both dblWidth and dblHeight = 0, then the width and height of the PictureFrame will be the width and height of the image. If dblWidth = 0 and dblHeight is > 0, or if dblWidth > 0 and dblHeight = 0, then the non-zero value is assumed to be an aspect ratio of the image's width or height, which ever one is = 0. If both dblWidth and dblHeight are > 0, then these are assumed to be the width and height of in the current unit system.
-    height =  If both dblWidth and dblHeight = 0, then the width and height of the PictureFrame will be the width and height of the image. If dblWidth = 0 and dblHeight is > 0, or if dblWidth > 0 and dblHeight = 0, then the non-zero value is assumed to be an aspect ratio of the image's width or height, which ever one is = 0. If both dblWidth and dblHeight are > 0, then these are assumed to be the width and height of in the current unit system.
-    self_illumination =  If True, then the image mapped to the picture frame plane always displays at full intensity and is not affected by light or shadow.
-    embed = If True, then the function adds the image to Rhino's internal bitmap table, thus making the document self-contained.
-    use_alpha = If False, the picture frame is created without any transparency texture.  If True, a transparency texture is created with a "mask texture" set to alpha, and an instance of the diffuse texture in the source texture slot.
-    make_mesh = If True, the function will make a PictureFrame object from a mesh rather than a plane surface.
+    plane (plane): The plane in which the PictureFrame will be created.  The bottom-left corner of picture will be at plane's origin. The width will be in the plane's X axis direction, and the height will be in the plane's Y axis direction.
+    filename (str): The path to a bitmap or image file.
+    width (number, optional): If both dblWidth and dblHeight = 0, then the width and height of the PictureFrame will be the width and height of the image. If dblWidth = 0 and dblHeight is > 0, or if dblWidth > 0 and dblHeight = 0, then the non-zero value is assumed to be an aspect ratio of the image's width or height, which ever one is = 0. If both dblWidth and dblHeight are > 0, then these are assumed to be the width and height of in the current unit system.
+    height (number, optional):  If both dblWidth and dblHeight = 0, then the width and height of the PictureFrame will be the width and height of the image. If dblWidth = 0 and dblHeight is > 0, or if dblWidth > 0 and dblHeight = 0, then the non-zero value is assumed to be an aspect ratio of the image's width or height, which ever one is = 0. If both dblWidth and dblHeight are > 0, then these are assumed to be the width and height of in the current unit system.
+    self_illumination (bool, optional): If True, then the image mapped to the picture frame plane always displays at full intensity and is not affected by light or shadow.
+    embed (bool, optional): If True, then the function adds the image to Rhino's internal bitmap table, thus making the document self-contained.
+    use_alpha (bool, optional): If False, the picture frame is created without any transparency texture.  If True, a transparency texture is created with a "mask texture" set to alpha, and an instance of the diffuse texture in the source texture slot.
+    make_mesh (bool, optional): If True, the function will make a PictureFrame object from a mesh rather than a plane surface.
   Returns:
-    object identifier on success
-    None on failure
+    guid: object identifier on success
+    None: on failure
   Example:
     
   See Also:
@@ -79,11 +79,11 @@ def AddPictureFrame(plane, filename, width=0.0, height=0.0, self_illumination=Tr
   return rc
 
 def AddPoint(point, y=None, z=None):
-    """Adds point object to the document
+    """Adds point object to the document.
     Parameters:
-      point = x,y,z location of point to add
+      point (point): a point3d or list(x,y,z) location of point to add
     Returns:
-      Guid for the object that was added to the doc
+      guid: identifier for the object that was added to the doc
     Example:
       import rhinoscriptsyntax as rs
       rs.AddPoint( (1,2,3) )
@@ -102,10 +102,10 @@ def AddPoint(point, y=None, z=None):
 def AddPointCloud(points, colors=None):
     """Adds point cloud object to the document
     Parameters:
-      points = list of values where every multiple of three represents a point
-      colors[opt] = list of colors to apply to each point
+      points ([point, ....]): list of values where every multiple of three represents a point
+      colors ([color, ...]): list of colors to apply to each point
     Returns:
-      identifier of point cloud on success
+      guid: identifier of point cloud on success
     Example:
       import rhinoscriptsyntax as rs
       points = (0,0,0), (1,1,1), (2,2,2), (3,3,3)
@@ -131,9 +131,9 @@ def AddPointCloud(points, colors=None):
 def AddPoints(points):
     """Adds one or more point objects to the document
     Parameters:
-      points = list of points
+      points ([point, ...]): list of points
     Returns:
-      list of Guid identifiers of the new objects on success
+      list(guid, ...): identifiers of the new objects on success
     Example:
       import rhinoscriptsyntax as rs
       points = rs.GetPoints(True, True, "Select points")
@@ -151,20 +151,26 @@ def AddPoints(points):
 def AddText(text, point_or_plane, height=1.0, font="Arial", font_style=0, justification=None):
     """Adds a text string to the document
     Parameters:
-      text = the text to display
-      point_or_plane = a 3-D point or the plane on which the text will lie.
+      text (str): the text to display
+      point_or_plane (point|plane): a 3-D point or the plane on which the text will lie.
           The origin of the plane will be the origin point of the text
-      height [opt] = the text height
-      font [opt] = the text font
-      font_style[opt] = any of the following flags
+      height (number, optional): the text height
+      font (str, optional): the text font
+      font_style (number, optional): any of the following flags
          0 = normal
          1 = bold
          2 = italic
          3 = bold and italic
-      justification[opt] = text justification (see help for values)
+      justification (number, optional): text justification. Values may be added to create combinations.
+         1 = Left
+         2 = Center (horizontal)
+         4 = Right
+         65536 = Bottom
+         131072 = Middle (vertical)
+         262144 = Top
     Returns:
-      Guid for the object that was added to the doc on success
-      None on failure
+      guid: identifier for the object that was added to the doc on success
+      None: on failure
     Example:
       import rhinoscriptsyntax as rs
       point = rs.GetPoint("Pick point")
@@ -196,10 +202,10 @@ def AddText(text, point_or_plane, height=1.0, font="Arial", font_style=0, justif
 def AddTextDot(text, point):
     """Add a text dot to the document.
     Parameters:
-      text = string in dot
-      point = A 3D point identifying the origin point.
+      text (str): string in dot
+      point (point): A 3D point identifying the origin point.
     Returns:
-      The identifier of the new object if successful
+      guid: The identifier of the new object if successful
     Example:
       import rhinoscriptsyntax as rs
       rs.AddTextDot("howdy",(1,2,3))
@@ -217,10 +223,10 @@ def AddTextDot(text, point):
 def Area(object_id):
     """Compute the area of a closed curve, hatch, surface, polysurface, or mesh
     Parameters:
-      object_id = the object's identifier
+      object_id (guid): the object's identifier
     Returns:
-      area if successful
-      None on error
+      number: area if successful
+      None: on error
     Example:
       import rhinoscriptsyntax as  rs
       a = rs.Area('a9e34aa8-226c-4e17-9e11-b74bf2cf581b')
@@ -238,18 +244,18 @@ def BoundingBox(objects, view_or_plane=None, in_world_coords=True):
     """Returns either world axis-aligned or a construction plane axis-aligned
     bounding box of an object or of several objects
     Parameters:
-      objects = The identifiers of the objects
-      view_or_plane[opt] = Title or id of the view that contains the
+      objects ([guid, ...]): The identifiers of the objects
+      view_or_plane (str|guid): Title or id of the view that contains the
           construction plane to which the bounding box should be aligned -or-
           user defined plane. If omitted, a world axis-aligned bounding box
           will be calculated
-      in_world_coords[opt] = return the bounding box as world coordinates or
+      in_world_coords (bool, optional): return the bounding box as world coordinates or
           construction plane coordinates. Note, this option does not apply to
           world axis-aligned bounding boxes.
     Returns:
-      Eight 3D points that define the bounding box. Points returned in counter-
-      clockwise order starting with the bottom rectangle of the box.
-      None on error
+      list(point, point, point, point, point, point, point, point): Eight 3D points that define the bounding box.
+           Points returned in counter-clockwise order starting with the bottom rectangle of the box.
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       object = rs.GetObject("Select object")
@@ -305,10 +311,10 @@ def BoundingBox(objects, view_or_plane=None, in_world_coords=True):
 def ExplodeText(text_id, delete=False):
     """Creates outline curves for a given text entity
     Parameters:
-      text_id: identifier of Text object to explode
-      delete[opt]: delete the text object after the curves have been created
+      text_id (guid): identifier of Text object to explode
+      delete (bool, optional): delete the text object after the curves have been created
     Returns:
-      list of outline curves
+      list(guid): of outline curves
     Example:
       import rhinoscriptsyntax as rs
       text = rs.AddText("abcd", rs.WorldXYPlane())
@@ -331,9 +337,9 @@ def ExplodeText(text_id, delete=False):
 def IsClippingPlane(object_id):
     """Verifies that an object is a clipping plane object
     Parameters:
-      object_id: the object's identifier
+      object_id (guid): the object's identifier
     Returns:
-      True if the object with a given id is a clipping plane
+      bool: True if the object with a given id is a clipping plane
     Example:
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a clipping plane")
@@ -351,9 +357,9 @@ def IsClippingPlane(object_id):
 def IsPoint(object_id):
     """Verifies an object is a point object.
     Parameters:
-      object_id: the object's identifier
+      object_id (guid): the object's identifier
     Returns:
-      True if the object with a given id is a point
+      bool: True if the object with a given id is a point
     Example:
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a point")
@@ -372,9 +378,9 @@ def IsPoint(object_id):
 def IsPointCloud(object_id):
     """Verifies an object is a point cloud object.
     Parameters:
-      object_id: the object's identifier
+      object_id (guid): the object's identifier
     Returns:
-      True if the object with a given id is a point cloud
+      bool: True if the object with a given id is a point cloud
     Example:
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a point cloud")
@@ -394,9 +400,9 @@ def IsPointCloud(object_id):
 def IsText(object_id):
     """Verifies an object is a text object.
     Parameters:
-      object_id: the object's identifier
+      object_id (guid): the object's identifier
     Returns:
-      True if the object with a given id is a text object
+      bool: True if the object with a given id is a text object
     Example:
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a text object")
@@ -414,9 +420,9 @@ def IsText(object_id):
 def IsTextDot(object_id):
     """Verifies an object is a text dot object.
     Parameters:
-      object_id: the object's identifier
+      object_id (guid): the object's identifier
     Returns:
-      True if the object with a given id is a text dot object
+      bool: True if the object with a given id is a text dot object
     Example:
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a text dot object")
@@ -434,9 +440,9 @@ def IsTextDot(object_id):
 def PointCloudCount(object_id):
     """Returns the point count of a point cloud object
     Parameters:
-      object_id: the point cloud object's identifier
+      object_id (guid): the point cloud object's identifier
     Returns:
-      number of points if successful
+      number: number of points if successful
     Example:
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select point cloud", rs.filter.pointcloud)
@@ -453,9 +459,9 @@ def PointCloudCount(object_id):
 def PointCloudHasHiddenPoints(object_id):
     """Verifies that a point cloud has hidden points
     Parameters:
-      object_id: the point cloud object's identifier
+      object_id (guid): the point cloud object's identifier
     Returns:
-      True if cloud has hidden points, otherwise False
+      bool: True if cloud has hidden points, otherwise False
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a point cloud", rs.filter.pointcloud)
@@ -475,9 +481,9 @@ def PointCloudHasHiddenPoints(object_id):
 def PointCloudHasPointColors(object_id):
     """Verifies that a point cloud has point colors
     Parameters:
-      object_id: the point cloud object's identifier
+      object_id (guid): the point cloud object's identifier
     Returns:
-      True if cloud has point colors, otherwise False
+      bool: True if cloud has point colors, otherwise False
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a point cloud", rs.filter.pointcloud)
@@ -497,12 +503,13 @@ def PointCloudHasPointColors(object_id):
 def PointCloudHidePoints(object_id, hidden=[]):
     """Returns or modifies the hidden points of a point cloud object
     Parameters:
-      object_id: the point cloud object's identifier
-      hidden: list of hidden values if you want to hide certain points
+      object_id (guid): the point cloud object's identifier
+      hidden ([bool, ....]): list of booleans matched to the index of points to be hidden
     Returns:
-      List of point cloud hidden states
+      list(bool, ....): List of point cloud hidden states
     Example:
       import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a point cloud", rs.filter.pointcloud)
       if obj:
       hidden = [True] * rs.PointCloudCount(obj)
       for i in range(len(hidden)):
@@ -531,10 +538,10 @@ def PointCloudHidePoints(object_id, hidden=[]):
 def PointCloudPointColors(object_id, colors=[]):
     """Returns or modifies the point colors of a point cloud object
     Parameters:
-      object_id: the point cloud object's identifier
-      colors: list of color values if you want to adjust colors
+      object_id (guid): the point cloud object's identifier
+      colors ([color, ...]) list of color values if you want to adjust colors
     Returns:
-      List of point cloud colors
+      list(color, ...): List of point cloud colors
     Example:
       import rhinoscriptsyntax as rs
       import random
@@ -573,9 +580,9 @@ def PointCloudPointColors(object_id, colors=[]):
 def PointCloudPoints(object_id):
     """Returns the points of a point cloud object
     Parameters:
-      object_id: the point cloud object's identifier
+      object_id (guid): the point cloud object's identifier
     Returns:
-      list of points if successful
+      list(guid, ...): list of points if successful
     Example:
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select point cloud", rs.filter.pointcloud)
@@ -593,11 +600,11 @@ def PointCloudPoints(object_id):
 def PointCoordinates(object_id, point=None):
     """Returns or modifies the X, Y, and Z coordinates of a point object
     Parameters:
-      object_id = The identifier of a point object
-      point[opt] = A new 3D point location.
+      object_id (guid): The identifier of a point object
+      point (point, optional): A new 3D point location.
     Returns:
-      If point is not specified, the current 3-D point location
-      If point is specified, the previous 3-D point location
+      point: If point is not specified, the current 3-D point location
+      point: If point is specified, the previous 3-D point location
     Example:
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select point", rs.filter.point)
@@ -620,12 +627,12 @@ def PointCoordinates(object_id, point=None):
 def TextDotFont(object_id, fontface=None):
     """Returns or modified the font of a text dot
     Parameters:
-      object_id = identifier of a text dot object
-      fontface[opt] = new font face name
+      object_id (guid): identifier of a text dot object
+      fontface (str, optional): new font face name
     Returns:
-      If font is not specified, the current text dot font
-      If font is specified, the previous text dot font
-      None on error
+      str: If font is not specified, the current text dot font
+      str: If font is specified, the previous text dot font
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select text dot")
@@ -650,12 +657,12 @@ def TextDotFont(object_id, fontface=None):
 def TextDotHeight(object_id, height=None):
     """Returns or modified the font height of a text dot
     Parameters:
-      object_id = identifier of a text dot object
-      height[opt] = new font height
+      object_id (guid): identifier of a text dot object
+      height (number, optional) new font height
     Returns:
-      If height is not specified, the current text dot height
-      If height is specified, the previous text dot height
-      None on error
+      number: If height is not specified, the current text dot height
+      number: If height is specified, the previous text dot height
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select text dot")
@@ -681,12 +688,12 @@ def TextDotHeight(object_id, height=None):
 def TextDotPoint(object_id, point=None):
     """Returns or modifies the location, or insertion point, on a text dot object
     Parameters:
-      object_id = identifier of a text dot object
-      point[opt] = A new 3D point location.
+      object_id (guid): identifier of a text dot object
+      point (point, optional): A new 3D point location.
     Returns:
-      If point is not specified, the current 3-D text dot location
-      If point is specified, the previous 3-D text dot location
-      None if not successful, or on error
+      point: If point is not specified, the current 3-D text dot location
+      point: If point is specified, the previous 3-D text dot location
+      None: if not successful, or on error
     Example:
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select text dot")
@@ -713,12 +720,12 @@ def TextDotPoint(object_id, point=None):
 def TextDotText(object_id, text=None):
     """Returns or modifies the text on a text dot object
     Parameters:
-      object_id =tThe identifier of a text dot object
-      text [opt] = a new string for the dot
+      object_id (guid): The identifier of a text dot object
+      text (str, optional): a new string for the dot
     Returns:
-      If text is not specified, the current text dot text
-      If text is specified, the previous text dot text
-      None if not successful, or on error
+      str: If text is not specified, the current text dot text
+      str: If text is specified, the previous text dot text
+      None: if not successful, or on error
     Example:
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select text dot")
@@ -744,12 +751,12 @@ def TextDotText(object_id, text=None):
 def TextObjectFont(object_id, font=None):
     """Returns of modifies the font used by a text object
     Parameters:
-      object_id = the identifier of a text object
-      font [opt] = the new font face name
+      object_id (guid): the identifier of a text object
+      font (str): the new font face name
     Returns:
-      if a font is not specified, the current font face name
-      if a font is specified, the previous font face name
-      None if not successful, or on error
+      str: if a font is not specified, the current font face name
+      str: if a font is specified, the previous font face name
+      None: if not successful, or on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select text")
@@ -780,12 +787,12 @@ def TextObjectFont(object_id, font=None):
 def TextObjectHeight(object_id, height=None):
     """Returns or modifies the height of a text object
     Parameters:
-      object_id = the identifier of a text object
-      height[opt] = the new text height.
+      object_id (guid): the identifier of a text object
+      height (number, optional): the new text height.
     Returns:
-      if height is not specified, the current text height
-      if height is specified, the previous text height
-      None if not successful, or on error
+      number: if height is not specified, the current text height
+      number: if height is specified, the previous text height
+      None: if not successful, or on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select text")
@@ -815,12 +822,12 @@ def TextObjectHeight(object_id, height=None):
 def TextObjectPlane(object_id, plane=None):
     """Returns or modifies the plane used by a text object
     Parameters:
-      object_id = the identifier of a text object
-      plane[opt] = the new text object plane
+      object_id (guid): the identifier of a text object
+      plane (plane): the new text object plane
     Returns:
-      if a plane is not specified, the current plane if successful
-      if a plane is specified, the previous plane if successful
-      None if not successful, or on Error
+      plane: if a plane is not specified, the current plane if successful
+      plane: if a plane is specified, the previous plane if successful
+      None: if not successful, or on Error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select text")
@@ -851,12 +858,12 @@ def TextObjectPlane(object_id, plane=None):
 def TextObjectPoint(object_id, point=None):
     """Returns or modifies the location of a text object
     Parameters:
-      object_id = the identifier of a text object
-      point[opt] = the new text object location
+      object_id (guid): the identifier of a text object
+      point (point, optional) the new text object location
     Returns:
-      if point is not specified, the 3D point identifying the current location
-      if point is specified, the 3D point identifying the previous location
-      None if not successful, or on Error
+      point: if point is not specified, the 3D point identifying the current location
+      point: if point is specified, the 3D point identifying the previous location
+      None: if not successful, or on Error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select text")
@@ -888,15 +895,15 @@ def TextObjectPoint(object_id, point=None):
 def TextObjectStyle(object_id, style=None):
     """Returns or modifies the font style of a text object
     Parameters:
-      object_id = the identifier of a text object
-      style [opt] = the font style. Can be any of the following flags
+      object_id (guid) the identifier of a text object
+      style (number, optional) the font style. Can be any of the following flags
          0 = Normal
          1 = Bold
          2 = Italic
     Returns:
-      if style is not specified, the current font style
-      if style is specified, the previous font style
-      None if not successful, or on Error
+      number: if style is not specified, the current font style
+      number: if style is specified, the previous font style
+      None: if not successful, or on Error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select text")
@@ -931,12 +938,12 @@ def TextObjectStyle(object_id, style=None):
 def TextObjectText(object_id, text=None):
     """Returns or modifies the text string of a text object.
     Parameters:
-      object_id = the identifier of a text object
-      text [opt] = a new text string
+      object_id (guid): the identifier of a text object
+      text (str, optional): a new text string
     Returns:
-      if text is not specified, the current string value if successful
-      if text is specified, the previous string value if successful
-      None if not successful, or on error
+      str: if text is not specified, the current string value if successful
+      str: if text is specified, the previous string value if successful
+      None: if not successful, or on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select text")
