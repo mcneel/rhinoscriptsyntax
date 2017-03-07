@@ -7,20 +7,20 @@ from view import __viewhelper
 def AddMesh(vertices, face_vertices, vertex_normals=None, texture_coordinates=None, vertex_colors=None):
     """Add a mesh object to the document
     Parameters:
-      vertices = list of 3D points defining the vertices of the mesh
-      face_vertices = list containing lists of 3 or 4 numbers that define the
-        vertex indices for each face of the mesh. If the third a fourth vertex
-        indices of a face are identical, a triangular face will be created.
-      vertex_normals[opt] = list of 3D vectors defining the vertex normals of
+      vertices ([point, ...]) list of 3D points defining the vertices of the mesh
+      face_vertices ([[number, number, number], [number, number, number, number], ...]) list containing lists of 3 or 4 numbers that define the
+                    vertex indices for each face of the mesh. If the third a fourth vertex
+                     indices of a face are identical, a triangular face will be created.
+      vertex_normals ([vector, ...], optional) list of 3D vectors defining the vertex normals of
         the mesh. Note, for every vertex, there must be a corresponding vertex
         normal
-      texture_coordinates[opt] = list of 2D texture coordinates. For every
+      texture_coordinates ([[number, number], [number, number], [number, number]], ...], optional): list of 2D texture coordinates. For every
         vertex, there must be a corresponding texture coordinate
-      vertex_colors[opt] = a list of color values. For every vertex,
+      vertex_colors ([color, ...]) a list of color values. For every vertex,
         there must be a corresponding vertex color
     Returns:
-      Identifier of the new object if successful
-      None on error
+      guid: Identifier of the new object if successful
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       vertices = []
@@ -83,11 +83,11 @@ def AddMesh(vertices, face_vertices, vertex_normals=None, texture_coordinates=No
 def AddPlanarMesh(object_id, delete_input=False):
     """Creates a planar mesh from a closed, planar curve
     Parameters:
-      object_id = identifier of a closed, planar curve
-      delete_input[opt] = if True, delete the input curve defined by object_id
+      object_id (guid): identifier of a closed, planar curve
+      delete_input (bool, optional) if True, delete the input curve defined by object_id
     Returns:
-      id of the new mesh on success
-      None on error
+      guid: id of the new mesh on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select planar curves to build mesh", rs.filter.curve)
@@ -108,16 +108,17 @@ def AddPlanarMesh(object_id, delete_input=False):
 def CurveMeshIntersection(curve_id, mesh_id, return_faces=False):
     """Calculates the intersection of a curve object and a mesh object
     Parameters:
-      curve_id = identifier of a curve object
-      mesh_id = identifier or a mesh object
-      return_faces[opt] = return both intersection points and face indices.
+      curve_id (guid): identifier of a curve object
+      mesh_id (guid): identifier or a mesh object
+      return_faces (bool, optional): return both intersection points and face indices.
         If False, then just the intersection points are returned
     Returns:
-      if return_false is omitted or False, then a list of intersection points
-      if return_false is True, the a one-dimensional list containing information
+      list(point, ...): if return_false is omitted or False, then a list of intersection points
+      list([point, number], ...): if return_false is True, the a one-dimensional list containing information
         about each intersection. Each element contains the following two elements
-        (point of intersection, mesh face index where intersection lies)
-      None on error
+          [0] = point of intersection
+          [1] = mesh face index where intersection lies
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select curve to intersect", rs.filter.curve)
@@ -149,9 +150,9 @@ def CurveMeshIntersection(curve_id, mesh_id, return_faces=False):
 def DisjointMeshCount(object_id):
     """Returns number of meshes that could be created by calling SplitDisjointMesh
     Parameters:
-      object_id = identifier of a mesh object
+      object_id (guid): identifier of a mesh object
     Returns:
-      The number of meshes that could be created
+      number: The number of meshes that could be created
     Example:
       import rhinoscriptsyntax as rs
       if rs.DisjointMeshCount(obj)>1: rs.SplitDisjointMesh(obj)
@@ -166,10 +167,10 @@ def DisjointMeshCount(object_id):
 def DuplicateMeshBorder(mesh_id):
     """Creates curves that duplicates a mesh border
     Parameters:
-      mesh_id = identifier of a mesh object
+      mesh_id (guid): identifier of a mesh object
     Returns:
-      list of curve ids on success
-      None on error
+      list(guid, ...): list of curve ids on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh)
@@ -196,10 +197,10 @@ def ExplodeMeshes(mesh_ids, delete=False):
     share the edge have unique mesh vertices (not mesh topology vertices)
     at both ends of the edge
     Parameters:
-      mesh_ids = list of mesh identifiers
-      delete[opt] = delete the input meshes
+      mesh_ids ([guid, ...]): list of mesh identifiers
+      delete (bool, optional): delete the input meshes
     Returns:
-      List of identifiers
+      list(guid, ...): List of resulting objects after explode.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh to explode", rs.filter.mesh)
@@ -225,9 +226,9 @@ def ExplodeMeshes(mesh_ids, delete=False):
 def IsMesh(object_id):
     """Verifies if an object is a mesh
     Parameters:
-      object_id = the object's identifier
+      object_id (guid): the object's identifier
     Returns:
-      True if successfull, otherwise False
+      bool: True if successful, otherwise False
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh")
@@ -249,9 +250,9 @@ def IsMesh(object_id):
 def IsMeshClosed(object_id):
     """Verifies a mesh object is closed
     Parameters:
-      object_id = identifier of a mesh object
+      object_id (guid): identifier of a mesh object
     Returns:
-      True if successful, otherwise False.
+      bool: True if successful, otherwise False.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh", rs.filter.mesh)
@@ -271,9 +272,9 @@ def IsMeshManifold(object_id):
     by at most two faces is called manifold. If a mesh has at least one edge
     that is shared by more than two faces, then that mesh is called non-manifold
     Parameters:
-      object_id = identifier of a mesh object
+      object_id (guid): identifier of a mesh object
     Returns:
-      True if successful, otherwise False.
+      bool: True if successful, otherwise False.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh", rs.filter.mesh)
@@ -293,10 +294,11 @@ def IsMeshManifold(object_id):
 def IsPointOnMesh(object_id, point):
     """Verifies a point is on a mesh
     Parameters:
-      object_id = identifier of a mesh object
-      point = test point
+      object_id (guid): identifier of a mesh object
+      point (point): test point
     Returns:
-      True if successful, otherwise False.  None on error.
+      bool: True if successful, otherwise False.
+      None: on error.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh")
@@ -321,10 +323,10 @@ def IsPointOnMesh(object_id, point):
 def JoinMeshes(object_ids, delete_input=False):
     """Joins two or or more mesh objects together
     Parameters:
-      object_ids = identifiers of two or more mesh objects
-      delete_input[opt] = delete input after joining
+      object_ids ([guid, ...]): identifiers of two or more mesh objects
+      delete_input (bool, optional): delete input after joining
     Returns:
-      identifier of newly created mesh on success
+      guid: identifier of newly created mesh on success
     Example:
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select meshes to join", rs.filter.mesh)
@@ -348,13 +350,13 @@ def JoinMeshes(object_ids, delete_input=False):
 def MeshArea(object_ids):
     """Returns approximate area of one or more mesh objects
     Parameters:
-      object_ids = identifiers of one or more mesh objects
+      object_ids ([guid, ...]): identifiers of one or more mesh objects
     Returns:
-      list containing 3 numbers if successful where
-        element[0] = number of meshes used in calculation
-        element[1] = total area of all meshes
-        element[2] = the error estimate
-      None if not successful
+      list(number, number, number): if successful where
+        [0] = number of meshes used in calculation
+        [1] = total area of all meshes
+        [2] = the error estimate
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh )
@@ -384,10 +386,10 @@ def MeshArea(object_ids):
 def MeshAreaCentroid(object_id):
     """Calculates the area centroid of a mesh object
     Parameters:
-      object_id = identifier of a mesh object
+      object_id (guid): identifier of a mesh object
     Returns:
-      Point3d representing the area centroid if successful
-      None on error  
+      point: representing the area centroid if successful
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh )
@@ -407,10 +409,10 @@ def MeshAreaCentroid(object_id):
 def MeshBooleanDifference(input0, input1, delete_input=True):
     """Performs boolean difference operation on two sets of input meshes
     Parameters:
-      input0, input1 = identifiers of meshes
-      delete_input[opt] = delete the input meshes
+      input0, input1 (guid): identifiers of meshes
+      delete_input (bool, optional): delete the input meshes
     Returns:
-      list of identifiers of new meshes
+      list(guid, ...): identifiers of newly created meshes
     Example:
       import rhinoscriptsyntax as rs
       input0 = rs.GetObjects("Select first set of meshes", rs.filter.mesh)
@@ -446,10 +448,10 @@ def MeshBooleanDifference(input0, input1, delete_input=True):
 def MeshBooleanIntersection(input0, input1, delete_input=True):
     """Performs boolean intersection operation on two sets of input meshes
     Parameters:
-      input0, input1 = identifiers of meshes
-      delete_input[opt] = delete the input meshes
+      input0, input1 (guid): identifiers of meshes
+      delete_input (bool, optional): delete the input meshes
     Returns:
-      list of identifiers of new meshes on success
+      list(guid, ...): identifiers of new meshes on success
     Example:
       import rhinoscriptsyntax as rs
       input0 = rs.GetObjects("Select first set of meshes", rs.filter.mesh)
@@ -485,11 +487,11 @@ def MeshBooleanIntersection(input0, input1, delete_input=True):
 def MeshBooleanSplit(input0, input1, delete_input=True):
     """Performs boolean split operation on two sets of input meshes
     Parameters:
-      input0, input1 = identifiers of meshes
-      delete_input[opt] = delete the input meshes
+      input0, input1 (guid): identifiers of meshes
+      delete_input (bool, optional): delete the input meshes
     Returns:
-      list of identifiers of new meshes on success
-      None on error
+      list(guid, ...): identifiers of new meshes on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       input0 = rs.GetObjects("Select first set of meshes", rs.filter.mesh)
@@ -525,10 +527,10 @@ def MeshBooleanSplit(input0, input1, delete_input=True):
 def MeshBooleanUnion(mesh_ids, delete_input=True):
     """Performs boolean union operation on a set of input meshes
     Parameters:
-      mesh_ids = identifiers of meshes
-      delete_input[opt] = delete the input meshes
+      mesh_ids ([guid, ...]): identifiers of meshes
+      delete_input (bool, optional): delete the input meshes
     Returns:
-      list of identifiers of new meshes
+      list(guid, ...): identifiers of new meshes
     Example:
       import rhinoscriptsyntax as rs
       input = rs.GetObjects("Select meshes to union", rs.filter.mesh)
@@ -556,17 +558,17 @@ def MeshBooleanUnion(mesh_ids, delete_input=True):
 def MeshClosestPoint(object_id, point, maximum_distance=None):
     """Returns the point on a mesh that is closest to a test point
     Parameters:
-      object_id = identifier of a mesh object
-      point = point to test
-      maximum_distance[opt] = upper bound used for closest point calculation.
+      object_id (guid): identifier of a mesh object
+      point (point): point to test
+      maximum_distance (number, optional): upper bound used for closest point calculation.
         If you are only interested in finding a point Q on the mesh when
         point.DistanceTo(Q) < maximum_distance, then set maximum_distance to
         that value
     Returns:
-      Tuple containing the results of the calculation where
-        element[0] = the 3-D point on the mesh
-        element[1] = the index of the mesh face on which the 3-D point lies
-      None on error
+      tuple(point, number): containing the results of the calculation where
+                            [0] = the 3-D point on the mesh
+                            [1] = the index of the mesh face on which the 3-D point lies
+      None: on error
     Example:
       import rhinocriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh)
@@ -588,9 +590,9 @@ def MeshClosestPoint(object_id, point, maximum_distance=None):
 def MeshFaceCenters(mesh_id):
     """Returns the center of each face of the mesh object
     Parameters:
-      mesh_id = identifier of a mesh object
+      mesh_id (guid): identifier of a mesh object
     Returns:
-      list of 3d points defining the center of each face
+      list(point, ...): points defining the center of each face
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh)
@@ -609,9 +611,9 @@ def MeshFaceCenters(mesh_id):
 def MeshFaceCount(object_id):
     """Returns total face count of a mesh object
     Parameters:
-      object_id = identifier of a mesh object
+      object_id (guid): identifier of a mesh object
     Returns:
-      The number of mesh faces if successful
+      number: the number of mesh faces if successful
     Example:
       import rhinocsriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh )
@@ -631,10 +633,10 @@ def MeshFaceCount(object_id):
 def MeshFaceNormals(mesh_id):
     """Returns the face unit normal for each face of a mesh object
     Parameters:
-      mesh_id = identifier of a mesh object
+      mesh_id (guid): identifier of a mesh object
     Returns:
-      List of 3D vectors that define the face unit normals of the mesh
-      None on error    
+      list(vector, ...): 3D vectors that define the face unit normals of the mesh
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh)
@@ -659,11 +661,11 @@ def MeshFaceNormals(mesh_id):
 def MeshFaces(object_id, face_type=True):
     """Returns face vertices of a mesh
     Parameters:
-      object_id = identifier of a mesh object
-      face_type[opt] = The face type to be returned. True = both triangles
+      object_id (guid): identifier of a mesh object
+      face_type (bool, optional): The face type to be returned. True = both triangles
         and quads. False = only triangles
     Returns:
-      a list of 3D points that define the face vertices of the mesh. If
+      list([point, point, point, point], ...): 3D points that define the face vertices of the mesh. If
       face_type is True, then faces are returned as both quads and triangles
       (4 3D points). For triangles, the third and fourth vertex will be
       identical. If face_type is False, then faces are returned as only
@@ -708,9 +710,9 @@ def MeshFaces(object_id, face_type=True):
 def MeshFaceVertices(object_id):
     """Returns the vertex indices of all faces of a mesh object
     Parameters:
-      object_id = identifier of a mesh object
+      object_id (guid): identifier of a mesh object
     Returns:
-      A list containing tuples of 4 numbers that define the vertex indices for
+      list((number, number, number, number), ...): containing tuples of 4 numbers that define the vertex indices for
       each face of the mesh. Both quad and triangle faces are returned. If the
       third and fourth vertex indices are identical, the face is a triangle.
     Example:
@@ -736,9 +738,9 @@ def MeshFaceVertices(object_id):
 def MeshHasFaceNormals(object_id):
     """Verifies a mesh object has face normals
     Parameters:
-      object_id = identifier of a mesh object
+      object_id (guid): identifier of a mesh object
     Returns:
-      True if successful, otherwise False.
+      bool: True if successful, otherwise False.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh", rs.filter.mesh)
@@ -756,9 +758,9 @@ def MeshHasFaceNormals(object_id):
 def MeshHasTextureCoordinates(object_id):
     """Verifies a mesh object has texture coordinates
     Parameters:
-      object_id = identifier of a mesh object
+      object_id (guid): identifier of a mesh object
     Returns:
-      True if successful, otherwise False.
+      bool: True if successful, otherwise False.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh", rs.filter.mesh)
@@ -776,9 +778,9 @@ def MeshHasTextureCoordinates(object_id):
 def MeshHasVertexColors(object_id):
     """Verifies a mesh object has vertex colors
     Parameters:
-      object_id = identifier of a mesh object
+      object_id (guid): identifier of a mesh object
     Returns:
-      True if successful, otherwise False.
+      bool: True if successful, otherwise False.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh", rs.filter.mesh)
@@ -796,9 +798,9 @@ def MeshHasVertexColors(object_id):
 def MeshHasVertexNormals(object_id):
     """Verifies a mesh object has vertex normals
     Parameters:
-      object_id = identifier of a mesh object
+      object_id (guid): identifier of a mesh object
     Returns:
-      True if successful, otherwise False.
+      bool: True if successful, otherwise False.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh", rs.filter.mesh)
@@ -816,10 +818,10 @@ def MeshHasVertexNormals(object_id):
 def MeshMeshIntersection(mesh1, mesh2, tolerance=None):
     """Calculates the intersections of a mesh object with another mesh object
     Parameters:
-      mesh1, mesh2 = identifiers of meshes
-      tolerance[opt] = the intersection tolerance
+      mesh1, mesh2 (guid): identifiers of meshes
+      tolerance (number, optional): the intersection tolerance
     Returns:
-      List of 3d point arrays that define the vertices of the intersection curves
+      list(point, ...): of points that define the vertices of the intersection curves
     Example:
       import rhinoscriptsyntax as rs
       mesh1 = rs.GetObject("Select first mesh to intersect", rs.filter.mesh)
@@ -844,13 +846,13 @@ def MeshNakedEdgePoints(object_id):
     meshes, such as are made by MeshBox, have naked mesh edge points where
     the sub-meshes are joined
     Parameters:
-      object_id = identifier of a mesh object
+      object_id (guid): identifier of a mesh object
     Returns:
-      List of boolean values that represent whether or not a mesh vertex is
+      list(bool, ...): of boolean values that represent whether or not a mesh vertex is
       naked or not. The number of elements in the list will be equal to
       the value returned by MeshVertexCount. In which case, the list will
       identify the naked status for each vertex returned by MeshVertices
-      None on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh)
@@ -872,11 +874,11 @@ def MeshOffset(mesh_id, distance):
     """Makes a new mesh with vertices offset at a distance in the opposite
     direction of the existing vertex normals
     Parameters:
-      mesh_id = identifier of a mesh object
-      distance = the distance to offset
+      mesh_id (guid): identifier of a mesh object
+      distance (number, optional): the distance to offset
     Returns:
-      id of the new mesh object if successful
-      None on error
+      guid: identifier of the new mesh object if successful
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       mesh = rs.GetObject("Select mesh to offset", rs.filter.mesh)
@@ -896,10 +898,10 @@ def MeshOffset(mesh_id, distance):
 def MeshOutline(object_ids, view=None):
     """Creates polyline curve outlines of mesh objects
     Parameters:
-      objects_ids = identifiers of meshes to outline
-      view(opt) = view to use for outline direction
+      objects_ids ([guid, ...]): identifiers of meshes to outline
+      view (str, optional): view to use for outline direction
     Returns:
-      list of polyline curve id on success
+      list(guid, ...): polyline curve identifiers on success
     Example:
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select mesh objects to outline", rs.filter.mesh)
@@ -926,9 +928,9 @@ def MeshOutline(object_ids, view=None):
 def MeshQuadCount(object_id):
     """Returns the number of quad faces of a mesh object
     Parameters:
-      object_id = identifier of a mesh object
+      object_id (guid): identifier of a mesh object
     Returns:
-      The number of quad mesh faces if successful
+      number: the number of quad mesh faces if successful
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh )
@@ -945,9 +947,9 @@ def MeshQuadCount(object_id):
 def MeshQuadsToTriangles(object_id):
     """Converts a mesh object's quad faces to triangles
     Parameters:
-      object_id = identifier of a mesh object
+      object_id (guid): identifier of a mesh object
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh )
@@ -971,12 +973,12 @@ def MeshToNurb(object_id, trimmed_triangles=True, delete_input=False):
     """Duplicates each polygon in a mesh with a NURBS surface. The resulting
     surfaces are then joined into a polysurface and added to the document
     Parameters:
-      object_id = identifier of a mesh object
-      trimmed_triangles[opt] = if True, triangles in the mesh will be
+      object_id (guid): identifier of a mesh object
+      trimmed_triangles (bool, optional): if True, triangles in the mesh will be
         represented by a trimmed plane
-      delete_input[opt] = delete input object
+      delete_input (bool, optional): delete input object
     Returns:
-      list of identifiers for the new breps on success
+      list(guid, ...): identifiers for the new breps on success
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh)
@@ -1000,9 +1002,9 @@ def MeshToNurb(object_id, trimmed_triangles=True, delete_input=False):
 def MeshTriangleCount(object_id):
     """Returns number of triangular faces of a mesh
     Parameters:
-      object_id = identifier of a mesh object
+      object_id (guid): identifier of a mesh object
     Returns:
-      The number of triangular mesh faces if successful
+      number: The number of triangular mesh faces if successful
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh )
@@ -1019,13 +1021,13 @@ def MeshTriangleCount(object_id):
 def MeshVertexColors(mesh_id, colors=0):
     """Returns of modifies vertex colors of a mesh
     Parameters:
-      mesh_id = identifier of a mesh object
-      colors[opt] = A list of color values. Note, for each vertex, there must
+      mesh_id (guid): identifier of a mesh object
+      colors 9{color, ...], optional) A list of color values. Note, for each vertex, there must
         be a corresponding vertex color. If the value is None, then any
         existing vertex colors will be removed from the mesh
     Returns:
-      if colors is not specified, the current vertex colors
-      if colors is specified, the previous vertex colors
+      color: if colors is not specified, the current vertex colors
+      color: if colors is specified, the previous vertex colors
     Example:
       import rhinoscriptsyntax as rs
       import random
@@ -1067,9 +1069,9 @@ def MeshVertexColors(mesh_id, colors=0):
 def MeshVertexCount(object_id):
     """Returns the vertex count of a mesh
     Parameters:
-      object_id = identifier of a mesh object
+      object_id (guid): identifier of a mesh object
     Returns:
-      The number of mesh vertices if successful.
+      number: The number of mesh vertices if successful.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh )
@@ -1087,11 +1089,11 @@ def MeshVertexCount(object_id):
 def MeshVertexFaces(mesh_id, vertex_index):
     """Returns the mesh faces that share a specified mesh vertex
     Parameters:
-      mesh_id = identifier of a mesh object
-      vertex_index = index of the mesh vertex to find faces for
+      mesh_id (guid): identifier of a mesh object
+      vertex_index (number): index of the mesh vertex to find faces for
     Returns:
-      list of face indices on success
-      None on error
+      list(number, ...): face indices on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       import random
@@ -1127,9 +1129,9 @@ def MeshVertexFaces(mesh_id, vertex_index):
 def MeshVertexNormals(mesh_id):
     """Returns the vertex unit normal for each vertex of a mesh
     Parameters:
-      mesh_id = identifier of a mesh object
+      mesh_id (guid): identifier of a mesh object
     Returns:
-      list of vertex normals, (empty list if no normals exist)
+      list(vector, ...): of vertex normals, (empty list if no normals exist)
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh)
@@ -1149,9 +1151,9 @@ def MeshVertexNormals(mesh_id):
 def MeshVertices(object_id):
     """Returns the vertices of a mesh
     Parameters:
-      object_id = identifier of a mesh object
+      object_id (guid): identifier of a mesh object
     Returns:
-      list of 3D points
+      list(point, ...): vertex points in the mesh
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh)
@@ -1175,13 +1177,13 @@ def MeshVertices(object_id):
 def MeshVolume(object_ids):
     """Returns the approximate volume of one or more closed meshes
     Parameters:
-      object_ids = identifiers of one or more mesh objects
+      object_ids ([guid, ...]): identifiers of one or more mesh objects
     Returns:
-      tuple containing 3 numbers if successful where
-        element[0] = number of meshes used in volume calculation
-        element[1] = total volume of all meshes
-        element[2] = the error estimate
-      None if not successful
+      tuple(number, number, number): containing 3 velues if successful where
+           [0] = number of meshes used in volume calculation
+           [1] = total volume of all meshes
+           [2] = the error estimate
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh )
@@ -1211,10 +1213,10 @@ def MeshVolume(object_ids):
 def MeshVolumeCentroid(object_id):
     """Calculates the volume centroid of a mesh
     Parameters:
-      object_id = identifier of a mesh object
+      object_id (guid): identifier of a mesh object
     Returns:
-      Point3d representing the volume centroid
-      None on error
+      point: Point3d representing the volume centroid
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh )
@@ -1237,11 +1239,11 @@ def PullCurveToMesh(mesh_id, curve_id):
     the input curve and gets the closest point on the mesh for each point on
     the polyline. Then it "connects the points" to create a polyline on the mesh
     Parameters:
-      mesh_id = identifier of mesh that pulls
-      curve_id = identifier of curve to pull
+      mesh_id (guid): identifier of mesh that pulls
+      curve_id (guid): identifier of curve to pull
     Returns:
-      Guid of new curve on success
-      None on error
+      guid: identifier new curve on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       mesh = rs.GetObject("Select mesh that pulls", rs.filter.mesh)
@@ -1264,10 +1266,10 @@ def PullCurveToMesh(mesh_id, curve_id):
 def SplitDisjointMesh(object_id, delete_input=False):
     """Splits up a mesh into its unconnected pieces
     Parameters:
-      object_id = identifier of a mesh object
-      delete_input [opt] = delete the input object
+      object_id (guid): identifier of a mesh object
+      delete_input (bool, optional): delete the input object
     Returns:
-      list of Guids for the new meshes
+      list(guid, ...): identifiers for the new meshes
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh)
@@ -1289,9 +1291,9 @@ def SplitDisjointMesh(object_id, delete_input=False):
 def UnifyMeshNormals(object_id):
     """Fixes inconsistencies in the directions of faces of a mesh
     Parameters:
-      object_id = identifier of a mesh object
+      object_id (guid): identifier of a mesh object
     Returns:
-      number of faces that were modified
+      number: the number of faces that were modified
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh)
