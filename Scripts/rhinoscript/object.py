@@ -34,7 +34,7 @@ def CopyObject(object_id, translation=None):
 def CopyObjects(object_ids, translation=None):
     """Copies one or more objects from one location to another, or in-place.
     Parameters:
-      object_ids ({guid, ...])list of objects to copy
+      object_ids ([guid, ...])list of objects to copy
       translation (vector, optional): list of three numbers or Vector3d representing
                          translation vector to apply to copied set
     Returns:
@@ -81,7 +81,7 @@ def DeleteObject(object_id):
 def DeleteObjects(object_ids):
     """Deletes one or more objects from the document
     Parameters:
-      object_ids ({guid, ...]): identifiers of objects to delete
+      object_ids ([guid, ...]): identifiers of objects to delete
     Returns:
       number: Number of objects deleted
     Example:
@@ -105,7 +105,7 @@ def FlashObject(object_ids, style=True):
     """Causes the selection state of one or more objects to change momentarily
     so the object appears to flash on the screen
     Parameters:
-      object_ids ([guid], ...]) identifiers of objects to flash
+      object_ids ([guid, ...]) identifiers of objects to flash
       style (bool, optional): If True, flash between object color and selection color.
         If False, flash between visible and invisible
     Returns:
@@ -195,7 +195,7 @@ def IsLayoutObject(object_id):
 
 
 def IsObject(object_id):
-    """Verifies the existance of an object
+    """Verifies the existence of an object
     Parameters:
       object_id (guid): an object to test
     Returns:
@@ -255,7 +255,7 @@ def IsObjectInBox(object_id, box, test_mode=True):
     Parameters:
       object_id (guid): identifier of an object to be tested
       box ([point, point, point, point, point, point, point, point]): bounding box to test for containment
-      test_mode (bool, optioal): If True, the object's bounding box must be contained by box
+      test_mode (bool, optional): If True, the object's bounding box must be contained by box
         If False, the object's bounding box must be contained by or intersect box
     Returns:
       bool: True if object is inside box
