@@ -6,10 +6,10 @@ import math
 def DistanceToPlane(plane, point):
     """Returns the distance from a 3D point to a plane
     Parameters:
-      plane = the plane
-      point = List of 3 numbers or Point3d
+      plane (plane): the plane
+      point (point): List of 3 numbers or Point3d
     Returns:
-      The distance if successful, otherwise None
+      number: The distance if successful, otherwise None
     Example:
       import rhinoscriptsyntax as rs
       point = rs.GetPoint("Point to test")
@@ -31,10 +31,10 @@ def DistanceToPlane(plane, point):
 def EvaluatePlane(plane, parameter):
     """Evaluates a plane at a U,V parameter
     Parameters:
-      plane = the plane to evaluate
-      parameter = list of two numbers defining the U,V parameter to evaluate
+      plane (plane): the plane to evaluate
+      parameter ([number, number]): list of two numbers defining the U,V parameter to evaluate
     Returns:
-      Point3d on success
+      point: Point3d on success
     Example:
       import rhinoscriptsyntax as rs
       view = rs.CurrentView()
@@ -51,12 +51,12 @@ def EvaluatePlane(plane, parameter):
 def IntersectPlanes(plane1, plane2, plane3):
     """Calculates the intersection of three planes
     Parameters:
-      plane1 = the 1st plane to intersect
-      plane2 = the 2nd plane to intersect
-      plane3 = the 3rd plane to intersect
+      plane1 (plane): the 1st plane to intersect
+      plane2 (plane): the 2nd plane to intersect
+      plane3 (plane): the 3rd plane to intersect
     Returns:
-      Point3d on success
-      None on error
+      point: the intersection point between the 3 planes on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       plane1 = rs.WorldXYPlane()
@@ -79,10 +79,10 @@ def IntersectPlanes(plane1, plane2, plane3):
 def MovePlane(plane, origin):
     """Moves the origin of a plane
     Parameters:
-      plane = Plane or ConstructionPlane
-      origin = Point3d or list of three numbers
+      plane (plane): Plane or ConstructionPlane
+      origin (point): Point3d or list of three numbers
     Returns:
-      moved plane
+      plane: moved plane
     Example:
       import rhinoscriptsyntax as rs
       origin = rs.GetPoint("CPlane origin")
@@ -105,17 +105,17 @@ def MovePlane(plane, origin):
 def PlaneClosestPoint(plane, point, return_point=True):
     """Returns the point on a plane that is closest to a test point.
     Parameters:
-      plane = The plane
-      point = The 3-D point to test.
-      return_point [opt] = If omitted or True, then the point on the plane
+      plane (plane): The plane
+      point (point): The 3-D point to test.
+      return_point (bool, optional): If omitted or True, then the point on the plane
          that is closest to the test point is returned. If False, then the
          parameter of the point on the plane that is closest to the test
          point is returned.
     Returns:
-      If return_point is omitted or True, then the 3-D point
-      If return_point is False, then an array containing the U,V parameters
+      point: If return_point is omitted or True, then the 3-D point
+      point: If return_point is False, then an array containing the U,V parameters
       of the point
-      None if not successful, or on error.
+      None: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       point = rs.GetPoint("Point to test")
@@ -139,48 +139,48 @@ def PlaneClosestPoint(plane, point, return_point=True):
 def PlaneCurveIntersection(plane, curve, tolerance=None):
     """Intersect an infinite plane and a curve object
     Parameters:
-      plane = The plane to intersect.
-      curve = The identifier of the curve object
-      torerance [opt] = The intersection tolerance. If omitted, the document's absolute tolerance is used.
+      plane (plane): The plane to intersect.
+      curve (guid): The identifier of the curve object
+      torerance (number, optional): The intersection tolerance. If omitted, the document's absolute tolerance is used.
     Returns:
       A list of intersection information tuple if successful.  The list will contain one or more of the following tuple:
 
         Element Type        Description
 
-        0       Number      The intersection event type, either Point (1) or Overlap (2).
+        [0]       Number      The intersection event type, either Point (1) or Overlap (2).
 
-        1       Point3d     If the event type is Point (1), then the intersection point on the curve.
+        [1]       Point3d     If the event type is Point (1), then the intersection point on the curve.
                             If the event type is Overlap (2), then intersection start point on the curve.
 
-        2       Point3d     If the event type is Point (1), then the intersection point on the curve.
+        [2]       Point3d     If the event type is Point (1), then the intersection point on the curve.
                             If the event type is Overlap (2), then intersection end point on the curve.
 
-        3       Point3d     If the event type is Point (1), then the intersection point on the plane.
+        [3]       Point3d     If the event type is Point (1), then the intersection point on the plane.
                             If the event type is Overlap (2), then intersection start point on the plane.
 
-        4       Point3d     If the event type is Point (1), then the intersection point on the plane.
+        [4]       Point3d     If the event type is Point (1), then the intersection point on the plane.
 
                             If the event type is Overlap (2), then intersection end point on the plane.
 
-        5       Number      If the event type is Point (1), then the curve parameter.
+        [5]       Number      If the event type is Point (1), then the curve parameter.
                             If the event type is Overlap (2), then the start value of the curve parameter range.
                             
-        6       Number      If the event type is Point (1), then the curve parameter.
+        [6]       Number      If the event type is Point (1), then the curve parameter.
                             If the event type is Overlap (2),  then the end value of the curve parameter range.
 
-        7       Number      If the event type is Point (1), then the U plane parameter.
+        [7]       Number      If the event type is Point (1), then the U plane parameter.
                             If the event type is Overlap (2), then the U plane parameter for curve at (n, 5).
 
-        8       Number      If the event type is Point (1), then the V plane parameter.
+        [8]       Number      If the event type is Point (1), then the V plane parameter.
                             If the event type is Overlap (2), then the V plane parameter for curve at (n, 5).
 
-        9       Number      If the event type is Point (1), then the U plane parameter.
+        [9]       Number      If the event type is Point (1), then the U plane parameter.
                             If the event type is Overlap (2), then the U plane parameter for curve at (n, 6).
                             
-        10      Number      If the event type is Point (1), then the V plane parameter.
+        [10]      Number      If the event type is Point (1), then the V plane parameter.
                             If the event type is Overlap (2), then the V plane parameter for curve at (n, 6).
 
-      None on error
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       
@@ -223,9 +223,10 @@ def PlaneEquation(plane):
     """Returns the equation of a plane as a tuple of four numbers. The standard
     equation of a plane with a non-zero vector is Ax+By+Cz+D=0
     Parameters:
-      plane = the plane
+      plane (plane): the plane to deconstruct
     Returns:
-      A tuple containing four numbers that represent the coefficients of the equation if successful, otherwise None
+      tuple(number, number, number, number): containing four numbers that represent the coefficients of the equation  (A, B, C, D) if successful
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       plane = rs.ViewCPlane()
@@ -247,10 +248,10 @@ def PlaneEquation(plane):
 def PlaneFitFromPoints(points):
     """Returns a plane that was fit through an array of 3D points.
     Parameters:
-    points = An array of 3D points.
+    points (point): An array of 3D points.
     Returns: 
-      The plane if successful
-      None if not successful
+      plane: The plane if successful
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       points = rs.GetPoints()
@@ -273,14 +274,14 @@ def PlaneFitFromPoints(points):
 def PlaneFromFrame(origin, x_axis, y_axis):
     """Construct a plane from a point, and two vectors in the plane.
     Parameters:
-      origin = A 3D point identifying the origin of the plane.
-      x_axis = A non-zero 3D vector in the plane that determines the X axis
+      origin (point): A 3D point identifying the origin of the plane.
+      x_axis (vector): A non-zero 3D vector in the plane that determines the X axis
                direction.
-      y_axis = A non-zero 3D vector not parallel to x_axis that is used
+      y_axis (vector): A non-zero 3D vector not parallel to x_axis that is used
                to determine the Y axis direction. Note, y_axis does not
                have to be perpendicular to x_axis.
     Returns:
-      The plane if successful. 
+      plane: The plane if successful.
     Example:
       import rhinoscriptsyntax as rs
       origin = rs.GetPoint("CPlane origin")
@@ -304,11 +305,11 @@ def PlaneFromFrame(origin, x_axis, y_axis):
 def PlaneFromNormal(origin, normal, xaxis=None):
     """Creates a plane from an origin point and a normal direction vector.
     Parameters:
-      origin = A 3D point identifying the origin of the plane.
-      normal = A 3D vector identifying the normal direction of the plane.
-      xaxis[opt] = optional vector defining the plane's x-axis
+      origin (point): A 3D point identifying the origin of the plane.
+      normal (vector): A 3D vector identifying the normal direction of the plane.
+      xaxis (vector, optional): optional vector defining the plane's x-axis
     Returns:
-      The plane if successful.
+      plane: The plane if successful.
     Example:
       import rhinoscriptsyntax as rs
       origin = rs.GetPoint("CPlane origin")
@@ -339,10 +340,10 @@ def PlaneFromNormal(origin, normal, xaxis=None):
 def PlaneFromPoints(origin, x, y):
     """Creates a plane from three non-colinear points
     Parameters:
-      origin = origin point of the plane
-      x, y = points on the plane's x and y axes
+      origin (point): origin point of the plane
+      x, y (point): points on the plane's x and y axes
     Returns:
-      The plane if successful, otherwise None
+      plane: The plane if successful, otherwise None
     Example:
       import rhinoscriptsyntax as rs
       corners = rs.GetRectangle()
@@ -362,11 +363,11 @@ def PlaneFromPoints(origin, x, y):
 def PlanePlaneIntersection(plane1, plane2):
     """Calculates the intersection of two planes
     Parameters:
-      plane1 = the 1st plane to intersect 
-      plane2 = the 2nd plane to intersect
+      plane1 (plane): the 1st plane to intersect
+      plane2 (plane): the 2nd plane to intersect
     Returns:
-      two 3d points identifying the starting/ending points of the intersection
-      None on error
+      line:  a line with two 3d points identifying the starting/ending points of the intersection
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       plane1 = rs.WorldXYPlane()
@@ -387,13 +388,18 @@ def PlanePlaneIntersection(plane1, plane2):
 def PlaneSphereIntersection(plane, sphere_plane, sphere_radius):
     """Calculates the intersection of a plane and a sphere
     Parameters:
-      plane = the plane to intersect
-      sphere_plane = equitorial plane of the sphere. origin of the plane is
+      plane (plane): the plane to intersect
+      sphere_plane (plane): equatorial plane of the sphere. origin of the plane is
         the center of the sphere
-      sphere_radius = radius of the sphere
+      sphere_radius (number): radius of the sphere
     Returns:
-      list of intersection results - see help
-      None on error
+      list(number, point|plane, number): of intersection results
+          Element    Type      Description
+          [0]       number     The type of intersection, where 0 = point and 1 = circle.
+          [1]   point or plane If a point intersection, the a Point3d identifying the 3-D intersection location.
+                               If a circle intersection, then the circle's plane. The origin of the plane will be the center point of the circle
+          [2]       number     If a circle intersection, then the radius of the circle.
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       plane = rs.WorldXYPlane()
@@ -422,10 +428,11 @@ def PlaneSphereIntersection(plane, sphere_plane, sphere_radius):
 def PlaneTransform(plane, xform):
     """Transforms a plane
     Parameters:
-      plane = Plane to transform
-      xform = Transformation to apply
+      plane (plane): Plane to transform
+      xform (transform): Transformation to apply
     Returns:
-      the resulting plane if successful, otherwise None
+      plane:the resulting plane if successful
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       plane = rs.ViewCPlane()
@@ -446,11 +453,11 @@ def PlaneTransform(plane, xform):
 def RotatePlane(plane, angle_degrees, axis):
     """Rotates a plane
     Parameters:
-      plane = Plane to rotate
-      angle_degrees = rotation angle in degrees
-      axis = Vector3d or list of three numbers
+      plane (plane): Plane to rotate
+      angle_degrees (number): rotation angle in degrees
+      axis (vector): Axis of rotation or list of three numbers
     Returns:
-      rotated plane on success
+      plane: rotated plane on success
     Example:
       import rhinoscriptsyntax as rs
       plane = rs.ViewCPlane()
@@ -470,10 +477,8 @@ def RotatePlane(plane, angle_degrees, axis):
 
 def WorldXYPlane():
     """Returns Rhino's world XY plane
-    Parameters:
-      None
     Returns:
-      Rhino's world XY plane
+      plane: Rhino's world XY plane
     Example:
       import rhinoscriptsyntax as rs
       view = rs.CurrentView()
@@ -487,10 +492,8 @@ def WorldXYPlane():
 
 def WorldYZPlane():
     """Returns Rhino's world YZ plane
-    Parameters:
-      None
     Returns:
-      Rhino's world YZ plane
+      plane: Rhino's world YZ plane
     Example:
       import rhinoscriptsyntax as rs
       view = rs.CurrentView()
@@ -504,10 +507,8 @@ def WorldYZPlane():
 
 def WorldZXPlane():
     """Returns Rhino's world ZX plane
-    Parameters:
-      None
     Returns:
-      Rhino's world ZX plane
+      plane: Rhino's world ZX plane
     Example:
       import rhinoscriptsyntax as rs
       view = rs.CurrentView()

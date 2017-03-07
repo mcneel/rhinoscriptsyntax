@@ -1753,11 +1753,11 @@ def TransformObjects(object_ids, matrix, copy=False):
     """Moves, scales, or rotates a list of objects given a 4x4 transformation
     matrix. The matrix acts on the left.
     Parameters:
-      object_ids = List of object identifiers.
-      matrix = The transformation matrix (4x4 array of numbers).
-      copy[opt] = Copy the objects
+      object_ids [(guid, ...}): List of object identifiers.
+      matrix (transform): The transformation matrix (4x4 array of numbers).
+      copy (bool, optional): Copy the objects
     Returns:
-      List of ids identifying the newly transformed objects
+      list(guid, ...): ids identifying the newly transformed objects
     Example:
       import rhinoscriptsyntax as rs
       # Translate (move) objects by (10,10,0)
