@@ -3,11 +3,11 @@ import Rhino
 def CloseToolbarCollection(name, prompt=False):
     """Closes a currently open toolbar collection
     Parameters:
-      name = name of a currently open toolbar collection
-      prompt[opt] = if True, user will be prompted to save the collection file
+      name (str): name of a currently open toolbar collection
+      prompt  (bool, optional): if True, user will be prompted to save the collection file
         if it has been modified prior to closing
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       names = rs.ToolbarCollectionNames()
@@ -27,10 +27,10 @@ def CloseToolbarCollection(name, prompt=False):
 def HideToolbar(name, toolbar_group):
     """Hides a previously visible toolbar group in an open toolbar collection
     Parameters:
-      name = name of a currently open toolbar file
-      toolbar_group = name of a toolbar group to hide
+      name (str): name of a currently open toolbar file
+      toolbar_group (str): name of a toolbar group to hide
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       file = "C:\\SteveBaer\\AppData\\Roaming\\McNeel\\Rhinoceros\\5.0\\UI\\default.rui"
@@ -55,11 +55,11 @@ def HideToolbar(name, toolbar_group):
 def IsToolbar(name, toolbar, group=False):
     """Verifies a toolbar (or toolbar group) exists in an open collection file
     Parameters:
-      name = name of a currently open toolbar file
-      toolbar = name of a toolbar group
-      group[opt] = if toolbar parameter is refering to a toolbar group
+      name (str): name of a currently open toolbar file
+      toolbar (str): name of a toolbar group
+      group (bool, optional): if toolbar parameter is referring to a toolbar group
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       file = "C:\\SteveBaer\\AppData\\Roaming\\McNeel\\Rhinoceros\\5.0\\UI\\default.rui"
@@ -86,10 +86,10 @@ def IsToolbar(name, toolbar, group=False):
 def IsToolbarCollection(file):
     """Verifies that a toolbar collection is open
     Parameters:
-      file = full path to a toolbar collection file
+      file (str): full path to a toolbar collection file
     Returns:
-      Rhino-assigned name of the toolbar collection if successful
-      None if not successful
+      str: Rhino-assigned name of the toolbar collection if successful
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       file = "C:\\SteveBaer\\AppData\\Roaming\\McNeel\\Rhinoceros\\5.0\\UI\\default.rui"
@@ -108,11 +108,11 @@ def IsToolbarCollection(file):
 def IsToolbarDocked(name, toolbar_group):
     """Verifies that a toolbar group in an open toolbar collection is visible
     Parameters:
-      name = name of a currently open toolbar file
-      toolbar_group = name of a toolbar group
+      name (str): name of a currently open toolbar file
+      toolbar_group (str): name of a toolbar group
     Returns:
-      True or False indicating success or failure
-      None on error
+      boolean: True or False indicating success or failure
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       rc = rs.IsToolbarDocked("Default", "Main1")
@@ -135,11 +135,11 @@ def IsToolbarDocked(name, toolbar_group):
 def IsToolbarVisible(name, toolbar_group):
     """Verifies that a toolbar group in an open toolbar collection is visible
     Parameters:
-      name = name of a currently open toolbar file
-      toolbar_group = name of a toolbar group
+      name (str): name of a currently open toolbar file
+      toolbar_group (str): name of a toolbar group
     Returns:
-      True or False indicating success or failure
-      None on error
+      bool:True or False indicating success or failure
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       file = "C:\\SteveBaer\\AppData\\Roaming\\McNeel\\Rhinoceros\\5.0\\UI\\default.rui"
@@ -161,10 +161,10 @@ def IsToolbarVisible(name, toolbar_group):
 def OpenToolbarCollection(file):
     """Opens a toolbar collection file
     Parameters:
-      file = full path to the collection file
+      file (str): full path to the collection file
     Returns:
-      Rhino-assigned name of the toolbar collection if successful
-      None if not successful
+      str: Rhino-assigned name of the toolbar collection if successful
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       file = "C:\\SteveBaer\\AppData\\Roaming\\McNeel\\Rhinoceros\\5.0\\UI\\default.rui"
@@ -183,9 +183,9 @@ def OpenToolbarCollection(file):
 def SaveToolbarCollection(name):
     """Saves an open toolbar collection to disk
     Parameters:
-      name = name of a currently open toolbar file
+      name (str): name of a currently open toolbar file
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       name = "Default"
@@ -201,10 +201,10 @@ def SaveToolbarCollection(name):
 def SaveToolbarCollectionAs(name, file):
     """Saves an open toolbar collection to a different disk file
     Parameters:
-      name = name of a currently open toolbar file
-      file = full path to file name to save to
+      name (str): name of a currently open toolbar file
+      file (str): full path to file name to save to
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       name = "Default"
@@ -221,10 +221,10 @@ def SaveToolbarCollectionAs(name, file):
 def ShowToolbar(name, toolbar_group):
     """Shows a previously hidden toolbar group in an open toolbar collection
     Parameters:
-      name = name of a currently open toolbar file
-      toolbar_group = name of a toolbar group to show
+      name (str): name of a currently open toolbar file
+      toolbar_group (str): name of a toolbar group to show
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       file = "C:\\SteveBaer\\AppData\\Roaming\\McNeel\\Rhinoceros\\5.0\\UI\\default.rui"
@@ -248,10 +248,8 @@ def ShowToolbar(name, toolbar_group):
 
 def ToolbarCollectionCount():
     """Returns number of currently open toolbar collections
-    Parameters:
-      None
     Returns:
-      the number of currently open toolbar collections
+      number: the number of currently open toolbar collections
     Example:
       import rhinoscriptsyntax as rs
       count = rs.ToolbarCollectionCount()
@@ -268,10 +266,8 @@ def ToolbarCollectionCount():
 
 def ToolbarCollectionNames():
     """Returns names of all currently open toolbar collections
-    Parameters:
-      None
     Returns:
-      the names of all currently open toolbar collections
+      list(str, ...): the names of all currently open toolbar collections
     Example:
       import rhinoscriptsyntax as rs
       names = rs.ToolbarCollectionNames()
@@ -289,9 +285,10 @@ def ToolbarCollectionNames():
 def ToolbarCollectionPath(name):
     """Returns full path to a currently open toolbar collection file
     Parameters:
-      name = name of currently open toolbar collection
+      name (str): name of currently open toolbar collection
     Returns:
-      full path on success, None on error
+      str: full path on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       names = rs.ToolbarCollectionNames()
@@ -310,10 +307,11 @@ def ToolbarCollectionPath(name):
 def ToolbarCount(name, groups=False):
     """Returns the number of toolbars or groups in a currently open toolbar file
     Parameters:
-      name = name of currently open toolbar collection
-      groups[opt] = If true, return the number of toolbar groups in the file
+      name (str): name of currently open toolbar collection
+      groups (bool, optional): If true, return the number of toolbar groups in the file
     Returns:
-      number of toolbars on success, None on error
+      number: number of toolbars on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       names = rs.ToolbarCollectionNames()
@@ -337,10 +335,11 @@ def ToolbarNames(name, groups=False):
     """Returns the names of all toolbars (or toolbar groups) found in a
     currently open toolbar file
     Parameters:
-      name = name of currently open toolbar collection
-      groups[opt] = If true, return the names of toolbar groups in the file
+      name (str): name of currently open toolbar collection
+      groups (bool, optional): If true, return the names of toolbar groups in the file
     Returns:
-      names of all toolbars (or toolbar groups) on success, None on error
+      list(str, ...): names of all toolbars (or toolbar groups) on success
+      None: on error
     Example:
       import rhinoscriptsytax as rs
       names = rs.ToolbarCollectionNames()
