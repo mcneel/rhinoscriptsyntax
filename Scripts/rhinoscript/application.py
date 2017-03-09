@@ -734,7 +734,7 @@ def IsPlugIn(plugin):
 def IsRunningOnWindows():
     """Returns True if this script is being executed on a Windows platform
     Returns:
-      bool: True if currently running on the Widnows platform. False if it is not Windows.
+      bool: True if currently running on the Widows platform. False if it is not Windows.
     Example:
       import rhinoscriptsyntax as rs
       if rs.IsRunngingOnWindows():
@@ -834,7 +834,7 @@ def Ortho(enable=None):
       enable (bool, optional): The new enabled status (True or False). If omitted the current state is returned.
     Returns:
       bool: if enable is not specified, then the current ortho status
-      bool: if enable is secified, then the previous ortho status
+      bool: if enable is specified, then the previous ortho status
     Example:
       import rhinoscriptsyntax as rs
       if not rs.Ortho(): rs.Ortho(True)
@@ -876,7 +876,7 @@ def OsnapDialog(visible=None):
       visible (bool, optional): The new visibility state. If omitted then the current state is returned.
     Returns:
       bool: if visible is not specified, then the current visible state
-      bool: if visible is secified, then the previous visible state
+      bool: if visible is specified, then the previous visible state
     Example:
       import rhinoscriptsyntax as rs
       if not rs.OsnapDialog(): rs.OsnapDialog(True)
