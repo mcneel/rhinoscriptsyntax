@@ -1603,7 +1603,8 @@ def CurveDomain(curve_id, segment_index=-1):
       curve_id = identifier of the curve object
       segment_index [opt] = the curve segment if curve_id identifies a polycurve.
     Returns:
-      the domain of the curve if successful, otherwise None
+      the domain of the curve if successful.
+      If the curve cannot be coerced, an error is raised.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -1615,8 +1616,7 @@ def CurveDomain(curve_id, segment_index=-1):
       IsCurve
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
-    dom = curve.Domain
-    return [dom.Min, dom.Max]
+    return curve.Domain
 
 
 def CurveEditPoints(curve_id, return_parameters=False, segment_index=-1):
