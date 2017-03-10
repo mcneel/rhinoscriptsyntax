@@ -9,9 +9,9 @@ import view as rhview
 def IsXformIdentity(xform):
     """Verifies a matrix is the identity matrix
     Parameters:
-      xform =  List or Rhino.Geometry.Transform.  A 4x4 transformation matrix.
+      xform (transform): List or Rhino.Geometry.Transform.  A 4x4 transformation matrix.
     Returns:
-      True or False indicating success or failure.
+      bool: True or False indicating success or failure.
     Example:
       import rhinoscriptsyntax as rs
       xform = rs.XformIdentity()
@@ -30,9 +30,9 @@ def IsXformSimilarity(xform):
     transformation can be broken into a sequence of dialations, translations,
     rotations, and reflections
     Parameters:
-      xform = List or Rhino.Geometry.Transform.  A 4x4 transformation matrix.
+      xform (transform): List or Rhino.Geometry.Transform.  A 4x4 transformation matrix.
     Returns:
-      True if this transformation is an orientation preserving similarity, otherwise False.
+      bool: True if this transformation is an orientation preserving similarity, otherwise False.
     Example:
       import rhinoscriptsyntax as rs
       xform = rs.BlockInstanceXform(block)
@@ -48,9 +48,9 @@ def IsXformSimilarity(xform):
 def IsXformZero(xform):
     """verifies that a matrix is a zero transformation matrix
     Parameters:
-      xform = List or Rhino.Geometry.Transform.  A 4x4 transformation matrix.
+      xform (transform): List or Rhino.Geometry.Transform.  A 4x4 transformation matrix.
     Returns:
-      True or False indicating success or failure.
+      bool: True or False indicating success or failure.
     Example:
       import rhinoscriptsyntax as rs
       xform = rs.XformZero()
@@ -70,10 +70,11 @@ def IsXformZero(xform):
 def XformChangeBasis(initial_plane, final_plane):
     """Returns a change of basis transformation matrix or None on error
     Parameters:
-      initial_plane = the initial plane
-      final_plane = the final plane
+      initial_plane (plane): the initial plane
+      final_plane (plane): the final plane
     Returns:
-      The 4x4 transformation matrix if successful, otherwise None
+      transform: The 4x4 transformation matrix if successful
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       import math
@@ -101,10 +102,11 @@ def XformChangeBasis(initial_plane, final_plane):
 def XformChangeBasis2(x0,y0,z0,x1,y1,z1):
     """Returns a change of basis transformation matrix of None on error
     Parameters:
-      x0,y0,z0 = initial basis
-      x1,y1,z1 = final basis
+      x0,y0,z0 (vector): initial basis
+      x1,y1,z1 (vector): final basis
     Returns:
-      The 4x4 transformation matrix if successful, otherwise None
+      transform: The 4x4 transformation matrix if successful
+      None: if not successful
     Example:
     See Also:
     """
@@ -124,9 +126,10 @@ def XformCompare(xform1, xform2):
     Parameters:
       xform1, xform2 = matrices to compare
     Returns:
-      -1 if xform1<xform2
-       1 if xform1>xform2
-       0 if xform1=xform2
+        number:
+        -1 if xform1<xform2
+         1 if xform1>xform2
+         0 if xform1=xform2
     Example:
       import rhinoscriptsyntax as rs
       xform0 = rs.XformZero()
@@ -145,10 +148,10 @@ def XformCompare(xform1, xform2):
 def XformCPlaneToWorld(point, plane):
     """Transform point from construction plane coordinates to world coordinates
     Parameters:
-      point = A 3D point in construction plane coordinates.
-      plane = The construction plane
+      point (point): A 3D point in construction plane coordinates.
+      plane (plane): The construction plane
     Returns:
-      A 3D point in world coordinates
+      point: A 3D point in world coordinates
     Example:
       import rhinoscriptsyntax as rs
       plane = rs.ViewCPlane()
@@ -167,9 +170,10 @@ def XformDeterminant(xform):
     of a transformation matrix is 0, the matrix is said to be singular. Singular
     matrices do not have inverses.
     Parameters:
-      xform = List or Rhino.Geometry.Transform.  A 4x4 transformation matrix.
+      xform (transform): List or Rhino.Geometry.Transform.  A 4x4 transformation matrix.
     Returns:
-      The determinant if successful, otherwise None
+      number: The determinant if successful
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       xform = rs.BlockInstanceXform(obj)
@@ -185,9 +189,10 @@ def XformDiagonal(diagonal_value):
     """Returns a diagonal transformation matrix. Diagonal matrices are 3x3 with
     the bottom row [0,0,0,1]
     Parameters:
-      diagonal_value = the diagonal value
+      diagonal_value (number): the diagonal value
     Returns:
-      The 4x4 transformation matrix if successful, otherwise None
+      transform: The 4x4 transformation matrix if successful
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       def printmatrix(xform):
@@ -203,10 +208,8 @@ def XformDiagonal(diagonal_value):
 
 def XformIdentity():
     """returns the identity transformation matrix
-    Parameters:
-      None
     Returns:
-      The 4x4 transformation matrix
+      transform: The 4x4 transformation matrix
     Example:
       import rhinoscriptsyntax as rs
       def printmatrix(xform):
@@ -223,10 +226,10 @@ def XformIdentity():
 def XformInverse(xform):
     """Returns the inverse of a non-singular transformation matrix
     Parameters:
-      xform = List or Rhino.Geometry.Transform.  A 4x4 transformation matrix.
+      xform (transform): List or Rhino.Geometry.Transform.  A 4x4 transformation matrix.
     Returns:
-      The inverted 4x4 transformation matrix if successful.
-      None, if matrix is non-singular or on error.
+      transform: The inverted 4x4 transformation matrix if successful.
+      None: if matrix is non-singular or on error.
     Example:
       import rhinoscriptsyntax as rs
       xform = rs.BlockInstanceXform(obj)
@@ -244,10 +247,10 @@ def XformInverse(xform):
 def XformMirror(mirror_plane_point, mirror_plane_normal):
     """Creates a mirror transformation matrix
     Parameters:
-      mirror_plane_point = point on the mirror plane
-      mirror_plane_normal = a 3D vector that is normal to the mirror plane
+      mirror_plane_point (point): point on the mirror plane
+      mirror_plane_normal (vector): a 3D vector that is normal to the mirror plane
     Returns:
-      mirror Transform
+      transform: mirror Transform matrix
     Example:
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select objects to mirror")
@@ -270,10 +273,10 @@ def XformMirror(mirror_plane_point, mirror_plane_normal):
 def XformMultiply(xform1, xform2):
     """Multiplies two transformation matrices, where result = xform1 * xform2
     Parameters:
-      xform1 = List or Rhino.Geometry.Transform.  The first 4x4 transformation matrix to multiply.
-      xform2 = List or Rhino.Geometry.Transform.  The second 4x4 transformation matrix to multiply.
+      xform1 (transform): List or Rhino.Geometry.Transform.  The first 4x4 transformation matrix to multiply.
+      xform2 (transform): List or Rhino.Geometry.Transform.  The second 4x4 transformation matrix to multiply.
     Returns:
-      result transformation on success
+      transform: result transformation on success
     Example:
       import rhinoscriptsyntax as rs
       import math
@@ -302,9 +305,9 @@ def XformMultiply(xform1, xform2):
 def XformPlanarProjection(plane):
     """Returns a transformation matrix that projects to a plane.
     Parameters:
-      plane = The plane to project to.
+      plane (plane): The plane to project to.
     Returns:
-      The 4x4 transformation matrix.
+      transform: The 4x4 transformation matrix.
     Example:
       import rhinoscriptsyntax as rs
       objects = rs.GetObjects("Select objects to project")
@@ -327,11 +330,11 @@ def XformRotation1(initial_plane, final_plane):
     """Returns a rotation transformation that maps initial_plane to final_plane.
     The planes should be right hand orthonormal planes.
     Parameters:
-      initial_plane = plane to rotate from
-      final_plane = plane to rotate to
+      initial_plane (plane): plane to rotate from
+      final_plane (plane): plane to rotate to
     Returns:
-      The 4x4 transformation matrix.
-      None on error.
+      transform: The 4x4 transformation matrix.
+      None: on error.
     Example:
     See Also:
     """
@@ -345,12 +348,12 @@ def XformRotation1(initial_plane, final_plane):
 def XformRotation2(angle_degrees, rotation_axis, center_point):
     """Returns a rotation transformation around an axis
     Parameters:
-      angle_degrees = rotation angle in degrees
-      rotation_axis = Vector3d: rotation axis
-      center_point = Point3d: rotation center
+      angle_degrees (number): rotation angle in degrees
+      rotation_axis (vector): rotation axis
+      center_point (point): rotation center
     Returns:
-      The 4x4 transformation matrix.
-      None on error.
+      transform: The 4x4 transformation matrix.
+      None: on error.
     Example:
     See Also:
     """
@@ -366,11 +369,11 @@ def XformRotation3( start_direction, end_direction, center_point ):
     """Calculate the minimal transformation that rotates start_direction to
     end_direction while fixing center_point
     Parameters:
-      start_direction, end_direction = 3d vectors
-      center_point = the rotation center
+      start_direction, end_direction (vector): 3d vectors
+      center_point (point): the rotation center
     Returns:
-      The 4x4 transformation matrix.
-      None on error.
+      transform: The 4x4 transformation matrix.
+      None: on error.
     Example:
     See Also:
     """
@@ -385,11 +388,11 @@ def XformRotation3( start_direction, end_direction, center_point ):
 def XformRotation4(x0, y0, z0, x1, y1, z1):
     """Returns a rotation transformation.
     Parameters:
-      x0,y0,z0 = Vectors defining the initial orthonormal frame
-      x1,y1,z1 = Vectors defining the final orthonormal frame
+      x0,y0,z0 (vector): Vectors defining the initial orthonormal frame
+      x1,y1,z1 (vector): Vectors defining the final orthonormal frame
     Returns:
-      The 4x4 transformation matrix.
-      None on error.
+      transform: The 4x4 transformation matrix.
+      None: on error.
     Example:
     See Also:
     """
@@ -407,11 +410,11 @@ def XformRotation4(x0, y0, z0, x1, y1, z1):
 def XformScale(scale, point=None):
     """Creates a scale transformation
     Parameters:
-      scale = single number, list of 3 numbers, Point3d, or Vector3d
-      point[opt] = center of scale. If omitted, world origin is used
+      scale (number|point|vector|[number, number, number]): single number, list of 3 numbers, Point3d, or Vector3d
+      point (point, optional): center of scale. If omitted, world origin is used
     Returns:
-      The 4x4 transformation matrix on success
-      None on error
+      transform: The 4x4 transformation matrix on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select objects to scale")
@@ -442,13 +445,13 @@ def XformScreenToWorld(point, view=None, screen_coordinates=False):
     or screen coordinates to world coordinates. The resulting coordinates are represented
     as a 3-D point
     Parameters:
-      point = 2D point
-      view[opt] = title or identifier of a view. If omitted, the active view is used
-      screen_coordinates[opt] = if False, point is in client-area coordinates. If True,
+      point (point): 2D point
+      view (str, optional): title or identifier of a view. If omitted, the active view is used
+      screen_coordinates (bool, optional): if False, point is in client-area coordinates. If True,
       point is in screen-area coordinates
     Returns:
-      3D point on success
-      None on error
+      point: on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       point2d = 200,100
@@ -474,10 +477,10 @@ def XformScreenToWorld(point, view=None, screen_coordinates=False):
 def XformShear(plane, x, y, z):
     """Returns a shear transformation matrix
     Parameters:
-      plane = plane[0] is the fixed point
-      x,y,z = each axis scale factor
+      plane (plane): plane[0] is the fixed point
+      x,y,z (number): each axis scale factor
     Returns:
-      The 4x4 transformation matrix on success
+      transform: The 4x4 transformation matrix on success
     Example:
       import rhinoscriptsyntax as rs
       objects = rs.GetObjects("Select objects to shear")
@@ -502,9 +505,9 @@ def XformShear(plane, x, y, z):
 def XformTranslation(vector):
     """Creates a translation transformation matrix
     Parameters:
-      vector = List of 3 numbers, Point3d, or Vector3d.  A 3-D translation vector.
+      vector (vector): List of 3 numbers, Point3d, or Vector3d.  A 3-D translation vector.
     Returns:
-      The 4x4 transformation matrix is successful, otherwise None
+      transform: The 4x4 transformation matrix is successful, otherwise None
     Example:
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select objects to copy")
@@ -525,10 +528,10 @@ def XformTranslation(vector):
 def XformWorldToCPlane(point, plane):
     """Transforms a point from world coordinates to construction plane coordinates.
     Parameters:
-      point = A 3D point in world coordinates.
-      plane = The construction plane
+      point (point): A 3D point in world coordinates.
+      plane (plane): The construction plane
     Returns:
-      A 3D point in construction plane coordinates
+      (point): 3D point in construction plane coordinates
     Example:
       import rhinoscriptsyntax as rs
       plane = rs.ViewCPlane()
@@ -548,13 +551,13 @@ def XformWorldToScreen(point, view=None, screen_coordinates=False):
     the specified view or screen coordinates. The resulting coordinates are represented
     as a 2D point
     Parameters:
-      point = 3D point in world coordinates
-      view[opt] = title or identifier of a view. If omitted, the active view is used
-      screen_coordinates[opt] = if False, the function returns the results as
+      point (point): 3D point in world coordinates
+      view (str, optional): title or identifier of a view. If omitted, the active view is used
+      screen_coordinates (bool, optional): if False, the function returns the results as
         client-area coordinates. If True, the result is in screen-area coordinates
     Returns:
-      2D point on success
-      None on error
+      (point): 2D point on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       point = (0.0, 0.0, 0.0)
@@ -579,10 +582,8 @@ def XformWorldToScreen(point, view=None, screen_coordinates=False):
 
 def XformZero():
     """Returns a zero transformation matrix
-    Parameters:
-      None
     Returns:
-      a zero transformation matrix
+      transform: a zero transformation matrix
     Example:
       import rhinoscriptsyntax as rs
       def printmatrix(xform):

@@ -9,10 +9,10 @@ def AddMaterialToLayer(layer):
     layer already has a material, then the layer's current material index is
     returned
     Parameters:
-      layer = name of an existing layer.
+      layer (str): name of an existing layer.
     Returns:
-      Material index of the layer if successful
-      None if not successful or on error
+      number: Material index of the layer if successful
+      None: if not successful or on error
     Example:
       import rhinoscriptsyntax as rs
       layer = rs.CurrentLayer()
@@ -36,9 +36,9 @@ def AddMaterialToObject(object_id):
     object already has a material, the the object's current material index is
     returned.
     Parameters:
-      object_id = identifier of an object
+      object_id (guid): identifier of an object
     Returns:
-      material index of the object
+      number: material index of the object
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject()
@@ -66,9 +66,9 @@ def AddMaterialToObject(object_id):
 def CopyMaterial(source_index, destination_index):
     """Copies definition of a source material to a destination material
     Parameters:
-      source_index, destination_index = indices of materials to copy
+      source_index, destination_index (number): indices of materials to copy
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       src = rs.LayerMaterialIndex("Default")
@@ -92,9 +92,9 @@ def IsMaterialDefault(material_index):
     The default material is used by objects and layers that have not been
     assigned a material.
     Parameters:
-      material_index = the zero-based material index
+      material_index (number): the zero-based material index
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject()
@@ -115,9 +115,9 @@ def IsMaterialDefault(material_index):
 def IsMaterialReference(material_index):
     """Verifies a material is referenced from another file
     Parameters:
-      material_index = the zero-based material index
+      material_index (number): the zero-based material index
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject()
@@ -139,12 +139,12 @@ def IsMaterialReference(material_index):
 def MatchMaterial(source, destination):
     """Copies the material definition from one material to one or more objects
     Parameters:
-      source = source material index -or- identifier of the source object.
+      source (number|guid): source material index -or- identifier of the source object.
         The object must have a material assigned
-      destination = indentifier(s) of the destination object(s)
+      destination ([guid, ...]) identifiers(s) of the destination object(s)
     Returns:
-      number of objects that were modified if successful
-      None if not successful or on error
+      number: number of objects that were modified if successful
+      None: if not successful or on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select source object")
@@ -181,12 +181,12 @@ def MatchMaterial(source, destination):
 def MaterialBump(material_index, filename=None):
     """Returns or modifies a material's bump bitmap filename
     Parameters:
-      material_index = zero based material index
-      filename[opt] = the bump bitmap filename
+      material_index (number): zero based material index
+      filename (str, optional): the bump bitmap filename
     Returns:
-      if filename is not specified, the current bump bitmap filename
-      if filename is specified, the previous bump bitmap filename
-      None if not successful or on error
+      str: if filename is not specified, the current bump bitmap filename
+      str: if filename is specified, the previous bump bitmap filename
+      None: if not successful or on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
@@ -216,12 +216,12 @@ def MaterialBump(material_index, filename=None):
 def MaterialColor(material_index, color=None):
     """Returns or modifies a material's diffuse color.
     Parameters:
-      material_index = zero based material index
-      color[opt] = the new color value
+      material_index (number): zero based material index
+      color (color, optional): the new color value
     Returns:
-      if color is not specified, the current material color
-      if color is specified, the previous material color
-      None on error
+      color: if color is not specified, the current material color
+      color: if color is specified, the previous material color
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
@@ -251,12 +251,12 @@ def MaterialColor(material_index, color=None):
 def MaterialEnvironmentMap(material_index, filename=None):
     """Returns or modifies a material's environment bitmap filename.
     Parameters:
-      material_index = zero based material index
-      filename[opt] = the environment bitmap filename
+      material_index (number): zero based material index
+      filename (str, optional): the environment bitmap filename
     Returns:
-      if filename is not specified, the current environment bitmap filename
-      if filename is specified, the previous environment bitmap filename
-      None if not successful or on error
+      str: if filename is not specified, the current environment bitmap filename
+      str: if filename is specified, the previous environment bitmap filename
+      None: if not successful or on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
@@ -283,12 +283,12 @@ def MaterialEnvironmentMap(material_index, filename=None):
 def MaterialName(material_index, name=None):
     """Returns or modifies a material's user defined name
     Parameters:
-      material_index = zero based material index
-      name[opt] = the new name
+      material_index (number): zero based material index
+      name (str, optional): the new name
     Returns:
-      if name is not specified, the current material name
-      if name is specified, the previous material name
-      None on error
+      str: if name is not specified, the current material name
+      str: if name is specified, the previous material name
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
@@ -316,12 +316,12 @@ def MaterialName(material_index, name=None):
 def MaterialReflectiveColor(material_index, color=None):
     """Returns or modifies a material's reflective color.
     Parameters:
-      material_index = zero based material index
-      color[opt] = the new color value
+      material_index (number): zero based material index
+      color (color, optional): the new color value
     Returns:
-      if color is not specified, the current material reflective color
-      if color is specified, the previous material reflective color
-      None on error
+      color: if color is not specified, the current material reflective color
+      color: if color is specified, the previous material reflective color
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
@@ -351,13 +351,13 @@ def MaterialReflectiveColor(material_index, color=None):
 def MaterialShine(material_index, shine=None):
     """Returns or modifies a material's shine value
     Parameters:
-      material_index = zero based material index
-      shine[opt] = the new shine value. A material's shine value ranges from 0.0 to 255.0, with
+      material_index (number): zero based material index
+      shine (number, optional): the new shine value. A material's shine value ranges from 0.0 to 255.0, with
         0.0 being matte and 255.0 being glossy
     Returns:
-      if shine is not specified, the current material shine value
-      if shine is specified, the previous material shine value
-      None on error
+      number: if shine is not specified, the current material shine value
+      number: if shine is specified, the previous material shine value
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       MAX_SHINE = 255.0
@@ -387,12 +387,12 @@ def MaterialShine(material_index, shine=None):
 def MaterialTexture(material_index, filename=None):
     """Returns or modifies a material's texture bitmap filename
     Parameters:
-      material_index = zero based material index
-      filename[opt] = the texture bitmap filename
+      material_index (number): zero based material index
+      filename (str, optional): the texture bitmap filename
     Returns:
-      if filename is not specified, the current texture bitmap filename
-      if filename is specified, the previous texture bitmap filename
-      None if not successful or on error
+      str: if filename is not specified, the current texture bitmap filename
+      str: if filename is specified, the previous texture bitmap filename
+      None: if not successful or on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
@@ -422,13 +422,13 @@ def MaterialTexture(material_index, filename=None):
 def MaterialTransparency(material_index, transparency=None):
     """Returns or modifies a material's transparency value
     Parameters:
-      material_index = zero based material index
-      transparency[opt] = the new transparency value. A material's transparency value ranges from 0.0 to 1.0, with
+      material_index (number): zero based material index
+      transparency (number, optional): the new transparency value. A material's transparency value ranges from 0.0 to 1.0, with
         0.0 being opaque and 1.0 being transparent
     Returns:
-      if transparency is not specified, the current material transparency value
-      if transparency is specified, the previous material transparency value
-      None on error
+      number: if transparency is not specified, the current material transparency value
+      number: if transparency is specified, the previous material transparency value
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
@@ -457,12 +457,12 @@ def MaterialTransparency(material_index, transparency=None):
 def MaterialTransparencyMap(material_index, filename=None):
     """Returns or modifies a material's transparency bitmap filename
     Parameters:
-      material_index = zero based material index
-      filename[opt] = the transparency bitmap filename
+      material_index (number): zero based material index
+      filename (str, optional): the transparency bitmap filename
     Returns:
-      if filename is not specified, the current transparency bitmap filename
-      if filename is specified, the previous transparency bitmap filename
-      None if not successful or on error
+      str: if filename is not specified, the current transparency bitmap filename
+      str: if filename is specified, the previous transparency bitmap filename
+      None: if not successful or on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
@@ -489,9 +489,9 @@ def MaterialTransparencyMap(material_index, filename=None):
 def ResetMaterial(material_index):
     """Resets a material to Rhino's default material
     Parameters:
-      material_index = zero based material index
+      material_index (number) zero based material index
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")

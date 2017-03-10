@@ -7,17 +7,17 @@ import utility as rhutil
 def CreatePreviewImage(filename, view=None, size=None, flags=0, wireframe=False):
     """Create a bitmap preview image of the current model
     Parameters:
-      filename = name of the bitmap file to create
-      view[opt] = title of the view. If omitted, the active view is used
-      size[opt] = two integers that specify width and height of the bitmap
-      flags[opt] = Bitmap creation flags. Can be the combination of:
+      filename (str): name of the bitmap file to create
+      view (str, optional): title of the view. If omitted, the active view is used
+      size (number, optional): two integers that specify width and height of the bitmap
+      flags (number, optional): Bitmap creation flags. Can be the combination of:
           1 = honor object highlighting
           2 = draw construction plane
           4 = use ghosted shading
-      wireframe[opt] = If True then a wireframe preview image. If False,
+      wireframe (bool, optional): If True then a wireframe preview image. If False,
           a rendered image will be created
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as  rs
       result = rs.CreatePreviewImage("test.jpg")
@@ -49,10 +49,10 @@ def DocumentModified(modified=None):
     document modified flag to False will prevent the "Do you want to save this
     file..." from displaying when you close Rhino.
     Parameters:
-      modified [optional] = the modified state, either True or False
+      modified (bool): the modified state, either True or False
     Returns:
-      if no modified state is specified, the current modified state
-      if a modified state is specified, the previous modified state
+      bool: if no modified state is specified, the current modified state
+      bool: if a modified state is specified, the previous modified state
     Example:
       import rhinoscriptsyntax as rs
       modified = rs.IsDocumentModified()
@@ -68,10 +68,8 @@ def DocumentModified(modified=None):
 
 def DocumentName():
     """Returns the name of the currently loaded Rhino document (3DM file)
-    Parameters:
-      None
     Returns:
-      the name of the currently loaded Rhino document (3DM file)
+      str: the name of the currently loaded Rhino document (3DM file)
     Example:
       import rhinoscriptsyntax as rs
       name = rs.DocumentName()
@@ -84,10 +82,8 @@ def DocumentName():
 
 def DocumentPath():
     """Returns path of the currently loaded Rhino document (3DM file)
-    Parameters:
-      None
     Returns:
-      the path of the currently loaded Rhino document (3DM file) 
+      str: the path of the currently loaded Rhino document (3DM file)
     Example:
       import rhinoscriptsyntax as rs
       path = rs.DocumentPath()
@@ -106,9 +102,9 @@ def DocumentPath():
 def EnableRedraw(enable=True):
     """Enables or disables screen redrawing
     Parameters:
-      enable [opt] = True to enable, False to disable
+      enable (bool, optional): True to enable, False to disable
     Returns: 
-      previous screen redrawing state
+      bool: previous screen redrawing state
     Example:
       import rhinoscriptsyntax as rs
       redraw = rs.EnableRedraw(True)
@@ -123,13 +119,13 @@ def EnableRedraw(enable=True):
 def ExtractPreviewImage(filename, modelname=None):
     """Extracts the bitmap preview image from the specified model (.3dm)
     Parameters:
-      filename = name of the bitmap file to create. The extension of
+      filename (str): name of the bitmap file to create. The extension of
          the filename controls the format of the bitmap file created.
          (.bmp, .tga, .jpg, .jpeg, .pcx, .png, .tif, .tiff)
-      modelname [opt] = The model (.3dm) from which to extract the
+      modelname (str, optional): The model (.3dm) from which to extract the
          preview image. If omitted, the currently loaded model is used.
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       result = rs.ExtractPreviewImage("test.jpg")
@@ -145,10 +141,8 @@ def ExtractPreviewImage(filename, modelname=None):
 
 def IsDocumentModified():
     """Verifies that the current document has been modified in some way
-    Parameters:
-      None
     Returns:
-      True or False. None on error
+      bool: True or False. None on error
     Example:
       import rhinoscriptsyntax as rs
       modified = rs.IsDocumentModified()
@@ -163,10 +157,10 @@ def Notes(newnotes=None):
     """Returns or sets the document's notes. Notes are generally created
     using Rhino's Notes command
     Parameters:
-      newnotes[opt] = new notes to set
+      newnotes (str): new notes to set
     Returns:
-      if newnotes is omitted, the current notes if successful
-      if newnotes is specified, the previous notes if successful
+      str: if `newnotes` is omitted, the current notes if successful
+      str: if `newnotes` is specified, the previous notes if successful
     Example:
       import rhinoscriptsyntax as rs
       notes = rs.Notes()
@@ -183,10 +177,8 @@ def ReadFileVersion():
     """Returns the file version of the current document. Use this function to
     determine which version of Rhino last saved the document. Note, this
     function will not return values from referenced or merged files.
-    Parameters:
-      None
     Returns:
-      the file version of the current document
+      str: the file version of the current document
     Example:
       import rhinoscriptsyntax as rs
       print "ReadFileVersion =", rs.ReadFileVersion()
@@ -199,8 +191,6 @@ def ReadFileVersion():
 
 def Redraw():
     """Redraws all views
-    Parameters:
-      None
     Returns:
       None 
     Example:
@@ -217,12 +207,12 @@ def Redraw():
 
 
 def RenderAntialias(style=None):
-    """Returns or sets render antialias style
+    """Returns or sets render antialiasing style
     Parameters:
-      style[opt] = level of antialiasing (0=none, 1=normal, 2=best)
+      style (number, optional): level of antialiasing (0=none, 1=normal, 2=best)
     Returns:
-      if style is not specified, the current antialias style
-      if style is specified, the previous antialias style
+      number: if style is not specified, the current antialiasing style
+      number: if style is specified, the previous antialiasing style
     Example:
       import rhinoscriptsyntax as rs
       rs.RenderAntialias(1)
@@ -242,11 +232,11 @@ def RenderAntialias(style=None):
 def RenderColor(item, color=None):
     """Returns or sets the render ambient light or background color
     Parameters:
-      item = 0=ambient light color, 1=background color
-      color[opt] = the new color value. If omitted, the curren item color is returned
+      item (number): 0=ambient light color, 1=background color
+      color (color, optional): the new color value. If omitted, the current item color is returned
     Returns:
-      if color is not specified, the current item color
-      if color is specified, the previous item color
+      color: if color is not specified, the current item color
+      color: if color is specified, the previous item color
     Example:
       import rhinoscriptsyntax as rs
       render_background_color = 1
@@ -272,13 +262,14 @@ def RenderColor(item, color=None):
 def RenderResolution(resolution=None):
     """Returns or sets the render resolution
     Parameters:
-      resolution[opt] = width and height of render
+      resolution ([number, number], optional): width and height of render
     Returns:
-      if resolution is not specified, the current resolution width,height
-      if resolution is specified, the previous resolution width, height
+      tuple(number, number): if resolution is not specified, the current resolution width,height
+      tuple(number, number): if resolution is specified, the previous resolution width, height
     Example:
       import rhinoscriptsyntax as rs
-      sizex, sizey = rs.Viewsize()
+      sizex, sizey = rs.RenderResolution()
+      print sizex, sizey
     See Also:
       RenderAntialias
       RenderColor
@@ -295,15 +286,15 @@ def RenderResolution(resolution=None):
 def RenderSettings(settings=None):
     """Returns or sets render settings
     Parameters:
-      settings[opt] = render settings to modify.
+      settings (number, optional): bit-coded flags of render settings to modify.
         0=none,
         1=create shadows,
         2=use lights on layers that are off,
         4=render curves and isocurves,
         8=render dimensions and text
     Returns:
-      if settings are not specified, the current render settings
-      if settings are specified, the previous render settings
+      number: if settings are not specified, the current render settings in bit-coded flags
+      number: if settings are specified, the previous render settings in bit-coded flags
     Example:
       import rhinoscriptsyntax as rs
       render_annotations = 8
@@ -336,12 +327,12 @@ def UnitAbsoluteTolerance(tolerance=None, in_model_units=True):
     is measured in drawing units. See Rhino's document properties command
     (Units and Page Units Window) for details
     Parameters:
-      tolerance [opt] = the absolute tolerance to set
-      in_model_units[opt] = Return or modify the document's model units (True)
+      tolerance (number, optional): the absolute tolerance to set
+      in_model_units (bool, optional): Return or modify the document's model units (True)
                             or the document's page units (False)
     Returns:
-      if tolerance is not specified, the current absolute tolerance
-      if tolerance is specified, the previous absolute tolerance
+      number: if tolerance is not specified, the current absolute tolerance
+      number: if tolerance is specified, the previous absolute tolerance
     Example:
       import rhinoscriptsyntax as rs
       tol = rs.UnitAbsoluteTolerance()
@@ -369,12 +360,12 @@ def UnitAngleTolerance(angle_tolerance_degrees=None, in_model_units=True):
     measured in degrees. See Rhino's DocumentProperties command
     (Units and Page Units Window) for details
     Parameters:
-      angle_tolerance_degrees [opt] = the angle tolerance to set
-      in_model_units [opt] = Return or modify the document's model units (True)
+      angle_tolerance_degrees (number, optional): the angle tolerance to set
+      in_model_units (number, optional): Return or modify the document's model units (True)
                              or the document's page units (False)
     Returns:
-      if angle_tolerance_degrees is not specified, the current angle tolerance
-      if angle_tolerance_degrees is specified, the previous angle tolerance
+      number: if angle_tolerance_degrees is not specified, the current angle tolerance
+      number: if angle_tolerance_degrees is specified, the previous angle tolerance
     Example:
       import rhinoscriptsyntax as rs
       tol = rs.UnitAngleTolerance()
@@ -400,10 +391,12 @@ def UnitAngleTolerance(angle_tolerance_degrees=None, in_model_units=True):
 def UnitDistanceDisplayPrecision(precision=None, model_units=True):
     """Return or set the document's distance display precision
     Parameters:
-      precision [opt] = The distance display precision.  If the current distance display mode is Decimal, then precision is the number of decimal places.  If the current distance display mode is Fractional (including Feet and Inches), then the denominator = (1/2)^precision.  Use UnitDistanceDisplayMode to get the current distance display mode.
-      model_units [opt] = Return or modify the document's model units (True) or the document's page units (False). The default is True.
+      precision (number, optional): The distance display precision.  If the current distance display mode is Decimal, then precision is the number of decimal places.
+                                    If the current distance display mode is Fractional (including Feet and Inches), then the denominator = (1/2)^precision.
+                                    Use UnitDistanceDisplayMode to get the current distance display mode.
+      model_units (bool, optional): Return or modify the document's model units (True) or the document's page units (False). The default is True.
     Returns:
-     If precision is not specified, the current distance display precision if successful. If precision is specified, the previous distance display precision if successful. If not successful, or on error.
+     number: If precision is not specified, the current distance display precision if successful. If precision is specified, the previous distance display precision if successful. If not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       precision = 3
@@ -428,12 +421,12 @@ def UnitRelativeTolerance(relative_tolerance=None, in_model_units=True):
     is measured in percent. See Rhino's DocumentProperties command
     (Units and Page Units Window) for details
     Parameters:
-      relative_tolerance [opt] = the relative tolerance in percent
-      in_model_units [opt] = Return or modify the document's model units (True)
+      relative_tolerance (number, optional) the relative tolerance in percent
+      in_model_units (bool, optional): Return or modify the document's model units (True)
                              or the document's page units (False)
     Returns:
-      if relative_tolerance is not specified, the current tolerance in percent
-      if relative_tolerance is specified, the previous tolerance in percent
+      number: if relative_tolerance is not specified, the current tolerance in percent
+      number: if relative_tolerance is specified, the previous tolerance in percent
     Example:
       import rhinoscriptsyntax as rs
       tol = rs.UnitRelativeTolerance()
@@ -459,7 +452,7 @@ def UnitRelativeTolerance(relative_tolerance=None, in_model_units=True):
 def UnitScale(to_system, from_system=None):
   """Return the scale factor for changing between unit systems.
   Parameters:
-    to_system = The unit system to convert to. The unit systems are are:
+    to_system (number): The unit system to convert to. The unit systems are are:
        0 - No unit system
        1 - Microns (1.0e-6 meters)
        2 - Millimeters (1.0e-3 meters)
@@ -486,10 +479,10 @@ def UnitScale(to_system, from_system=None):
       23 - Astronomical (1.4959787e+11)
       24 - Lightyears (9.46073e+15 meters)
       25 - Parsecs (3.08567758e+16)
-    from_system [opt] = the unit system to convert from (see above). If omitted,
+    from_system (number, optional): the unit system to convert from (see above). If omitted,
         the document's current unit system is used
   Returns:
-    scale factor for changing between unit systems
+    number: scale factor for changing between unit systems
   Example:
     import rhinoscriptsyntax as rs
   See Also:
@@ -509,7 +502,7 @@ def UnitSystem(unit_system=None, scale=False, in_model_units=True):
     """Return or set the document's unit system. See Rhino's DocumentProperties
     command (Units and Page Units Window) for details
     Parameters:
-      unit_system = The unit system to set the document to. The unit systems are:
+      unit_system (number, optional): The unit system to set the document to. The unit systems are:
          0 - No unit system
          1 - Microns (1.0e-6 meters)
          2 - Millimeters (1.0e-3 meters)
@@ -536,14 +529,14 @@ def UnitSystem(unit_system=None, scale=False, in_model_units=True):
         23 - Astronomical (1.4959787e+11)
         24 - Lightyears (9.46073e+15 meters)
         25 - Parsecs (3.08567758e+16)
-      scale [opt] = Scale existing geometry based on the new unit system.
+      scale (bool, optional): Scale existing geometry based on the new unit system.
           If not specified, any existing geometry is not scaled (False)
-      in_model_units [opt] = Return or modify the document's model units (True)
+      in_model_units (number, optional): Return or modify the document's model units (True)
           or the document's page units (False). The default is True.
     Returns:
-      if unit_system is not specified, the current unit system
-      if unit_system is specified, the previous unit system
-      None on error
+      number: if unit_system is not specified, the current unit system
+      number: if unit_system is specified, the previous unit system
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       rhUnitMillimeters = 2
@@ -575,12 +568,12 @@ def UnitSystem(unit_system=None, scale=False, in_model_units=True):
 def UnitSystemName(capitalize=False, singular=True, abbreviate=False, model_units=True):
     """Returns the name of the current unit system
     Parameters:
-      capitalize [opt] = Capitalize the first character of the units system name (e.g. return "Millimeter" instead of "millimeter"). The default is not to capitalize the first character (false).
-      singular [opt] = Return the singular form of the units system name (e.g. "millimeter" instead of "millimeters"). The default is to return the singular form of the name (true).
-      abbreviate [opt] = Abbreviate the name of the units system (e.g. return "mm" instead of "millimeter"). The default is not to abbreviate the name (false).
-      model_units [opt] = Return the document's model units (True) or the document's page units (False). The default is True.
+      capitalize (bool, optional): Capitalize the first character of the units system name (e.g. return "Millimeter" instead of "millimeter"). The default is not to capitalize the first character (false).
+      singular (bool, optional): Return the singular form of the units system name (e.g. "millimeter" instead of "millimeters"). The default is to return the singular form of the name (true).
+      abbreviate (bool, optional): Abbreviate the name of the units system (e.g. return "mm" instead of "millimeter"). The default is not to abbreviate the name (false).
+      model_units (bool, optional): Return the document's model units (True) or the document's page units (False). The default is True.
     Returns:
-      The name of the current units system if successful. 
+      str: The name of the current units system if successful.
     Example:
       import rhinoscriptsyntax as rs
       system = rs.UnitSystemName(False, False, False)

@@ -13,9 +13,9 @@ def __getlinetype(name_or_id):
 def IsLinetype(name_or_id):
     """Verifies the existance of a linetype in the document
     Parameters:
-      name_or_id = The name or identifier of an existing linetype.
+      name_or_id (guid|str): The name or identifier of an existing linetype.
     Returns: 
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       name = rs.GetString("Linetype name")
@@ -31,9 +31,9 @@ def IsLinetype(name_or_id):
 def IsLinetypeReference(name_or_id):
     """Verifies that an existing linetype is from a reference file
     Parameters:
-      name_or_id = The name or identifier of an existing linetype. 
+      name_or_id (guid|str): The name or identifier of an existing linetype.
     Returns: 
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       name = rs.GetString("Linetype name")
@@ -54,10 +54,8 @@ def IsLinetypeReference(name_or_id):
 
 def LinetypeCount():
     """Returns number of linetypes in the document
-    Parameters:
-      None
     Returns:
-      the number of linetypes in the document
+      number: the number of linetypes in the document
     Example:
       import rhinoscriptsyntax as rs
       count = rs.LinetypeCount()
@@ -71,9 +69,9 @@ def LinetypeCount():
 def LinetypeNames(sort=False):
     """Returns names of all linetypes in the document
     Parameters:
-      sort[opt] = return a sorted list of the linetype names
+      sort (bool, optional): return a sorted list of the linetype names
     Returns:
-      list of strings if successful
+      list(str, ...): list of linetype names if successful
     Example:
       import rhinoscriptsyntax as rs
       names = rs.LinetypeNames()

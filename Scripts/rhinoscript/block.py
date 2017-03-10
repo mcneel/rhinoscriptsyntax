@@ -13,13 +13,13 @@ def __InstanceObjectFromId(id, raise_if_missing):
 def AddBlock(object_ids, base_point, name=None, delete_input=False):
     """Adds a new block definition to the document
     Parameters:
-      object_ids = objects that will be included in the block
-      base_point = 3D base point for the block definition
-      name(opt) = name of the block definition. If omitted a name will be
+      object_ids ([guid, ....]) objects that will be included in the block
+      base_point (point): 3D base point for the block definition
+      name (str, optional): name of the block definition. If omitted a name will be
         automatically generated
-      delete_input(opt) = if True, the object_ids will be deleted
+      delete_input (bool): if True, the object_ids will be deleted
     Returns:
-      name of new block definition on success
+      str: name of new block definition on success
     Example:
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select objects to define block")
@@ -66,9 +66,9 @@ def BlockContainerCount(block_name):
     """Returns number of block definitions that contain a specified
     block definition
     Parameters:
-      block_name = the name of an existing block definition
+      block_name (str): the name of an existing block definition
     Returns:
-      the number of block definitions that contain a specified block definition
+      number: the number of block definitions that contain a specified block definition
     Example:
       import rhinoscriptscriptsyntax as rs
       block = rs.GetString("Block name to query")
@@ -86,9 +86,9 @@ def BlockContainers(block_name):
     """Returns names of the block definitions that contain a specified block
     definition.
     Parameters:
-      block_name = the name of an existing block definition
+      block_name (str): the name of an existing block definition
     Returns:
-      A list of block definition names
+      list(str, ...): A list of block definition names
     Example:
       import rhinoscriptsyntax as rs
       blockname = rs.GetString("Block name to query")
@@ -110,10 +110,8 @@ def BlockContainers(block_name):
 
 def BlockCount():
     """Returns the number of block definitions in the document
-    Parameters:
-      None
     Returns:
-      the number of block definitions in the document
+      number: the number of block definitions in the document
     Example:
       import rhinoscriptsyntax as rs
       count = rs.BlockCount()
@@ -128,11 +126,11 @@ def BlockCount():
 def BlockDescription(block_name, description=None):
     """Returns or sets the description of a block definition
     Parameters:
-      block_name = the name of an existing block definition
-      description[opt] = The new description.
+      block_name (str): the name of an existing block definition
+      description (str, optional): The new description.
     Returns:
-      if description is not specified, the current description
-      if description is specified, the previous description
+      str: if description is not specified, the current description
+      str: if description is specified, the previous description
     Example:
       import rhinoscriptsyntax as rs
       blockname = rs.GetString("Block name to list description")
@@ -154,13 +152,13 @@ def BlockInstanceCount(block_name,where_to_look=0):
     """Counts number of instances of the block in the document.
     Nested instances are not included in the count.
     Parameters:
-      block_name = the name of an existing block definition
-      where_to_look [opt] =
+      block_name (str): the name of an existing block definition
+      where_to_look (number, optional):
         0 = get top level references in active document.
         1 = get top level and nested references in active document.
         2 = check for references from other instance definitions
     Returns:
-      the number of instances of the block in the document
+      number: the number of instances of the block in the document
     Example:
       import rhinoscriptsyntax as rs
       blockname = rs.GetString("Block to count")
@@ -182,9 +180,9 @@ def BlockInstanceCount(block_name,where_to_look=0):
 def BlockInstanceInsertPoint(object_id):
     """Returns the insertion point of a block instance.
     Parameters:
-      object_id = The identifier of an existing block insertion object
+      object_id (guid): The identifier of an existing block insertion object
     Returns:
-      list representing 3D point if successful
+      point: The insertion 3D point if successful
     Example:
       import rhinoscriptsyntax as rs
       strObject = rs.GetObject("Select block")
@@ -206,9 +204,9 @@ def BlockInstanceInsertPoint(object_id):
 def BlockInstanceName(object_id):
     """Returns the block name of a block instance
     Parameters:
-      object_id = The identifier of an existing block insertion object
+      object_id (guid): The identifier of an existing block insertion object
     Returns:
-      the block name of a block instance
+      str: the block name of a block instance
     Example:
       import rhinoscriptsyntax as rs
       strObject = rs.GetObject("Select block")
@@ -228,9 +226,9 @@ def BlockInstanceName(object_id):
 def BlockInstances(block_name):
     """Returns the identifiers of the inserted instances of a block.
     Parameters:
-      block_name = the name of an existing block definition
+      block_name (str): the name of an existing block definition
     Returns:
-      list of guids identifying the instances of a block
+      list(guid, ...): Ids identifying the instances of a block in the model.
     Example:
       import rhinoscriptsyntax as rs
       strBlock = rs.GetString("Block to select")
@@ -255,9 +253,9 @@ def BlockInstanceXform(object_id):
     system origin (0,0,0). The position is returned as a 4x4 transformation
     matrix
     Parameters:
-      object_id = The identifier of an existing block insertion object  
+      object_id (guid): The identifier of an existing block insertion object
     Returns:
-      the location, as a transform matrix, of a block instance relative to the world coordinate
+      transform: the location, as a transform matrix, of a block instance relative to the world coordinate
     system origin
     Example:
       import rhinoscriptsyntax as rs
@@ -280,9 +278,9 @@ def BlockInstanceXform(object_id):
 def BlockNames( sort=False ):
     """Returns the names of all block definitions in the document
     Parameters:
-      sort = return a sorted list
+      sort (bool): True to return a sorted list
     Returns:
-      the names of all block definitions in the document
+      list(str, ...): the names of all block definitions in the document
     Example:
       import rhinoscriptsyntax as rs
       names = rs.BlockNames(True)
@@ -300,9 +298,9 @@ def BlockNames( sort=False ):
 def BlockObjectCount(block_name):
     """Returns number of objects that make up a block definition
     Parameters:
-      block_name = name of an existing block definition
+      block_name (str): name of an existing block definition
     Returns:
-      the number of objects that make up a block definition
+      number: the number of objects that make up a block definition
     Example:
       import rhinoscriptsyntax as rs
       count = rs.BlockObjectCount()
@@ -320,9 +318,9 @@ def BlockObjectCount(block_name):
 def BlockObjects(block_name):
     """Returns identifiers of the objects that make up a block definition
     Parameters:
-      block_name = name of an existing block definition
+      block_name (str): name of an existing block definition
     Returns:
-      list of identifiers on success
+      list(guid, ...): list of identifiers on success
     Example:
       import rhinoscriptsyntax as rs
       strBlock = rs.GetString("Block name to list identifiers")
@@ -346,9 +344,9 @@ def BlockPath(block_name):
     A linked or embedded block definition is a block definition that was
     inserted from an external file.
     Parameters:
-      block_name = name of an existing block definition
+      block_name (str): name of an existing block definition
     Returns:
-      path to the linked block on success
+      str: path to the linked block on success
     Example:
       import rhinoscriptsyntax as rs
       strBlock = rs.GetString("Block name to list path")
@@ -365,6 +363,10 @@ def BlockPath(block_name):
 
 def BlockStatus(block_name):
     """Returns the status of a linked block
+    Parameters:
+        block_name (str): Name of an existing block
+    Returns:
+      number: the status of a linked block
         Value Description
         -3    Not a linked block definition.
         -2    The linked block definition's file could not be opened or could not be read.
@@ -373,10 +375,6 @@ def BlockStatus(block_name):
          1    The linked block definition's file is newer than definition.
          2    The linked block definition's file is older than definition.
          3    The linked block definition's file is different than definition.
-    Parameters:
-      None
-    Returns:
-      the status of a linked block
     Example:
       import rhinoscriptsyntax as rs
       block = rs.GetString("Block name to list description")
@@ -394,9 +392,9 @@ def BlockStatus(block_name):
 def DeleteBlock(block_name):
     """Deletes a block definition and all of it's inserted instances.
     Parameters:
-      block_name = name of an existing block definition
+      block_name (str): name of an existing block definition
     Returns:
-      True or False indicating success or failure  
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       strBlock = rs.GetString("Block name to delete")
@@ -418,10 +416,10 @@ def ExplodeBlockInstance(object_id, explode_nested_instances=False):
     """Explodes a block instance into it's geometric components. The
     exploded objects are added to the document
     Parameters:
-      object_id = The identifier of an existing block insertion object  
-      explode_nested_instances = By default nested blocks are not exploded.
+      object_id (guid): The identifier of an existing block insertion object
+      explode_nested_instances (bool, optional): By default nested blocks are not exploded.
     Returns:
-      identifiers for the newly exploded objects on success
+      list(guid, ...): identifiers for the newly exploded objects on success
     Example:
       import rhinoscriptsyntax as rs
       strObject = rs.GetObject("Select block instance to explode")
@@ -441,13 +439,13 @@ def ExplodeBlockInstance(object_id, explode_nested_instances=False):
 def InsertBlock( block_name, insertion_point, scale=(1,1,1), angle_degrees=0, rotation_normal=(0,0,1) ):
     """Inserts a block whose definition already exists in the document
     Parameters:
-      block_name = name of an existing block definition
-      insertion_point = insertion point for the block
-      scale [opt] = x,y,z scale factors
-      angle_degrees [opt] = rotation angle in degrees
-      rotation_normal [opt] = the axis of rotation.
+      block_name (str): name of an existing block definition
+      insertion_point (point): insertion point for the block
+      scale ({number, number, number]): x,y,z scale factors
+      angle_degrees (number, optional): rotation angle in degrees
+      rotation_normal (vector, optional): the axis of rotation.
     Returns:
-      id for the block that was added to the doc
+      guid: id for the block that was added to the doc
     Example:
     See Also:
     """
@@ -465,10 +463,10 @@ def InsertBlock( block_name, insertion_point, scale=(1,1,1), angle_degrees=0, ro
 def InsertBlock2(block_name, xform):
     """Inserts a block whose definition already exists in the document
     Parameters:
-      block_name = name of an existing block definition
-      xform = 4x4 transformation matrix to apply
+      block_name (str): name of an existing block definition
+      xform (transform): 4x4 transformation matrix to apply
     Returns:
-      id for the block that was added to the doc on success
+      guid: id for the block that was added to the doc on success
     Example:
     See Also:
     """
@@ -484,9 +482,9 @@ def InsertBlock2(block_name, xform):
 def IsBlock(block_name):
     """Verifies the existence of a block definition in the document.
     Parameters:
-      block_name = name of an existing block definition
+      block_name (str): name of an existing block definition
     Returns:
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       strBlock = rs.GetString("Block name")
@@ -507,9 +505,9 @@ def IsBlock(block_name):
 def IsBlockEmbedded(block_name):
     """Verifies a block definition is embedded, or linked, from an external file.
     Parameters:
-      block_name = name of an existing block definition
+      block_name (str): name of an existing block definition
     Returns:
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       strBlock = rs.GetString("Block name")
@@ -535,9 +533,9 @@ def IsBlockEmbedded(block_name):
 def IsBlockInstance(object_id):
     """Verifies an object is a block instance
     Parameters:
-      object_id = The identifier of an existing block insertion object
+      object_id (guid): The identifier of an existing block insertion object
     Returns:
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select block instance")
@@ -557,13 +555,13 @@ def IsBlockInstance(object_id):
 def IsBlockInUse(block_name, where_to_look=0):
     """Verifies that a block definition is being used by an inserted instance
     Parameters:
-      block_name = name of an existing block definition
-      where_to_look [opt] = One of the following values
+      block_name (str): name of an existing block definition
+      where_to_look (number, optional): One of the following values
            0 = Check for top level references in active document
            1 = Check for top level and nested references in active document
            2 = Check for references in other instance definitions
     Returns:
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       strBlock = rs.GetString("Block name")
@@ -588,9 +586,9 @@ def IsBlockInUse(block_name, where_to_look=0):
 def IsBlockReference(block_name):
     """Verifies that a block definition is from a reference file.
     Parameters:
-      block_name = name of an existing block definition
+      block_name (str): name of an existing block definition
     Returns:
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       strBlock = rs.GetString("Block name")
@@ -615,10 +613,10 @@ def IsBlockReference(block_name):
 def RenameBlock( block_name, new_name ):
     """Renames an existing block definition
     Parameters:
-      block_name = name of an existing block definition
-      new_name = name to change to
+      block_name (str): name of an existing block definition
+      new_name (str): name to change to
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       strOldBlock = rs.GetString("Old block name")
