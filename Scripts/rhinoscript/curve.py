@@ -1603,6 +1603,7 @@ def CurveDomain(curve_id, segment_index=-1):
          [0] Domain minimum
          [1] Domain maximum
       None: on error
+
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a curve")
@@ -1614,8 +1615,7 @@ def CurveDomain(curve_id, segment_index=-1):
       IsCurve
     """
     curve = rhutil.coercecurve(curve_id, segment_index, True)
-    dom = curve.Domain
-    return [dom.Min, dom.Max]
+    return curve.Domain
 
 
 def CurveEditPoints(curve_id, return_parameters=False, segment_index=-1):
