@@ -1598,7 +1598,8 @@ def CurveDiscontinuity(curve_id, style):
 
 
 def CurveDomain(curve_id, segment_index=-1):
-    """Returns the domain of a curve object.
+    """Returns the domain of a curve object
+    as an indexable object with two elements.
     Parameters:
       curve_id = identifier of the curve object
       segment_index [opt] = the curve segment if curve_id identifies a polycurve.
