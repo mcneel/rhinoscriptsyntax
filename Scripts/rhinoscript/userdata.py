@@ -4,11 +4,11 @@ import utility as rhutil
 def DeleteDocumentData(section=None, entry=None):
     """Removes user data strings from the current document
     Parameters:
-      section = section name. If omitted, all sections and their corresponding
+      section (str, optional): section name. If omitted, all sections and their corresponding
         entries are removed
-      entry = entry name. If omitted, all entries for section are removed
+      entry (str, optional): entry name. If omitted, all entries for section are removed
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       rs.DeleteDocumentData( "MySection1", "MyEntry1" )
@@ -25,10 +25,8 @@ def DeleteDocumentData(section=None, entry=None):
 
 def DocumentDataCount():
     """Returns the number of user data strings in the current document
-    Parameters:
-      None
     Returns:
-      the number of user data strings in the current document
+      number: the number of user data strings in the current document
     Example:
       import rhinoscriptsyntax as rs
       count = rs.DocumentDataCount()
@@ -44,10 +42,8 @@ def DocumentDataCount():
 
 def DocumentUserTextCount():
     """Returns the number of user text strings in the current document
-    Parameters:
-      None
     Returns:
-      the number of user text strings in the current document
+      number: the number of user text strings in the current document
     Example:
       
     See Also:
@@ -61,12 +57,13 @@ def DocumentUserTextCount():
 def GetDocumentData(section=None, entry=None):
     """Returns a user data item from the current document
     Parameters:
-      section[opt] = section name. If omitted, all section names are returned
-      entry[opt] = entry name. If omitted, all entry names for section are returned
+      section (str, optional): section name. If omitted, all section names are returned
+      entry (str, optional): entry name. If omitted, all entry names for section are returned
     Returns:
-      list of all section names if section name is omitted
-      list of all entry names for a section if entry is omitted
-      value of the entry if both section and entry are specified
+      list(str, ...): of all section names if section name is omitted
+      list(str, ...) of all entry names for a section if entry is omitted
+      str: value of the entry if both section and entry are specified
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       value = rs.GetDocumentData("MySection1", "MyEntry1")
@@ -96,11 +93,11 @@ def GetDocumentData(section=None, entry=None):
 def GetDocumentUserText(key=None):
     """Returns user text stored in the document
     Parameters:
-      key[opt] = key to use for retrieving user text. If empty, all keys are returned
+      key (str, optional): key to use for retrieving user text. If empty, all keys are returned
     Returns:
-      If key is specified, then the associated value if successful.
-      If key is not specified, then a list of key names if successful.
-      If not successful, or on error.
+      str: If key is specified, then the associated value if successful.
+      list(str, ...):If key is not specified, then a list of key names if successful.
+      None: If not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       print rs.GetDocumentUserText("Designer")
@@ -119,12 +116,12 @@ def GetDocumentUserText(key=None):
 def GetUserText(object_id, key=None, attached_to_geometry=False):
     """Returns user text stored on an object.
     Parameters:
-      object_id = the object's identifies
-      key[opt] = the key name. If omitted all key names for an object are returned
-      attached_to_geometry[opt] = location on the object to retrieve the user text
+      object_id (guid): the object's identifies
+      key (str, optional): the key name. If omitted all key names for an object are returned
+      attached_to_geometry (bool, optional): location on the object to retrieve the user text
     Returns:
-      if key is specified, the associated value if successful
-      if key is not specified, a list of key names if successful
+      str: if key is specified, the associated value if successful
+      list(str, ...): if key is not specified, a list of key names if successful
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
@@ -147,10 +144,8 @@ def GetUserText(object_id, key=None, attached_to_geometry=False):
 
 def IsDocumentData():
     """Verifies the current document contains user data
-    Parameters:
-      None
     Returns:
-      True or False indicating the presence of Script user data
+      bool: True or False indicating the presence of Script user data
     Example:
       import rhinoscriptsyntax as rs
       result = rs.IsDocumentData()
@@ -169,10 +164,8 @@ def IsDocumentData():
 
 def IsDocumentUserText():
     """Verifies the current document contains user text
-    Parameters:
-      None
     Returns:
-      True or False indicating the presence of Script user text
+      bool: True or False indicating the presence of Script user text
     Example:
       
     See Also:
@@ -185,12 +178,13 @@ def IsDocumentUserText():
 def IsUserText(object_id):
     """Verifies that an object contains user text
     Parameters:
-      object_id = the object's identifier
+      object_id (guid): the object's identifier
     Returns:
-      0 = no user text
-      1 = attribute user text
-      2 = geometry user text
-      3 = both attribute and geometry user text
+      number: result of test:
+        0 = no user text
+        1 = attribute user text
+        2 = geometry user text
+        3 = both attribute and geometry user text
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object") 
@@ -214,11 +208,11 @@ def IsUserText(object_id):
 def SetDocumentData(section, entry, value):
     """Adds or sets a user data string to the current document
     Parameters:
-      section = the section name
-      entry = the entry name
-      value  = the string value
+      section (str): the section name
+      entry (str): the entry name
+      value (str): the string value
     Returns:
-      The previous value
+      str: The previous value
     Example:
       import rhinoscriptsyntax as rs
       rs.SetDocumentData( "MySection1", "MyEntry1", "MyValue1" )
@@ -237,11 +231,11 @@ def SetDocumentData(section, entry, value):
 def SetDocumentUserText(key, value=None):
     """Sets or removes user text stored in the document
     Parameters:
-      key = key name to set
-      value[opt] = The string value to set. If omitted the key/value pair
+      key (str): key name to set
+      value (str): The string value to set. If omitted the key/value pair
         specified by key will be deleted
     Returns:
-      True or False indicating success
+      bool: True or False indicating success
     Example:
       import rhinoscriptsyntax as rs
       rs.SetDocumentUserText("Designer", "Steve Baer")
@@ -257,13 +251,13 @@ def SetDocumentUserText(key, value=None):
 def SetUserText(object_id, key, value=None, attach_to_geometry=False):
     """Sets or removes user text stored on an object.
     Parameters:
-      object_id = the object's identifier
-      key = the key name to set
-      value[opt] = the string value to set. If omitted, the key/value pair
+      object_id (str): the object's identifier
+      key (str): the key name to set
+      value (str, optional) the string value to set. If omitted, the key/value pair
           specified by key will be deleted
-      attach_to_geometry[opt] = location on the object to store the user text
+      attach_to_geometry (bool, optional): location on the object to store the user text
     Returns:
-      True or False indicating success or failure 
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")

@@ -10,10 +10,8 @@ import numbers
 
 def ContextIsRhino():
     """Return True if the script is being executed in the context of Rhino
-    Parameters:
-      None
     Returns:
-      True if the script is being executed in the context of Rhino
+      bool: True if the script is being executed in the context of Rhino
     Example:
       import rhinoscriptsyntax as  rs
       print rs.ContextIsRhino()
@@ -25,10 +23,8 @@ def ContextIsRhino():
 
 def ContextIsGrasshopper():
     """Return True if the script is being executed in a grasshopper component
-    Parameters:
-      None
     Returns:
-      True if the script is being executed in a grasshopper component
+      bool: True if the script is being executed in a grasshopper component
     Example:
       import rhinoscriptsyntax as  rs
       print rs.ContextIsGrasshopper()
@@ -41,19 +37,19 @@ def ContextIsGrasshopper():
 def Angle(point1, point2, plane=True):
     """Measures the angle between two points
     Parameters:
-      point1, point2: the input points
-      plane[opt] = Boolean or Plane
+      point1, point2 (point): the input points
+      plane (bool, optional): Boolean or Plane
         If True, angle calculation is based on the world coordinate system.
         If False, angle calculation is based on the active construction plane
         If a plane is provided, angle calculation is with respect to this plane
     Returns:
-      tuple containing the following elements if successful
+      tuple(tuple(number, number), number, number, number, number): containing the following elements if successful
         element 0 = the X,Y angle in degrees
         element 1 = the elevation
         element 2 = delta in the X direction
         element 3 = delta in the Y direction
         element 4 = delta in the Z direction
-      None if not successful
+      None: if not successful
     Example:
       import rhinoscriptsyntax as  rs
       point1 = rs.GetPoint("First  point")
@@ -101,13 +97,13 @@ def Angle(point1, point2, plane=True):
 def Angle2(line1, line2):
     """Measures the angle between two lines
     Parameters:
-      line1 = List of 6 numbers or 2 Point3d.
-      line2 = List of 6 numbers or 2 Point3d.
+      line1 (line): List of 6 numbers or 2 Point3d.
+      line2 (line): List of 6 numbers or 2 Point3d.
     Returns:
-      A tuple containing the following elements if successful.
+      tuple(number, number): containing the following elements if successful.
         0 The angle in degrees.
         1 The reflex angle in degrees.
-        None If not successful, or on error.
+      None: If not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       point1 = rs.GetPoint("Start of first line")
@@ -137,11 +133,11 @@ def Angle2(line1, line2):
 def ClipboardText(text=None):
     """Returns or sets a text string to the Windows clipboard
     Parameters:
-      text: [opt] text to set
+      text (str, optional): text to set
     Returns:
-      if text is not specified, the current text in the clipboard
-      if text is specified, the previous text in the clipboard
-      None if not successful
+      str: if text is not specified, the current text in the clipboard
+      str: if text is specified, the previous text in the clipboard
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       txt = rs.ClipboardText("Hello Rhino!")
@@ -162,13 +158,13 @@ def ColorAdjustLuma(rgb, luma, scale=False):
     """Changes the luminance of a red-green-blue value. Hue and saturation are
     not affected
     Parameters:
-      rgb = initial rgb value
-      luma = The luminance in units of 0.1 percent of the total range. A
+      rgb (color): initial rgb value
+      luma (number): The luminance in units of 0.1 percent of the total range. A
           value of luma = 50 corresponds to 5 percent of the maximum luminance
-      scale[opt] = if True, luma specifies how much to increment or decrement the
+      scale (bool, optional): if True, luma specifies how much to increment or decrement the
           current luminance. If False, luma specified the absolute luminance.
     Returns:
-      modified rgb value if successful
+      color: modified rgb value if successful
     Example:
       import rhinoscriptsyntax as rs
       rgb = rs.ColorAdjustLuma((128, 128, 128), 50)
@@ -190,9 +186,9 @@ def ColorAdjustLuma(rgb, luma, scale=False):
 def ColorBlueValue(rgb):
     """Retrieves intensity value for the blue component of an RGB color
     Parameters:
-      rgb = the RGB color value
+      rgb (color): the RGB color value
     Returns:
-      The blue component if successful, otherwise None
+      number: The blue component if successful, otherwise None
     Example:
       import rhinoscriptsyntax as rs
       rgb = rs.LayerColor("Default")
@@ -209,9 +205,9 @@ def ColorBlueValue(rgb):
 def ColorGreenValue(rgb):
     """Retrieves intensity value for the green component of an RGB color
     Parameters:
-      rgb = the RGB color value
+      rgb (color): the RGB color value
     Returns:
-      The green component if successful, otherwise None
+      number: The green component if successful, otherwise None
     Example:
       import rhinoscriptsyntax as rs
       rgb = rs.LayerColor("Default")
@@ -228,9 +224,9 @@ def ColorGreenValue(rgb):
 def ColorHLSToRGB(hls):
     """Converts colors from hue-lumanence-saturation to RGB
     Parameters:
-      hls = the HLS color value
+      hls (color): the HLS color value
     Returns:
-      The RGB color value if successful, otherwise False
+      color: The RGB color value if successful, otherwise False
     Example:
       import rhinoscriptsyntax as rs
       rgb = rs.ColorHLSToRGB( (160, 120, 0) )
@@ -251,9 +247,9 @@ def ColorHLSToRGB(hls):
 def ColorRedValue(rgb):
     """Retrieves intensity value for the red component of an RGB color
     Parameters:
-      hls = the HLS color value
+      hls (color): the HLS color value
     Returns:
-      The red color value if successful, otherwise False
+      color: The red color value if successful, otherwise False
     Example:
       import rhinoscriptsyntax as rs
       rgb = rs.LayerColor("Default")
@@ -270,9 +266,9 @@ def ColorRedValue(rgb):
 def ColorRGBToHLS(rgb):
     """Convert colors from RGB to HLS
     Parameters:
-      rgb = the RGB color value
+      rgb (color): the RGB color value
     Returns:
-      The HLS color value if successful, otherwise False  
+      color: The HLS color value if successful, otherwise False
     Example:
       import rhinoscriptsyntax as rs
       hls = rs.ColorRGBToHLS((128, 128, 128))
@@ -291,10 +287,10 @@ def ColorRGBToHLS(rgb):
 def CullDuplicateNumbers(numbers, tolerance=None):
     """Removes duplicates from an array of numbers.
     Parameters:
-      numbers = list or tuple
-      tolerance [opt] = The minimum distance between numbers.  Numbers that fall within this tolerance will be discarded.  If omitted, Rhino's internal zero tolerance is used.
+      numbers ([number, ...]): list or tuple
+      tolerance (number, optional): The minimum distance between numbers.  Numbers that fall within this tolerance will be discarded.  If omitted, Rhino's internal zero tolerance is used.
     Returns:
-      a list of numbers with duplicates removed if successful.
+      list(number, ...): numbers with duplicates removed if successful.
     Example:
       import rhinoscriptsyntax as rs
       arr = [1,1,2,2,3,3,4,4,5,5]
@@ -322,13 +318,13 @@ def CullDuplicateNumbers(numbers, tolerance=None):
 def CullDuplicatePoints(points, tolerance=-1):
     """Removes duplicates from a list of 3D points.
     Parameters:
-      points = A list of 3D points.
-      tolerance [opt] = Minimum distance between points. Points within this
+      points ([point, ...]): A list of 3D points.
+      tolerance (number): Minimum distance between points. Points within this
         tolerance will be discarded. If omitted, Rhino's internal zero tolerance
         is used.
     Returns:
-      list of 3D points with duplicates removed if successful.
-      None if not successful
+      list(point, ...): of 3D points with duplicates removed if successful.
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       points = rs.GetPoints(,,"First point", "Next point")
@@ -348,12 +344,12 @@ def Distance(point1, point2):
     """Measures distance between two 3D points, or between a 3D point and
     an array of 3D points.
     Parameters:
-      point1 = The first 3D point.
-      point2 = The second 3D point or list of 3-D points.
+      point1 (point): The first 3D point.
+      point2 (point): The second 3D point or list of 3-D points.
     Returns:
-      If point2 is a 3D point then the distance if successful.
-      If point2 is a list of points, then an list of distances if successful.
-      None if not successful
+      point: If point2 is a 3D point then the distance if successful.
+      point: If point2 is a list of points, then an list of distances if successful.
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       point1 = rs.GetPoint("First point")
@@ -377,14 +373,14 @@ def Distance(point1, point2):
 def GetSettings(filename, section=None, entry=None):
     """Returns string from a specified section in a initialization file.
     Parameters:
-      filename = name of the initialization file
-      section[opt] = section containing the entry
-      entry[opt] = entry whose associated string is to be returned
+      filename (str): name of the initialization file
+      section (str, optional): section containing the entry
+      entry (str, optional): entry whose associated string is to be returned
     Returns:
-      If section is not specified, a list containing all section names
-      If entry is not specified, a list containing all entry names for a given section
-      If section and entry are specied, a value for entry
-      None if not successful
+      list(str, ...): If section is not specified, a list containing all section names
+      list:(str, ...): If entry is not specified, a list containing all entry names for a given section
+      str: If section and entry are specified, a value for entry
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       filename = rs.OpenFileName("Open", "Initialization Files (*.ini)|*.ini||")
@@ -418,12 +414,12 @@ def GetSettings(filename, section=None, entry=None):
 def Polar(point, angle_degrees, distance, plane=None):
     """Returns 3D point that is a specified angle and distance from a 3D point
     Parameters:
-      point = the point to transform
-      plane[opt] = plane to base the transformation. If omitted, the world
+      point (point): the point to transform
+      plane (plane, optional): plane to base the transformation. If omitted, the world
         x-y plane is used
     Returns:
-      resulting point is successful
-      None on error
+      point: resulting point is successful
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       point = (1.0, 1.0, 0.0)
@@ -452,9 +448,9 @@ def Polar(point, angle_degrees, distance, plane=None):
 def SimplifyArray(points):
     """Flattens an array of 3-D points into a one-dimensional list of real numbers. For example, if you had an array containing three 3-D points, this method would return a one-dimensional array containing nine real numbers.
     Parameters:
-      points = 
+      points ([point, ...]): Points to flatten
     Returns:
-      A one-dimensional list containing real numbers, if successful, otherwise None
+      list(number, ...): A one-dimensional list containing real numbers, if successful, otherwise None
     Example:
       import rhinoscriptsyntax as rs
       points = rs.GetPoints()
@@ -476,7 +472,7 @@ def SimplifyArray(points):
 def Sleep(milliseconds):
     """Suspends execution of a running script for the specified interval
     Parameters:
-      milliseconds = thousands of a second
+      milliseconds (number): thousands of a second
     Returns:
       None
     Example:
@@ -499,12 +495,12 @@ def Sleep(milliseconds):
 def SortPointList(points, tolerance=None):
     """Sorts list of points so they will be connected in a "reasonable" polyline order
     Parameters:
-      points = the points to sort
-      tolerance[opt] = minimum distance between points. Points that fall within this tolerance
+      points ({point, ...])the points to sort
+      tolerance (number, optional): minimum distance between points. Points that fall within this tolerance
         will be discarded. If omitted, Rhino's internal zero tolerance is used.
     Returns:
-      a list of sorted 3D points if successful
-      None on error
+      list(point, ...): of sorted 3D points if successful
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       points = rs.GetPointCoordinates()
@@ -520,9 +516,11 @@ def SortPointList(points, tolerance=None):
 
 
 def SortPoints(points, ascending=True, order=0):
-    """Sorts an array of 3D points
-
-    Component sort order values:
+    """Sorts the components of an array of 3D points
+    Parameters:
+      points ([point, ...]): points to sort
+      ascending (bool, optional: ascending if omitted (True) or True, descending if False.
+      order (number, optional): the component sort order
         Value       Component Sort Order
         0 (default) X, Y, Z
         1           X, Z, Y
@@ -530,13 +528,9 @@ def SortPoints(points, ascending=True, order=0):
         3           Y, Z, X
         4           Z, X, Y
         5           Z, Y, X
-    
-    Parameters:
-      points = points to sort
-      ascending [opt] = ascending if ommitted (True) or True, descending if False.
-      order [opt] = the component sort order
     Returns:
-      A list of sorted 3-D points if successful, otherwise None
+      list(point, ...): sorted 3-D points if successful
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       points = rs.GetPoints()
@@ -583,9 +577,10 @@ def SortPoints(points, ascending=True, order=0):
 def Str2Pt(point):
     """convert a formatted string value into a 3D point value
     Parameters:
-      point =  A string that contains a delimited point like "1,2,3".
+      point (str): A string that contains a delimited point like "1,2,3".
     Returns:
-      error on invalid format
+      point: Point structure from the input string.
+      None: error on invalid format
     Example:
       import rhinoscriptsyntax as rs
       point = rs.Str2Pt("1,2,3")
@@ -665,10 +660,12 @@ def CreatePoint(point, y=None, z=None):
     Alternatively, you can also pass two coordinates singularly for a
     point on the XY plane, or three for a 3D point.
     Parameters:
-      point = Point3d, Vector3d, Point3f, Vector3f, str, uuid
+      point (Point3d|Vector3d|Point3f|Vector3f|str|guid|[number, number, number])
     Returns:
-      a Rhino.Geometry.Point3d. This can be seen as an object with three indices:
-      result[0]: X coordinate, result[1]: Y coordinate, result[2]: Z coordinate.
+      point: a Rhino.Geometry.Point3d. This can be seen as an object with three indices:
+        [0]  X coordinate
+        [1]  Y coordinate
+        [2]  Z coordinate.
     Example:
     See Also:
     """
@@ -723,8 +720,8 @@ def CreateVector(vector, y=None, z=None):
     Alternatively, you can also pass two coordinates singularly for a
     vector on the XY plane, or three for a 3D vector.
     Parameters:
-      vector = Vector3d, Point3d, list, Point3f, Vector3f, str, uuid
-      raise_on_error [opt] = True or False
+      vector (Vector3d|Point3d|Point3f|Vector3f\str|guid|[number, number, number])
+      raise_on_error (bool, optionals): True or False
     Returns:
       a Rhino.Geometry.Vector3d. This can be seen as an object with three indices:
       result[0]: X component, result[1]: Y component, and result[2] Z component.
@@ -820,9 +817,9 @@ def CreatePlane(plane):
     The returned data is accessible by indexing[row, column], and that is the suggested method to interact with the type.
     If the conversion fails, an error is raised.
     Parameters:
-      xform = the transform. This can be seen as a 4x4 matrix, given as nested lists or tuples.
+      plane (plane|[point, point, point, point])
     Returns:
-      A Rhino.Geometry.Transform. result[0,3] gives access to the first row, last column.
+      plane: A Rhino.Geometry.plane.
     Example:
     See Also:
     """
@@ -855,9 +852,9 @@ def CreateXform(xform):
     The returned data is accessible by indexing[row, column], and that is the suggested method to interact with the type.
     If the conversion fails, an error is raised.
     Parameters:
-      xform = the transform. This can be seen as a 4x4 matrix, given as nested lists or tuples.
+      xform (list): the transform. This can be seen as a 4x4 matrix, given as nested lists or tuples.
     Returns:
-      A Rhino.Geometry.Transform. result[0,3] gives access to the first row, last column.
+      transform: A Rhino.Geometry.Transform. result[0,3] gives access to the first row, last column.
     Example:
     See Also:
     """
@@ -915,9 +912,9 @@ def CreateColor(color, g=None, b=None, a=None):
     Alternatively, you can also pass three coordinates singularly for an RGB color, or four
     for an RGBA color point.
     Parameters:
-      color = tuple, list or 3 or 4 items. Also, a single int can be passed and it will be bitwise-parsed.
+      color ([number, number, number]): list or 3 or 4 items. Also, a single int can be passed and it will be bitwise-parsed.
     Returns:
-      An object that can be indexed for red, green, blu, alpha. Item[0] is red.
+      color: An object that can be indexed for red, green, blu, alpha. Item[0] is red.
     Example:
     See Also:
     """
@@ -1061,9 +1058,11 @@ def CreateInterval(interval, y=None):
     In case a single number is provided, it will be translated to an increasing interval that includes
     the provided input and 0. If two values are provided, they will be used instead.
     Parameters:
-      interval = tuple, or list, or any item that can be accessed at index 0 and 1; an Interval
+      interval ([number, number]): or any item that can be accessed at index 0 and 1; an Interval
     Returns:
-      a Rhino.Geometry.Interval. This can be seen as an object made of two items: [0] start, [1] end.
+      interval: a Rhino.Geometry.Interval. This can be seen as an object made of two items:
+        [0] start of interval
+        [1] end of interval
     Example:
     See Also:
     """

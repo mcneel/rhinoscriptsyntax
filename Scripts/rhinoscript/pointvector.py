@@ -6,11 +6,12 @@ import math
 def IsVectorParallelTo(vector1, vector2):
     """Compares two vectors to see if they are parallel
     Parameters:
-      vector1, vector2 = the vectors to compare
+      vector1, vector2 (vector): the vectors to compare
     Returns:
-      -1 = the vectors are anti-parallel
-      0 = the vectors are not parallel
-      1 = the vectors are parallel
+    number: the value represents
+            -1 = the vectors are anti-parallel
+             0 = the vectors are not parallel
+             1 = the vectors are parallel
     Example:
       import rhinoscriptsyntax as rs
       vector1 = (1,0,0)
@@ -29,9 +30,9 @@ def IsVectorParallelTo(vector1, vector2):
 def IsVectorPerpendicularTo(vector1, vector2):
     """Compares two vectors to see if they are perpendicular
     Parameters:
-      vector1, vector2 = the vectors to compare
+      vector1, vector2 (vector): the vectors to compare
     Returns:
-      True if vectors are perpendicular, otherwise False
+      bool: True if vectors are perpendicular, otherwise False
     Example:
       import rhinoscriptsyntax as rs
       vector1 = (1,0,0)
@@ -50,9 +51,9 @@ def IsVectorPerpendicularTo(vector1, vector2):
 def IsVectorTiny(vector):
     """Verifies that a vector is very short. The X,Y,Z elements are <= 1.0e-12
     Parameters:
-      vector - the vector to check
+      vector (vector): the vector to check
     Returns:
-      True if the vector is tiny, otherwise False
+      bool: True if the vector is tiny, otherwise False
     Example:
       import rhinoscriptsyntax as rs
       pt1 = rs.GetPoint("First point")
@@ -73,9 +74,9 @@ def IsVectorTiny(vector):
 def IsVectorZero(vector):
     """Verifies that a vector is zero, or tiny. The X,Y,Z elements are equal to 0.0
     Parameters:
-      vector - the vector to check
+      vector (vector): the vector to check
     Returns:
-      True if the vector is zero, otherwise False
+      bool: True if the vector is zero, otherwise False
     Example:
       import rhinoscriptsyntax as rs
       pt1 = rs.GetPoint("First point")
@@ -96,9 +97,9 @@ def IsVectorZero(vector):
 def PointAdd(point1, point2):
     """Adds a 3D point or a 3D vector to a 3D point
     Parameters:
-      point1, point2 = the points to add
+      point1, point2 (point): the points to add
     Returns:
-      the resulting 3D point if successful
+      point: the resulting 3D point if successful
     Example:
       import rhinoscriptsyntax as rs
       point1 = (1,1,1)
@@ -120,10 +121,10 @@ def PointAdd(point1, point2):
 def PointArrayClosestPoint(points, test_point):
     """Finds the point in a list of 3D points that is closest to a test point
     Parameters:
-      points = list of points
-      test_point = the point to compare against
+      points ([point, ...]): list of points
+      test_point (point): the point to compare against
     Returns:
-      index of the element in the point list that is closest to the test point
+      number: index of the element in the point list that is closest to the test point
     Example:
       import rhinoscriptsyntax as rs
       cloud= rs.GetObject("Select point cloud")
@@ -148,10 +149,10 @@ def PointArrayClosestPoint(points, test_point):
 def PointArrayTransform(points, xform):
     """Transforms a list of 3D points
     Parameters:
-      points = list of 3D points
-      xform = transformation to apply
+      points ([point, ...]): list of 3D points
+      xform (transform): transformation to apply
     Returns:
-      list of transformed points on success
+      list(point, ...): transformed points on success
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
@@ -170,11 +171,11 @@ def PointArrayTransform(points, xform):
 def PointClosestObject(point, object_ids):
     """Finds the object that is closest to a test point
     Parameters:
-      point = point to test
-      object_id = identifiers of one or more objects
+      point (point): point to test
+      object_id ([guid, ...]): identifiers of one or more objects
     Returns:
-      (closest object_id, point on object) on success
-      None on failure
+      list(guid, point): closest [0] object_id and [1] point on object on success
+      None: on failure
     Example:
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select target objects for closest point", 63)
@@ -235,11 +236,11 @@ def PointClosestObject(point, object_ids):
 def PointCompare(point1, point2, tolerance=None):
     """Compares two 3D points
     Parameters:
-      point1, point2 = the points to compare
-      tolerance [opt] = tolerance to use for comparison. If omitted,
-        Rhino's internal zero tolerance is used
+      point1, point2 (point): the points to compare
+      tolerance (number, optional): tolerance to use for comparison. If omitted,
+                                    Rhino's internal zero tolerance is used
     Returns:
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       point1 = (1,1,1)
@@ -262,10 +263,10 @@ def PointCompare(point1, point2, tolerance=None):
 def PointDivide(point, divide):
     """Divides a 3D point by a value
     Parameters:
-      point = the point to divide
-      divide = a non-zero value to divide
+      point (point): the point to divide
+      divide (number): a non-zero value to divide
     Returns:
-      resulting point
+      point: resulting point
     Example:
       import rhinoscriptsyntax as rs
       print point
@@ -283,10 +284,10 @@ def PointDivide(point, divide):
 def PointsAreCoplanar(points, tolerance=1.0e-12):
     """Verifies that a list of 3D points are coplanar
     Parameters:
-      points = list of 3D points
-      tolerance[opt] = tolerance to use when verifying
+      points ([point, ...]): 3D points to test
+      tolerance (number, optional): tolerance to use when verifying
     Returns:
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       def SurfacesAreCoplanar(srf1, srf2):
@@ -312,10 +313,10 @@ def PointsAreCoplanar(points, tolerance=1.0e-12):
 def PointScale(point, scale):
     """Scales a 3D point by a value
     Parameters:
-      point = the point to divide
-      scale = scale factor to apply
+      point (point): the point to divide
+      scale (number): scale factor to apply
     Returns:
-      resulting point on success
+      point: resulting point on success
     Example:
       import rhinoscriptsyntax as rs
       point = rs.PointScale([1,0,0], 5)
@@ -334,9 +335,9 @@ def PointScale(point, scale):
 def PointSubtract(point1, point2):
     """Subtracts a 3D point or a 3D vector from a 3D point
     Parameters:
-      point1, point2 = the points to subtract
+      point1, point2 (point): the points to subtract
     Returns:
-      the resulting 3D point if successful
+      point: the resulting 3D point if successful
     Example:
       import rhinoscriptsyntax as rs
       point1 = (1,1,1)
@@ -359,10 +360,10 @@ def PointSubtract(point1, point2):
 def PointTransform(point, xform):
     """Transforms a 3D point
     Parameters:
-      point = the point to transform
-      xform = a valid 4x4 transformation matrix
+      point (point): the point to transform
+      xform (transform): a valid 4x4 transformation matrix
     Returns:
-      transformed vector on success
+      vector: transformed vector on success
     Example:
       # Translate (move) objects by (10,10,0)
       import rhinoscriptsyntax as rs
@@ -385,11 +386,11 @@ def PointTransform(point, xform):
 def ProjectPointToMesh(points, mesh_ids, direction):
     """Projects one or more points onto one or more meshes
     Parameters:
-      points = one or more 3D points
-      mesh_ids = identifiers of one or more meshes
-      direction = direction vector to project the points
+      points ([point, ...]): one or more 3D points
+      mesh_ids ([guid, ...]): identifiers of one or more meshes
+      direction (vector): direction vector to project the points
     Returns:
-     list of projected points on success
+     list(point, ...): projected points on success
     Example:
       import rhinoscriptsyntax as rs
       mesh = rs.GetObject("Select mesh to project onto", rs.filter.mesh)
@@ -418,11 +419,11 @@ def ProjectPointToMesh(points, mesh_ids, direction):
 def ProjectPointToSurface(points, surface_ids, direction):
     """Projects one or more points onto one or more surfaces or polysurfaces
     Parameters:
-      points = one or more 3D points
-      surface_ids = identifiers of one or more surfaces/polysurfaces
-      direction = direction vector to project the points
+      points ([point, ...]): one or more 3D points
+      surface_ids ([guid, ...]): identifiers of one or more surfaces/polysurfaces
+      direction (vector): direction vector to project the points
     Returns:
-     list of projected points on success
+     list(point, ...): projected points on success
     Example:
       import rhinoscriptsyntax as rs
       surface = rs.GetObject("Select surface to project onto", rs.filter.surface)
@@ -450,10 +451,10 @@ def PullPoints(object_id, points):
     """Pulls an array of points to a surface or mesh object. For more
     information, see the Rhino help file Pull command
     Parameters:
-      object_id = the identifier of the surface or mesh object that pulls
-      points = list of 3D points
+      object_id (guid): the identifier of the surface or mesh object that pulls
+      points ([point, ...]): list of 3D points
     Returns:
-      list of 3D points
+      list(point, ...): 3D points pulled onto surface or mesh
     Example:
       import rhinoscriptsyntax as rs
       surface = rs.GetObject("Select surface that pulls", rs.filter.surface)
@@ -481,9 +482,9 @@ def PullPoints(object_id, points):
 def VectorAdd(vector1, vector2):
     """Adds two 3D vectors
     Parameters:
-      vector1, vector2 = the vectors to add
+      vector1, vector2 (vector): the vectors to add
     Returns:
-      the resulting 3D vector if successful
+      vector: the resulting 3D vector if successful
     Example:
       import rhinoscriptsyntax as rs
       vector1 = (1,0,0)
@@ -503,10 +504,11 @@ def VectorAdd(vector1, vector2):
 def VectorAngle(vector1, vector2):
     """Returns the angle, in degrees, between two 3-D vectors
     Parameters:
-      vector1 = List of 3 numbers, Point3d, or Vector3d.  The first 3-D vector.
-      vector2 = List of 3 numbers, Point3d, or Vector3d.  The second 3-D vector.
+      vector1 (vector): The first 3-D vector.
+      vector2 (vector): The second 3-D vector.
     Returns:
-      The angle in degrees if successfull, otherwise None
+      number: The angle in degrees if successful
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       s0 = rs.GetObject("Surface 0", rs.filter.surface)
@@ -538,11 +540,12 @@ def VectorAngle(vector1, vector2):
 def VectorCompare(vector1, vector2):
     """Compares two 3D vectors
     Parameters:
-      vector1, vector2 = the vectors to compare
+      vector1, vector2 (vector): the two vectors to compare
     Returns:
-      -1 if vector1 is less than vector2
-      0 if vector1 is equal to vector2
-      1 if vector1 is greater than vector2
+      number: result of comparing the vectors.
+              -1 if vector1 is less than vector2
+              0 if vector1 is equal to vector2
+              1 if vector1 is greater than vector2
     Example:
       import rhinoscriptsyntax as rs
       vector1 = (1,0,0)
@@ -562,9 +565,9 @@ def VectorCompare(vector1, vector2):
 def VectorCreate(to_point, from_point):
     """Creates a vector from two 3D points
     Parameters:
-      to_point, from_point = the points defining the vector
+      to_point, from_point (point): the points defining the vector
     Returns:
-      the resulting vector if successful
+      vector: the resulting vector if successful
     Example:
       import rhinoscriptsyntax as rs
       point1 = rs.GetPoint("First point")
@@ -585,9 +588,9 @@ def VectorCreate(to_point, from_point):
 def VectorCrossProduct(vector1, vector2):
     """Calculates the cross product of two 3D vectors
     Parameters:
-      vector1, vector2 = the vectors to perform cross product on
+      vector1, vector2 (vector): the vectors to perform cross product on
     Returns:
-      the resulting vector if successful
+      vector: the resulting cross product direction if successful
     Example:
       import rhinoscriptsyntax as rs
       vector1 = (1,0,0)
@@ -606,10 +609,10 @@ def VectorCrossProduct(vector1, vector2):
 def VectorDivide(vector, divide):
     """Divides a 3D vector by a value
     Parameters:
-      vector = the vector to divide
-      divide = a non-zero value to divide
+      vector (vector): the vector to divide
+      divide (number): a non-zero value to divide
     Returns:
-      resulting vector on success
+      vector: resulting vector on success
     Example:
       import rhinoscriptsyntax as rs
       print vector
@@ -625,9 +628,9 @@ def VectorDivide(vector, divide):
 def VectorDotProduct(vector1, vector2):
     """Calculates the dot product of two 3D vectors
     Parameters:
-      vector1, vector2 = the vectors to perform the dot product on
+      vector1, vector2 (vector): the vectors to perform the dot product on
     Returns:
-      the resulting dot product if successful
+      vector: the resulting dot product if successful
     Example:
       import rhinoscriptsyntax as rs
       vector1 = [1,0,0]
@@ -646,9 +649,9 @@ def VectorDotProduct(vector1, vector2):
 def VectorLength(vector):
     """Returns the length of a 3D vector
     Parameters:
-      vector = List of 3 numbers or Vector3d.  The 3-D vector.
+      vector (vector):  The 3-D vector.
     Returns:
-      The length of the vector if successful, otherwise None
+      number: The length of the vector if successful, otherwise None
     Example:
       import rhinoscriptsyntax as rs
       point1 = rs.GetPoint("First point")
@@ -668,9 +671,9 @@ def VectorLength(vector):
 def VectorMultiply(vector1, vector2):
     """Multiplies two 3D vectors
     Parameters:
-      vector1, vector2 = the vectors to multiply
+      vector1, vector2 (vector): the vectors to multiply
     Returns:
-      the resulting inner (dot) product if successful
+      vector: the resulting inner (dot) product if successful
     Example:
       import rhinoscriptsyntax as rs
       product = rs.VectorMultiply( [2,2,2], [3,3,3] )
@@ -686,9 +689,9 @@ def VectorMultiply(vector1, vector2):
 def VectorReverse(vector):
     """Reverses the direction of a 3D vector
     Parameters:
-      vector = the vector to reverse
+      vector (vector): the vector to reverse
     Returns:
-      reversed vector on success
+      vector: reversed vector on success
     Example:
       import rhinoscriptsyntax as rs
       vector = rs.VectorReverse([1,0,0])
@@ -706,11 +709,11 @@ def VectorReverse(vector):
 def VectorRotate(vector, angle_degrees, axis):
     """Rotates a 3D vector
     Parameters:
-      vector = the vector to rotate
-      angle_degrees = rotation angle
-      axis = axis of rotation
+      vector (vector): the vector to rotate
+      angle_degrees (number): rotation angle
+      axis (vector): axis of rotation
     Returns:
-      rotated vector on success
+      vector: rotated vector on success
     Example:
       import rhinoscriptsyntax as rs
       vector = rs.VectorRotate([1,0,0], 90.0, [0,0,1])
@@ -729,10 +732,10 @@ def VectorRotate(vector, angle_degrees, axis):
 def VectorScale(vector, scale):
     """Scales a 3-D vector
     Parameters:
-      vector = the vector to scale
-      scale = scale factor to apply
+      vector (vector): the vector to scale
+      scale (number): scale factor to apply
     Returns:
-      resulting vector on success
+      vector: resulting vector on success
     Example:
       import rhinoscriptsyntax as rs
       print vector
@@ -748,10 +751,10 @@ def VectorScale(vector, scale):
 def VectorSubtract(vector1, vector2):
     """Subtracts two 3D vectors
     Parameters:
-      vector1 = the vector to subtract from
-      vector2 = the vector to subtract
+      vector1 (vector): the vector to subtract from
+      vector2 (vector): the vector to subtract
     Returns:
-      the resulting 3D vector
+      vector: the resulting 3D vector
     Example:
       import rhinoscriptsyntax as rs
       vector1 = [1,0,0]
@@ -771,10 +774,10 @@ def VectorSubtract(vector1, vector2):
 def VectorTransform(vector, xform):
     """Transforms a 3D vector
     Parameters:
-      vector = the vector to transform
-      xform = a valid 4x4 transformation matrix
+      vector (vector): the vector to transform
+      xform (transform): a valid 4x4 transformation matrix
     Returns:
-      transformed vector on success
+      vector: transformed vector on success
     Example:
       import rhinoscriptsyntax as rs
       vector = (1,0,0) #world x-axis
@@ -794,10 +797,10 @@ def VectorTransform(vector, xform):
 def VectorUnitize(vector):
     """Unitizes, or normalizes a 3D vector. Note, zero vectors cannot be unitized
     Parameters:
-      vector = the vector to unitize
+      vector (vector): the vector to unitize
     Returns:
-      unitized vector on success
-      None on error
+      vector: unitized vector on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       vector = rs.VectorUnitize( [1.5,-4.1,3.6] )
@@ -815,18 +818,18 @@ def PointArrayBoundingBox(points, view_or_plane=None, in_world_coords=True):
     """Returns either a world axis-aligned or a construction plane axis-aligned 
     bounding box of an array of 3-D point locations.
     Parameters:
-      points = A list of 3-D points
-      view_or_plane[opt] = Title or id of the view that contains the
+      points ([point, ...]): A list of 3-D points
+      view_or_plane (str|plane, optional): Title or id of the view that contains the
           construction plane to which the bounding box should be aligned -or-
           user defined plane. If omitted, a world axis-aligned bounding box
           will be calculated
-      in_world_coords[opt] = return the bounding box as world coordinates or
+      in_world_coords (bool, optional): return the bounding box as world coordinates or
           construction plane coordinates. Note, this option does not apply to
           world axis-aligned bounding boxes.
     Returns:
-      Eight 3D points that define the bounding box. Points returned in counter-
+      list(point, ....): Eight points that define the bounding box. Points returned in counter-
       clockwise order starting with the bottom rectangle of the box.
-      None on error
+      None: on error
     Example:
       
     See Also:

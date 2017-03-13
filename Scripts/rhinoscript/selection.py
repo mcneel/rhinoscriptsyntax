@@ -31,11 +31,11 @@ class filter:
 def AllObjects(select=False, include_lights=False, include_grips=False, include_references=False):
     """Returns identifiers of all objects in the document.
     Parameters:
-      select[opt] = Select the objects
-      include_lights[opt] = Include light objects
-      include_grips[opt] = Include grips objects
+      select(bool, optional): Select the objects
+      include_lights (bool, optional): Include light objects
+      include_grips (bool, optional): Include grips objects
     Returns:
-      List of Guids identifying the objects
+      list(guid, ...): identifiers for all the objects in the document
     Example:
       import rhinoscriptsyntax as rs
       objs = rs.AllObjects()
@@ -65,11 +65,11 @@ def FirstObject(select=False, include_lights=False, include_grips=False):
     """Returns identifier of the first object in the document. The first
     object is the last object created by the user.
     Parameters:
-      select [opt] = Select the object.  If omitted (False), the object is not selected.
-      include_lights [opt] = Include light objects.  If omitted (False), light objects are not returned.
-      include_gripts [opt] = Include grips objects.  If omitted (False), grips objects are not returned.
+      select (bool, optional): Select the object.  If omitted (False), the object is not selected.
+      include_lights (bool, optional): Include light objects.  If omitted (False), light objects are not returned.
+      include_grips (bool, optional): Include grips objects.  If omitted (False), grips objects are not returned.
     Returns:
-      The identifier of the object if successful.
+      guid: The identifier of the object if successful.
     Example:
       import rhinoscriptsyntax as rs
       rs.AddLine( (0,0,0), (5,5,0) )
@@ -139,19 +139,23 @@ def __FilterHelper(filter):
 def GetCurveObject(message=None, preselect=False, select=False):
     """Prompts user to pick or select a single curve object
     Parameters:
-      message[opt] = a prompt or message.
-      preselect[opt] = Allow for the selection of pre-selected objects.
-      select[opt] = Select the picked objects. If False, objects that
+      message (str, optional): a prompt or message.
+      preselect (bool,, optional): Allow for the selection of pre-selected objects.
+      select (bool, optional): Select the picked objects. If False, objects that
         are picked are not selected.
     Returns:
       Tuple containing the following information
-        element 0 = identifier of the curve object
-        element 1 = True if the curve was preselected, otherwise False
-        element 2 = selection method (see help)
-        element 3 = selection point
-        element 4 = the curve parameter of the selection point
-        element 5 = name of the view selection was made
-      None if no object picked
+        [0]  guid     identifier of the curve object
+        [1]  bool     True if the curve was preselected, otherwise False
+        [2]  number   selection method
+                         0 = selected by non-mouse method (SelAll, etc.).
+                         1 = selected by mouse click on the object.
+                         2 = selected by being inside of a mouse window.
+                         3 = selected by intersecting a mouse crossing window.
+        [3]  point    selection point
+        [4]  number   the curve parameter of the selection point
+        [5]  str      name of the view selection was made
+      None: if no object picked
     Example:
       import rhinoscriptsyntax as rs
       select_result = rs.GetCurveObject("Select curve")
@@ -196,19 +200,19 @@ def GetCurveObject(message=None, preselect=False, select=False):
 def GetObject(message=None, filter=0, preselect=False, select=False, custom_filter=None, subobjects=False):
     """Prompts user to pick, or select, a single object.
     Parameters:
-      message[opt] = a prompt or message.
-      filter[opt] = The type(s) of geometry (points, curves, surfaces, meshes,...)
+      message(str, optional): a prompt or message.
+      filter (number, optional): The type(s) of geometry (points, curves, surfaces, meshes,...)
           that can be selected. Object types can be added together to filter
           several different kinds of geometry. use the filter class to get values
-      preselect[opt] =  Allow for the selection of pre-selected objects.
-      select[opt] = Select the picked objects.  If False, the objects that are
+      preselect (bool, optional): Allow for the selection of pre-selected objects.
+      select (bool, optional): Select the picked objects.  If False, the objects that are
           picked are not selected.
-      subobjects[opt] = If True, subobjects can be selected. When this is the
+      subobjects (bool, optional): If True, subobjects can be selected. When this is the
           case, an ObjRef is returned instead of a Guid to allow for tracking
           of the subobject when passed into other functions
     Returns:
-      Identifier of the picked object
-      None if user did not pick an object
+      guid: Identifier of the picked object
+      None: if user did not pick an object
     Example:
       import rhinoscriptsyntax as rs
       objectId = rs.GetObject("Pick any object")
@@ -267,23 +271,23 @@ class __CustomGetObjectEx(Rhino.Input.Custom.GetObject):
 def GetObjectEx(message=None, filter=0, preselect=False, select=False, objects=None):
     """Prompts user to pick, or select a single object
     Parameters:
-      message[opt] = a prompt or message.
-      filter[opt] = The type(s) of geometry (points, curves, surfaces, meshes,...)
+      message (str, optional): a prompt or message.
+      filter (number, optional): The type(s) of geometry (points, curves, surfaces, meshes,...)
           that can be selected. Object types can be added together to filter
           several different kinds of geometry. use the filter class to get values
-      preselect[opt] =  Allow for the selection of pre-selected objects.
-      select[opt] = Select the picked objects.  If False, the objects that are
+      preselect (bool, optional):  Allow for the selection of pre-selected objects.
+      select (bool, optional): Select the picked objects.  If False, the objects that are
           picked are not selected.
-      objects[opt] = list of object identifiers specifying objects that are
+      objects ([guid, ...]): list of object identifiers specifying objects that are
           allowed to be selected
     Returns:
-      Tuple of information containing the following information
-        element 0 = identifier of the object
-        element 1 = True if the object was preselected, otherwise False
-        element 2 = selection method (see help)
-        element 3 = selection point
-        element 4 = name of the view selection was made
-      None if no object selected
+      tuple(guid, bool, number, point, str): containing the following information
+          [0] identifier of the object
+          [1] True if the object was preselected, otherwise False
+          [2] selection method (see help)
+          [3] selection point
+          [4] name of the view selection was made
+      None: if no object selected
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObjectEx("Select object", 0, True)
@@ -343,20 +347,21 @@ def GetObjectEx(message=None, filter=0, preselect=False, select=False, objects=N
 def GetObjects(message=None, filter=0, group=True, preselect=False, select=False, objects=None, minimum_count=1, maximum_count=0, custom_filter=None):
     """Prompts user to pick or select one or more objects.
     Parameters:
-      message[opt] = a prompt or message.
-      filter[opt] = The type(s) of geometry (points, curves, surfaces, meshes,...)
+      message (str, optional): a prompt or message.
+      filter (number, optional): The type(s) of geometry (points, curves, surfaces, meshes,...)
           that can be selected. Object types can be added together to filter
           several different kinds of geometry. use the filter class to get values
-      group[opt] = Honor object grouping.  If omitted and the user picks a group,
+      group (bool, optional) Honor object grouping.  If omitted and the user picks a group,
           the entire group will be picked (True). Note, if filter is set to a
           value other than 0 (All objects), then group selection will be disabled.
-      preselect[opt] =  Allow for the selection of pre-selected objects.
-      select[opt] = Select the picked objects.  If False, the objects that are
+      preselect (bool, optional):  Allow for the selection of pre-selected objects.
+      select (bool, optional): Select the picked objects.  If False, the objects that are
           picked are not selected.
-      objects[opt] = list of objects that are allowed to be selected
-      mimimum_count, maximum_count[out] = limits on number of objects allowed to be selected
+      objects ([guid, ...]): list of objects that are allowed to be selected
+      minimum_count, maximum_count(number): limits on number of objects allowed to be selected
+      custom_filter (str, optional): Calls a custom function in the script and passes the Rhino Object, Geometry, and component index and returns true or false indicating if the object can be selected
     Returns:
-      list of Guids identifying the picked objects
+      list(guid, ...): identifiers of the picked objects
     Example:
       import rhinoscriptsyntax as rs
       objectIds = rs.GetObjects("Pick some curves", rs.filter.curve)
@@ -408,25 +413,25 @@ def GetObjects(message=None, filter=0, group=True, preselect=False, select=False
 def GetObjectsEx(message=None, filter=0, group=True, preselect=False, select=False, objects=None):
     """Prompts user to pick, or select one or more objects
     Parameters:
-      message[opt] = a prompt or message.
-      filter[opt] = The type(s) of geometry (points, curves, surfaces, meshes,...)
+      message (str, optional):  a prompt or message.
+      filter (number, optional): The type(s) of geometry (points, curves, surfaces, meshes,...)
           that can be selected. Object types can be added together to filter
           several different kinds of geometry. use the filter class to get values
-      group[opt] = Honor object grouping.  If omitted and the user picks a group,
+      group (bool, optional): Honor object grouping.  If omitted and the user picks a group,
           the entire group will be picked (True). Note, if filter is set to a
           value other than 0 (All objects), then group selection will be disabled.
-      preselect[opt] =  Allow for the selection of pre-selected objects.
-      select[opt] = Select the picked objects. If False, the objects that are
+      preselect (bool, optional):  Allow for the selection of pre-selected objects.
+      select (bool, optional): Select the picked objects. If False, the objects that are
           picked are not selected.
-      objects[opt] = list of object identifiers specifying objects that are
+      objects ([guid, ...]): list of object identifiers specifying objects that are
           allowed to be selected
     Returns:
-      A list of tuples containing the following information
-        element 0 = identifier of the object
-        element 1 = True if the object was preselected, otherwise False
-        element 2 = selection method (see help)
-        element 3 = selection point
-        element 4 = name of the view selection was made
+      list(tuple(guid, bool, number, point, str), ...): containing the following information
+        [n][0]  identifier of the object
+        [n][1]  True if the object was preselected, otherwise False
+        [n][2]  selection method (see help)
+        [n][3]  selection point
+        [n][4]  name of the view selection was made
     Example:
       import rhinoscriptsyntax as rs
       objects = rs.GetObjectsEx("Select objects", 0, True)
@@ -491,10 +496,10 @@ def GetObjectsEx(message=None, filter=0, group=True, preselect=False, select=Fal
 def GetPointCoordinates(message="select points", preselect=False):
     """Prompts the user to select one or more point objects.
     Parameters:
-      message [opt] = a prompt message.
-      preselect [opt] = Allow for the selection of pre-selected objects.  If omitted (False), pre-selected objects are not accepted.
+      message (str, optional): a prompt message.
+      preselect (bool, optional): Allow for the selection of pre-selected objects.  If omitted (False), pre-selected objects are not accepted.
     Returns:
-      list of 3d coordinates on success
+      list(point, ...): 3d coordinates of point objects on success
     Example:
       import rhinoscriptsyntax as rs
       points = rs.GetPointCoordinates()
@@ -517,18 +522,18 @@ def GetPointCoordinates(message="select points", preselect=False):
 def GetSurfaceObject(message="select surface", preselect=False, select=False):
     """Prompts the user to select a single surface
     Parameters:
-      message[opt] = prompt displayed
-      preselect[opt] = allow for preselected objects
-      select[opt] = select the picked object
+      message(str, optional): prompt displayed
+      preselect (bool, optional): allow for preselected objects
+      select (bool, optional):  select the picked object
     Returns:
-      tuple of information on success
-        element 0 = identifier of the surface
-        element 1 = True if the surface was preselected, otherwise False
-        element 2 = selection method ( see help )
-        element 3 = selection point
-        element 4 = u,v surface parameter of the selection point
-        element 5 = name of the view in which the selection was made
-      None on error
+      tuple(guid, bool, number, point, (number, number), str): of information on success
+        [0]  identifier of the surface
+        [1]  True if the surface was preselected, otherwise False
+        [2]  selection method ( see help )
+        [3]  selection point
+        [4]  u,v surface parameter of the selection point
+        [5]  name of the view in which the selection was made
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       select = rs.GetSurfaceObject("Select surface")
@@ -574,10 +579,10 @@ def LockedObjects(include_lights=False, include_grips=False, include_references=
     """Returns identifiers of all locked objects in the document. Locked objects
     cannot be snapped to, and cannot be selected
     Parameters:
-      include_lights[opt] = include light objects
-      include_grips[opt] = include grip objects
+      include_lights (bool, optional): include light objects
+      include_grips (bool, optional): include grip objects
     Returns:
-      A list of Guids identifying the objects if successful.
+      list(guid, ...): identifiers the locked objects if successful.
     Example:
       import rhinoscriptsyntax as  rs
       objs = rs.LockedObjects()
@@ -602,10 +607,10 @@ def HiddenObjects(include_lights=False, include_grips=False, include_references=
     """Returns identifiers of all hidden objects in the document. Hidden objects
     are not visible, cannot be snapped to, and cannot be selected
     Parameters:
-      include_lights[opt] = include light objects
-      include_grips[opt] = include grip objects
+      include_lights (bool, optional): include light objects
+      include_grips (bool, optional): include grip objects
     Returns:
-      A list of Guids identifying the objects if successful.
+      list(guid, ...): identifiers of the hidden objects if successful.
     Example:
       import rhinoscriptsyntax as rs
       hidden = rs.HiddenObjects()
@@ -631,11 +636,11 @@ def InvertSelectedObjects(include_lights=False, include_grips=False, include_ref
     """Inverts the current object selection. The identifiers of the newly
     selected objects are returned
     Parameters:
-      include_lights [opt] = Include light objects.  If omitted (False), light objects are not returned.
-      include_gripts [opt] = Include grips objects.  If omitted (False), grips objects are not returned.
-      include_references [opt] = Include reference objects.  If omitted (False), reference objects are not returned.
+      include_lights (bool, optional): Include light objects.  If omitted (False), light objects are not returned.
+      include_grips (bool, optional): Include grips objects.  If omitted (False), grips objects are not returned.
+      include_references (bool, optional): Include reference objects.  If omitted (False), reference objects are not returned.
     Returns:
-      A list of Guids identifying the newly selected objects if successful.
+      list(guid, ...): identifiers of the newly selected objects if successful.
     Example:
       import rhinoscriptsyntax as rs
       rs.GetObjects("Select some objects", select=True)
@@ -668,9 +673,9 @@ def LastCreatedObjects(select=False):
     call this function immediately after calling the Command function as only the
     most recently created or changed object identifiers will be returned
     Parameters:
-      select [opt] = Select the object.  If omitted (False), the object is not selected.
+      select (bool, optional): Select the object.  If omitted (False), the object is not selected.
     Returns:
-      A list of Guids identifying the most recently created or changed objects if successful.
+      list(guid, ...): identifiers of the most recently created or changed objects if successful.
     Example:
       import rhinoscriptsyntax as rs
       rs.Command( "_-Circle 0,0,0 10" )
@@ -702,11 +707,11 @@ def LastObject(select=False, include_lights=False, include_grips=False):
     """Returns the identifier of the last object in the document. The last object
     in the document is the first object created by the user
     Parameters:
-      select[opt] = select the object
-      include_lights[opt] = include lights in the potential set
-      include_grips[opt] = include grips in the potential set
+      select (bool, optional): select the object
+      include_lights (bool, optional): include lights in the potential set
+      include_grips (bool, optional): include grips in the potential set
     Returns:
-      identifier of the object on success
+      guid: identifier of the object on success
     Example:
       import rhinoscriptsyntax as rs
       rs.AddLine((0,0,0), (5,5,0))
@@ -734,12 +739,12 @@ def LastObject(select=False, include_lights=False, include_grips=False):
 def NextObject(object_id, select=False, include_lights=False, include_grips=False):
     """Returns the identifier of the next object in the document
     Parameters:
-      object_id = the identifier of the object from which to get the next object
-      select[opt] = select the object
-      include_lights[opt] = include lights in the potential set
-      include_grips[opt] = include grips in the potential set
+      object_id (guid): the identifier of the object from which to get the next object
+      select (bool, optional): select the object
+      include_lights (bool, optional): include lights in the potential set
+      include_grips (bool, optional): include grips in the potential set
     Returns:
-      identifier of the object on success
+      guid: identifier of the object on success
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.FirstObject()
@@ -766,10 +771,10 @@ def NormalObjects(include_lights=False, include_grips=False):
     """Returns identifiers of all normal objects in the document. Normal objects
     are visible, can be snapped to, and are independent of selection state
     Parameters:
-      include_lights [opt] = Include light objects.  If omitted (False), light objects are not returned.
-      include_gripts [opt] = Include grips objects.  If omitted (False), grips objects are not returned.
+      include_lights (bool, optional): Include light objects.  If omitted (False), light objects are not returned.
+      include_gripts (bool, optional): Include grips objects.  If omitted (False), grips objects are not returned.
     Returns:
-      A list of Guids identifying the objects if successful.
+      list(guid, ...): identifier of normal objects if successful.
     Example:
       import rhinoscriptsyntax as rs
       objs = rs.NormalObjects()
@@ -790,11 +795,11 @@ def NormalObjects(include_lights=False, include_grips=False):
 def ObjectsByColor(color, select=False, include_lights=False):
     """Returns identifiers of all objects based on color
     Parameters:
-      color = color to get objects by
-      select[opt] = select the objects
-      include_lights[opt] = include lights in the set
+      color (color): color to get objects by
+      select (bool, optional): select the objects
+      include_lights (bool, optional): include lights in the set
     Returns:
-      list of identifiers
+      list(guid, ...): identifiers of objects of the selected color.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Pick any object")
@@ -815,10 +820,10 @@ def ObjectsByColor(color, select=False, include_lights=False):
 def ObjectsByGroup(group_name, select=False):
     """Returns identifiers of all objects based on the objects' group name
     Parameters:
-      group_name = name of the group
-      select [opt] = select the objects
+      group_name (str): name of the group
+      select (bool, optional): select the objects
     Returns:
-      list of identifiers on success
+      list(guid, ...):identifiers for objects in the group on success
     Example:
       import rhinoscriptsyntax as rs
       group = rs.GetString("Group to select")
@@ -839,10 +844,10 @@ def ObjectsByGroup(group_name, select=False):
 def ObjectsByLayer(layer_name, select=False):
     """Returns identifiers of all objects based on the objects' layer name
     Parameters:
-      layer_name = name of the layer
-      select [opt] = select the objects
+      layer_name (str): name of the layer
+      select (bool, optional): select the objects
     Returns:
-      list of identifiers
+      list(guid, ...): identifiers for objects in the specified layer
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Pick any object")
@@ -864,11 +869,11 @@ def ObjectsByLayer(layer_name, select=False):
 def ObjectsByName(name, select=False, include_lights=False, include_references=False):
     """Returns identifiers of all objects based on user-assigned name
     Parameters:
-      name = name of the object or objects
-      select[opt] = select the objects
-      include_lights[opt] = include light objects
+      name (str): name of the object or objects
+      select (bool, optional): select the objects
+      include_lights (bool, optional): include light objects
     Returns:
-      list of identifiers
+      list(guid, ...): identifiers for objects with the specified name.
     Example:
       import rhinoscriptsyntax as rs
       name = rs.GetString("Name to select")
@@ -896,9 +901,9 @@ def ObjectsByName(name, select=False, include_lights=False, include_references=F
 def ObjectsByType(geometry_type, select=False, state=0):
     """Returns identifiers of all objects based on the objects' geometry type.
     Parameters:
-      geometry_type = The type(s) of geometry objects (points, curves, surfaces,
+      geometry_type (number): The type(s) of geometry objects (points, curves, surfaces,
              meshes, etc.) that can be selected. Object types can be
-             added together to filter several different kinds of geometry.
+             added together as bit-coded flags to filter several different kinds of geometry.
               Value        Description
                0           All objects
                1           Point
@@ -918,10 +923,10 @@ def ObjectsByType(geometry_type, select=False, state=0):
                134217728   Cage
                268435456   Phantom
                536870912   Clipping plane
-      select[opt] = Select the objects
-      state[opt] = Object state. See help
+      select (bool, optional): Select the objects
+      state (bool, optional): Object state. See help
     Returns:
-      A list of Guids identifying the objects.
+      list(guid, ...): identifiers of object that fit the specified type(s).
     Example:
       import rhinoscriptsyntax as  rs
       objs = rs.ObjectsByType(4 |  8, True)
@@ -990,10 +995,10 @@ def ObjectsByType(geometry_type, select=False, state=0):
 def SelectedObjects(include_lights=False, include_grips=False):
     """Returns the identifiers of all objects that are currently selected
     Parameters:
-      include_lights [opt] = include light objects
-      include_grips [opt] = include grip objects
+      include_lights (bool, optional): include light objects
+      include_grips (bool, optional): include grip objects
     Returns:
-      list of Guids identifying the objects
+      list(guid, ...) identifiers of selected objects
     Example:
       import rhinoscriptsyntax as rs
       objects = rs.SelectedObjects()
@@ -1008,10 +1013,8 @@ def SelectedObjects(include_lights=False, include_grips=False):
 
 def UnselectAllObjects():
     """Unselects all objects in the document
-    Parameters:
-      None
     Returns:
-      the number of objects that were unselected
+      number: the number of objects that were unselected
     Example:
       import rhinoscriptsyntax as rs
       count = rs.UnselectAllObjects()
@@ -1028,12 +1031,12 @@ def UnselectAllObjects():
 def VisibleObjects(view=None, select=False, include_lights=False, include_grips=False):
     """Return identifiers of all objects that are visible in a specified view
     Parameters:
-      view [opt] = the view to use. If omitted, the current active view is used
-      select [opt] = Select the objects
-      include_lights [opt] = include light objects
-      include_grips [opt] = include grip objects
+      view (bool, optional): the view to use. If omitted, the current active view is used
+      select (bool, optional): Select the objects
+      include_lights (bool, optional): include light objects
+      include_grips (bool, optional): include grip objects
     Returns:
-      list of Guids identifying the objects
+      list(guid, ...): identifiers of the visible objects
     Example:
       import rhinoscriptsyntax as rs
       object_ids = rs.VisibleObjects("Top")
@@ -1068,12 +1071,12 @@ def VisibleObjects(view=None, select=False, include_lights=False, include_grips=
 def WindowPick(corner1, corner2, view=None, select=False, in_window=True):
     """Picks objects using either a window or crossing selection
     Parameters:
-      corner1, corner2 = corners of selection window
-      view[opt] = view to perform the selection in
-      select[opt] = select picked objects
-      in_window[opt] = if False, then a crossing window selection is performed
+      corner1, corner2 (point): corners of selection window
+      view (bool, optional): view to perform the selection in
+      select (bool, optional): select picked objects
+      in_window (bool, optional): if False, then a crossing window selection is performed
     Returns:
-      list of object ids on success
+      list(guid, ...): identifiers of selected objects on success
     Example:
       import rhinoscriptsyntax as  rs
       rs.WindowPick((0,0,0), (0,0,0),  None, True)

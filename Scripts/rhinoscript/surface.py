@@ -9,10 +9,10 @@ from System.Collections.Generic import List
 def AddBox(corners):
     """Adds a box shaped polysurface to the document
     Parameters:
-      corners = 8 3D points that define the corners of the box. Points need to
+      corners ([point, point, point ,point, point, point ,point,point]) 8 points that define the corners of the box. Points need to
         be in counter-clockwise order starting with the bottom rectangle of the box
     Returns:
-      identifier of the new object on success
+      guid: identifier of the new object on success
     Example:
       import rhinoscriptsyntax as rs
       box = rs.GetBox()
@@ -35,15 +35,15 @@ def AddBox(corners):
 def AddCone(base, height, radius, cap=True):
     """Adds a cone shaped polysurface to the document
     Parameters:
-      base = 3D origin point of the cone or a plane with an apex at the origin
+      base (point|plane): 3D origin point of the cone or a plane with an apex at the origin
           and normal along the plane's z-axis
-      height = 3D height point of the cone if base is a 3D point. The height
+      height (point|number): 3D height point of the cone if base is a 3D point. The height
           point defines the height and direction of the cone. If base is a
           plane, height is a numeric value
-      radius = the radius at the base of the cone
-      cap [opt] = cap base of the cone
+      radius (number): the radius at the base of the cone
+      cap (bool, optional): cap base of the cone
     Returns:
-      identifier of the new object on success
+      guid: identifier of the new object on success
     Example:
       import rhinoscriptsyntax as rs
       radius = 5.0
@@ -77,16 +77,16 @@ def AddCutPlane(object_ids, start_point, end_point, normal=None):
     """Adds a planar surface through objects at a designated location. For more
     information, see the Rhino help file for the CutPlane command
     Parameters:
-      objects_ids = identifiers of objects that the cutting plane will
+      objects_ids ([guid, ...]): identifiers of objects that the cutting plane will
           pass through
-      start_point, end_point = line that defines the cutting plane
-      normal[opt] = vector that will be contained in the returned planar
+      start_point, end_point (line): line that defines the cutting plane
+      normal (vector, optional): vector that will be contained in the returned planar
           surface. In the case of Rhino's CutPlane command, this is the
           normal to, or Z axis of, the active view's construction plane.
           If omitted, the world Z axis is used
     Returns:
-      identifier of new object on success
-      None on error
+      guid: identifier of new object on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select objects for cut plane")
@@ -121,16 +121,16 @@ def AddCutPlane(object_ids, start_point, end_point, normal=None):
 def AddCylinder(base, height, radius, cap=True):
     """Adds a cylinder-shaped polysurface to the document
     Parameters:
-      base = The 3D base point of the cylinder or the base plane of the cylinder
-      height = if base is a point, then height is a 3D height point of the
+      base (point|plane): The 3D base point of the cylinder or the base plane of the cylinder
+      height (point|number): if base is a point, then height is a 3D height point of the
         cylinder. The height point defines the height and direction of the
         cylinder. If base is a plane, then height is the numeric height value
         of the cylinder
-      radius = radius of the cylinder
-      cap[opt] = cap the cylinder
+      radius (number): radius of the cylinder
+      cap (bool, optional): cap the cylinder
     Returns:
-      identifier of new object if successful
-      None on error
+      guid: identifier of new object if successful
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       radius = 5.0
@@ -170,10 +170,10 @@ def AddCylinder(base, height, radius, cap=True):
 def AddEdgeSrf(curve_ids):
     """Creates a surface from 2, 3, or 4 edge curves
     Parameters:
-      curve_ids = list or tuple of curves
+      curve_ids ([guid, ...]): list or tuple of curves
     Returns:
-      identifier of new object if successful
-      None on error
+      guid: identifier of new object if successful
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       if curves and len(curves)>1 ): rs.AddEdgeSrf(curves)
@@ -195,11 +195,14 @@ def AddEdgeSrf(curve_ids):
 def AddNetworkSrf(curves, continuity=1, edge_tolerance=0, interior_tolerance=0, angle_tolerance=0):
     """Creates a surface from a network of crossing curves
     Parameters:
-      curves = curves from which to create the surface
-      continuity[opt] = how the edges match the input geometry
-        0=loose, 1=position, 2=tangency, 3=curvature
+      curves ([guid, ...]): curves from which to create the surface
+      continuity (number, optional): how the edges match the input geometry
+                 0 = loose
+                 1 = position
+                 2 = tangency
+                 3 = curvature
     Returns:
-      identifier of new object if successful
+      guid: identifier of new object if successful
     Example:
       import rhinoscriptsyntax as  rs
       curve_ids = rs.GetObjects("Select  curves in network", 4, True, True)
@@ -219,18 +222,18 @@ def AddNetworkSrf(curves, continuity=1, edge_tolerance=0, interior_tolerance=0, 
 def AddNurbsSurface(point_count, points, knots_u, knots_v, degree, weights=None):
     """Adds a NURBS surface object to the document
     Parameters:
-      point_count = number of control points in the u and v direction
-      points = list of 3D points
-      knots_u = knot values for the surface in the u direction.
+      point_count ([number, number]) number of control points in the u and v direction
+      points ({point, ...]): list of 3D points
+      knots_u ([number, ...]): knot values for the surface in the u direction.
                 Must contain point_count[0]+degree[0]-1 elements
-      knots_v = knot values for the surface in the v direction.
+      knots_v ([number, ...]): knot values for the surface in the v direction.
                 Must contain point_count[1]+degree[1]-1 elements
-      degree = degree of the surface in the u and v directions.
-      weights[opt] = weight values for the surface. The number of elements in
+      degree ([number, number]): degree of the surface in the u and v directions.
+      weights [(number, ...]): weight values for the surface. The number of elements in
         weights must equal the number of elements in points. Values must be
         greater than zero.
     Returns:
-      identifier of new object if successful
+      guid: identifier of new object if successful
       None on error
     Example:
       import rhinoscriptsyntax as rs
@@ -282,28 +285,28 @@ def AddNurbsSurface(point_count, points, knots_u, knots_v, degree, weights=None)
 def AddPatch(object_ids, uv_spans_tuple_OR_surface_object_id, tolerance=None, trim=True, point_spacing=0.1, flexibility=1.0, surface_pull=1.0, fix_edges=False):
     """Fits a surface through curve, point, point cloud, and mesh objects.
     Parameters:
-      object_ids = a list of object identifiers that indicate the objects to use for the patch fitting. 
+      object_ids ({guid, ...]): a list of object identifiers that indicate the objects to use for the patch fitting.
           Acceptable object types include curves, points, point clouds, and meshes.
-      uv_spans_tuple_OR_surface_object_id =  the U and V direction span counts for the automatically generated surface OR 
+      uv_spans_tuple_OR_surface_object_id ([number, number]|guid):  the U and V direction span counts for the automatically generated surface OR
           The identifier of the starting surface.  It is best if you create a starting surface that is similar in shape 
           to the surface you are trying to create.
-      tolerance[opt] = The tolerance used by input analysis functions. If omitted, Rhino's document absolute tolerance is used.
-      trim[opt] = Try to find an outside curve and trims the surface to it.  The default value is True.
-      point_spacing[opt] = The basic distance between points sampled from input curves.  The default value is 0.1.
-      flexibility[opt] = Determines the behavior of the surface in areas where its not otherwise controlled by the input.
+      tolerance (number, optional): The tolerance used by input analysis functions. If omitted, Rhino's document absolute tolerance is used.
+      trim (bool, optional): Try to find an outside curve and trims the surface to it.  The default value is True.
+      point_spacing (number, optional): The basic distance between points sampled from input curves.  The default value is 0.1.
+      flexibility (number, optional): Determines the behavior of the surface in areas where its not otherwise controlled by the input.
           Lower numbers make the surface behave more like a stiff material, higher, more like a flexible material.  
           That is, each span is made to more closely match the spans adjacent to it if there is no input geometry 
           mapping to that area of the surface when the flexibility value is low.  The scale is logarithmic.  
           For example, numbers around 0.001 or 0.1 make the patch pretty stiff and numbers around 10 or 100 
           make the surface flexible.  The default value is 1.0.
-      surface_pull[opt] = Similar to stiffness, but applies to the starting surface. The bigger the pull, the closer 
+      surface_pull (number, optional): Similar to stiffness, but applies to the starting surface. The bigger the pull, the closer
           the resulting surface shape will be to the starting surface.  The default value is 1.0.
-      fix_edges[opt] = Clamps the edges of the starting surface in place. This option is useful if you are using a 
+      fix_edges (bool, optional): Clamps the edges of the starting surface in place. This option is useful if you are using a
           curve or points for deforming an existing surface, and you do not want the edges of the starting surface 
           to move.  The default if False.
     Returns:
-      Identifier of the new surface object if successful.
-      None on error.
+      guid: Identifier of the new surface object if successful.
+      None: on error.
     Example:
     See Also:
     """
@@ -343,13 +346,13 @@ def AddPatch(object_ids, uv_spans_tuple_OR_surface_object_id, tolerance=None, tr
 def AddPipe(curve_id, parameters, radii, blend_type=0, cap=0, fit=False):
     """Creates a single walled surface with a circular profile around a curve
     Parameters:
-      curve_id = identifier of rail curve
-      parameters, radii = list of radius values at normalized curve parameters
-      blend_type = 0(local) or 1(global)
-      cap = 0(none), 1(flat), 2(round)
-      fit = attempt to fit a single surface
+      curve_id (guid): identifier of rail curve
+      parameters, radii ([number, ...]): list of radius values at normalized curve parameters
+      blend_type (number, optional): 0(local) or 1(global)
+      cap (number, optional): 0(none), 1(flat), 2(round)
+      fit (bool, optional): attempt to fit a single surface
     Returns:
-      List of identifiers of new objects created
+      list(guid, ...): identifiers of new objects created
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select curve to create pipe around", rs.filter.curve, True)
@@ -376,10 +379,10 @@ def AddPipe(curve_id, parameters, radii, blend_type=0, cap=0, fit=False):
 def AddPlanarSrf(object_ids):
     """Creates one or more surfaces from planar curves
     Parameters:
-      object_ids = curves to use for creating planar surfaces
+      object_ids ({guid, ...]): curves to use for creating planar surfaces
     Returns:
-      list of surfaces created on success
-      None on error
+      list(guid, ...): identifiers of surfaces created on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select planar curves to build surface", rs.filter.curve)
@@ -403,12 +406,12 @@ def AddPlanarSrf(object_ids):
 def AddPlaneSurface(plane, u_dir, v_dir):
     """Create a plane surface and add it to the document.
     Parameters:
-      plane = The plane.
-      u_dir = The magnitude in the U direction.
-      v_dir = The magnitude in the V direction.
+      plane (plane): The plane.
+      u_dir (number): The magnitude in the U direction.
+      v_dir (number): The magnitude in the V direction.
     Returns:
-      The identifier of the new object if successful.
-      None if not successful, or on error.
+      guid: The identifier of the new object if successful.
+      None: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       rs.AddPlaneSurface( rs.WorldXYPlane(), 5.0, 3.0 )
@@ -439,10 +442,10 @@ def AddLoftSrf(object_ids, start=None, end=None, loft_type=0, simplify_method=0,
     - seams of closed curves are not adjusted. Use CurveSeam to adjust the seam
       of closed curves
     Parameters:
-      object_ids = ordered list of the curves to loft through
-      start [opt] = starting point of the loft
-      end [opt] = ending point of the loft
-      loft_type [opt] = type of loft. Possible options are:
+      object_ids ({guid, guid, ...]): ordered list of the curves to loft through
+      start (point, optional): starting point of the loft
+      end (point, optional): ending point of the loft
+      loft_type (number, optional): type of loft. Possible options are:
         0 = Normal. Uses chord-length parameterization in the loft direction
         1 = Loose. The surface is allowed to move away from the original curves
             to make a smoother surface. The surface control points are created
@@ -453,20 +456,22 @@ def AddLoftSrf(object_ids, start=None, end=None, loft_type=0, simplify_method=0,
             root of chord-length parameterization in the loft direction
         4 = Developable. Creates a separate developable surface or polysurface
             from each pair of curves.
-      simplify_method [opt] = Possible options are:
+      simplify_method (number, optional): Possible options are:
         0 = None. Does not simplify.
-        1 = Rebuild. Rebuilds the shape curves before lofting.
-        2 = Refit. Refits the shape curves to a specified tolerance
-      value [opt] = A value based on the specified style.
-        style=1 (Rebuild), then value is the number of control point used to rebuild
-        style=1 is specified and this argument is omitted, then curves will be
-        rebuilt using 10 control points.
-        style=2 (Refit), then value is the tolerance used to rebuild.
-        style=2 is specified and this argument is omitted, then the document's
-        absolute tolerance us used for refitting.
+        1 = Rebuild. Rebuilds the shape curves before lofting. modified by `value` below
+        2 = Refit. Refits the shape curves to a specified tolerance. modified by `value` below
+      value (number, optional): Additional value based on the specified `simplify_method`:
+        Simplify  -   Description
+        Rebuild(1) - then value is the number of control point used to rebuild
+        Rebuild(1) - is specified and this argument is omitted, then curves will be
+                     rebuilt using 10 control points.
+        Refit(2) - then value is the tolerance used to rebuild.
+        Refit(2) - is specified and this argument is omitted, then the document's
+                     absolute tolerance us used for refitting.
+      closed (bool, optional): close the loft back to the first curve
     Returns:
-      Array containing the identifiers of the new surface objects if successful
-      None on error
+      list(guid, ...):Array containing the identifiers of the new surface objects if successful
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Pick curves to loft", rs.filter.curve)
@@ -517,12 +522,12 @@ def AddLoftSrf(object_ids, start=None, end=None, loft_type=0, simplify_method=0,
 def AddRevSrf(curve_id, axis, start_angle=0.0, end_angle=360.0):
     """Create a surface by revolving a curve around an axis
     Parameters:
-      curve_id = identifier of profile curve
-      axis = line for the rail revolve axis
-      start_angle[opt], end_angle[opt] = start and end angles of revolve
+      curve_id (guid): identifier of profile curve
+      axis (line): line for the rail revolve axis
+      start_angle, end_angle (number, optional): start and end angles of revolve
     Returns:
-      identifier of new object if successful
-      None on error
+      guid: identifier of new object if successful
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.AddLine((5,0,0), (10,0,10))
@@ -544,12 +549,12 @@ def AddRevSrf(curve_id, axis, start_angle=0.0, end_angle=360.0):
 def AddSphere(center_or_plane, radius):
     """Add a spherical surface to the document
     Parameters:
-      center_or_plane = center point of the sphere. If a plane is input,
+      center_or_plane (point|plane): center point of the sphere. If a plane is input,
         the origin of the plane will be the center of the sphere
-      radius = radius of the sphere in the current model units
+      radius (number): radius of the sphere in the current model units
     Returns:
-      intentifier of the new object on success
-      None on error
+      guid: identifier of the new object on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       radius = 2
@@ -577,14 +582,14 @@ def AddSrfContourCrvs(object_id, points_or_plane, interval=None):
     defined cutting planes through a surface or polysurface. For more
     information, see Rhino help for details on the Contour command
     Parameters:
-      object_id = object identifier
-      points_or_plane = either a list/tuple of two points or a plane
+      object_id (guid): object identifier to contour
+      points_or_plane ([point,point]|plane): either a list/tuple of two points or a plane
         if two points, they define the start and end points of a center line
         if a plane, the plane defines the cutting plane
-      interval[opt] = distance beween contour curves.
+      interval (number, optional): distance between contour curves.
     Returns:
-      ids of new curves on success
-      None on error
+      guid: ids of new contour curves on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object", rs.filter.surface + rs.filter.polysurface)
@@ -618,12 +623,12 @@ def AddSrfContourCrvs(object_id, points_or_plane, interval=None):
 def AddSrfControlPtGrid(count, points, degree=(3,3)):
     """Creates a surface from a grid of points
     Parameters:
-      count = tuple of two numbers defining number of points in the u,v directions
-      points = list of 3D points
-      degree[opt] = two numbers defining degree of the surface in the u,v directions
+      count ([number, number])tuple of two numbers defining number of points in the u,v directions
+      points ([point, ...]): list of 3D points
+      degree ([number, number]): two numbers defining degree of the surface in the u,v directions
     Returns:
-      The identifier of the new object if successful.
-      None if not successful, or on error.
+      guid: The identifier of the new object if successful.
+      None: if not successful, or on error.
     Example:
     See Also:
     """
@@ -639,10 +644,10 @@ def AddSrfControlPtGrid(count, points, degree=(3,3)):
 def AddSrfPt(points):
     """Creates a new surface from either 3 or 4 corner points.
     Parameters:
-      points = list of either 3 or 4 corner points
+      points ([point, point, point, point]): list of either 3 or 4 corner points
     Returns:
-      The identifier of the new object if successful.
-      None if not successful, or on error.
+      guid: The identifier of the new object if successful.
+      None: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       points = rs.GetPoints(True, message1="Pick 3 or 4 corner points")
@@ -668,13 +673,13 @@ def AddSrfPt(points):
 def AddSrfPtGrid(count, points, degree=(3,3), closed=(False,False)):
     """Creates a surface from a grid of points
     Parameters:
-      count = tuple of two numbers defining number of points in the u,v directions
-      points = list of 3D points
-      degree[opt] = two numbers defining degree of the surface in the u,v directions
-      closed[opt] = two booleans defining if the surface is closed in the u,v directions
+      count ([number, number}): tuple of two numbers defining number of points in the u,v directions
+      points ([point, ...]): list of 3D points
+      degree ([number, number], optional): two numbers defining degree of the surface in the u,v directions
+      closed ([bool, bool], optional): two booleans defining if the surface is closed in the u,v directions
     Returns:
-      The identifier of the new object if successful.
-      None if not successful, or on error.
+      guid: The identifier of the new object if successful.
+      None: if not successful, or on error.
     Example:
     See Also:
     """
@@ -691,12 +696,12 @@ def AddSweep1(rail, shapes, closed=False):
     """Adds a surface created through profile curves that define the surface
     shape and one curve that defines a surface edge.
     Parameters:
-      rail = identifier of the rail curve
-      shapes = one or more cross section shape curves
-      closed[opt] = If True, then create a closed surface
+      rail (guid): identifier of the rail curve
+      shapes ([guid, ...]): one or more cross section shape curves
+      closed (bool, optional): If True, then create a closed surface
     Returns:
-      List of new surface objects if successful
-      None if not successfule, or on error
+      list(guid, ...): of new surface objects if successful
+      None: if not successful, or on error
     Example:
       import rhinoscriptsyntax as rs
       rail = rs.GetObject("Select rail curve", rs.filter.curve)
@@ -722,12 +727,12 @@ def AddSweep2(rails, shapes, closed=False):
     """Adds a surface created through profile curves that define the surface
     shape and two curves that defines a surface edge.
     Parameters:
-      rails = identifiers of the two rail curve
-      shapes = one or more cross section shape curves
-      closed[opt] = If True, then create a closed surface
+      rails ([guid, guid]): identifiers of the two rail curve
+      shapes ([guid, ...]): one or more cross section shape curves
+      closed (bool, optional): If True, then create a closed surface
     Returns:
-      List of new surface objects if successful
-      None if not successfule, or on error
+      list(guid, ...): of new surface objects if successful
+      None: if not successful, or on error
     Example:
       import rhinoscriptsyntax as rs
       rails = rs.GetObjects("Select two rail curve", rs.filter.curve)
@@ -752,13 +757,13 @@ def AddSweep2(rails, shapes, closed=False):
 def AddTorus(base, major_radius, minor_radius, direction=None):
     """Adds a torus shaped revolved surface to the document
     Parameters:
-      base = 3D origin point of the torus or the base plane of the torus
-      major_radius, minor_radius = the two radii of the torus
-      directions[opt] = A point that defines the direction of the torus when base is a point.
+      base (point): 3D origin point of the torus or the base plane of the torus
+      major_radius, minor_radius (number): the two radii of the torus
+      directions (point):  A point that defines the direction of the torus when base is a point.
         If omitted, a torus that is parallel to the world XY plane is created
     Returns:
-      The identifier of the new object if successful.
-      None if not successful, or on error.
+      guid: The identifier of the new object if successful.
+      None: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       major_radius = 5.0
@@ -796,12 +801,12 @@ def BooleanDifference(input0, input1, delete_input=True):
     and polysurfaces. For more details, see the BooleanDifference command in
     the Rhino help file
     Parameters:
-        input0 = list of surfaces to subtract from
-        input1 = list of surfaces to be subtracted
-        delete_input[opt] = delete all input objects
+        input0 ([guid, ...]): list of surfaces to subtract from
+        input1 ([guid, ...]): list of surfaces to be subtracted
+        delete_input (bool, optional): delete all input objects
     Returns:
-        list of identifiers of newly created objects on success
-        None on error
+        list(guid, ...): of identifiers of newly created objects on success
+        None: on error
     Example:
       import rhinoscriptsyntax as rs
       filter = rs.filter.surface | rs.filter.polysurface
@@ -838,12 +843,12 @@ def BooleanIntersection(input0, input1, delete_input=True):
     and polysurfaces. For more details, see the BooleanIntersection command in
     the Rhino help file
     Parameters:
-        input0 = list of surfaces
-        input1 = list of surfaces
-        delete_input[opt] = delete all input objects
+        input0 ([guid, ...]): list of surfaces
+        input1 ([guid, ...]): list of surfaces
+        delete_input (bool, optional): delete all input objects
     Returns:
-        list of identifiers of newly created objects on success
-        None on error
+        list(guid, ...): of identifiers of newly created objects on success
+        None: on error
     Example:
       import rhinoscriptsyntax as rs
       input0 = rs.GetObjects("Select first set of surfaces or polysurfaces", rs.filter.surface | rs.filter.polysurface)
@@ -877,10 +882,10 @@ def BooleanUnion(input, delete_input=True):
     polysurfaces. For more details, see the BooleanUnion command in the
     Rhino help file
     Parameters:
-        input = list of surfaces to union
-        delete_input[opt] = delete all input objects
+        input ([guid, ...]): list of surfaces to union
+        delete_input (bool, optional):  delete all input objects
     Returns:
-        list of identifiers of newly created objects on success
+        list(guid, ...): of identifiers of newly created objects on success
         None on error
     Example:
       import rhinoscriptsyntax as rs
@@ -907,10 +912,10 @@ def BrepClosestPoint(object_id, point):
     """Returns the point on a surface or polysurface that is closest to a test
     point. This function works on both untrimmed and trimmed surfaces.
     Parameters:
-      object_id = The object's identifier.
-      point = The test, or sampling point.
+      object_id (guid): The object's identifier.
+      point (point): The test, or sampling point.
     Returns:
-      A tuple of closest point information if successful. The list will
+      tuple(point, [number, number], [number, number], vector): of closest point information if successful. The list will
       contain the following information:
       Element     Type             Description
          0        Point3d          The 3-D point at the parameter value of the 
@@ -923,7 +928,7 @@ def BrepClosestPoint(object_id, point):
                                    brep_face, brep_edge or brep_vertex.
          3        Vector3d         The normal to the brep_face, or the tangent
                                    to the brep_edge.  
-      None if not successful, or on error.
+      None: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.surface)
@@ -951,9 +956,9 @@ def BrepClosestPoint(object_id, point):
 def CapPlanarHoles(surface_id):
     """Caps planar holes in a surface or polysurface
     Parameters:
-      surface_id = The identifier of the surface or polysurface to cap.
+      surface_id (guid): The identifier of the surface or polysurface to cap.
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       surface = rs.GetObject("Select surface or polysurface to cap", rs.filter.surface | rs.filter.polysurface)
@@ -981,12 +986,12 @@ def DuplicateEdgeCurves(object_id, select=False):
     information, see the Rhino help file for information on the DupEdge
     command.
     Parameters:
-      object_id = The identifier of the surface or polysurface object.
-      select [opt] = Select the duplicated edge curves. The default is not
+      object_id (guid): The identifier of the surface or polysurface object.
+      select (bool, optional):  Select the duplicated edge curves. The default is not
       to select (False).
     Returns:
-      A list of Guids identifying the newly created curve objects if successful.
-      None if not successful, or on error.
+      list(guid, ..): identifying the newly created curve objects if successful.
+      None: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select surface or polysurface", rs.filter.surface | rs.filter.polysurface)
@@ -1014,12 +1019,14 @@ def DuplicateEdgeCurves(object_id, select=False):
 def DuplicateSurfaceBorder(surface_id, type=0):
     """Create curves that duplicate a surface or polysurface border
     Parameters:
-      surface_id = identifier of a surface
-      type[opt] = the border curves to return (0=both exterior and interior,
-          1=exterior, 2=interior
+      surface_id (guid): identifier of a surface
+      type (number, optional): the border curves to return
+         0=both exterior and interior,
+         1=exterior
+         2=interior
     Returns:
-      list of curve ids on success
-      None on error
+      list(guid, ...): list of curve ids on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       surface = rs.GetObject("Select surface or polysurface", rs.filter.surface | rs.filter.polysurface)
@@ -1043,10 +1050,11 @@ def DuplicateSurfaceBorder(surface_id, type=0):
 def EvaluateSurface(surface_id, u, v):
     """Evaluates a surface at a U,V parameter
     Parameters:
-      surface_id = the object's identifier.
-      u, v = u, v parameters to evaluate.
+      surface_id (guid): the object's identifier.
+      u, v ({number, number]): u, v parameters to evaluate.
     Returns:
-      a 3-D point if successful, otherwise None
+      point: a 3-D point if successful
+      None: if not successful
     Example:
       import rhinoscriptsyntax as rs
       objectId = rs.GetObject("Select a surface")
@@ -1070,15 +1078,15 @@ def EvaluateSurface(surface_id, u, v):
 def ExtendSurface(surface_id, parameter, length, smooth=True):
     """Lengthens an untrimmed surface object
     Parameters:
-      surface_id = identifier of a surface
-      parameter = tuple of two values definfing the U,V parameter to evaluate.
+      surface_id (guid): identifier of a surface
+      parameter ([number, number}): tuple of two values definfing the U,V parameter to evaluate.
         The surface edge closest to the U,V parameter will be the edge that is
         extended
-      length = amount to extend to surface
-      smooth[opt] = If True, the surface is extended smoothly curving from the
+      length (number): amount to extend to surface
+      smooth (bool, optional): If True, the surface is extended smoothly curving from the
         edge. If False, the surface is extended in a straight line from the edge
     Returns:
-      True or False indicating success or failure
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       pick = rs.GetObjectEx("Select surface to extend", rs.filter.surface)
@@ -1102,10 +1110,10 @@ def ExplodePolysurfaces(object_ids, delete_input=False):
     """Explodes, or unjoins, one or more polysurface objects. Polysurfaces
     will be exploded into separate surfaces
     Parameters:
-      object_ids = identifiers of polysurfaces to explode
-      delete_input[opt] = delete input objects after exploding
+      object_ids ([guid, ...]): identifiers of polysurfaces to explode
+      delete_input 9bool, optional): delete input objects after exploding
     Returns:
-      List of identifiers of exploded pieces on success
+      list(guid, ...): of identifiers of exploded pieces on success
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select polysurface to explode", rs.filter.polysurface)
@@ -1133,13 +1141,15 @@ def ExplodePolysurfaces(object_ids, delete_input=False):
 def ExtractIsoCurve(surface_id, parameter, direction):
     """Extracts isoparametric curves from a surface
     Parameters:
-      surface_id = identifier of a surface
-      parameter = u,v parameter of the surface to evaluate
-      direction
-        0 = u, 1 = v, 2 = both
+      surface_id (guid): identifier of a surface
+      parameter ([number, number]): u,v parameter of the surface to evaluate
+      direction (number): Direction to evaluate
+        0 = u
+        1 = v
+        2 = both
     Returns:
-      list of curve ids on success
-      None on error
+      list(guid, ...): of curve ids on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select surface for isocurve extraction", rs.filter.surface)
@@ -1178,11 +1188,11 @@ def ExtractIsoCurve(surface_id, parameter, direction):
 def ExtractSurface(object_id, face_indices, copy=False):
     """Separates or copies a surface or a copy of a surface from a polysurface
     Parameters:
-      object_id: polysurface identifier
-      face_indices: one or more numbers representing faces
-      copy[opt]: If True the faces are copied. If False, the faces are extracted
+      object_id (guid): polysurface identifier
+      face_indices (number, ...): one or more numbers representing faces
+      copy (bool, optional): If True the faces are copied. If False, the faces are extracted
     Returns:
-      identifiers of extracted surface objects on success
+      list(guid, ...): identifiers of extracted surface objects on success
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select polysurface", rs.filter.polysurface, True)
@@ -1213,11 +1223,11 @@ def ExtractSurface(object_id, face_indices, copy=False):
 def ExtrudeCurve(curve_id, path_id):
     """Creates a surface by extruding a curve along a path
     Parameters:
-      curve_id = identifier of the curve to extrude
-      path_id = identifier of the path curve
+      curve_id (guid): identifier of the curve to extrude
+      path_id (guid): identifier of the path curve
     Returns:
-      identifier of new surface on success
-      None on error
+      guid: identifier of new surface on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.AddCircle(rs.WorldXYPlane(), 5)
@@ -1240,11 +1250,11 @@ def ExtrudeCurve(curve_id, path_id):
 def ExtrudeCurvePoint(curve_id, point):
     """Creates a surface by extruding a curve to a point
     Parameters:
-      curve_id = identifier of the curve to extrude
-      point = 3D point
+      curve_id (guid): identifier of the curve to extrude
+      point (point): 3D point
     Returns:
-      identifier of new surface on success
-      None on error
+      guid: identifier of new surface on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.AddCircle(rs.WorldXYPlane(), 5)
@@ -1267,11 +1277,11 @@ def ExtrudeCurvePoint(curve_id, point):
 def ExtrudeCurveStraight(curve_id, start_point, end_point):
     """Create surface by extruding a curve along two points that define a line
     Parameters:
-      curve_id = identifier of the curve to extrude
-      start_point, end_point = 3D points
+      curve_id (guid): identifier of the curve to extrude
+      start_point, end_point (point): 3D points that specify distance and direction
     Returns:
-      identifier of new surface on success
-      None on error
+      guid: identifier of new surface on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.AddCircle(rs.WorldXYPlane(), 5)
@@ -1295,11 +1305,11 @@ def ExtrudeCurveStraight(curve_id, start_point, end_point):
 def ExtrudeSurface(surface, curve, cap=True):
     """Create surface by extruding along a path curve
     Parameters:
-      surface = identifier of the surface to extrude
-      curve = identifier of the path curve
-      cap[opt] = extrusion is capped at both ends
+      surface (guid): identifier of the surface to extrude
+      curve (guid): identifier of the path curve
+      cap (bool, optional): extrusion is capped at both ends
     Returns:
-      identifier of new surface on success
+      guid: identifier of new surface on success
     Example:
       import rhinoscriptsyntax as rs
       surface = rs.AddSrfPt([(0,0,0), (5,0,0), (5,5,0), (0,5,0)])
@@ -1323,14 +1333,14 @@ def FilletSurfaces(surface0, surface1, radius, uvparam0=None, uvparam1=None):
     """Create constant radius rolling ball fillets between two surfaces. Note,
     this function does not trim the original surfaces of the fillets
     Parameters:
-      surface0, surface1 = identifiers of first and second surface
-      radius = a positive fillet radius
-      uvparam0[opt] = a u,v surface parameter of surface0 near where the fillet
+      surface0, surface1 (guid): identifiers of first and second surface
+      radius (number): a positive fillet radius
+      uvparam0 ([number, number], optional): a u,v surface parameter of surface0 near where the fillet
         is expected to hit the surface
-      uvparam1[opt] = same as uvparam0, but for surface1
+      uvparam1([number, number], optional): same as uvparam0, but for surface1
     Returns:
-      ids of surfaces created on success
-      None on error
+      guid: ids of surfaces created on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       surface0 = rs.GetObject("First surface", rs.filter.surface)
@@ -1362,12 +1372,12 @@ def FlipSurface(surface_id, flip=None):
     """Returns or changes the normal direction of a surface. This feature can
     also be found in Rhino's Dir command
     Parameters:
-      surface_id = identifier of a surface object
-      flip[opt] = new normal orientation, either flipped(True) or not flipped (False).
+      surface_id (guid): identifier of a surface object
+      flip (bool, optional) new normal orientation, either flipped(True) or not flipped (False).
     Returns:
-      if flipped is not specified, the current normal orientation
-      if flipped is specified, the previous normal orientation
-      None on error
+      vector: if flipped is not specified, the current normal orientation
+      vector: if flipped is specified, the previous normal orientation
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       surf = rs.GetObject("Select object", rs.filter.surface)
@@ -1393,14 +1403,13 @@ def IntersectBreps(brep1, brep2, tolerance=None):
     """Intersects a brep object with another brep object. Note, unlike the
     SurfaceSurfaceIntersection function this function works on trimmed surfaces.
     Parameters:
-      brep1 = identifier of first brep object
-      brep2 = identifier of second brep object
-      tolerance = Distance tolerance at segment midpoints. If omitted,
+      brep1 (guid): identifier of first brep object
+      brep2 (guid): identifier of second brep object
+      tolerance (number): Distance tolerance at segment midpoints. If omitted,
                   the current absolute tolerance is used.
     Returns:
-      List of Guids identifying the newly created intersection curve and
-      point objects if successful.
-      None if not successful, or on error.
+      list(guid, ...): identifying the newly created intersection curve and point objects if successful.
+      None: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       brep1 = rs.GetObject("Select the first brep", rs.filter.surface | rs.filter.polysurface)
@@ -1447,17 +1456,17 @@ def IntersectBreps(brep1, brep2, tolerance=None):
 def IntersectSpheres(sphere_plane0, sphere_radius0, sphere_plane1, sphere_radius1):
     """Calculates intersections of two spheres
     Parameters:
-      sphere_plane0 = an equatorial plane of the first sphere. The origin of the
+      sphere_plane0 (plane): an equatorial plane of the first sphere. The origin of the
         plane will be the center point of the sphere
-      sphere_radius0 = radius of the first sphere
-      sphere_plane1 = plane for second sphere
-      sphere_radius1 = radius for second sphere
+      sphere_radius0 (number): radius of the first sphere
+      sphere_plane1 (plane): plane for second sphere
+      sphere_radius1 (number): radius for second sphere
     Returns:
-      List of intersection results
-        element 0 = type of intersection (0=point, 1=circle, 2=spheres are identical)
-        element 1 = Point of intersection or plane of circle intersection
-        element 2 = radius of circle if circle intersection
-      None on error
+      list(number, point, number): of intersection results
+        [0] = type of intersection (0=point, 1=circle, 2=spheres are identical)
+        [1] = Point of intersection or plane of circle intersection
+        [2] = radius of circle if circle intersection
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       plane0 = rs.WorldXYPlane()
@@ -1488,10 +1497,10 @@ def IntersectSpheres(sphere_plane0, sphere_radius0, sphere_plane1, sphere_radius
 def IsBrep(object_id):
     """Verifies an object is a Brep, or a boundary representation model, object.
     Parameters:
-      object_id = The object's identifier.
+      object_id (guid): The object's identifier.
     Returns:
-      True if successful, otherwise False.
-      None on error.
+      bool: True if successful, otherwise False.
+      None: on error.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a Brep")
@@ -1510,9 +1519,9 @@ def IsBrep(object_id):
 def IsCone(object_id):
     """Determines if a surface is a portion of a cone
     Parameters:
-      object_id = the surface object's identifier
+      object_id (guid): the surface object's identifier
     Returns:
-      True if successful, otherwise False
+      bool: True if successful, otherwise False
     Example:
       import rhinoscriptsyntax as rs
       surface = rs.GetObject("Select a surface", rs.filter.surface)
@@ -1534,9 +1543,9 @@ def IsCone(object_id):
 def IsCylinder(object_id):
     """Determines if a surface is a portion of a cone
     Parameters:
-      object_id = the cylinder object's identifier
+      object_id (guid): the cylinder object's identifier
     Returns:
-      True if successful, otherwise False
+      bool: True if successful, otherwise False
     Example:
       import rhinoscriptsyntax as rs
       surface = rs.GetObject("Select a surface", rs.filter.surface)
@@ -1559,9 +1568,9 @@ def IsPlaneSurface(object_id):
     """Verifies an object is a plane surface. Plane surfaces can be created by
     the Plane command. Note, a plane surface is not a planar NURBS surface
     Parameters:
-      object_id = the object's identifier
+      object_id (guid): the object's identifier
     Returns:
-      True if successful, otherwise False
+      bool: True if successful, otherwise False
     Example:
       import rhinoscriptsyntax as rs
        = rs.GetObject("Select surface to trim", rs.filter.surface)
@@ -1583,13 +1592,13 @@ def IsPlaneSurface(object_id):
 def IsPointInSurface(object_id, point, strictly_in=False, tolerance=None):
     """Verifies that a point is inside a closed surface or polysurface
     Parameters:
-      object_id: the object's identifier
-      point: list of three numbers or Point3d. The test, or sampling point
-      strictly_in[opt]: If true, the test point must be inside by at least tolerance
-      tolerance[opt]: distance tolerance used for intersection and determining
+      object_id (guid): the object's identifier
+      point (point): The test, or sampling point
+      strictly_in (bool, optional): If true, the test point must be inside by at least tolerance
+      tolerance (number, optional): distance tolerance used for intersection and determining
         strict inclusion. If omitted, Rhino's internal tolerance is used
     Returns:
-      True if successful, otherwise False
+      bool: True if successful, otherwise False
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a polysurface", rs.filter.polysurface)
@@ -1621,10 +1630,10 @@ def IsPointInSurface(object_id, point, strictly_in=False, tolerance=None):
 def IsPointOnSurface(object_id, point):
     """Verifies that a point lies on a surface
     Parameters:
-      object_id: the object's identifier
-      point: list of three numbers or Point3d. The test, or sampling point
+      object_id (guid): the object's identifier
+      point (point): The test, or sampling point
     Returns:
-      True if successful, otherwise False
+      bool: True if successful, otherwise False
     Example:
       import rhinoscriptsyntax as rs
       surf = rs.GetObject("Select a surface")
@@ -1655,9 +1664,9 @@ def IsPolysurface(object_id):
     surfaces joined together. If the polysurface fully encloses a volume, it is
     considered a solid.
     Parameters:
-      object_id: the object's identifier
+      object_id (guid): the object's identifier
     Returns:
-      True is successful, otherwise False
+      bool: True is successful, otherwise False
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a polysurface")
@@ -1678,9 +1687,9 @@ def IsPolysurfaceClosed(object_id):
     """Verifies a polysurface object is closed. If the polysurface fully encloses
     a volume, it is considered a solid.
     Parameters:
-      object_id: the object's identifier
+      object_id (guid): the object's identifier
     Returns:
-      True is successful, otherwise False
+      bool: True is successful, otherwise False
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a polysurface", rs.filter.polysurface)
@@ -1699,9 +1708,9 @@ def IsPolysurfaceClosed(object_id):
 def IsSphere(object_id):
     """Determines if a surface is a portion of a sphere
     Parameters:
-      object_id = the object's identifier
+      object_id (guid): the object's identifier
     Returns:
-      True if successful, otherwise False
+      bool: True if successful, otherwise False
     Example:
       import rhinoscriptsyntax as rs
       surface = rs.GetObject("Select a surface", rs.filter.surface)
@@ -1724,9 +1733,9 @@ def IsSurface(object_id):
     """Verifies an object is a surface. Brep objects with only one face are
     also considered surfaces.
     Parameters:
-      object_id = the object's identifier.
+      object_id (guid): the object's identifier.
     Returns:
-      True if successful, otherwise False.
+      bool: True if successful, otherwise False.
     Example:
       import rhinoscriptsyntax as rs
       objectId = rs.GetObject("Select a surface")
@@ -1751,10 +1760,10 @@ def IsSurfaceClosed( surface_id, direction ):
     """Verifies a surface object is closed in the specified direction.  If the
     surface fully encloses a volume, it is considered a solid
     Parameters:
-      surface_id = identifier of a surface
-      direction = 0=U, 1=V
+      surface_id (guid): identifier of a surface
+      direction (number): 0=U direction check, 1=V direction check
     Returns:
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.surface)
@@ -1775,10 +1784,10 @@ def IsSurfaceClosed( surface_id, direction ):
 def IsSurfacePeriodic(surface_id, direction):
     """Verifies a surface object is periodic in the specified direction.
     Parameters:
-      surface_id = identifier of a surface
-      direction = 0=U, 1=V
+      surface_id (guid): identifier of a surface
+      direction (number): 0=U direction check, 1=V direction check
     Returns:
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.surface)
@@ -1800,11 +1809,11 @@ def IsSurfacePeriodic(surface_id, direction):
 def IsSurfacePlanar(surface_id, tolerance=None):
     """Verifies a surface object is planar
     Parameters:
-      surface_id = identifier of a surface
-      tolerance[opt] = tolerance used when checked. If omitted, the current absolute
+      surface_id (guid): identifier of a surface
+      tolerance (number): tolerance used when checked. If omitted, the current absolute
         tolerance is used
     Returns:
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.surface)
@@ -1827,9 +1836,9 @@ def IsSurfacePlanar(surface_id, tolerance=None):
 def IsSurfaceRational(surface_id):
     """Verifies a surface object is rational
     Parameters:
-      surface_id = the surface's identifier
+      surface_id (guid): the surface's identifier
     Returns:
-      True if successful, otherwise False
+      bool: True if successful, otherwise False
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.surface)
@@ -1853,10 +1862,14 @@ def IsSurfaceSingular(surface_id, direction):
     """Verifies a surface object is singular in the specified direction.
     Surfaces are considered singular if a side collapses to a point.
     Parameters:
-      surface_id = the surface's identifier
-      direction: 0=south, 1=east, 2=north, 3=west
+      surface_id (guid): the surface's identifier
+      direction (number):
+        0=south
+        1=east
+        2=north
+        3=west
     Returns:
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.surface)
@@ -1877,9 +1890,9 @@ def IsSurfaceSingular(surface_id, direction):
 def IsSurfaceTrimmed(surface_id):
     """Verifies a surface object has been trimmed
     Parameters:
-      surface_id = the surface's identifier
+      surface_id (guid): the surface's identifier
     Returns:
-      True or False
+      bool: True or False
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.surface)
@@ -1900,9 +1913,9 @@ def IsSurfaceTrimmed(surface_id):
 def IsTorus(surface_id):
     """Determines if a surface is a portion of a torus
     Parameters:
-      surface_id = the surface object's identifier
+      surface_id (guid): the surface object's identifier
     Returns:
-      True if successful, otherwise False
+      bool: True if successful, otherwise False
     Example:
       import rhinoscriptsyntax as rs
       surface = rs.GetObject("Select a surface", rs.filter.surface)
@@ -1925,10 +1938,11 @@ def JoinSurfaces(object_ids, delete_input=False):
     """Joins two or more surface or polysurface objects together to form one
     polysurface object
     Parameters:
-      object_ids = list of object identifiers
+      object_ids ([guid, ...]) list of object identifiers
+      delete_input (bool, optional): Delete the original surfaces
     Returns:
-      identifier of newly created object on success
-      None on failure
+      guid: identifier of newly created object on success
+      None: on failure
     Example:
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select surfaces in order", rs.filter.surface)
@@ -1959,13 +1973,13 @@ def JoinSurfaces(object_ids, delete_input=False):
 def MakeSurfacePeriodic(surface_id, direction, delete_input=False):
     """Makes an existing surface a periodic NURBS surface
     Parameters:
-      surface_id = the surface's identifier
-      direction = The direction to make periodic, either 0=U or 1=V
-      delete_input[opt] = delete the input surface
+      surface_id (guid): the surface's identifier
+      direction (number): The direction to make periodic, either 0=U or 1=V
+      delete_input (bool, optional): delete the input surface
     Returns:
-      if delete_input is False, identifier of the new surface
-      if delete_input is True, identifer of the modifier surface
-      None on error
+      guid: if delete_input is False, identifier of the new surface
+      guid: if delete_input is True, identifier of the modifier surface
+      None: on error
     Example:
       import rhinoscriptsyntax as  rs
       obj = rs.GetObject("Select  a surface", rs.filter.surface)
@@ -1990,15 +2004,15 @@ def OffsetSurface(surface_id, distance, tolerance=None, both_sides=False, create
     """Offsets a trimmed or untrimmed surface by a distance. The offset surface
     will be added to Rhino.
     Parameters:
-      surface_id = the surface's identifier
-      distance = the distance to offset
-      tolerance [opt] = The offset tolerance. Use 0.0 to make a loose offset. Otherwise, the
+      surface_id (guid): the surface's identifier
+      distance (number): the distance to offset
+      tolerance (number, optional): The offset tolerance. Use 0.0 to make a loose offset. Otherwise, the
         document's absolute tolerance is usually sufficient.
-      both_sides [opt] = Offset to both sides of the input surface
-      create_solid [opt] = Make a solid object
+      both_sides (bool, optional): Offset to both sides of the input surface
+      create_solid (bool, optional): Make a solid object
     Returns:
-      identifier of the new object if successful
-      None on error
+      guid: identifier of the new object if successful
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       surface = rs.GetObject("Select a surface", rs.filter.surface)
@@ -2023,12 +2037,12 @@ def OffsetSurface(surface_id, distance, tolerance=None, both_sides=False, create
 def PullCurve(surface, curve, delete_input=False):
     """Pulls a curve object to a surface object
     Parameters:
-      surface = the surface's identifier
-      curve = the curve's identifier
-      delete_input[opt] = should the input items be deleted
+      surface (guid): the surface's identifier
+      curve (guid): the curve's identifier
+      delete_input (bool, optional) should the input items be deleted
     Returns:
-      list of new curves if successful
-      None on error
+      list(guid, ...): of new curves if successful
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select curve to pull", rs.filter.curve )
@@ -2054,11 +2068,11 @@ def RebuildSurface(object_id, degree=(3,3), pointcount=(10,10)):
     """Rebuilds a surface to a given degree and control point count. For more
     information see the Rhino help file for the Rebuild command
     Parameters:
-      object_id = the surface's identifier
-      degree[opt] = two numbers that identify surface degree in both U and V directions
-      pointcount[opt] = two numbers that identify the surface point count in both the U and V directions
+      object_id (guid): the surface's identifier
+      degree ([number, number], optional): two numbers that identify surface degree in both U and V directions
+      pointcount ([number, number], optional): two numbers that identify the surface point count in both the U and V directions
     Returns:
-      True of False indicating success or failure
+      bool: True of False indicating success or failure
     Example:
     See Also:
     """
@@ -2075,12 +2089,14 @@ def ReverseSurface(surface_id, direction):
     """Reverses U or V directions of a surface, or swaps (transposes) U and V
     directions.
     Parameters:
-      surface_id = identifier of a surface object
-      direction
-        1 = reverse U, 2 = reverse V, 4 = transpose U and V (values can be combined)
+      surface_id (guid): identifier of a surface object
+      direction (number): as a bit coded flag to swap
+            1 = reverse U
+            2 = reverse V
+            4 = transpose U and V (values can be combined)
     Returns:
-      Boolean indicating success or failure
-      None on error
+      bool: indicating success or failure
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface to reverse")
@@ -2107,13 +2123,13 @@ def ReverseSurface(surface_id, direction):
 def ShootRay(surface_ids, start_point, direction, reflections=10):
     """Shoots a ray at a collection of surfaces
     Parameters:
-      surface_ids = one of more surface identifiers
-      start_point = starting point of the ray
-      direction = vector identifying the direction of the ray
-      reflections[opt] = the maximum number of times the ray will be reflected
+      surface_ids ([guid, ...]): one of more surface identifiers
+      start_point (point): starting point of the ray
+      direction (vector):  vector identifying the direction of the ray
+      reflections (number, optional): the maximum number of times the ray will be reflected
     Returns:
-      list of reflection points on success
-      None on error
+      list(point, ...): of reflection points on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       def TestRayShooter():
@@ -2163,11 +2179,11 @@ def ShortPath(surface_id, start_point, end_point):
     """Creates the shortest possible curve(geodesic) between two points on a
     surface. For more details, see the ShortPath command in Rhino help
     Parameters:
-      surface_id = identifier of a surface
-      start_point, end_point = start/end points of the short curve
+      surface_id (guid): identifier of a surface
+      start_point, end_point (point): start/end points of the short curve
     Returns:
-      identifier of the new surface on success
-      None on error
+      guid: identifier of the new surface on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       surface = rs.GetObject("Select surface for short path", rs.filter.surface + rs.filter.surface)
@@ -2200,12 +2216,12 @@ def ShrinkTrimmedSurface(object_id, create_copy=False):
     """Shrinks the underlying untrimmed surfaces near to the trimming
     boundaries. See the ShrinkTrimmedSrf command in the Rhino help.
     Parameters:
-      object_id = the surface's identifier
-      create_copy[opt] = If True, the original surface is not deleted
+      object_id (guid): the surface's identifier
+      create_copy (bool, optional): If True, the original surface is not deleted
     Returns:
-      If create_copy is False, True or False indifating success or failure
-      If create_copy is True, the identifier of the new surface
-      None on error
+      bool: If create_copy is False, True or False indicating success or failure
+      bool: If create_copy is True, the identifier of the new surface
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       filter = rs.filter.surface | rs.filter.polysurface
@@ -2241,11 +2257,11 @@ def __GetMassProperties(object_id, area):
 def SplitBrep(brep_id, cutter_id, delete_input=False):
     """Splits a brep
     Parameters:
-      brep = identifier of the brep to split
-      cutter = identifier of the brep to split with
+      brep (guid): identifier of the brep to split
+      cutter (guid): identifier of the brep to split with
     Returns:
-      identifiers of split pieces on success
-      None on error
+      list(guid, ...): identifiers of split pieces on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       filter = rs.filter.surface + rs.filter.polysurface
@@ -2272,10 +2288,10 @@ def SurfaceArea(object_id):
     """Calculate the area of a surface or polysurface object. The results are
     based on the current drawing units
     Parameters:
-      object_id = the surface's identifier
+      object_id (guid): the surface's identifier
     Returns:
-      list of area information on success (area, absolute error bound)
-      None on error
+      list(number, number): of area information on success (area, absolute error bound)
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.surface)
@@ -2294,12 +2310,13 @@ def SurfaceArea(object_id):
 def SurfaceAreaCentroid(object_id):
     """Calculates the area centroid of a surface or polysurface
     Parameters:
-      object_id = the surface's identifier
+      object_id (guid): the surface's identifier
     Returns:
-      (Area Centriod, Error bound) on success
-      None on error
+      list(point, tuple(number, number, number)): Area centroid information (Area Centroid, Error bound in X, Y, Z)
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a surface", rs.filter.surface)
       if obj:
       massprop = rs.SurfaceAreaCentroid(obj)
       if massprop:rs.AddPoint( massprop[0] )
@@ -2336,10 +2353,25 @@ def SurfaceAreaMoments(surface_id):
     """Calculates area moments of inertia of a surface or polysurface object.
     See the Rhino help for "Mass Properties calculation details"
     Parameters:
-      surface_id = the surface's identifier
+      surface_id (guid): the surface's identifier
     Returns:
-      list of moments and error bounds - see help topic
-      None on error
+      list(tuple(number, number,number), ...): of moments and error bounds in tuple(X, Y, Z) - see help topic
+        Index   Description
+        [0]     First Moments.
+        [1]     The absolute (+/-) error bound for the First Moments.
+        [2]     Second Moments.
+        [3]     The absolute (+/-) error bound for the Second Moments.
+        [4]     Product Moments.
+        [5]     The absolute (+/-) error bound for the Product Moments.
+        [6]     Area Moments of Inertia about the World Coordinate Axes.
+        [7]     The absolute (+/-) error bound for the Area Moments of Inertia about World Coordinate Axes.
+        [8]     Area Radii of Gyration about the World Coordinate Axes.
+        [9]     The absolute (+/-) error bound for the Area Radii of Gyration about World Coordinate Axes.
+        [10]    Area Moments of Inertia about the Centroid Coordinate Axes.
+        [11]    The absolute (+/-) error bound for the Area Moments of Inertia about the Centroid Coordinate Axes.
+        [12]    Area Radii of Gyration about the Centroid Coordinate Axes.
+        [13]    The absolute (+/-) error bound for the Area Radii of Gyration about the Centroid Coordinate Axes.
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.surface)
@@ -2357,11 +2389,11 @@ def SurfaceAreaMoments(surface_id):
 def SurfaceClosestPoint(surface_id, test_point):
     """Returns U,V parameters of point on a surface that is closest to a test point
     Parameters:
-      surface_id = identifier of a surface object
-      test_point = sampling point
+      surface_id (guid): identifier of a surface object
+      test_point (point): sampling point
     Returns:
-      The U,V parameters of the closest point on the surface if successful.
-      None on error.
+      list(number, number): The U,V parameters of the closest point on the surface if successful.
+      None: on error.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.surface)
@@ -2387,14 +2419,14 @@ def SurfaceClosestPoint(surface_id, test_point):
 def SurfaceCone(surface_id):
     """Returns the definition of a surface cone
     Parameters:
-      surface_id = the surface's identifier
+      surface_id (guid): the surface's identifier
     Returns:
-      tuple containing the definition of the cone if successful
-        element 0 = the plane of the cone. The apex of the cone is at the
-            plane's origin and the axis of the cone is the plane's z-axis
-        element 1 = the height of the cone
-        element 2 = the radius of the cone
-      None on error
+      tuple(plane, number, number): containing the definition of the cone if successful
+        [0]   the plane of the cone. The apex of the cone is at the
+              plane's origin and the axis of the cone is the plane's z-axis
+        [1]   the height of the cone
+        [2]   the radius of the cone
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       if rs.IsCone(cone):
@@ -2413,19 +2445,19 @@ def SurfaceCurvature(surface_id, parameter):
     """Returns the curvature of a surface at a U,V parameter. See Rhino help
     for details of surface curvature
     Parameters:
-      surface_id = the surface's identifier
-      parameter = u,v parameter
+      surface_id (guid): the surface's identifier
+      parameter (number, number): u,v parameter
     Returns:
-      tuple of curvature information
-        element 0 = point at specified U,V parameter
-        element 1 = normal direction
-        element 2 = maximum principal curvature
-        element 3 = maximum principal curvature direction
-        element 4 = minimum principal curvature
-        element 5 = minimum principal curvature direction
-        element 6 = gaussian curvature
-        element 7 = mean curvature
-      None if not successful, or on error
+      tuple(point, vector, number, number, number, number, number): of curvature information
+        [0]   point at specified U,V parameter
+        [1]   normal direction
+        [2]   maximum principal curvature
+        [3]   maximum principal curvature direction
+        [4]   minimum principal curvature
+        [5]   minimum principal curvature direction
+        [6]   gaussian curvature
+        [7]   mean curvature
+      None: if not successful, or on error
     Example:
       import rhinoscriptsyntax as rs
       srf = rs.GetObject("Select a surface", rs.filter.surface)
@@ -2456,10 +2488,10 @@ def SurfaceCurvature(surface_id, parameter):
 def SurfaceCylinder(surface_id):
     """Returns the definition of a cylinder surface
     Parameters:
-      surface_id = the surface's identifier
+      surface_id (guid): the surface's identifier
     Returns:
-      tuple of the cylinder plane, height, radius on success
-      None on error
+      tuple(plane, number, nymber): of the cylinder plane, height, radius on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       cylinder = rs.AddCylinder(rs.WorldXYPlane(), 6, 2, False)
@@ -2480,13 +2512,15 @@ def SurfaceCylinder(surface_id):
 def SurfaceDegree(surface_id, direction=2):
     """Returns the degree of a surface object in the specified direction
     Parameters:
-      surface_id = the surface's identifier
-      direction[opt]
-        0 = U, 1 = v, 2 = both
+      surface_id (guid): the surface's identifier
+      direction (number, optional): The degree U, V direction
+                0 = U
+                1 = V
+                2 = both
     Returns:
-      Tuple of two values if direction = 2
-      Single number if direction = 0 or 1
-      None on error
+      number: Single number if `direction` = 0 or 1
+      tuple(number, number): of two values if `direction` = 2
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.surface)
@@ -2506,11 +2540,11 @@ def SurfaceDegree(surface_id, direction=2):
 def SurfaceDomain(surface_id, direction):
     """Returns the domain of a surface object in the specified direction.
     Parameters:
-      surface_id = the surface's identifier
-      direction = either 0 = U, or 1 = V
+      surface_id (guid): the surface's identifier
+      direction (number): domain direction 0 = U, or 1 = V
     Returns:
-      list containing the domain interval in the specified direction
-      None if not successful, or on error
+      list(number, number): containing the domain interval in the specified direction
+      None: if not successful, or on error
     Example:
       import rhinoscriptsyntax as rs
       object = rs.GetObject("Select a surface", rs.filter.surface)
@@ -2533,17 +2567,17 @@ def SurfaceEditPoints(surface_id, return_parameters=False, return_all=True):
     """Returns the edit, or Greville points of a surface object. For each
     surface control point, there is a corresponding edit point
     Parameters:
-      surface_id = the surface's identifier
-      return_parameters[opt] = If False, edit points are returned as a list of
+      surface_id (guid): the surface's identifier
+      return_parameters (bool, optional): If False, edit points are returned as a list of
         3D points. If True, edit points are returned as a list of U,V surface
         parameters
-      return_all[opt] = If True, all surface edit points are returned. If False,
+      return_all (bool, options): If True, all surface edit points are returned. If False,
         the function will return surface edit points based on whether or not the
         surface is closed or periodic
     Returns:
-      if return_parameters is False, a list of 3D points
-      if return_parameters is True, a list of U,V parameters
-      None on error
+      list(point, ...): if return_parameters is False, a list of 3D points
+      list((number, number), ...): if return_parameters is True, a list of U,V parameters
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface")
@@ -2585,12 +2619,20 @@ def SurfaceEditPoints(surface_id, return_parameters=False, return_all=True):
 def SurfaceEvaluate(surface_id, parameter, derivative):
     """A general purpose surface evaluator
     Parameters:
-      surface_id = the surface's identifier
-      parameter = u,v parameter to evaluate
-      derivative = number of derivatives to evaluate
+      surface_id (guid): the surface's identifier
+      parameter ([number, number]): u,v parameter to evaluate
+      derivative (number): number of derivatives to evaluate
     Returns:
-      list of derivatives on success
-      None on error
+      list((point, vector, ...), ...): list length (derivative+1)*(derivative+2)/2 if successful.  The elements are as follows:
+      Element  Description
+      [0]      The 3-D point.
+      [1]      The first derivative.
+      [2]      The first derivative.
+      [3]      The second derivative.
+      [4]      The second derivative.
+      [5]      The second derivative.
+      [6]      etc...
+    None: If not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
       def TestSurfaceEvaluate():
@@ -2623,11 +2665,11 @@ def SurfaceFrame(surface_id, uv_parameter):
     """Returns a plane based on the normal, u, and v directions at a surface
     U,V parameter
     Parameters:
-      surface_id = the surface's identifier
-      uv_parameter = u,v parameter to evaluate
+      surface_id (guid): the surface's identifier
+      uv_parameter ([number, number]): u,v parameter to evaluate
     Returns:
-      plane on success
-      None on error
+      plane: plane on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       surface = rs.GetSurfaceObject("Select a surface")
@@ -2650,17 +2692,17 @@ def SurfaceIsocurveDensity(surface_id, density=None):
     Rhino uses isocurves and surface edge curves to visualize the shape of a
     NURBS surface
     Parameters:
-      surface_id = the surface's identifier
-      density[opt] = the isocurve wireframe density. The possible values are
+      surface_id (guid): the surface's identifier
+      density (number, optional): the isocurve wireframe density. The possible values are
           -1: Hides the surface isocurves
            0: Display boundary and knot wires
            1: Display boundary and knot wires and one interior wire if there
               are no interior knots
          >=2: Display boundary and knot wires and (N+1) interior wires
     Returns:
-      If density is not specified, then the current isocurve density if successful
-      If density is specified, the the previous isocurve density if successful
-      None on error
+      number: If density is not specified, then the current isocurve density if successful
+      number: If density is specified, the the previous isocurve density if successful
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.surface | rs.filter.polysurface)
@@ -2685,9 +2727,9 @@ def SurfaceKnotCount(surface_id):
     """Returns the control point count of a surface
       surface_id = the surface's identifier
     Parameters:
-      surface_id = the surface object's identifier
+      surface_id (guid): the surface object's identifier
     Returns:
-      (U count, V count) on success
+      list(number, number): a list containing (U count, V count) on success
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface")
@@ -2707,14 +2749,14 @@ def SurfaceKnotCount(surface_id):
 def SurfaceKnots(surface_id):
     """Returns the knots, or knot vector, of a surface object.
     Parameters:
-      surface_id = the surface's identifier
+      surface_id (guid): the surface's identifier
     Returns:
-      The list of knot values of the surface if successful. The list will
+     list(number, number): knot values of the surface if successful. The list will
       contain the following information:
-      Element     Description
-        0         Knot vector in U direction
-        1         Knot vector in V direction
-      None if not successful, or on error.
+      Element   Description
+        [0]     Knot vector in U direction
+        [1]     Knot vector in V direction
+      None: if not successful, or on error.
     Example:
       import rhinocsriptsyntax as rs
       obj = rs.GetObject("Select a surface")
@@ -2743,10 +2785,10 @@ def SurfaceKnots(surface_id):
 def SurfaceNormal(surface_id, uv_parameter):
     """Returns 3D vector that is the normal to a surface at a parameter
     Parameters:
-      surface_id = the surface's identifier
-      uv_parameter = the uv parameter to evaluate
+      surface_id (guid): the surface's identifier
+      uv_parameter  ([number, number]): the uv parameter to evaluate
     Returns:
-      Normal vector on success
+      vector: Normal vector on success
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.surface)
@@ -2768,11 +2810,11 @@ def SurfaceNormalizedParameter(surface_id, parameter):
     """Converts surface parameter to a normalized surface parameter; one that
     ranges between 0.0 and 1.0 in both the U and V directions
     Parameters:
-      surface_id = the surface's identifier
-      parameter = the surface parameter to convert
+      surface_id (guid) the surface's identifier
+      parameter ([number, number]): the surface parameter to convert
     Returns:
-      normalized surface parameter if successful
-      None on error
+      list(number, number): normalized surface parameter if successful
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select surface")
@@ -2802,10 +2844,10 @@ def SurfaceParameter(surface_id, parameter):
     """Converts normalized surface parameter to a surface parameter; or
     within the surface's domain
     Parameters:
-      surface_id = the surface's identifier
-      parameter = the normalized parameter to convert
+      surface_id (guid): the surface's identifier
+      parameter ([number, number]): the normalized parameter to convert
     Returns:
-      surface parameter as tuple on success
+      tuple(number, number): surface parameter on success
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select surface")
@@ -2828,9 +2870,9 @@ def SurfacePointCount(surface_id):
     """Returns the control point count of a surface
       surface_id = the surface's identifier
     Parameters:
-      surface_id = the surface object's identifier
+      surface_id (guid): the surface object's identifier
     Returns:
-      (U count, V count) on success
+      list(number, number): THe number of control points in UV direction. (U count, V count)
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface")
@@ -2850,13 +2892,13 @@ def SurfacePointCount(surface_id):
 def SurfacePoints(surface_id, return_all=True):
     """Returns the control points, or control vertices, of a surface object
     Parameters:
-      surface_id = the surface's identifier
-      return_all[opt] = If True all surface edit points are returned. If False,
+      surface_id (guid): the surface's identifier
+      return_all (bool, optional): If True all surface edit points are returned. If False,
         the function will return surface edit points based on whether or not
         the surface is closed or periodic
     Returns:
-      the control points if successful
-      None on error
+      list(point, ...): the control points if successful
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       surface = rs.GetObject("Select surface", rs.filter.surface)
@@ -2887,13 +2929,13 @@ def SurfacePoints(surface_id, return_all=True):
 def SurfaceTorus(surface_id):
     """Returns the definition of a surface torus
     Parameters:
-      surface_id = the surface's identifier
+      surface_id (guid): the surface's identifier
     Returns:
-      tuple containing the definition of the torus if successful
-        element 0 = the base plane of the torus
-        element 1 = the major radius of the torus
-        element 2 = the minor radius of the torus
-      None on error
+      tuple(plane, number, number): containing the definition of the torus if successful
+        [0]   the base plane of the torus
+        [1]   the major radius of the torus
+        [2]   the minor radius of the torus
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       torus = rs.AddTorus(rs.WorldXYPlane(), 6, 2)
@@ -2911,10 +2953,10 @@ def SurfaceTorus(surface_id):
 def SurfaceVolume(object_id):
     """Calculates volume of a closed surface or polysurface
     Parameters:
-      object_id = the surface's identifier
+      object_id (guid): the surface's identifier
     Returns:
-      (Volume, Error bound) on success
-      None on error
+      list(number, tuple(X, Y, Z): volume data returned (Volume, Error bound) on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.polysurface)
@@ -2934,10 +2976,10 @@ def SurfaceVolume(object_id):
 def SurfaceVolumeCentroid(object_id):
     """Calculates volume centroid of a closed surface or polysurface
     Parameters:
-      object_id = the surface's identifier
+      object_id (guid): the surface's identifier
     Returns:
-      (Volume Centriod, Error bound) on success
-      None on error
+      list(point, tuple(X, Y, Z): volume data returned (Volume Centriod, Error bound) on success
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.polysurface)
@@ -2956,10 +2998,25 @@ def SurfaceVolumeMoments(surface_id):
     """Calculates volume moments of inertia of a surface or polysurface object.
     For more information, see Rhino help for "Mass Properties calculation details"
     Parameters:
-      surface_id = the surface's identifier
+      surface_id (guid): the surface's identifier
     Returns:
-      list of moments and error bounds - see help topic
-      None on error
+      list(tuple(number, number,number), ...): of moments and error bounds in tuple(X, Y, Z) - see help topic
+        Index   Description
+        [0]     First Moments.
+        [1]     The absolute (+/-) error bound for the First Moments.
+        [2]     Second Moments.
+        [3]     The absolute (+/-) error bound for the Second Moments.
+        [4]     Product Moments.
+        [5]     The absolute (+/-) error bound for the Product Moments.
+        [6]     Area Moments of Inertia about the World Coordinate Axes.
+        [7]     The absolute (+/-) error bound for the Area Moments of Inertia about World Coordinate Axes.
+        [8]     Area Radii of Gyration about the World Coordinate Axes.
+        [9]     The absolute (+/-) error bound for the Area Radii of Gyration about World Coordinate Axes.
+        [10]    Area Moments of Inertia about the Centroid Coordinate Axes.
+        [11]    The absolute (+/-) error bound for the Area Moments of Inertia about the Centroid Coordinate Axes.
+        [12]    Area Radii of Gyration about the Centroid Coordinate Axes.
+        [13]    The absolute (+/-) error bound for the Area Radii of Gyration about the Centroid Coordinate Axes.
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.polysurface)
@@ -2979,10 +3036,10 @@ def SurfaceWeights(object_id):
     The number of weights returned will be equal to the number of control points
     in the U and V directions.
     Parameters:
-      object_id = the surface's identifier
+      object_id (guid): the surface's identifier
     Returns:
-      list of weights
-      None on error
+      list(number, ...): point weights.
+      None: on error
     Example:
       import rhinoscriptsyntax as rs
       surf = rs.GetObject("Select a surface")
@@ -3010,12 +3067,12 @@ def SurfaceWeights(object_id):
 def TrimBrep(object_id, cutter, tolerance=None):
     """Trims a surface using an oriented cutter
     Parameters:
-      object_id = surface or polysurface identifier
-      cutter = surface, polysurface, or plane performing the trim
-      tolerance[opt] = trimming tolerance. If omitted, the document's absolute
+      object_id (guid): surface or polysurface identifier
+      cutter (guid|plane): surface, polysurface, or plane performing the trim
+      tolerance (number, optional): trimming tolerance. If omitted, the document's absolute
         tolerance is used
     Returns:
-      identifiers of retained components on success
+      list(guid, ...): identifiers of retained components on success
     Example:
       import rhinoscriptsyntax as rs
       filter = rs.filter.surface + rs.filter.polysurface
@@ -3057,13 +3114,13 @@ def TrimBrep(object_id, cutter, tolerance=None):
 def TrimSurface( surface_id, direction, interval, delete_input=False):
     """Remove portions of the surface outside of the specified interval
     Parameters:
-      surface_id = surface identifier
-      direction = 0(U), 1(V), or 2(U and V)
-      interval = interval of the surface to keep.
+      surface_id (guid): surface identifier
+      direction (number, optional): 0(U), 1(V), or 2(U and V)
+      interval (interval): sub section of the surface to keep.
         If both U and V then a list or tuple of 2 intervals
-      delete_input [opt] = should the input surface be deleted
+      delete_input (bool, optional): should the input surface be deleted
     Returns:
-      new surface identifier on success
+      guid: new surface identifier on success
     Example:
       import rhinoscriptsyntax as rs
       surface = rs.GetObject("Select surface to split", rs.filter.surface)
@@ -3099,15 +3156,15 @@ def TrimSurface( surface_id, direction, interval, delete_input=False):
 def UnrollSurface(surface_id, explode=False, following_geometry=None, absolute_tolerance=None, relative_tolerance=None):
     """Flattens a developable surface or polysurface
     Parameters:
-      surface_id = the surface's identifier
-      explode[opt] = If True, the resulting surfaces ar not joined
-      following_geometry[opt] = List of curves, dots, and points which
+      surface_id (guid): the surface's identifier
+      explode (bool, optional): If True, the resulting surfaces ar not joined
+      following_geometry ({guid, ...]): List of curves, dots, and points which
         should be unrolled with the surface
     Returns:
-      List of unrolled surface ids
-      if following_geometry is not None, a tuple where item 1
-        is the list of unrolled surface ids and item 2 is the
-        list of unrolled following geometry
+      list(guid, ...): of unrolled surface ids
+      tuple((guid, ...),(guid, ...)): if following_geometry is not None, a tuple
+        [1] is the list of unrolled surface ids
+        [2] is the list of unrolled following geometry
     Example:
       import rhinoscriptsyntax as rs
       surface = rs.GetObject("Select surface or polysurface to unroll", rs.filter.surface + rs.filter.polysurface)
@@ -3147,11 +3204,11 @@ def UnrollSurface(surface_id, explode=False, following_geometry=None, absolute_t
 def ChangeSurfaceDegree(object_id, degree):
   """Changes the degree of a surface object.  For more information see the Rhino help file for the ChangeDegree command.
   Parameters:
-    object_id = the object's identifier.
-    degree = list, of two integers, specifying the degrees for the U  V directions
+    object_id (guid): the object's identifier.
+    degree ([number, number]) two integers, specifying the degrees for the U  V directions
   Returns:
-    True of False indicating success or failure.
-    None on failure.
+    bool: True of False indicating success or failure.
+    None: on failure.
   Example:
     
   See Also:
