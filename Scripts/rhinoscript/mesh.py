@@ -99,7 +99,11 @@ def AddPlanarMesh(object_id, delete_input=False):
     curve = rhutil.coercecurve(object_id, -1, True)
     mesh = Rhino.Geometry.Mesh.CreateFromPlanarBoundary(curve, Rhino.Geometry.MeshingParameters.Default)
     if not mesh: return scriptcontext.errorhandler()
-    rc = scriptcontext.doc.Objects.AddMesh(mesh)
+    if delete_input:
+        id = rhutil.coerceguid(delete_input, True)
+        rc = scriptcontext.doc.Objects.Replace(id, mesh)
+    else:
+        rc = scriptcontext.doc.Objects.AddMesh(mesh)
     if rc==System.Guid.Empty: raise Exception("unable to add mesh to document")
     scriptcontext.doc.Views.Redraw()
     return rc
