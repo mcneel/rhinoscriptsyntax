@@ -541,7 +541,9 @@ def AddRevSrf(curve_id, axis, start_angle=0.0, end_angle=360.0):
     end_angle = math.radians(end_angle)
     srf = Rhino.Geometry.RevSurface.Create(curve, axis, start_angle, end_angle)
     if not srf: return scriptcontext.errorhandler()
-    rc = scriptcontext.doc.Objects.AddSurface(srf)
+    ns = srf.ToNurbsSurface()
+    if not ns: return scriptcontext.errorhandler()
+    rc = scriptcontext.doc.Objects.AddSurface(ns)
     scriptcontext.doc.Views.Redraw()
     return rc
 
