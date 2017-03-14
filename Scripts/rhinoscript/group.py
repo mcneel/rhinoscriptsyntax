@@ -49,7 +49,7 @@ def AddObjectsToGroup(object_ids, group_name):
       ObjectsByGroup
     """
     if not isinstance(group_name, str): group_name = str(group_name)
-    index = scriptcontext.doc.Groups.Find(group_name, True)
+    index = scriptcontext.doc.Groups.Find(group_name)
     object_ids = rhutil.coerceguidlist(object_ids)
     if index<0 or not object_ids: return 0
     if not scriptcontext.doc.Groups.AddToGroup(index, object_ids): return 0
@@ -76,7 +76,7 @@ def AddObjectToGroup(object_id, group_name):
     """
     object_id = rhutil.coerceguid(object_id)
     if not isinstance(group_name, str): group_name = str(group_name)
-    index = scriptcontext.doc.Groups.Find(group_name, True)
+    index = scriptcontext.doc.Groups.Find(group_name)
     if object_id is None or index<0: return False
     return scriptcontext.doc.Groups.AddToGroup(index, object_id)
 
@@ -101,7 +101,7 @@ def DeleteGroup(group_name):
       RenameGroup
     """
     if not isinstance(group_name, str): group_name = str(group_name)
-    index = scriptcontext.doc.Groups.Find(group_name, True)
+    index = scriptcontext.doc.Groups.Find(group_name)
     return scriptcontext.doc.Groups.Delete(index)
 
 
@@ -162,7 +162,7 @@ def HideGroup(group_name):
       ShowGroup
       UnlockGroup
     """
-    index = scriptcontext.doc.Groups.Find(group_name, True)
+    index = scriptcontext.doc.Groups.Find(group_name)
     if index<0: return 0
     return scriptcontext.doc.Groups.Hide(index);
 
@@ -188,7 +188,7 @@ def IsGroup(group_name):
       RenameGroup
     """
     if not isinstance(group_name, str): group_name = str(group_name)
-    return scriptcontext.doc.Groups.Find(group_name, True)>=0
+    return scriptcontext.doc.Groups.Find(group_name)>=0
 
 
 def IsGroupEmpty(group_name):
@@ -212,7 +212,7 @@ def IsGroupEmpty(group_name):
       RemoveObjectsFromGroup
     """
     if not isinstance(group_name, str): group_name = str(group_name)
-    index = scriptcontext.doc.Groups.Find(group_name, True)
+    index = scriptcontext.doc.Groups.Find(group_name)
     if index<0: return scriptcontext.errorhandler()
     return scriptcontext.doc.Groups.GroupObjectCount(index)>0
 
@@ -236,7 +236,7 @@ def LockGroup(group_name):
       UnlockGroup
     """
     if not isinstance(group_name, str): group_name = str(group_name)
-    index = scriptcontext.doc.Groups.Find(group_name, True)
+    index = scriptcontext.doc.Groups.Find(group_name)
     if index<0: return scriptcontext.errorhandler()
     return scriptcontext.doc.Groups.Lock(index);
 
@@ -310,7 +310,7 @@ def RemoveObjectsFromGroup(object_ids, group_name):
       RemoveObjectFromGroup
     """
     if not isinstance(group_name, str): group_name = str(group_name)
-    index = scriptcontext.doc.Groups.Find(group_name, True)
+    index = scriptcontext.doc.Groups.Find(group_name)
     if index<0: return scriptcontext.errorhandler()
     id = rhutil.coerceguid(object_ids, False)
     if id: object_ids = [id]
@@ -346,7 +346,7 @@ def RenameGroup(old_name, new_name):
       IsGroup
     """
     if not isinstance(old_name, str): old_name = str(old_name)
-    index = scriptcontext.doc.Groups.Find(old_name, True)
+    index = scriptcontext.doc.Groups.Find(old_name)
     if index<0: return scriptcontext.errorhandler()
     if not isinstance(new_name, str): new_name = str(new_name)
     if scriptcontext.doc.Groups.ChangeGroupName(index, new_name):
@@ -373,7 +373,7 @@ def ShowGroup(group_name):
       UnlockGroup
     """
     if not isinstance(group_name, str): group_name = str(group_name)
-    index = scriptcontext.doc.Groups.Find(group_name, True)
+    index = scriptcontext.doc.Groups.Find(group_name)
     if index<0: return scriptcontext.errorhandler()
     return scriptcontext.doc.Groups.Show(index);
 
@@ -397,6 +397,6 @@ def UnlockGroup(group_name):
       ShowGroup
     """
     if not isinstance(group_name, str): group_name = str(group_name)
-    index = scriptcontext.doc.Groups.Find(group_name, True)
+    index = scriptcontext.doc.Groups.Find(group_name)
     if index<0: return scriptcontext.errorhandler()
     return scriptcontext.doc.Groups.Unlock(index);
