@@ -2492,7 +2492,7 @@ def SurfaceCylinder(surface_id):
     Parameters:
       surface_id (guid): the surface's identifier
     Returns:
-      tuple(plane, number, nymber): of the cylinder plane, height, radius on success
+      tuple(plane, number, number): of the cylinder plane, height, radius on success
       None: on error
     Example:
       import rhinoscriptsyntax as rs
@@ -2505,10 +2505,9 @@ def SurfaceCylinder(surface_id):
     """
     surface = rhutil.coercesurface(surface_id, True)
     tol = scriptcontext.doc.ModelAbsoluteTolerance
-    rc, cylinder = surface.TryGetCylinder(tol)
+    rc, cylinder = surface.TryGetFiniteCylinder(tol)
     if rc:
-        circle = cylinder.CircleAt(0)
-        return circle.Plane, cylinder.TotalHeight, circle.Radius
+        return cylinder.BasePlane, cylinder.TotalHeight, cylinder.Radius
 
 
 def SurfaceDegree(surface_id, direction=2):
