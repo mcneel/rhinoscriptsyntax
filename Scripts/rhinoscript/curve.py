@@ -3839,42 +3839,4 @@ def AddTweenCurves(from_curve_id, to_curve_id, number_of_curves = 1, method = 0,
         if rc==System.Guid.Empty: raise Exception("unable to add curve to document")
         curves.append(rc)
   scriptcontext.doc.Views.Redraw()
-  return curvesdef AddTweenCurves(from_curve_id, to_curve_id, number_of_curves = 1, method = 0, sample_number = 10):
-  """Creates curves between two open or closed input curves.
-  Parameters:
-    from_curve_id (guid): identifier of the first curve object.
-    to_curve_id (guid): identifier of the second curve object.
-    number_of_curves (number): The number of curves to create. The default is 1.
-    method (number): The method for refining the output curves, where:
-      0: (Default) Uses the control points of the curves for matching. So the first control point of first curve is matched to first control point of the second curve.
-      1: Refits the output curves like using the FitCurve method.  Both the input curve and the output curve will have the same structure. The resulting curves are usually more complex than input unless input curves are compatible.
-      2: Input curves are divided to the specified number of points on the curve, corresponding points define new points that output curves go through. If you are making one tween curve, the method essentially does the following: divides the two curves into an equal number of points, finds the midpoint between the corresponding points on the curves. and interpolates the tween curve through those points.
-    sample_number (number): The number of samples points to is intMethod = 2. The default is 10.
-  Returns:
-    list(guid, ...): The identifiers of the new tween objects if successful, None on error.
-  Example:
-    import rhinoscriptsyntax as rs
-    curveA = rs.GetObject("Select first curve", rs.filter.curve)
-    curveB = rs.GetObject("Select second curve", rs.filter.curve)
-    arrResult = rs.AddTweenCurves(curveA, curveB, 6, 2, 30)
-  """
-  curve0 = rhutil.coercecurve(from_curve_id, -1, True)
-  curve1 = rhutil.coercecurve(to_curve_id, -1, True)
-  out_curves = 0
-  if method == 0:
-		  out_curves = Rhino.Geometry.Curve.CreateTweenCurves(curve0, curve1, number_of_curves)
-  elif method == 1:
-		  out_curves = Rhino.Geometry.Curve.CreateTweenCurvesWithMatching(curve0, curve1, number_of_curves)
-  elif method == 2:
-		  out_curves = Rhino.Geometry.Curve.CreateTweenCurvesWithSampling(curve0, curve1, number_of_curves, sample_number)
-  else: raise ValueError("method must be 0, 1, or 2")
-  curves = []
-  if out_curves:
-    for curve in out_curves:
-      if curve and curve.IsValid:
-        rc = scriptcontext.doc.Objects.AddCurve(curve)
-        curve.Dispose()
-        if rc==System.Guid.Empty: raise Exception("unable to add curve to document")
-        curves.append(rc)
-  scriptcontext.doc.Views.Redraw()
   return curves
