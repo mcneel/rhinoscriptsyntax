@@ -1112,7 +1112,7 @@ def LeaderText(object_id, text=None):
         return scriptcontext.errorhandler()
     rc = annotation_object.DisplayText
     if text is not None:
-        geom.TextFormula = text
+        geom.RichText = text
         annotation_object.CommitChanges()
         scriptcontext.doc.Views.Redraw()
     return rc

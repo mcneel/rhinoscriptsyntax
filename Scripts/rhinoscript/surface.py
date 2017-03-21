@@ -396,7 +396,8 @@ def AddPlanarSrf(object_ids):
     id = rhutil.coerceguid(object_ids, False)
     if id: object_ids = [id]
     curves = [rhutil.coercecurve(id,-1,True) for id in object_ids]
-    breps = Rhino.Geometry.Brep.CreatePlanarBreps(curves)
+    tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+    breps = Rhino.Geometry.Brep.CreatePlanarBreps(curves, tolerance)
     if breps:
         rc = [scriptcontext.doc.Objects.AddBrep(brep) for brep in breps]
         scriptcontext.doc.Views.Redraw()
