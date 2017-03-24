@@ -249,7 +249,7 @@ def BuildDate():
       build = rs.BuildDate()
       print "Rhino Build:", build
     See Also:
-      Python Datetime module
+
     """
     build = Rhino.RhinoApp.BuildDate
     return datetime.date(build.Year, build.Month, build.Day)
