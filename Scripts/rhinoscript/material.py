@@ -130,7 +130,7 @@ def IsMaterialReference(material_index):
     See Also:
       IsLayerReference
       IsLightReference
-      isObjectReference
+      IsObjectReference
     """
     mat = scriptcontext.doc.Materials[material_index]
     return mat and mat.IsReference

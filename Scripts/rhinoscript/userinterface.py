@@ -58,7 +58,7 @@ def CheckListBox(items, message=None, title=None):
     See Also:
       ComboListBox
       ListBox
-      MultiListbox
+      MultiListBox
       PropertyListBox
     """
     checkstates = [item[1] for item in items]
@@ -88,7 +88,7 @@ def ComboListBox(items, message=None, title=None):
     See Also:
       CheckListBox
       ListBox
-      MultiListbox
+      MultiListBox
       PropertyListBox
     """
     return Rhino.UI.Dialogs.ShowComboListBox(title, message, items)
@@ -254,8 +254,8 @@ def GetCursorPos():
       import rhinoscriptsyntax as  rs
       world, screen, view, client  = rs.GetCursorPos()
     See Also:
-      XFormScreenToWorld
-      XFormWorldToScreen
+      XformScreenToWorld
+      XformWorldToScreen
     """
     view = scriptcontext.doc.Views.ActiveView
     screen_pt = Rhino.UI.MouseCursor.Location
@@ -970,7 +970,7 @@ def PropertyListBox(items, values, message=None, title=None):
       CheckListBox
       ComboListBox
       ListBox
-      MultiListbox
+      MultiListBox
     """
     values = [str(v) for v in values]
     return Rhino.UI.Dialogs.ShowPropertyListBox(title, message, items, values)
