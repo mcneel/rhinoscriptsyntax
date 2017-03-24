@@ -217,7 +217,7 @@ def XformIdentity():
       print "[", xform[i,0], ", ", xform[i,1], ", ", xform[i,2], ", ", xform[i,3], "]"
       printmatrix(rs.XformIdentity())
     See Also:
-      XFormDiagonal
+      XformDiagonal
       XformZero
     """
     return Rhino.Geometry.Transform.Identity
@@ -260,7 +260,10 @@ def XformMirror(mirror_plane_point, mirror_plane_normal):
       rs.TransformObjects( objs, xform, True )
     See Also:
       XformPlanarProjection
-      XformRotation
+      XformRotation1
+      XformRotation2
+      XformRotation3
+      XformRotation4
       XformScale
       XformShear
       XformTranslation
@@ -292,7 +295,10 @@ def XformMultiply(xform1, xform2):
       rs.TransformObjects( objs, xform, True )
     See Also:
       XformPlanarProjection
-      XformRotation
+      XformRotation1
+      XformRotation2
+      XformRotation3
+      XformRotation4
       XformScale
       XformShear
       XformTranslation
@@ -317,7 +323,10 @@ def XformPlanarProjection(plane):
       rs.TransformObjects( objects, xform, True )
     See Also:
       XformMirror
-      XformRotation
+      XformRotation1
+      XformRotation2
+      XformRotation3
+      XformRotation4
       XformScale
       XformShear
       XformTranslation
@@ -424,7 +433,10 @@ def XformScale(scale, point=None):
     See Also:
       XformMirror
       XformPlanarProjection
-      XformRotation
+      XformRotation1
+      XformRotation2
+      XformRotation3
+      XformRotation4
       XformShear
       XformTranslation
     """
@@ -491,7 +503,10 @@ def XformShear(plane, x, y, z):
     See Also:
       XformMirror
       XformPlanarProjection
-      XformRotation
+      XformRotation1
+      XformRotation2
+      XformRotation3
+      XformRotation4
       XformScale
       XformTranslation
     """
@@ -517,7 +532,10 @@ def XformTranslation(vector):
     See Also:
       XformMirror
       XformPlanarProjection
-      XformRotation
+      XformRotation1
+      XformRotation2
+      XformRotation3
+      XformRotation4
       XformScale
       XformShear
     """
