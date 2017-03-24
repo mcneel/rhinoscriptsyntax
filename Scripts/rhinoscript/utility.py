@@ -6,6 +6,7 @@ import scriptcontext
 import math
 import string
 import numbers
+import RhinoPython.Host as __host
 
 
 def ContextIsRhino():
@@ -620,7 +621,7 @@ def frange(start, stop, step):
 
 
 def coerce3dpoint(point, raise_on_error=False):
-    """Convert input into a Rhino.Geometry.Point3d if possible.
+    """Converts input into a Rhino.Geometry.Point3d if possible.
     Parameters:
       point = Point3d, Vector3d, Point3f, Vector3f, str, uuid
       raise_on_error [opt] = True or False
@@ -630,6 +631,11 @@ def coerce3dpoint(point, raise_on_error=False):
     See Also:
     """
     if type(point) is Rhino.Geometry.Point3d: return point
+    enumerable =  __host.Coerce3dPointFromEnumerables(point)
+    if enumerable is not None: return enumerable
+    if type(point) is System.Guid:
+        found, pt = scriptcontext.doc.Objects.TryFindPoint(point)
+        if found: return pt
     if hasattr(point, "__len__") and len(point)==3 and hasattr(point, "__getitem__"):
         try:
             return Rhino.Geometry.Point3d(float(point[0]), float(point[1]), float(point[2]))
@@ -640,11 +646,6 @@ def coerce3dpoint(point, raise_on_error=False):
     if type(point) is str:
         point = point.split(',')
         return Rhino.Geometry.Point3d( float(point[0]), float(point[1]), float(point[2]) )
-    if type(point) is System.Guid:
-        rhobj = coercerhinoobject(point, raise_on_error)
-        if rhobj:
-            geom = rhobj.Geometry
-            if isinstance(geom, Rhino.Geometry.Point): return geom.Location
     if hasattr(point, "__len__") and len(point)==2 and hasattr(point, "__getitem__"):
         try:
             return Rhino.Geometry.Point3d(float(point[0]), float(point[1]), 0.0)
