@@ -3801,12 +3801,11 @@ def ChangeCurveDegree(object_id, degree):
         r = scriptcontext.doc.Objects.Replace(object_id, curve)
     return r
 
-def AddTweenCurves(from_curve_id, to_curve_id, tolerance, number_of_curves = 1, method = 0, sample_number = 10):
+def AddTweenCurves(from_curve_id, to_curve_id, number_of_curves = 1, method = 0, sample_number = 10):
     """Creates curves between two open or closed input curves.
     Parameters:
       from_curve_id (guid): identifier of the first curve object.
       to_curve_id (guid): identifier of the second curve object.
-	  tolerance (number): tolerance
       number_of_curves (number): The number of curves to create. The default is 1.
       method (number): The method for refining the output curves, where:
         0: (Default) Uses the control points of the curves for matching. So the first control point of first curve is matched to first control point of the second curve.
@@ -3819,11 +3818,12 @@ def AddTweenCurves(from_curve_id, to_curve_id, tolerance, number_of_curves = 1, 
       import rhinoscriptsyntax as rs
       curveA = rs.GetObject("Select first curve", rs.filter.curve)
       curveB = rs.GetObject("Select second curve", rs.filter.curve)
-      arrResult = rs.AddTweenCurves(curveA, curveB, 0.01, 6, 2, 30)
+      arrResult = rs.AddTweenCurves(curveA, curveB, 6, 2, 30)
     """
     curve0 = rhutil.coercecurve(from_curve_id, -1, True)
     curve1 = rhutil.coercecurve(to_curve_id, -1, True)
     out_curves = 0
+    tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     if method == 0:
         out_curves = Rhino.Geometry.Curve.CreateTweenCurves(curve0, curve1, number_of_curves, tolerance)
     elif method == 1:
