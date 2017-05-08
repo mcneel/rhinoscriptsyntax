@@ -1102,7 +1102,7 @@ def OpenFileName(title=None, filter=None, folder=None, filename=None, extension=
     if folder: fd.InitialDirectory = folder
     if filename: fd.FileName = filename
     if extension: fd.DefaultExt = extension
-    if fd.ShowDialog(): return fd.FileName
+    if fd.ShowOpenDialog(): return fd.FileName
 
 
 def OpenFileNames(title=None, filter=None, folder=None, filename=None, extension=None):
@@ -1134,7 +1134,7 @@ def OpenFileNames(title=None, filter=None, folder=None, filename=None, extension
     if filename: fd.FileName = filename
     if extension: fd.DefaultExt = extension
     fd.MultiSelect = True
-    if fd.ShowDialog(): return fd.FileNames
+    if fd.ShowOpenDialog(): return fd.FileNames
     return []
 
 
@@ -1235,7 +1235,7 @@ def SaveFileName(title=None, filter=None, folder=None, filename=None, extension=
     if folder: fd.InitialDirectory = folder
     if filename: fd.FileName = filename
     if extension: fd.DefaultExt = extension
-    if fd.ShowDialog(): return fd.FileName
+    if fd.ShowSaveDialog(): return fd.FileName
 
 
 def StringBox(message=None, default_value=None, title=None):
