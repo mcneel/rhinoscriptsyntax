@@ -1937,6 +1937,31 @@ def IsTorus(surface_id):
     return surface.IsTorus()
 
 
+def SurfaceSphere(surface_id):
+    """Gets the sphere definition from a surface, if possible.
+    Parameters:
+      surface_id (guid): the identifier of the surface object
+    Returns:
+      (plane, number): The equatorial plane of the sphere, and its radius.
+      None: on error
+    Example:
+      import rhinoscriptsyntax as rs
+      surface = rs.GetObject("Select a surface", rs.filter.surface)
+      if surface:
+        result = rs.SurfaceSphere(surface)
+        if result:
+          print("The sphere radius is: " + str(result[1]))
+    See Also:
+      SurfaceCylinder
+    """
+    surface = rhutil.coercesurface(surface_id, True)
+    tol = scriptcontext.doc.ModelAbsoluteTolerance
+    is_sphere, sphere = surface.TryGetSphere(tol)
+    rc = None
+    if is_sphere: rc = (sphere.EquatorialPlane, sphere.Radius)
+    return rc
+
+
 def JoinSurfaces(object_ids, delete_input=False):
     """Joins two or more surface or polysurface objects together to form one
     polysurface object
@@ -2502,7 +2527,7 @@ def SurfaceCylinder(surface_id):
       plane, height, radius = rs.SurfaceCylinder(cylinder)
       rs.AddCylinder(plane, height, radius, False)
     See Also:
-      
+      SurfaceSphere
     """
     surface = rhutil.coercesurface(surface_id, True)
     tol = scriptcontext.doc.ModelAbsoluteTolerance
