@@ -793,6 +793,10 @@ def coerceplane(plane, raise_on_bad_input=False):
     if type(plane) is Rhino.Geometry.Plane: return plane
     if type(plane) is list or type(plane) is tuple:
         length = len(plane)
+        if length == 1:
+            point = coerce3dpoint(plane, False)
+            if point: plane = point; length = 3
+            elif plane[0] is list or plane[0] is tuple: return coerceplane(plane[0])
         if length==3 and type(plane[0]) is not list:
             rc = Rhino.Geometry.Plane.WorldXY
             rc.Origin = Rhino.Geometry.Point3d(plane[0],plane[1],plane[2])
@@ -803,7 +807,7 @@ def coerceplane(plane, raise_on_bad_input=False):
             ypoint = Rhino.Geometry.Point3d(plane[6],plane[7],plane[8])
             rc     = Rhino.Geometry.Plane(origin, xpoint, ypoint)
             return rc
-        if length==3 and (type(plane[0]) is list or type(plane[0]) is tuple):
+        if (length==3 or length==4) and (type(plane[0]) is list or type(plane[0]) is tuple):
             origin = Rhino.Geometry.Point3d(plane[0][0],plane[0][1],plane[0][2])
             xpoint = Rhino.Geometry.Point3d(plane[1][0],plane[1][1],plane[1][2])
             ypoint = Rhino.Geometry.Point3d(plane[2][0],plane[2][1],plane[2][2])
@@ -812,20 +816,27 @@ def coerceplane(plane, raise_on_bad_input=False):
     if raise_on_bad_input: raise TypeError("%s can not be converted to a Plane"%plane)
 
 
-def CreatePlane(plane):
+def CreatePlane(plane_or_origin, x_axis=None, y_axis=None, ignored=None):
     """Converts input into a Rhino.Geometry.Plane object if possible.
     If the provided object is already a plane, its value is copied.
-    The returned data is accessible by indexing[row, column], and that is the suggested method to interact with the type.
+    The returned data is accessible by indexing[origin, X axis, Y axis, Z axis], and that is the suggested method to interact with the type.
+    The Z axis is in any case computed from the X and Y axes, so providing it is possible but not required.
     If the conversion fails, an error is raised.
     Parameters:
-      plane (plane|[point, point, point, point])
+      plane (plane|point|point, vector, vector|[point, vector, vector])
     Returns:
       plane: A Rhino.Geometry.plane.
     Example:
     See Also:
     """
-    if type(plane) is Rhino.Geometry.Plane: return plane.Clone()
-    return coerceplane(xform, True)
+    if type(plane_or_origin) is Rhino.Geometry.Plane: return plane_or_origin.Clone()
+    if x_axis != None:
+        if y_axis == None: raise Exception("A value for the Y axis is expected if the X axis is specified.")
+        origin = coerce3dpoint(plane_or_origin, True)
+        x_axis = coerce3dvector(x_axis, True)
+        y_axis = coerce3dvector(y_axis, True)
+        return Rhino.Geometry.Plane(origin, x_axis, y_axis)
+    return coerceplane(plane_or_origin, True)
 
 
 def coercexform(xform, raise_on_bad_input=False):
@@ -1001,6 +1012,7 @@ def coercesurface(object_id, raise_if_missing=False):
     See Also:
     """
     if isinstance(object_id, Rhino.Geometry.Surface): return object_id
+    if isinstance(object_id, Rhino.Geometry.Brep) and object_id.Faces.Count==1: return object_id.Faces[0]
     if type(object_id) is Rhino.DocObjects.ObjRef: return object_id.Face()
     object_id = coerceguid(object_id, True)
     srfObj = scriptcontext.doc.Objects.Find(object_id)
