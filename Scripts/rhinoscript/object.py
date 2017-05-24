@@ -439,19 +439,21 @@ def IsObjectSelectable(object_id):
 
 
 def IsObjectSelected(object_id):
-    """Verifies that an object is currently selected
+    """Verifies that an object is currently selected.
     Parameters:
       object_id (guid): The identifier of an object to test
     Returns:
-      bool: True if the object is selected
-      bool: False if the object is not selected
+      int: 0, the object is not selected
+      int: 1, the object is selected
+      int: 2, the object is entirely persistently selected
+      int: 3, one or more proper sub-objects are selected
     Example:
       import rhinocsriptsyntax as rs
-      # Do something here...
+      object = rs.GetObject()
       if rs.IsObjectSelected(object):
-      print "The object is selected."
+        print "The object is selected."
       else:
-      print "The object is not selected."
+        print "The object is not selected."
     See Also:
       IsObject
       IsObjectHidden
