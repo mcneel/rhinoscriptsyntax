@@ -123,8 +123,30 @@ def Angle2(line1, line2):
     vec1 = line2.To - line2.From
     if not vec0.Unitize() or not vec1.Unitize(): return scriptcontext.errorhandler()
     dot = vec0 * vec1
-    dot = clamp(-1,1,dot)
-    angle = math.acos(dot)
+    
+    
+    #    The "straight forward" method of acos(u.v) has large precision
+    #   issues when the dot product is near +/-1.  This is due to the
+    #   steep slope of the acos function as we approach +/- 1.  Slight
+    #   precision errors in the dot product calculation cause large
+    #   variation in the output value.
+    #   To avoid this we use an alternative method which finds the
+    #   angle bisector by (u-v)/2    
+    #   Because u and v and unit vectors, (u-v)/2 forms a right angle
+    #   with the angle bisector.  The hypotenuse is 1, therefore
+    #   2*asin(|u-v|/2) gives us the angle between u and v.       
+    #   The largest possible value of |u-v| occurs with perpendicular
+    #   vectors and is sqrt(2)/2 which is well away from extreme slope
+    #   at +/-1. taken from:
+    #   https://referencesource.microsoft.com/#PresentationCore/Core/CSharp/System/Windows/Media3D/Vector3D.cs,130
+    if -0.8 < dot < 0.8 : # safe to use acos
+        angle =  math.acos(dot)
+    else:
+        if dot < 0.0:
+            angle = math.pi - 2.0 * math.asin((-vec0 - vec1).Length * 0.5)
+        else:                       
+            angle = 2.0 * math.asin(( vec0 - vec1).Length * 0.5)
+  
     reflex_angle = 2.0*math.pi - angle
     angle = math.degrees(angle)
     reflex_angle = math.degrees(reflex_angle)
