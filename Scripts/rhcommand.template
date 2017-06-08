@@ -1,5 +1,4 @@
-import rhinoscript.userinterface
-import rhinoscript.geometry
+import rhinoscriptsyntax as rs
 
 __commandname__ = "[COMMANDNAME]"
 
@@ -8,9 +7,9 @@ __commandname__ = "[COMMANDNAME]"
 def RunCommand( is_interactive ):
   print "Hello", __commandname__
   # get a point
-  point = rhinoscript.userinterface.GetPoint()
+  point = rs.GetPoint()
   if( point != None ):
-    rhinoscript.geometry.AddPoint(point)
+    rs.AddPoint(point)
   
   # you can optionally return a value from this function
   # to signify command result. Return values that make
