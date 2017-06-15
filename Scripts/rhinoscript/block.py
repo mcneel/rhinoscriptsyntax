@@ -34,7 +34,7 @@ def AddBlock(object_ids, base_point, name=None, delete_input=False):
     base_point = rhutil.coerce3dpoint(base_point, True)
     if not name:
         name = scriptcontext.doc.InstanceDefinitions.GetUnusedInstanceDefinitionName()
-    found = scriptcontext.doc.InstanceDefinitions.Find(name, True)
+    found = scriptcontext.doc.InstanceDefinitions.Find(name)
     objects = []
     for id in object_ids:
         obj = rhutil.coercerhinoobject(id, True)
@@ -99,7 +99,7 @@ def BlockContainers(block_name):
       BlockContainerCount
       IsBlock
     """
-    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
+    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
     containers = idef.GetContainers()
     rc = []
@@ -141,7 +141,7 @@ def BlockDescription(block_name, description=None):
     See Also:
       IsBlock
     """
-    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
+    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
     rc = idef.Description
     if description: scriptcontext.doc.InstanceDefinitions.Modify( idef, idef.Name, description, True )
@@ -171,7 +171,7 @@ def BlockInstanceCount(block_name,where_to_look=0):
       BlockInstanceXform
       IsBlockInstance
     """
-    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
+    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
     refs = idef.GetReferences(where_to_look)
     return len(refs)
@@ -242,7 +242,7 @@ def BlockInstances(block_name):
       BlockInstanceXform
       IsBlockInstance
     """
-    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
+    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
     instances = idef.GetReferences(0)
     return [item.Id for item in instances]
@@ -310,7 +310,7 @@ def BlockObjectCount(block_name):
       BlockObjects
       IsBlock
     """
-    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
+    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
     return idef.ObjectCount
 
@@ -333,7 +333,7 @@ def BlockObjects(block_name):
       BlockObjectCount
       IsBlock
     """
-    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
+    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
     rhobjs = idef.GetObjects()
     return [obj.Id for obj in rhobjs]
@@ -356,7 +356,7 @@ def BlockPath(block_name):
       IsBlock
       IsBlockEmbedded
     """
-    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
+    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
     return idef.SourceArchive
 
@@ -384,7 +384,7 @@ def BlockStatus(block_name):
     See Also:
       IsBlock
     """
-    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
+    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name)
     if not idef: return -3
     return int(idef.ArchiveFileStatus)
 
@@ -405,7 +405,7 @@ def DeleteBlock(block_name):
       ExplodeBlockInstance
       IsBlock
     """
-    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
+    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
     rc = scriptcontext.doc.InstanceDefinitions.Delete(idef.Index, True, False)
     scriptcontext.doc.Views.Redraw()
@@ -470,7 +470,7 @@ def InsertBlock2(block_name, xform):
     Example:
     See Also:
     """
-    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
+    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
     xform = rhutil.coercexform(xform, True)
     id = scriptcontext.doc.Objects.AddInstanceObject(idef.Index, xform )
@@ -498,7 +498,7 @@ def IsBlock(block_name):
       IsBlockInUse
       IsBlockReference
     """
-    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
+    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name)
     return (idef is not None)
 
 
@@ -524,7 +524,7 @@ def IsBlockEmbedded(block_name):
       IsBlockInUse
       IsBlockReference
     """
-    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
+    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
     ut = Rhino.DocObjects.InstanceDefinitionUpdateType
     return (idef.UpdateType==ut.Embedded or idef.UpdateType==ut.LinkedAndEmbedded)
@@ -578,7 +578,7 @@ def IsBlockInUse(block_name, where_to_look=0):
       IsBlockEmbedded
       IsBlockReference
     """
-    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
+    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
     return idef.InUse(where_to_look)
 
@@ -605,7 +605,7 @@ def IsBlockReference(block_name):
       IsBlockInUse
       IsBlockInstance
     """
-    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
+    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
     return idef.IsReference
 
@@ -628,7 +628,7 @@ def RenameBlock( block_name, new_name ):
       BlockNames
       IsBlock
     """
-    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name, True)
+    idef = scriptcontext.doc.InstanceDefinitions.Find(block_name)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
     description = idef.Description
     rc = scriptcontext.doc.InstanceDefinitions.Modify(idef, new_name, description, False)

@@ -1065,12 +1065,13 @@ def CurveArrows(curve_id, arrow_style=None):
     if rc==Rhino.DocObjects.ObjectDecoration.BothArrowhead: return 3
 
 
-def CurveBooleanDifference(curve_id_0, curve_id_1):
+def CurveBooleanDifference(curve_id_0, curve_id_1, tolerance=None):
     """Calculates the difference between two closed, planar curves and
     adds the results to the document. Note, curves must be coplanar.
     Parameters:
       curve_id_0 (guid): identifier of the first curve object.
       curve_id_1 (guid): identifier of the second curve object.
+      tolerance (float, optional): a positive tolerance value, or None for the doc default.
     Returns:
       list(guid, ...): The identifiers of the new objects if successful, None on error.
     Example:
@@ -1087,7 +1088,9 @@ def CurveBooleanDifference(curve_id_0, curve_id_1):
     """
     curve0 = rhutil.coercecurve(curve_id_0, -1, True)
     curve1 = rhutil.coercecurve(curve_id_1, -1, True)
-    out_curves = Rhino.Geometry.Curve.CreateBooleanDifference(curve0, curve1)
+    if tolerance is None or tolerance<0:
+        tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+    out_curves = Rhino.Geometry.Curve.CreateBooleanDifference(curve0, curve1, tolerance)
     curves = []
     if out_curves:
         for curve in out_curves:
@@ -1100,12 +1103,13 @@ def CurveBooleanDifference(curve_id_0, curve_id_1):
     return curves
 
 
-def CurveBooleanIntersection(curve_id_0, curve_id_1):
+def CurveBooleanIntersection(curve_id_0, curve_id_1, tolerance=None):
     """Calculates the intersection of two closed, planar curves and adds
     the results to the document. Note, curves must be coplanar.
     Parameters:
       curve_id_0 (guid): identifier of the first curve object.
       curve_id_1 (guid): identifier of the second curve object.
+      tolerance (float, optional): a positive tolerance value, or None for the doc default.
     Returns:
       list(guid, ...): The identifiers of the new objects.
     Example:
@@ -1122,7 +1126,9 @@ def CurveBooleanIntersection(curve_id_0, curve_id_1):
     """
     curve0 = rhutil.coercecurve(curve_id_0, -1, True)
     curve1 = rhutil.coercecurve(curve_id_1, -1, True)
-    out_curves = Rhino.Geometry.Curve.CreateBooleanIntersection(curve0, curve1)
+    if tolerance is None or tolerance<0:
+        tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+    out_curves = Rhino.Geometry.Curve.CreateBooleanIntersection(curve0, curve1, tolerance)
     curves = []
     if out_curves:
         for curve in out_curves:
@@ -1135,11 +1141,12 @@ def CurveBooleanIntersection(curve_id_0, curve_id_1):
     return curves
 
 
-def CurveBooleanUnion(curve_id):
+def CurveBooleanUnion(curve_id, tolerance=None):
     """Calculate the union of two or more closed, planar curves and
     add the results to the document. Note, curves must be coplanar.
     Parameters:
       curve_id ([guid, guid, ...])list of two or more close planar curves identifiers
+      tolerance (float, optional): a positive tolerance value, or None for the doc default.
     Returns:
       list(guid, ...): The identifiers of the new objects.
     Example:
@@ -1154,7 +1161,9 @@ def CurveBooleanUnion(curve_id):
     """
     in_curves = [rhutil.coercecurve(id,-1,True) for id in curve_id]
     if len(in_curves)<2: raise ValueException("curve_id must have at least 2 curves")
-    out_curves = Rhino.Geometry.Curve.CreateBooleanUnion(in_curves)
+    if tolerance is None or tolerance<0:
+        tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+    out_curves = Rhino.Geometry.Curve.CreateBooleanUnion(in_curves, tolerance)
     curves = []
     if out_curves:
         for curve in out_curves:
