@@ -184,7 +184,7 @@ def CurrentDimStyle(dimstyle_name=None):
     """
     rc = scriptcontext.doc.DimStyles.CurrentDimensionStyle.Name
     if dimstyle_name:
-        ds = scriptcontext.doc.DimStyles.Find(dimstyle_name, True)
+        ds = scriptcontext.doc.DimStyles.FindName(dimstyle_name)
         if ds is None: return scriptcontext.errorhandler()
         scriptcontext.doc.DimStyles.SetCurrentDimensionStyleIndex(ds.Index, False)
     return rc
@@ -207,7 +207,7 @@ def DeleteDimStyle(dimstyle_name):
       IsDimStyle
       RenameDimStyle
     """
-    ds = scriptcontext.doc.DimStyles.Find(dimstyle_name, True)
+    ds = scriptcontext.doc.DimStyles.FindName(dimstyle_name)
     if ds and scriptcontext.doc.DimStyles.DeleteDimensionStyle(ds.Index, True):
         return dimstyle_name
     return scriptcontext.errorhandler()
@@ -241,7 +241,7 @@ def DimensionStyle(object_id, dimstyle_name=None):
     ds = annotation_object.DimensionStyle
     rc = ds.Name
     if dimstyle_name:
-        ds = scriptcontext.doc.DimStyles.Find(dimstyle_name, True)
+        ds = scriptcontext.doc.DimStyles.FindName(dimstyle_name)
         if not ds: return scriptcontext.errorhandler()
         annotation = annotation_object.Geometry
         annotation.DimensionStyleId = ds.Id
@@ -343,7 +343,7 @@ def DimStyleAnglePrecision(dimstyle, precision=None):
       DimStyleTextAlignment
       DimStyleTextHeight
     """
-    ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
+    ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
     if ds is None: return scriptcontext.errorhandler()
     rc = ds.AngleResolution
     if precision is not None:
@@ -376,7 +376,7 @@ def DimStyleArrowSize(dimstyle, size=None):
       DimStyleTextAlignment
       DimStyleTextHeight
     """
-    ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
+    ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
     if ds is None: return scriptcontext.errorhandler()
     rc = ds.ArrowLength
     if size is not None:
@@ -424,7 +424,7 @@ def DimStyleExtension(dimstyle, extension=None):
       DimStyleTextAlignment
       DimStyleTextHeight
     """
-    ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
+    ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
     if ds is None: return scriptcontext.errorhandler()
     rc = ds.ExtensionLineExtension
     if extension is not None:
@@ -457,7 +457,7 @@ def DimStyleFont(dimstyle, font=None):
       DimStyleTextAlignment
       DimStyleTextHeight
     """
-    ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
+    ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
     if ds is None: return scriptcontext.errorhandler()
     rc = ds.Font.FaceName
     if font:
@@ -492,7 +492,7 @@ def DimStyleLeaderArrowSize(dimstyle, size=None):
       DimStyleTextAlignment
       DimStyleTextHeight
     """
-    ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
+    ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
     if ds is None: return scriptcontext.errorhandler()
     rc = ds.LeaderArrowLength
     if size is not None:
@@ -520,7 +520,7 @@ def DimStyleLengthFactor(dimstyle, factor=None):
       DimStylePrefix
       DimStyleSuffix
     """
-    ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
+    ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
     if ds is None: return scriptcontext.errorhandler()
     rc = ds.LengthFactor
     if factor is not None:
@@ -553,7 +553,7 @@ def DimStyleLinearPrecision(dimstyle, precision=None):
       DimStyleTextAlignment
       DimStyleTextHeight
     """
-    ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
+    ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
     if ds is None: return scriptcontext.errorhandler()
     rc = ds.LengthResolution
     if precision is not None:
@@ -609,7 +609,7 @@ def DimStyleNumberFormat(dimstyle, format=None):
       DimStyleTextAlignment
       DimStyleTextHeight
     """
-    ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
+    ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
     if ds is None: return scriptcontext.errorhandler()
     rc = int(ds.LengthFormat)
     if format is not None:
@@ -644,7 +644,7 @@ def DimStyleOffset(dimstyle, offset=None):
       DimStyleTextAlignment
       DimStyleTextHeight
     """
-    ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
+    ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
     if ds is None: return scriptcontext.errorhandler()
     rc = ds.ExtensionLineOffset
     if offset is not None:
@@ -672,7 +672,7 @@ def DimStylePrefix(dimstyle, prefix=None):
       DimStyleLengthFactor
       DimStyleSuffix
     """
-    ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
+    ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
     if ds is None: return scriptcontext.errorhandler()
     rc = ds.Prefix
     if prefix is not None:
@@ -700,7 +700,7 @@ def DimStyleSuffix(dimstyle, suffix=None):
       DimStyleLengthFactor
       DimStylePrefix
     """
-    ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
+    ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
     if ds is None: return scriptcontext.errorhandler()
     rc = ds.Suffix
     if suffix is not None:
@@ -737,7 +737,7 @@ def DimStyleTextAlignment(dimstyle, alignment=None):
       DimStyleOffset
       DimStyleTextHeight
     """
-    ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
+    ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
     if ds is None: return scriptcontext.errorhandler()
     rc = int(ds.TextAlignment)
     if alignment is not None:
@@ -774,7 +774,7 @@ def DimStyleTextGap(dimstyle, gap=None):
       DimStyleTextAlignment
       DimStyleTextHeight
     """
-    ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
+    ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
     if ds is None: return scriptcontext.errorhandler()
     rc = ds.TextGap
     if gap is not None:
@@ -807,7 +807,7 @@ def DimStyleTextHeight(dimstyle, height=None):
       DimStyleOffset
       DimStyleTextAlignment
     """
-    ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
+    ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
     if ds is None: return scriptcontext.errorhandler()
     rc = ds.TextHeight
     if height:
@@ -952,7 +952,7 @@ def IsDimStyle(dimstyle):
     See Also:
       IsDimStyleReference
     """
-    ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
+    ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
     return ds is not None
 
 
@@ -976,7 +976,7 @@ def IsDimStyleReference(dimstyle):
     See Also:
       IsDimStyle
     """
-    ds = scriptcontext.doc.DimStyles.Find(dimstyle, True)
+    ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
     if ds is None: return scriptcontext.errorhandler()
     return ds.IsReference
 
@@ -1137,7 +1137,7 @@ def RenameDimStyle(oldstyle, newstyle):
       DeleteDimStyle
       IsDimStyle
     """
-    ds = scriptcontext.doc.DimStyles.Find(oldstyle, True)
+    ds = scriptcontext.doc.DimStyles.FindName(oldstyle)
     if not ds: return scriptcontext.errorhandler()
     ds.Name = newstyle
     if ds.CommitChanges(): return newstyle
