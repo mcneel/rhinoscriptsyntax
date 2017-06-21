@@ -635,17 +635,19 @@ def AddSubCrv(curve_id, param0, param1):
     Returns:
       guid: id of the new curve object if successful
     Example:
-      import rhinoscriptsyntax as rs
-      getresult = rs.GetCurveObject()
-      if getresult:
-      curve_id = retresult[0]
-      point0 = rs.GetPointOnCurve( curve_id )
-      if point0:
-      point1 = rs.GetPointOnCurve( curve_id )
-      if point1:
-      t0 = rs.CurveClosestPoint( curve_id, point0)
-      t1 = rs.CurveClosestPoint( curve_id, point1)
-      rs.AddSubCrv( curve_id, t0, t1 )
+
+import rhinoscriptsyntax as rs
+getresult = rs.GetCurveObject()
+if getresult:
+    curve_id = getresult[0]
+    point0 = rs.GetPointOnCurve( curve_id )
+    if point0:
+        point1 = rs.GetPointOnCurve( curve_id )
+        if point1:
+            t0 = rs.CurveClosestPoint( curve_id, point0)
+            t1 = rs.CurveClosestPoint( curve_id, point1)
+            rs.AddSubCrv( curve_id, t0, t1 )
+
     See Also:
       CurveClosestPoint
       GetCurveObject
