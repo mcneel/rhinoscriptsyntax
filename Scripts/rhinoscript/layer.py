@@ -76,7 +76,7 @@ def AddLayer(name=None, color=None, visible=True, locked=False, parent=None):
         full_path = layer.Name
         if last_parent:
             full_path = last_parent.FullPath + "::" + full_path
-        last_parent_index = scriptcontext.doc.Layers.FindByFullPath(full_path, -1)
+        last_parent_index = scriptcontext.doc.Layers.FindByFullPath(full_path, UnsetIntIndex)
     return scriptcontext.doc.Layers[last_parent_index].FullPath
 
 def CurrentLayer(layer=None):
@@ -647,7 +647,7 @@ def LayerId(layer):
     Parameters:
       layer (str): name of existing layer
     Returns:
-      guid: The layer's identifier if successful.
+      guid (str): The layer's identifier if successful.
       None: If not successful, or on error.
     Example:
       import rhinoscriptsyntax as  rs
@@ -655,8 +655,8 @@ def LayerId(layer):
     See Also:
       LayerName
     """
-    idx = scriptcontext.doc.Layers.FindByFullPath(layer, -1)
-    return str(scriptcontext.doc.Layers[idx].Id) if idx >= 0 else None
+    idx = scriptcontext.doc.Layers.FindByFullPath(layer, UnsetIntIndex)
+    return str(scriptcontext.doc.Layers[idx].Id) if idx != UnsetIntIndex else None
 
 
 def LayerName(layer_id, fullpath=True):

@@ -5,9 +5,8 @@ import Rhino
 
 def __getlinetype(name_or_id):
     id = rhutil.coerceguid(name_or_id)
-    if id: name_or_id = id
-    linetype = scriptcontext.doc.Linetypes.Find(name_or_id, True)
-    if linetype>=0: return scriptcontext.doc.Linetypes[linetype]
+    if id: return scriptcontext.doc.Linetypes.FindId(id)
+    return scriptcontext.doc.Linetypes.FindName(name_or_id)
 
 
 def IsLinetype(name_or_id):
