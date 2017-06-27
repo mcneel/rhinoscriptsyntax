@@ -97,7 +97,8 @@ def AddPlanarMesh(object_id, delete_input=False):
       IsCurvePlanar
     """
     curve = rhutil.coercecurve(object_id, -1, True)
-    mesh = Rhino.Geometry.Mesh.CreateFromPlanarBoundary(curve, Rhino.Geometry.MeshingParameters.Default)
+    tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+    mesh = Rhino.Geometry.Mesh.CreateFromPlanarBoundary(curve, Rhino.Geometry.MeshingParameters.Default, tolerance)
     if not mesh: return scriptcontext.errorhandler()
     if delete_input:
         id = rhutil.coerceguid(delete_input, True)
@@ -410,11 +411,12 @@ def MeshAreaCentroid(object_id):
     return mp.Centroid
 
 
-def MeshBooleanDifference(input0, input1, delete_input=True):
+def MeshBooleanDifference(input0, input1, delete_input=True, tolerance=None):
     """Performs boolean difference operation on two sets of input meshes
     Parameters:
       input0, input1 (guid): identifiers of meshes
       delete_input (bool, optional): delete the input meshes
+      tolerance (float, optional): a positive tolerance value, or None to use the default of the document.
     Returns:
       list(guid, ...): identifiers of newly created meshes
     Example:

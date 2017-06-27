@@ -318,7 +318,7 @@ def IsObjectInGroup(object_id, group_name=None):
     count = rhobj.GroupCount
     if count<1: return False
     if not group_name: return True
-    index = scriptcontext.doc.Groups.Find(group_name, True)
+    index = scriptcontext.doc.Groups.Find(group_name)
     if index<0: raise ValueError("%s group does not exist"%group_name)
     group_ids = rhobj.GetGroupList()
     for id in group_ids:
@@ -986,14 +986,14 @@ def ObjectLinetype(object_ids, linetype=None):
         rhino_object = rhutil.coercerhinoobject(id, True, True)
         oldindex = scriptcontext.doc.Linetypes.LinetypeIndexForObject(rhino_object)
         if linetype:
-            newindex = scriptcontext.doc.Linetypes.Find(linetype, True)
+            newindex = scriptcontext.doc.Linetypes.Find(linetype)
             rhino_object.Attributes.LinetypeSource = Rhino.DocObjects.ObjectLinetypeSource.LinetypeFromObject
             rhino_object.Attributes.LinetypeIndex = newindex
             rhino_object.CommitChanges()
             scriptcontext.doc.Views.Redraw()
         return scriptcontext.doc.Linetypes[oldindex].Name
 
-    newindex = scriptcontext.doc.Linetypes.Find(linetype, True)
+    newindex = scriptcontext.doc.Linetypes.Find(linetype)
     if newindex<0: raise Exception("%s does not exist in LineTypes table"%linetype)
     for id in object_ids:
         rhino_object = rhutil.coercerhinoobject(id, True, True)

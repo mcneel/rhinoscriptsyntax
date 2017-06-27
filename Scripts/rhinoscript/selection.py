@@ -831,9 +831,9 @@ def ObjectsByGroup(group_name, select=False):
     See Also:
       
     """
-    group_index = scriptcontext.doc.Groups.Find(group_name, True)
-    if group_index<0: raise ValueError("%s does not exist in GroupTable"%group_name)
-    rhino_objects = scriptcontext.doc.Groups.GroupMembers(group_index)
+    group_instance = scriptcontext.doc.Groups.FindName(group_name)
+    if group_instance is None: raise ValueError("%s does not exist in GroupTable"%group_name)
+    rhino_objects = scriptcontext.doc.Groups.GroupMembers(group_instance.Index)
     if not rhino_objects: return []
     if select:
         for obj in rhino_objects: obj.Select(True)

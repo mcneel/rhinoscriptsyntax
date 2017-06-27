@@ -182,7 +182,7 @@ def CurrentDimStyle(dimstyle_name=None):
       IsDimStyle
       RenameDimStyle
     """
-    rc = scriptcontext.doc.DimStyles.CurrentDimensionStyle.Name
+    rc = scriptcontext.doc.DimStyles.Current.Name
     if dimstyle_name:
         ds = scriptcontext.doc.DimStyles.FindName(dimstyle_name)
         if ds is None: return scriptcontext.errorhandler()
