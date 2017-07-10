@@ -348,7 +348,7 @@ def DimStyleAnglePrecision(dimstyle, precision=None):
     rc = ds.AngleResolution
     if precision is not None:
         ds.AngleResolution = precision
-        ds.CommitChanges()
+        scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False)
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -381,7 +381,7 @@ def DimStyleArrowSize(dimstyle, size=None):
     rc = ds.ArrowLength
     if size is not None:
         ds.ArrowLength = size
-        ds.CommitChanges()
+        scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False)
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -429,7 +429,7 @@ def DimStyleExtension(dimstyle, extension=None):
     rc = ds.ExtensionLineExtension
     if extension is not None:
         ds.ExtensionLineExtension = extension
-        ds.CommitChanges()
+        scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False)
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -463,7 +463,7 @@ def DimStyleFont(dimstyle, font=None):
     if font:
         newindex = scriptcontext.doc.Fonts.FindOrCreate(font, False, False)
         ds.Font = scriptcontext.doc.Fonts[newindex]
-        ds.CommitChanges()
+        scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False)
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -497,7 +497,7 @@ def DimStyleLeaderArrowSize(dimstyle, size=None):
     rc = ds.LeaderArrowLength
     if size is not None:
         ds.LeaderArrowLength = size
-        ds.CommitChanges()
+        scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False)
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -525,7 +525,7 @@ def DimStyleLengthFactor(dimstyle, factor=None):
     rc = ds.LengthFactor
     if factor is not None:
         ds.LengthFactor = factor
-        ds.CommitChanges()
+        scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False)
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -558,7 +558,7 @@ def DimStyleLinearPrecision(dimstyle, precision=None):
     rc = ds.LengthResolution
     if precision is not None:
         ds.LengthResolution = precision
-        ds.CommitChanges()
+        scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False)
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -616,7 +616,7 @@ def DimStyleNumberFormat(dimstyle, format=None):
         if format==0: ds.LengthFormat = Rhino.DocObjects.DistanceDisplayMode.Decimal
         if format==1: ds.LengthFormat = Rhino.DocObjects.DistanceDisplayMode.Feet
         if format==2: ds.LengthFormat = Rhino.DocObjects.DistanceDisplayMode.FeetAndInches
-        ds.CommitChanges()
+        scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False)
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -649,7 +649,7 @@ def DimStyleOffset(dimstyle, offset=None):
     rc = ds.ExtensionLineOffset
     if offset is not None:
         ds.ExtensionLineOffset = offset
-        ds.CommitChanges()
+        scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False)
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -677,7 +677,7 @@ def DimStylePrefix(dimstyle, prefix=None):
     rc = ds.Prefix
     if prefix is not None:
         ds.Prefix = prefix
-        ds.CommitChanges()
+        scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False)
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -705,7 +705,7 @@ def DimStyleSuffix(dimstyle, suffix=None):
     rc = ds.Suffix
     if suffix is not None:
         ds.Suffix = suffix
-        ds.CommitChanges()
+        scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False)
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -745,7 +745,7 @@ def DimStyleTextAlignment(dimstyle, alignment=None):
         if alignment==1: ds.TextAlignment = Rhino.DocObjects.TextDisplayAlignment.Horizontal
         if alignment==2: ds.TextAlignment = Rhino.DocObjects.TextDisplayAlignment.AboveLine
         if alignment==3: ds.TextAlignment = Rhino.DocObjects.TextDisplayAlignment.InLine
-        ds.CommitChanges()
+        scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False)
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -779,7 +779,7 @@ def DimStyleTextGap(dimstyle, gap=None):
     rc = ds.TextGap
     if gap is not None:
         ds.TextGap = gap
-        ds.CommitChanges()
+        scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False)
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -812,7 +812,7 @@ def DimStyleTextHeight(dimstyle, height=None):
     rc = ds.TextHeight
     if height:
         ds.TextHeight = height
-        ds.CommitChanges()
+        scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False)
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -1140,5 +1140,5 @@ def RenameDimStyle(oldstyle, newstyle):
     ds = scriptcontext.doc.DimStyles.FindName(oldstyle)
     if not ds: return scriptcontext.errorhandler()
     ds.Name = newstyle
-    if ds.CommitChanges(): return newstyle
+    if scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False): return newstyle
     return None
