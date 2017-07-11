@@ -1160,7 +1160,7 @@ def PopupMenu(items, modes=None, point=None, view=None):
       import rhinoscriptsyntax as rs
       items = "Line", "", "Circle", "Arc"
       modes = 2,0,0,0
-      if result>=0: rs.MessageBox(items[result])
+      rs.PopupMenu(items, modes)
     See Also:
       
     """
