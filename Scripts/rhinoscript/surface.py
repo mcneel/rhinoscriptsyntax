@@ -757,6 +757,43 @@ def AddSweep2(rails, shapes, closed=False):
     return rc
 
 
+def AddRailRevSrf(profile, rail, axis, scale_height=False):
+    """Adds a surface created through profile curves that define the surface
+    shape and two curves that defines a surface edge.
+    Parameters:
+      profile (guid): identifier of the profile curve
+      rail (guid): identifier of the rail curve
+      axis ([point, point]): A list of two 3-D points identifying the start point and end point of the rail revolve axis, or a Line
+      scale_height (bool, optional): If True, surface will be locally scaled. Defaults to False
+    Returns:
+      guid: identifier of the new object if successful
+      None: if not successful, or on error
+    Example:
+      import rhinoscriptsyntax as rs
+      profile = rs.GetObject("Select a profile", rs.filter.curve)
+      if profile:
+        rail = rs.GetObject("Select a rail", rs.filter.curve)
+        if rail:
+          rs.AddRailRevSrf(profile, rail, ((0,0,0),(0,0,1)))
+    See Also:
+      AddSweep1
+      CurveDirectionsMatch
+      ReverseCurve
+    """
+    profile_inst = rhutil.coercecurve(profile, -1, True)
+    rail_inst = rhutil.coercecurve(rail, -1, True)
+    axis_start = rhutil.coerce3dpoint(axis[0], True)
+    axis_end = rhutil.coerce3dpoint(axis[1], True)
+
+    line = Rhino.Geometry.Line(axis_start, axis_end)
+    surface = Rhino.Geometry.NurbsSurface.CreateRailRevolvedSurface(profile_inst, rail_inst, line, scale_height)
+
+    if not surface: return scriptcontext.errorhandler()
+    rc = scriptcontext.doc.Objects.AddSurface(surface)
+    scriptcontext.doc.Views.Redraw()
+    return rc
+
+
 def AddTorus(base, major_radius, minor_radius, direction=None):
     """Adds a torus shaped revolved surface to the document
     Parameters:
