@@ -489,6 +489,29 @@ def GetLine(mode=0, point=None, message1=None, message2=None, message3=None):
     if rc==Rhino.Commands.Result.Success: return line.From, line.To
 
 
+def GetLinetype(default_linetype=None, show_by_layer=False):
+    """Displays a dialog box prompting the user to select one linetype
+    Parameters:
+      default_linetype (str, optional):  Optional. The name of the linetype to select. If omitted, the current linetype will be selected.
+      show_by_layer (bool, optional): If True, the "by Layer" linetype will show. Defaults to False.
+    Returns:
+      str: The names of selected linetype if successful
+    Example:
+      import rhinoscriptsyntax as rs
+      linetype = rs.GetLinetype()
+      if linetype: print(linetype)
+    See Also:
+      GetLayer
+    """
+    lt_instance = scriptcontext.doc.Linetypes.CurrentLinetype
+    if default_linetype:
+        lt_new = scriptcontext.doc.Linetypes.FindName(default_linetype)
+        if lt_new is not None: lt_instance = lt_new
+    rc, new_lt_index = Rhino.UI.Dialogs.ShowSelectLinetypeDialog(lt_instance.Index, show_by_layer)
+    if rc == False: return None
+    linetype = scriptcontext.doc.Linetypes[new_lt_index]
+    return linetype.Name
+
 def GetMeshFaces(object_id, message="", min_count=1, max_count=0):
     """Prompts the user to pick one or more mesh faces
     Parameters:
