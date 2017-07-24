@@ -2150,6 +2150,41 @@ def RebuildSurface(object_id, degree=(3,3), pointcount=(10,10)):
     return rc
 
 
+def RemoveSurfaceKnot(surface, uv_parameter, v_direction):
+    """Deletes a knot from a surface object.
+    Parameters:
+      surface (guid): The reference of the surface object
+      uv_parameter (list(number, number)): An indexable item containing a U,V parameter on the surface. List, tuples and UVIntervals will work.
+        Note, if the parameter is not equal to one of the existing knots, then the knot closest to the specified parameter will be removed.
+      v_direction (bool): if True, or 1, the V direction will be addressed. If False, or 0, the U direction.
+    Returns:
+      bool: True of False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+
+      srf_info = rs.GetSurfaceObject()
+      if srf_info:
+          srf_id = srf_info[0]
+          srf_param = srf_info[4]
+          rs.RemoveSurfaceKnot(srf_id, srf_param, 1)
+    See Also:
+      RemoveSurfaceKnot
+    """
+    srf_inst = rhutil.coercesurface(surface, True)
+    u_param = uv_parameter[0]
+    v_param = uv_parameter[1]
+    success, n_u_param, n_v_param = srf_inst.GetSurfaceParameterFromNurbsFormParameter(u_param, v_param)
+    if not success: return False
+    n_srf = srf_inst.ToNurbsSurface()
+    if not n_srf: return False
+    knots = n_srf.KnotsV if v_direction else n_srf.KnotsU
+    success = knots.RemoveKnotsAt(n_u_param, n_v_param)
+    if not success: return False
+    scriptcontext.doc.Objects.Replace(surface, n_srf)
+    scriptcontext.doc.Views.Redraw()
+    return True
+
+
 def ReverseSurface(surface_id, direction):
     """Reverses U or V directions of a surface, or swaps (transposes) U and V
     directions.
