@@ -493,7 +493,7 @@ def GetObjectsEx(message=None, filter=0, group=True, preselect=False, select=Fal
     return rc
 
 
-def GetPointCoordinates(message="select points", preselect=False):
+def GetPointCoordinates(message="Select points", preselect=False):
     """Prompts the user to select one or more point objects.
     Parameters:
       message (str, optional): a prompt message.
@@ -519,7 +519,7 @@ def GetPointCoordinates(message="select points", preselect=False):
     return rc
 
 
-def GetSurfaceObject(message="select surface", preselect=False, select=False):
+def GetSurfaceObject(message="Select surface", preselect=False, select=False):
     """Prompts the user to select a single surface
     Parameters:
       message(str, optional): prompt displayed
