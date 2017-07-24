@@ -4,6 +4,7 @@ import Rhino
 import math
 import System.Guid, System.Array, System.Enum
 
+
 def AddArc(plane, radius, angle_degrees):
     """Adds an arc curve to the document
     Parameters:
@@ -3631,6 +3632,38 @@ def RebuildCurve(curve_id, degree=3, point_count=10):
     newcurve = curve.Rebuild(point_count, degree, False)
     if not newcurve: return False
     scriptcontext.doc.Objects.Replace(curve_id, newcurve)
+    scriptcontext.doc.Views.Redraw()
+    return True
+
+
+def RemoveCurveKnot(curve, parameter):
+    """Deletes a knot from a curve object.
+    Parameters:
+      curve (guid): The reference of the source object
+      parameter (number): The parameter on the curve. Note, if the parameter is not equal to one
+                      of the existing knots, then the knot closest to the specified parameter
+                      will be removed.
+    Returns:
+      bool: True of False indicating success or failure
+    Example:
+      import rhinoscriptsyntax as rs
+
+      crv_info = rs.GetCurveObject("Select curve near knot to be removed")
+      if crv_info:
+          crv_id = crv_info[0]
+          crv_param = crv_info[4]
+          rs.RemoveCurveKnot(crv_id, crv_param)
+    See Also:
+      RemoveSurfaceKnot
+    """
+    curve_inst = rhutil.coercecurve(curve, -1, True)
+    success, n_param = curve_inst.GetCurveParameterFromNurbsFormParameter(parameter)
+    if not success: return False
+    n_curve = curve_inst.ToNurbsCurve()
+    if not n_curve: return False
+    success = n_curve.Knots.RemoveKnotAt(n_param)
+    if not success: return False
+    scriptcontext.doc.Objects.Replace(curve, n_curve)
     scriptcontext.doc.Views.Redraw()
     return True
 
