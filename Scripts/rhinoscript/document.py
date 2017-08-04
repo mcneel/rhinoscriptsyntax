@@ -2,7 +2,7 @@ import scriptcontext
 import Rhino
 import System.Enum, System.Drawing.Size
 import System.IO
-import utility as rhutil
+#import utility as rhutil
 
 def CreatePreviewImage(filename, view=None, size=None, flags=0, wireframe=False):
     """Create a bitmap preview image of the current model
@@ -281,6 +281,303 @@ def RenderResolution(resolution=None):
         settings.ImageSize = System.Drawing.Size(resolution[0], resolution[1])
         scriptcontext.doc.RenderSettings = settings
     return rc.Width, rc.Height
+
+
+def RenderMeshDensity(density=None):
+    """Returns or sets the render mesh density property of the active document.
+        For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
+    Parameters:
+      density (number, optional): the render mesh density, which is a number between 0.0 and 1.0.
+    Returns:
+      tuple(number, number): if density is not specified, the current render mesh density if successful.
+      tuple(number, number): if density is specified, the previous render mesh density if successful.
+      None: if not successful, or on error.
+    Example:
+      print("Quality: %" % Rhino.RenderMeshQuality)
+      print("Mesh density: %" % Rhino.RenderMeshDensity)
+      print("Maximum angle: %" % Rhino.RenderMeshMaxAngle)
+      print("Maximum aspect ratio: %" % Rhino.RenderMeshMaxAspectRatio)
+      print("Minimun edge length: %" % Rhino.RenderMeshMinEdgeLength)
+      print("Maximum edge length: %" % Rhino.RenderMeshMaxEdgeLength)
+      print("Maximum distance, edge to surface: %" % Rhino.RenderMeshMaxDistEdgeToSrf)
+      print("Minumum initial grid quads: %" % Rhino.RenderMeshMinInitialGridQuads)
+      print("Other settings: %" % Rhino.RenderMeshSettings)
+    See Also:
+      RenderMeshDensity
+      RenderMeshMaxAngle
+      RenderMeshMaxAspectRatio
+      RenderMeshMaxDistEdgeToSrf
+      RenderMeshMaxEdgeLength
+      RenderMeshMinEdgeLength
+      RenderMeshMinInitialGridQuads
+      RenderMeshQuality
+      RenderMeshSettings
+    """
+    return Rhino.Geometry.MeshingParameters.DocumentCurrentSetting(scriptcontext.doc).RelativeTolerance
+
+
+def RenderMeshMaxAngle():
+    """Returns or sets the render mesh maximum angle property of the active document.
+      For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
+    Parameters:
+      density (number, optional): the render mesh density, which is a number between 0.0 and 1.0.
+    Returns:
+      tuple(number, number): if density is not specified, the current render mesh density if successful.
+      tuple(number, number): if density is specified, the previous render mesh density if successful.
+      None: if not successful, or on error.
+    Example:
+      print("Quality: %" % Rhino.RenderMeshQuality)
+      print("Mesh density: %" % Rhino.RenderMeshDensity)
+      print("Maximum angle: %" % Rhino.RenderMeshMaxAngle)
+      print("Maximum aspect ratio: %" % Rhino.RenderMeshMaxAspectRatio)
+      print("Minimun edge length: %" % Rhino.RenderMeshMinEdgeLength)
+      print("Maximum edge length: %" % Rhino.RenderMeshMaxEdgeLength)
+      print("Maximum distance, edge to surface: %" % Rhino.RenderMeshMaxDistEdgeToSrf)
+      print("Minumum initial grid quads: %" % Rhino.RenderMeshMinInitialGridQuads)
+      print("Other settings: %" % Rhino.RenderMeshSettings)
+    See Also:
+      RenderMeshDensity
+      RenderMeshMaxAngle
+      RenderMeshMaxAspectRatio
+      RenderMeshMaxDistEdgeToSrf
+      RenderMeshMaxEdgeLength
+      RenderMeshMinEdgeLength
+      RenderMeshMinInitialGridQuads
+      RenderMeshQuality
+      RenderMeshSettings
+    """
+    pass
+
+
+def RenderMeshMaxAspectRatio():
+    """Returns or sets the render mesh maximum aspect ratio property of the active document.
+      For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
+     Parameters:
+      density (number, optional): the render mesh density, which is a number between 0.0 and 1.0.
+    Returns:
+      tuple(number, number): if density is not specified, the current render mesh density if successful.
+      tuple(number, number): if density is specified, the previous render mesh density if successful.
+      None: if not successful, or on error.
+    Example:
+      print("Quality: %" % Rhino.RenderMeshQuality)
+      print("Mesh density: %" % Rhino.RenderMeshDensity)
+      print("Maximum angle: %" % Rhino.RenderMeshMaxAngle)
+      print("Maximum aspect ratio: %" % Rhino.RenderMeshMaxAspectRatio)
+      print("Minimun edge length: %" % Rhino.RenderMeshMinEdgeLength)
+      print("Maximum edge length: %" % Rhino.RenderMeshMaxEdgeLength)
+      print("Maximum distance, edge to surface: %" % Rhino.RenderMeshMaxDistEdgeToSrf)
+      print("Minumum initial grid quads: %" % Rhino.RenderMeshMinInitialGridQuads)
+      print("Other settings: %" % Rhino.RenderMeshSettings)
+    See Also:
+      RenderMeshDensity
+      RenderMeshMaxAngle
+      RenderMeshMaxAspectRatio
+      RenderMeshMaxDistEdgeToSrf
+      RenderMeshMaxEdgeLength
+      RenderMeshMinEdgeLength
+      RenderMeshMinInitialGridQuads
+      RenderMeshQuality
+      RenderMeshSettings
+    """
+    pass
+
+
+def RenderMeshMaxDistEdgeToSrf():
+    """Returns or sets the render mesh maximum distance, edge to surface parameter of the active document.
+      For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
+    Parameters:
+      density (number, optional): the render mesh density, which is a number between 0.0 and 1.0.
+    Returns:
+      tuple(number, number): if density is not specified, the current render mesh density if successful.
+      tuple(number, number): if density is specified, the previous render mesh density if successful.
+      None: if not successful, or on error.
+    Example:
+      print("Quality: %" % Rhino.RenderMeshQuality)
+      print("Mesh density: %" % Rhino.RenderMeshDensity)
+      print("Maximum angle: %" % Rhino.RenderMeshMaxAngle)
+      print("Maximum aspect ratio: %" % Rhino.RenderMeshMaxAspectRatio)
+      print("Minimun edge length: %" % Rhino.RenderMeshMinEdgeLength)
+      print("Maximum edge length: %" % Rhino.RenderMeshMaxEdgeLength)
+      print("Maximum distance, edge to surface: %" % Rhino.RenderMeshMaxDistEdgeToSrf)
+      print("Minumum initial grid quads: %" % Rhino.RenderMeshMinInitialGridQuads)
+      print("Other settings: %" % Rhino.RenderMeshSettings)
+    See Also:
+      RenderMeshDensity
+      RenderMeshMaxAngle
+      RenderMeshMaxAspectRatio
+      RenderMeshMaxDistEdgeToSrf
+      RenderMeshMaxEdgeLength
+      RenderMeshMinEdgeLength
+      RenderMeshMinInitialGridQuads
+      RenderMeshQuality
+      RenderMeshSettings
+    """
+    pass
+
+
+def RenderMeshMaxEdgeLength():
+    """Returns or sets the render mesh maximum edge length parameter of the active document.
+      For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
+    Parameters:
+      density (number, optional): the render mesh density, which is a number between 0.0 and 1.0.
+    Returns:
+      tuple(number, number): if density is not specified, the current render mesh density if successful.
+      tuple(number, number): if density is specified, the previous render mesh density if successful.
+      None: if not successful, or on error.
+    Example:
+      print("Quality: %" % Rhino.RenderMeshQuality)
+      print("Mesh density: %" % Rhino.RenderMeshDensity)
+      print("Maximum angle: %" % Rhino.RenderMeshMaxAngle)
+      print("Maximum aspect ratio: %" % Rhino.RenderMeshMaxAspectRatio)
+      print("Minimun edge length: %" % Rhino.RenderMeshMinEdgeLength)
+      print("Maximum edge length: %" % Rhino.RenderMeshMaxEdgeLength)
+      print("Maximum distance, edge to surface: %" % Rhino.RenderMeshMaxDistEdgeToSrf)
+      print("Minumum initial grid quads: %" % Rhino.RenderMeshMinInitialGridQuads)
+      print("Other settings: %" % Rhino.RenderMeshSettings)
+    See Also:
+      RenderMeshDensity
+      RenderMeshMaxAngle
+      RenderMeshMaxAspectRatio
+      RenderMeshMaxDistEdgeToSrf
+      RenderMeshMaxEdgeLength
+      RenderMeshMinEdgeLength
+      RenderMeshMinInitialGridQuads
+      RenderMeshQuality
+      RenderMeshSettings
+    """
+    pass
+
+
+def RenderMeshMinEdgeLength():
+    """Returns or sets the render mesh minimum edge length parameter of the active document.
+      For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
+        Parameters:
+      density (number, optional): the render mesh density, which is a number between 0.0 and 1.0.
+    Returns:
+      tuple(number, number): if density is not specified, the current render mesh density if successful.
+      tuple(number, number): if density is specified, the previous render mesh density if successful.
+      None: if not successful, or on error.
+    Example:
+      print("Quality: %" % Rhino.RenderMeshQuality)
+      print("Mesh density: %" % Rhino.RenderMeshDensity)
+      print("Maximum angle: %" % Rhino.RenderMeshMaxAngle)
+      print("Maximum aspect ratio: %" % Rhino.RenderMeshMaxAspectRatio)
+      print("Minimun edge length: %" % Rhino.RenderMeshMinEdgeLength)
+      print("Maximum edge length: %" % Rhino.RenderMeshMaxEdgeLength)
+      print("Maximum distance, edge to surface: %" % Rhino.RenderMeshMaxDistEdgeToSrf)
+      print("Minumum initial grid quads: %" % Rhino.RenderMeshMinInitialGridQuads)
+      print("Other settings: %" % Rhino.RenderMeshSettings)
+    See Also:
+      RenderMeshDensity
+      RenderMeshMaxAngle
+      RenderMeshMaxAspectRatio
+      RenderMeshMaxDistEdgeToSrf
+      RenderMeshMaxEdgeLength
+      RenderMeshMinEdgeLength
+      RenderMeshMinInitialGridQuads
+      RenderMeshQuality
+      RenderMeshSettings
+    """
+    pass
+
+
+def RenderMeshMinInitialGridQuads():
+    """Returns or sets the render mesh minimum initial grid quads parameter of the active document.
+      For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
+    Parameters:
+      density (number, optional): the render mesh density, which is a number between 0.0 and 1.0.
+    Returns:
+      tuple(number, number): if density is not specified, the current render mesh density if successful.
+      tuple(number, number): if density is specified, the previous render mesh density if successful.
+      None: if not successful, or on error.
+    Example:
+      print("Quality: %" % Rhino.RenderMeshQuality)
+      print("Mesh density: %" % Rhino.RenderMeshDensity)
+      print("Maximum angle: %" % Rhino.RenderMeshMaxAngle)
+      print("Maximum aspect ratio: %" % Rhino.RenderMeshMaxAspectRatio)
+      print("Minimun edge length: %" % Rhino.RenderMeshMinEdgeLength)
+      print("Maximum edge length: %" % Rhino.RenderMeshMaxEdgeLength)
+      print("Maximum distance, edge to surface: %" % Rhino.RenderMeshMaxDistEdgeToSrf)
+      print("Minumum initial grid quads: %" % Rhino.RenderMeshMinInitialGridQuads)
+      print("Other settings: %" % Rhino.RenderMeshSettings)
+    See Also:
+      RenderMeshDensity
+      RenderMeshMaxAngle
+      RenderMeshMaxAspectRatio
+      RenderMeshMaxDistEdgeToSrf
+      RenderMeshMaxEdgeLength
+      RenderMeshMinEdgeLength
+      RenderMeshMinInitialGridQuads
+      RenderMeshQuality
+      RenderMeshSettings
+    """
+    pass
+
+
+def RenderMeshQuality():
+    """Returns or sets the render mesh quality of the active document.
+        For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
+      Parameters:
+      density (number, optional): the render mesh density, which is a number between 0.0 and 1.0.
+    Returns:
+      tuple(number, number): if density is not specified, the current render mesh density if successful.
+      tuple(number, number): if density is specified, the previous render mesh density if successful.
+      None: if not successful, or on error.
+    Example:
+      print("Quality: %" % Rhino.RenderMeshQuality)
+      print("Mesh density: %" % Rhino.RenderMeshDensity)
+      print("Maximum angle: %" % Rhino.RenderMeshMaxAngle)
+      print("Maximum aspect ratio: %" % Rhino.RenderMeshMaxAspectRatio)
+      print("Minimun edge length: %" % Rhino.RenderMeshMinEdgeLength)
+      print("Maximum edge length: %" % Rhino.RenderMeshMaxEdgeLength)
+      print("Maximum distance, edge to surface: %" % Rhino.RenderMeshMaxDistEdgeToSrf)
+      print("Minumum initial grid quads: %" % Rhino.RenderMeshMinInitialGridQuads)
+      print("Other settings: %" % Rhino.RenderMeshSettings)
+    See Also:
+      RenderMeshDensity
+      RenderMeshMaxAngle
+      RenderMeshMaxAspectRatio
+      RenderMeshMaxDistEdgeToSrf
+      RenderMeshMaxEdgeLength
+      RenderMeshMinEdgeLength
+      RenderMeshMinInitialGridQuads
+      RenderMeshQuality
+      RenderMeshSettings
+    """
+    pass
+
+
+def RenderMeshSettings():
+    """Returns or sets the render mesh settings of the active document.
+      For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
+    Parameters:
+      density (number, optional): the render mesh density, which is a number between 0.0 and 1.0.
+    Returns:
+      tuple(number, number): if density is not specified, the current render mesh density if successful.
+      tuple(number, number): if density is specified, the previous render mesh density if successful.
+      None: if not successful, or on error.
+    Example:
+      print("Quality: %" % Rhino.RenderMeshQuality)
+      print("Mesh density: %" % Rhino.RenderMeshDensity)
+      print("Maximum angle: %" % Rhino.RenderMeshMaxAngle)
+      print("Maximum aspect ratio: %" % Rhino.RenderMeshMaxAspectRatio)
+      print("Minimun edge length: %" % Rhino.RenderMeshMinEdgeLength)
+      print("Maximum edge length: %" % Rhino.RenderMeshMaxEdgeLength)
+      print("Maximum distance, edge to surface: %" % Rhino.RenderMeshMaxDistEdgeToSrf)
+      print("Minumum initial grid quads: %" % Rhino.RenderMeshMinInitialGridQuads)
+      print("Other settings: %" % Rhino.RenderMeshSettings)
+    See Also:
+      RenderMeshDensity
+      RenderMeshMaxAngle
+      RenderMeshMaxAspectRatio
+      RenderMeshMaxDistEdgeToSrf
+      RenderMeshMaxEdgeLength
+      RenderMeshMinEdgeLength
+      RenderMeshMinInitialGridQuads
+      RenderMeshQuality
+      RenderMeshSettings
+    """
+    pass
 
 
 def RenderSettings(settings=None):
