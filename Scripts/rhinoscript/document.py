@@ -615,7 +615,7 @@ def RenderMeshSettings(settings=None):
     """Returns or sets the render mesh settings of the active document.
       For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
     Parameters:
-      density (number, optional): the render mesh settings, which is a bit-coded number that allows or disallows certain features.
+      settings (number, optional): the render mesh settings, which is a bit-coded number that allows or disallows certain features.
       The bits can be added together in any combination to form a value between 0 and 7.  The bit values are as follows:
         0: No settings enabled.
         1: Refine mesh enabled.
