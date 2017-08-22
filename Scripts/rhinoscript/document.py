@@ -2,7 +2,8 @@ import scriptcontext
 import Rhino
 import System.Enum, System.Drawing.Size
 import System.IO
-#import utility as rhutil
+import utility as rhutil
+import math
 
 def CreatePreviewImage(filename, view=None, size=None, flags=0, wireframe=False):
     """Create a bitmap preview image of the current model
@@ -283,15 +284,19 @@ def RenderResolution(resolution=None):
     return rc.Width, rc.Height
 
 
+def _SetRenderMeshAndUpdateStyle(current):
+    scriptcontext.doc.SetCustomMeshingParameters(current)
+    scriptcontext.doc.MeshingParameterStyle = Rhino.Geometry.MeshingParameterStyle.Custom
+
+
 def RenderMeshDensity(density=None):
     """Returns or sets the render mesh density property of the active document.
         For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
     Parameters:
-      density (number, optional): the render mesh density, which is a number between 0.0 and 1.0.
+      density (number, optional): the new render mesh density, which is a number between 0.0 and 1.0.
     Returns:
-      tuple(number, number): if density is not specified, the current render mesh density if successful.
-      tuple(number, number): if density is specified, the previous render mesh density if successful.
-      None: if not successful, or on error.
+      number: if density is not specified, the current render mesh density if successful.
+      number: if density is specified, the previous render mesh density if successful.
     Example:
       print("Quality: %" % Rhino.RenderMeshQuality)
       print("Mesh density: %" % Rhino.RenderMeshDensity)
@@ -313,17 +318,23 @@ def RenderMeshDensity(density=None):
       RenderMeshQuality
       RenderMeshSettings
     """
-    return Rhino.Geometry.MeshingParameters.DocumentCurrentSetting(scriptcontext.doc).RelativeTolerance
+    current = scriptcontext.doc.GetCurrentMeshingParameters()
+    rc = current.RelativeTolerance
+    if density is not None:
+        if Rhino.RhinoMath.Clamp(density, 0.0, 1.0) != density: return None
+        current.RelativeTolerance = density
+        _SetRenderMeshAndUpdateStyle(current)
+    return rc
 
 
-def RenderMeshMaxAngle():
-    """Returns or sets the render mesh maximum angle property of the active document.
+def RenderMeshMaxAngle(angle_degrees=None):
+    """Returns or sets the render mesh maximum angle property of the active document.  
       For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
     Parameters:
-      density (number, optional): the render mesh density, which is a number between 0.0 and 1.0.
+      angle_degrees (number, optional): the new maximum angle, which is a positive number in degrees.
     Returns:
-      tuple(number, number): if density is not specified, the current render mesh density if successful.
-      tuple(number, number): if density is specified, the previous render mesh density if successful.
+      number: if angle_degrees is not specified, the current maximum angle if successful.
+      number: if angle_degrees is specified, the previous maximum angle if successful.
       None: if not successful, or on error.
     Example:
       print("Quality: %" % Rhino.RenderMeshQuality)
@@ -346,17 +357,23 @@ def RenderMeshMaxAngle():
       RenderMeshQuality
       RenderMeshSettings
     """
-    pass
+    current = scriptcontext.doc.GetCurrentMeshingParameters()
+    rc = math.degrees(current.RefineAngle)
+    if angle_degrees is not None:
+        if angle_degrees < 0: return None
+        current.RefineAngle = math.radians(angle_degrees)
+        _SetRenderMeshAndUpdateStyle(current)
+    return rc
 
 
-def RenderMeshMaxAspectRatio():
+def RenderMeshMaxAspectRatio(ratio=None):
     """Returns or sets the render mesh maximum aspect ratio property of the active document.
       For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
      Parameters:
-      density (number, optional): the render mesh density, which is a number between 0.0 and 1.0.
+      ratio (number, optional): the render mesh maximum aspect ratio.  The suggested range, when not zero, is from 1 to 100.
     Returns:
-      tuple(number, number): if density is not specified, the current render mesh density if successful.
-      tuple(number, number): if density is specified, the previous render mesh density if successful.
+      number: if ratio is not specified, the current render mesh maximum aspect ratio if successful.
+      number: if ratio is specified, the previous render mesh maximum aspect ratio if successful.
       None: if not successful, or on error.
     Example:
       print("Quality: %" % Rhino.RenderMeshQuality)
@@ -379,17 +396,22 @@ def RenderMeshMaxAspectRatio():
       RenderMeshQuality
       RenderMeshSettings
     """
-    pass
+    current = scriptcontext.doc.GetCurrentMeshingParameters()
+    rc = current.GridAspectRatio
+    if ratio is not None:
+        current.GridAspectRatio = ratio
+        _SetRenderMeshAndUpdateStyle(current)
+    return rc
 
 
-def RenderMeshMaxDistEdgeToSrf():
+def RenderMeshMaxDistEdgeToSrf(distance=None):
     """Returns or sets the render mesh maximum distance, edge to surface parameter of the active document.
       For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
     Parameters:
-      density (number, optional): the render mesh density, which is a number between 0.0 and 1.0.
+      distance (number, optional): the render mesh maximum distance, edge to surface.
     Returns:
-      tuple(number, number): if density is not specified, the current render mesh density if successful.
-      tuple(number, number): if density is specified, the previous render mesh density if successful.
+      number: if distance is not specified, the current render mesh maximum distance, edge to surface if successful.
+      number: if distance is specified, the previous render mesh maximum distance, edge to surface if successful.
       None: if not successful, or on error.
     Example:
       print("Quality: %" % Rhino.RenderMeshQuality)
@@ -412,17 +434,22 @@ def RenderMeshMaxDistEdgeToSrf():
       RenderMeshQuality
       RenderMeshSettings
     """
-    pass
+    current = scriptcontext.doc.GetCurrentMeshingParameters()
+    rc = current.Tolerance
+    if distance is not None:
+        current.Tolerance = distance
+        _SetRenderMeshAndUpdateStyle(current)
+    return rc
 
 
-def RenderMeshMaxEdgeLength():
+def RenderMeshMaxEdgeLength(distance=None):
     """Returns or sets the render mesh maximum edge length parameter of the active document.
       For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
     Parameters:
-      density (number, optional): the render mesh density, which is a number between 0.0 and 1.0.
+      distance (number, optional): the render mesh maximum edge length.
     Returns:
-      tuple(number, number): if density is not specified, the current render mesh density if successful.
-      tuple(number, number): if density is specified, the previous render mesh density if successful.
+      number: if distance is not specified, the current render mesh maximum edge length if successful.
+      number: if distance is specified, the previous render mesh maximum edge length if successful.
       None: if not successful, or on error.
     Example:
       print("Quality: %" % Rhino.RenderMeshQuality)
@@ -445,17 +472,22 @@ def RenderMeshMaxEdgeLength():
       RenderMeshQuality
       RenderMeshSettings
     """
-    pass
+    current = scriptcontext.doc.GetCurrentMeshingParameters()
+    rc = current.MaximumEdgeLength
+    if distance is not None:
+        current.MaximumEdgeLength = distance
+        _SetRenderMeshAndUpdateStyle(current)
+    return rc
 
 
-def RenderMeshMinEdgeLength():
+def RenderMeshMinEdgeLength(distance=None):
     """Returns or sets the render mesh minimum edge length parameter of the active document.
       For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
         Parameters:
-      density (number, optional): the render mesh density, which is a number between 0.0 and 1.0.
+      distance (number, optional): the render mesh minimum edge length.
     Returns:
-      tuple(number, number): if density is not specified, the current render mesh density if successful.
-      tuple(number, number): if density is specified, the previous render mesh density if successful.
+      number: if distance is not specified, the current render mesh minimum edge length if successful.
+      number: if distance is specified, the previous render mesh minimum edge length if successful.
       None: if not successful, or on error.
     Example:
       print("Quality: %" % Rhino.RenderMeshQuality)
@@ -478,17 +510,22 @@ def RenderMeshMinEdgeLength():
       RenderMeshQuality
       RenderMeshSettings
     """
-    pass
+    current = scriptcontext.doc.GetCurrentMeshingParameters()
+    rc = current.MinimumEdgeLength
+    if distance is not None:
+        current.MinimumEdgeLength = distance
+        _SetRenderMeshAndUpdateStyle(current)
+    return rc
 
 
-def RenderMeshMinInitialGridQuads():
+def RenderMeshMinInitialGridQuads(quads=None):
     """Returns or sets the render mesh minimum initial grid quads parameter of the active document.
       For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
     Parameters:
-      density (number, optional): the render mesh density, which is a number between 0.0 and 1.0.
+      quads (number, optional): the render mesh minimum initial grid quads. The suggested range is from 0 to 10000.
     Returns:
-      tuple(number, number): if density is not specified, the current render mesh density if successful.
-      tuple(number, number): if density is specified, the previous render mesh density if successful.
+      number: if quads is not specified, the current render mesh minimum initial grid quads if successful.
+      number: if quads is specified, the previous render mesh minimum initial grid quads if successful.
       None: if not successful, or on error.
     Example:
       print("Quality: %" % Rhino.RenderMeshQuality)
@@ -511,17 +548,25 @@ def RenderMeshMinInitialGridQuads():
       RenderMeshQuality
       RenderMeshSettings
     """
-    pass
+    current = scriptcontext.doc.GetCurrentMeshingParameters()
+    rc = current.GridMinCount
+    if distance is not None:
+        current.GridMinCount = distance
+        _SetRenderMeshAndUpdateStyle(current)
+    return rc
 
 
-def RenderMeshQuality():
+def RenderMeshQuality(quality=None):
     """Returns or sets the render mesh quality of the active document.
         For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
       Parameters:
-      density (number, optional): the render mesh density, which is a number between 0.0 and 1.0.
+      quality (number, optional): the render mesh quality, either:
+        0: Jagged and faster.  Objects may look jagged, but they should shade and render relatively quickly.
+        1: Smooth and slower.  Objects should look smooth, but they may take a very long time to shade and render.
+        2: Custom.
     Returns:
-      tuple(number, number): if density is not specified, the current render mesh density if successful.
-      tuple(number, number): if density is specified, the previous render mesh density if successful.
+      number: if quality is not specified, the current render mesh quality if successful.
+      number: if quality is specified, the previous render mesh quality if successful.
       None: if not successful, or on error.
     Example:
       print("Quality: %" % Rhino.RenderMeshQuality)
@@ -544,17 +589,41 @@ def RenderMeshQuality():
       RenderMeshQuality
       RenderMeshSettings
     """
-    pass
+    current = scriptcontext.doc.MeshingParameterStyle
+    if current == Rhino.Geometry.MeshingParameterStyle.Fast:
+        rc = 0
+    elif current == Rhino.Geometry.MeshingParameterStyle.Quality:
+        rc = 1
+    elif current == Rhino.Geometry.MeshingParameterStyle.Custom:
+        rc = 2
+    else:
+        rc = None
+    if quality is not None:
+        if quality == 0:
+            new_value = Rhino.Geometry.MeshingParameterStyle.Fast
+        elif quality == 1:
+            new_value = Rhino.Geometry.MeshingParameterStyle.Quality
+        elif quality == 2:
+            new_value = Rhino.Geometry.MeshingParameterStyle.Custom
+        else:
+            return None
+        scriptcontext.doc.MeshingParameterStyle = new_value
+    return rc
 
 
-def RenderMeshSettings():
+def RenderMeshSettings(settings=None):
     """Returns or sets the render mesh settings of the active document.
       For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
     Parameters:
-      density (number, optional): the render mesh density, which is a number between 0.0 and 1.0.
+      density (number, optional): the render mesh settings, which is a bit-coded number that allows or disallows certain features.
+      The bits can be added together in any combination to form a value between 0 and 7.  The bit values are as follows:
+        0: No settings enabled.
+        1: Refine mesh enabled.
+        2: Jagged seams enabled.
+        4: Simple planes enabled.
     Returns:
-      tuple(number, number): if density is not specified, the current render mesh density if successful.
-      tuple(number, number): if density is specified, the previous render mesh density if successful.
+      number: if settings is not specified, the current render mesh settings if successful.
+      number: if settings is specified, the previous render mesh settings if successful.
       None: if not successful, or on error.
     Example:
       print("Quality: %" % Rhino.RenderMeshQuality)
@@ -577,7 +646,19 @@ def RenderMeshSettings():
       RenderMeshQuality
       RenderMeshSettings
     """
-    pass
+    current = scriptcontext.doc.GetCurrentMeshingParameters()
+    rc = 0
+    if current.RefineGrid: rc += 1
+    if current.JaggedSeams: rc += 2
+    if current.SimplePlanes: rc += 4
+    if current.TextureRange == Rhino.Geometry.MeshingParameterTextureRange.PackedScaledNormalized: rc += 8
+    if settings is not None:
+        current.RefineGrid = (settings & 1)
+        current.JaggedSeams = (settings & 2)
+        current.SimplePlanes = (settings & 4)
+        current.TextureRange = Rhino.Geometry.MeshingParameterTextureRange.PackedScaledNormalized if (settings & 8) else Rhino.Geometry.MeshingParameterTextureRange.UnpackedUnscaledNormalized
+        _SetRenderMeshAndUpdateStyle(current)
+    return rc
 
 
 def RenderSettings(settings=None):
