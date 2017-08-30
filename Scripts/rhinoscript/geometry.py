@@ -308,6 +308,28 @@ def BoundingBox(objects, view_or_plane=None, in_world_coords=True):
     return corners
 
 
+def CompareGeometry(first, second):
+    """Compares two objects to determine if they are geometrically identical.
+    Parameters:
+      first (guid|geometry): The identifier of the first object to compare.
+      second (guid|geometry): The identifier of the second object to compare.
+    Returns:
+      True if the objects are geometrically identical, otherwise False.
+    Example:
+      import rhinoscriptsyntax as rs
+      object1 = rs.GetObject("Select first object")
+      object2 = rs.GetObject("Select second object")
+      if object:
+      print "Objects are identical" if rs.CompareGeometry(object1, object2) else "Objects differ"
+    See Also:
+      
+    """
+    first_g = rhutil.coercegeometry(first)
+    second_g = rhutil.coercegeometry(second)
+
+    return Rhino.Geometry.GeometryBase.Equals(first_g, second_g)
+
+
 def ExplodeText(text_id, delete=False):
     """Creates outline curves for a given text entity
     Parameters:
