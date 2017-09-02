@@ -1279,3 +1279,19 @@ def StringBox(message=None, default_value=None, title=None):
     """
     rc, text = Rhino.UI.Dialogs.ShowEditBox(title, message, default_value, False)
     if rc: return text
+
+
+def TextOut(message=None, title=None):
+    """Display a dialog text dialog box similar to the one used by the _What command.
+    Parameters:
+      message (str): a message
+      title (str, optional): the message title
+    Returns:
+      None: in any case
+    Example:
+      import rhinoscriptsyntax as rs
+      rs.TextOut("This is a long string..." )
+    See Also:
+      MessagBox
+    """
+    rc, text = Rhino.UI.Dialogs.ShowTextDialog(message, title)
