@@ -1282,7 +1282,7 @@ def StringBox(message=None, default_value=None, title=None):
 
 
 def TextOut(message=None, title=None):
-    """Display a dialog text dialog box similar to the one used by the _What command.
+    """Display a text dialog box similar to the one used by the _What command.
     Parameters:
       message (str): a message
       title (str, optional): the message title
