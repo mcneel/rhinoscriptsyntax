@@ -320,14 +320,14 @@ def CompareGeometry(first, second):
       object1 = rs.GetObject("Select first object")
       object2 = rs.GetObject("Select second object")
       if object:
-      print "Objects are identical" if rs.CompareGeometry(object1, object2) else "Objects differ"
+      print("Objects are identical" if rs.CompareGeometry(object1, object2) else "Objects differ")
     See Also:
       
     """
-    first_g = rhutil.coercegeometry(first)
-    second_g = rhutil.coercegeometry(second)
+    first_g = rhutil.coercegeometry(first, True)
+    second_g = rhutil.coercegeometry(second, True)
 
-    return Rhino.Geometry.GeometryBase.Equals(first_g, second_g)
+    return Rhino.Geometry.GeometryBase.GeometryEquals(first_g, second_g)
 
 
 def ExplodeText(text_id, delete=False):
