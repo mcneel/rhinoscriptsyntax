@@ -298,15 +298,16 @@ def RenderMeshDensity(density=None):
       number: if density is not specified, the current render mesh density if successful.
       number: if density is specified, the previous render mesh density if successful.
     Example:
-      print("Quality: %" % Rhino.RenderMeshQuality)
-      print("Mesh density: %" % Rhino.RenderMeshDensity)
-      print("Maximum angle: %" % Rhino.RenderMeshMaxAngle)
-      print("Maximum aspect ratio: %" % Rhino.RenderMeshMaxAspectRatio)
-      print("Minimun edge length: %" % Rhino.RenderMeshMinEdgeLength)
-      print("Maximum edge length: %" % Rhino.RenderMeshMaxEdgeLength)
-      print("Maximum distance, edge to surface: %" % Rhino.RenderMeshMaxDistEdgeToSrf)
-      print("Minumum initial grid quads: %" % Rhino.RenderMeshMinInitialGridQuads)
-      print("Other settings: %" % Rhino.RenderMeshSettings)
+import rhinoscriptsyntax as  rs
+print("Quality: %s" % rs.RenderMeshQuality())
+print("Mesh density: %s" % rs.RenderMeshDensity())
+print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
+print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
+print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
+print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
+print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
+print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
+print("Other settings: %s" % rs.RenderMeshSettings())
     See Also:
       RenderMeshDensity
       RenderMeshMaxAngle
@@ -337,15 +338,16 @@ def RenderMeshMaxAngle(angle_degrees=None):
       number: if angle_degrees is specified, the previous maximum angle if successful.
       None: if not successful, or on error.
     Example:
-      print("Quality: %" % Rhino.RenderMeshQuality)
-      print("Mesh density: %" % Rhino.RenderMeshDensity)
-      print("Maximum angle: %" % Rhino.RenderMeshMaxAngle)
-      print("Maximum aspect ratio: %" % Rhino.RenderMeshMaxAspectRatio)
-      print("Minimun edge length: %" % Rhino.RenderMeshMinEdgeLength)
-      print("Maximum edge length: %" % Rhino.RenderMeshMaxEdgeLength)
-      print("Maximum distance, edge to surface: %" % Rhino.RenderMeshMaxDistEdgeToSrf)
-      print("Minumum initial grid quads: %" % Rhino.RenderMeshMinInitialGridQuads)
-      print("Other settings: %" % Rhino.RenderMeshSettings)
+import rhinoscriptsyntax as  rs
+print("Quality: %s" % rs.RenderMeshQuality())
+print("Mesh density: %s" % rs.RenderMeshDensity())
+print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
+print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
+print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
+print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
+print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
+print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
+print("Other settings: %s" % rs.RenderMeshSettings())
     See Also:
       RenderMeshDensity
       RenderMeshMaxAngle
@@ -376,15 +378,16 @@ def RenderMeshMaxAspectRatio(ratio=None):
       number: if ratio is specified, the previous render mesh maximum aspect ratio if successful.
       None: if not successful, or on error.
     Example:
-      print("Quality: %" % Rhino.RenderMeshQuality)
-      print("Mesh density: %" % Rhino.RenderMeshDensity)
-      print("Maximum angle: %" % Rhino.RenderMeshMaxAngle)
-      print("Maximum aspect ratio: %" % Rhino.RenderMeshMaxAspectRatio)
-      print("Minimun edge length: %" % Rhino.RenderMeshMinEdgeLength)
-      print("Maximum edge length: %" % Rhino.RenderMeshMaxEdgeLength)
-      print("Maximum distance, edge to surface: %" % Rhino.RenderMeshMaxDistEdgeToSrf)
-      print("Minumum initial grid quads: %" % Rhino.RenderMeshMinInitialGridQuads)
-      print("Other settings: %" % Rhino.RenderMeshSettings)
+import rhinoscriptsyntax as  rs
+print("Quality: %s" % rs.RenderMeshQuality())
+print("Mesh density: %s" % rs.RenderMeshDensity())
+print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
+print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
+print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
+print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
+print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
+print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
+print("Other settings: %s" % rs.RenderMeshSettings())
     See Also:
       RenderMeshDensity
       RenderMeshMaxAngle
@@ -414,15 +417,16 @@ def RenderMeshMaxDistEdgeToSrf(distance=None):
       number: if distance is specified, the previous render mesh maximum distance, edge to surface if successful.
       None: if not successful, or on error.
     Example:
-      print("Quality: %" % Rhino.RenderMeshQuality)
-      print("Mesh density: %" % Rhino.RenderMeshDensity)
-      print("Maximum angle: %" % Rhino.RenderMeshMaxAngle)
-      print("Maximum aspect ratio: %" % Rhino.RenderMeshMaxAspectRatio)
-      print("Minimun edge length: %" % Rhino.RenderMeshMinEdgeLength)
-      print("Maximum edge length: %" % Rhino.RenderMeshMaxEdgeLength)
-      print("Maximum distance, edge to surface: %" % Rhino.RenderMeshMaxDistEdgeToSrf)
-      print("Minumum initial grid quads: %" % Rhino.RenderMeshMinInitialGridQuads)
-      print("Other settings: %" % Rhino.RenderMeshSettings)
+import rhinoscriptsyntax as  rs
+print("Quality: %s" % rs.RenderMeshQuality())
+print("Mesh density: %s" % rs.RenderMeshDensity())
+print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
+print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
+print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
+print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
+print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
+print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
+print("Other settings: %s" % rs.RenderMeshSettings())
     See Also:
       RenderMeshDensity
       RenderMeshMaxAngle
@@ -452,15 +456,16 @@ def RenderMeshMaxEdgeLength(distance=None):
       number: if distance is specified, the previous render mesh maximum edge length if successful.
       None: if not successful, or on error.
     Example:
-      print("Quality: %" % Rhino.RenderMeshQuality)
-      print("Mesh density: %" % Rhino.RenderMeshDensity)
-      print("Maximum angle: %" % Rhino.RenderMeshMaxAngle)
-      print("Maximum aspect ratio: %" % Rhino.RenderMeshMaxAspectRatio)
-      print("Minimun edge length: %" % Rhino.RenderMeshMinEdgeLength)
-      print("Maximum edge length: %" % Rhino.RenderMeshMaxEdgeLength)
-      print("Maximum distance, edge to surface: %" % Rhino.RenderMeshMaxDistEdgeToSrf)
-      print("Minumum initial grid quads: %" % Rhino.RenderMeshMinInitialGridQuads)
-      print("Other settings: %" % Rhino.RenderMeshSettings)
+import rhinoscriptsyntax as  rs
+print("Quality: %s" % rs.RenderMeshQuality())
+print("Mesh density: %s" % rs.RenderMeshDensity())
+print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
+print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
+print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
+print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
+print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
+print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
+print("Other settings: %s" % rs.RenderMeshSettings())
     See Also:
       RenderMeshDensity
       RenderMeshMaxAngle
@@ -490,15 +495,16 @@ def RenderMeshMinEdgeLength(distance=None):
       number: if distance is specified, the previous render mesh minimum edge length if successful.
       None: if not successful, or on error.
     Example:
-      print("Quality: %" % Rhino.RenderMeshQuality)
-      print("Mesh density: %" % Rhino.RenderMeshDensity)
-      print("Maximum angle: %" % Rhino.RenderMeshMaxAngle)
-      print("Maximum aspect ratio: %" % Rhino.RenderMeshMaxAspectRatio)
-      print("Minimun edge length: %" % Rhino.RenderMeshMinEdgeLength)
-      print("Maximum edge length: %" % Rhino.RenderMeshMaxEdgeLength)
-      print("Maximum distance, edge to surface: %" % Rhino.RenderMeshMaxDistEdgeToSrf)
-      print("Minumum initial grid quads: %" % Rhino.RenderMeshMinInitialGridQuads)
-      print("Other settings: %" % Rhino.RenderMeshSettings)
+import rhinoscriptsyntax as  rs
+print("Quality: %s" % rs.RenderMeshQuality())
+print("Mesh density: %s" % rs.RenderMeshDensity())
+print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
+print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
+print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
+print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
+print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
+print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
+print("Other settings: %s" % rs.RenderMeshSettings())
     See Also:
       RenderMeshDensity
       RenderMeshMaxAngle
@@ -528,15 +534,16 @@ def RenderMeshMinInitialGridQuads(quads=None):
       number: if quads is specified, the previous render mesh minimum initial grid quads if successful.
       None: if not successful, or on error.
     Example:
-      print("Quality: %" % Rhino.RenderMeshQuality)
-      print("Mesh density: %" % Rhino.RenderMeshDensity)
-      print("Maximum angle: %" % Rhino.RenderMeshMaxAngle)
-      print("Maximum aspect ratio: %" % Rhino.RenderMeshMaxAspectRatio)
-      print("Minimun edge length: %" % Rhino.RenderMeshMinEdgeLength)
-      print("Maximum edge length: %" % Rhino.RenderMeshMaxEdgeLength)
-      print("Maximum distance, edge to surface: %" % Rhino.RenderMeshMaxDistEdgeToSrf)
-      print("Minumum initial grid quads: %" % Rhino.RenderMeshMinInitialGridQuads)
-      print("Other settings: %" % Rhino.RenderMeshSettings)
+import rhinoscriptsyntax as  rs
+print("Quality: %s" % rs.RenderMeshQuality())
+print("Mesh density: %s" % rs.RenderMeshDensity())
+print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
+print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
+print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
+print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
+print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
+print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
+print("Other settings: %s" % rs.RenderMeshSettings())
     See Also:
       RenderMeshDensity
       RenderMeshMaxAngle
@@ -550,8 +557,8 @@ def RenderMeshMinInitialGridQuads(quads=None):
     """
     current = scriptcontext.doc.GetCurrentMeshingParameters()
     rc = current.GridMinCount
-    if distance is not None:
-        current.GridMinCount = distance
+    if quads is not None:
+        current.GridMinCount = quads
         _SetRenderMeshAndUpdateStyle(current)
     return rc
 
@@ -569,15 +576,16 @@ def RenderMeshQuality(quality=None):
       number: if quality is specified, the previous render mesh quality if successful.
       None: if not successful, or on error.
     Example:
-      print("Quality: %" % Rhino.RenderMeshQuality)
-      print("Mesh density: %" % Rhino.RenderMeshDensity)
-      print("Maximum angle: %" % Rhino.RenderMeshMaxAngle)
-      print("Maximum aspect ratio: %" % Rhino.RenderMeshMaxAspectRatio)
-      print("Minimun edge length: %" % Rhino.RenderMeshMinEdgeLength)
-      print("Maximum edge length: %" % Rhino.RenderMeshMaxEdgeLength)
-      print("Maximum distance, edge to surface: %" % Rhino.RenderMeshMaxDistEdgeToSrf)
-      print("Minumum initial grid quads: %" % Rhino.RenderMeshMinInitialGridQuads)
-      print("Other settings: %" % Rhino.RenderMeshSettings)
+import rhinoscriptsyntax as  rs
+print("Quality: %s" % rs.RenderMeshQuality())
+print("Mesh density: %s" % rs.RenderMeshDensity())
+print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
+print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
+print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
+print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
+print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
+print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
+print("Other settings: %s" % rs.RenderMeshSettings())
     See Also:
       RenderMeshDensity
       RenderMeshMaxAngle
@@ -621,20 +629,22 @@ def RenderMeshSettings(settings=None):
         1: Refine mesh enabled.
         2: Jagged seams enabled.
         4: Simple planes enabled.
+        8: Texture is packed, scaled and normalized; otherwise unpacked, unscaled and normalized.
     Returns:
       number: if settings is not specified, the current render mesh settings if successful.
       number: if settings is specified, the previous render mesh settings if successful.
       None: if not successful, or on error.
     Example:
-      print("Quality: %" % Rhino.RenderMeshQuality)
-      print("Mesh density: %" % Rhino.RenderMeshDensity)
-      print("Maximum angle: %" % Rhino.RenderMeshMaxAngle)
-      print("Maximum aspect ratio: %" % Rhino.RenderMeshMaxAspectRatio)
-      print("Minimun edge length: %" % Rhino.RenderMeshMinEdgeLength)
-      print("Maximum edge length: %" % Rhino.RenderMeshMaxEdgeLength)
-      print("Maximum distance, edge to surface: %" % Rhino.RenderMeshMaxDistEdgeToSrf)
-      print("Minumum initial grid quads: %" % Rhino.RenderMeshMinInitialGridQuads)
-      print("Other settings: %" % Rhino.RenderMeshSettings)
+import rhinoscriptsyntax as  rs
+print("Quality: %s" % rs.RenderMeshQuality())
+print("Mesh density: %s" % rs.RenderMeshDensity())
+print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
+print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
+print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
+print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
+print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
+print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
+print("Other settings: %s" % rs.RenderMeshSettings())
     See Also:
       RenderMeshDensity
       RenderMeshMaxAngle
