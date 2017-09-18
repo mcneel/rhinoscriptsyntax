@@ -623,7 +623,7 @@ def PointCloudKNeighbors(pt_cloud, needle_points, amount=1):
     """Returns a list of lists of point indices in a point cloud that are
     closest to needle_points. Each inner list references all indices of the hay_number closest neighbors.
     Parameters:
-      pt_cloud_id (guid): the point cloud to consider.
+      pt_cloud (guid): the point cloud to consider.
       needle_points ([point, ...]|point): a list of points. A single point can also be specified.
       amount (int, optional): the amount of required closest points. Defaults to 1.
     Returns:
@@ -653,7 +653,7 @@ def PointCloudKNeighbors(pt_cloud, needle_points, amount=1):
         search = Rhino.Collections.RhinoList.Point3dKNeighbors
 
     if isinstance(pt_cloud, System.Collections.Generic.IEnumerable[Rhino.Geometry.Point3d]):
-        return list(search(pt_cloud_id, needles, amount))
+        return list(search(pt_cloud, needles, amount))
     pts = rhutil.coerce3dpointlist(pt_cloud, True)
     return list(search(pt_cloud, needles, amount))
 
@@ -663,7 +663,7 @@ def PointCloudClosestPoints(pt_cloud, needle_points, distance):
     closest to needle_points. Each inner list references all points within a sphere of hay_distance radius, or
     indices exactly hay_number closest neighbors.
     Parameters:
-      pt_cloud_id (guid): the point cloud to consider.
+      pt_cloud (guid): the point cloud to consider.
       needle_points ([point, ...]|point): a list of points. A single point can also be specified.
       distance (float): the included limit for listing points
     Returns:
@@ -683,7 +683,7 @@ def PointCloudClosestPoints(pt_cloud, needle_points, distance):
     if isinstance(pc_geom, Rhino.Geometry.PointCloud):
         return list(Rhino.Geometry.RTree.PointCloudClosestPoints(pc_geom, needles, distance))
     if isinstance(pt_cloud, System.Collections.Generic.IEnumerable[Rhino.Geometry.Point3d]):
-        return list(Rhino.Geometry.RTree.Point3dClosestPoints(pt_cloud_id, needles, distance))
+        return list(Rhino.Geometry.RTree.Point3dClosestPoints(pt_cloud, needles, distance))
     pts = rhutil.coerce3dpointlist(pt_cloud, True)
     return list(Rhino.Geometry.RTree.Point3dClosestPoints(pt_cloud, needles, distance))
 
