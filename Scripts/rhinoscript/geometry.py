@@ -619,7 +619,7 @@ def PointCloudPoints(object_id):
     if isinstance(pc, Rhino.Geometry.PointCloud): return pc.GetPoints()
 
 
-def PointCloudKNeighbours(pt_cloud, needle_points, amount=1):
+def PointCloudKNeighbors(pt_cloud, needle_points, amount=1):
     """Returns a list of lists of point indices in a point cloud that are
     closest to needle_points. Each inner list references all indices of the hay_number closest neighbors.
     Parameters:
@@ -637,15 +637,21 @@ def PointCloudKNeighbours(pt_cloud, needle_points, amount=1):
       IsPointCloud
       PointCloudPoints
     """
-    if len(needle_points) > 100:
-        search = Rhino.Geometry.RTree.KNeighbors
-    else:
-        search = Rhino.Collections.RhinoList.KNeighbors
-
     needles = rhutil.coerce3dpointlist(needle_points, True)
     pc_geom = rhutil.coercegeometry(pt_cloud, False)
     if isinstance(pc_geom, Rhino.Geometry.PointCloud):
+        if len(needle_points) > 100:
+            search = Rhino.Geometry.RTree.PointCloudKNeighbors
+        else:
+            search = Rhino.Collections.RhinoList.PointCloudKNeighbors
+
         return list(search(pc_geom, needles, amount))
+
+    if len(needle_points) > 100:
+        search = Rhino.Geometry.RTree.Point3dKNeighbors
+    else:
+        search = Rhino.Collections.RhinoList.Point3dKNeighbors
+
     if isinstance(pt_cloud, System.Collections.Generic.IEnumerable[Rhino.Geometry.Point3d]):
         return list(search(pt_cloud_id, needles, amount))
     pts = rhutil.coerce3dpointlist(pt_cloud, True)
@@ -671,16 +677,15 @@ def PointCloudClosestPoints(pt_cloud, needle_points, distance):
       IsPointCloud
       PointCloudPoints
     """
-    search = Rhino.Geometry.RTree.ClosestPoints
 
     needles = rhutil.coerce3dpointlist(needle_points, True)
     pc_geom = rhutil.coercegeometry(pt_cloud, False)
     if isinstance(pc_geom, Rhino.Geometry.PointCloud):
-        return list(search(pc_geom, needles, distance))
+        return list(Rhino.Geometry.RTree.PointCloudClosestPoints(pc_geom, needles, distance))
     if isinstance(pt_cloud, System.Collections.Generic.IEnumerable[Rhino.Geometry.Point3d]):
-        return list(search(pt_cloud_id, needles, distance))
+        return list(Rhino.Geometry.RTree.Point3dClosestPoints(pt_cloud_id, needles, distance))
     pts = rhutil.coerce3dpointlist(pt_cloud, True)
-    return list(search(pt_cloud, needles, distance))
+    return list(Rhino.Geometry.RTree.Point3dClosestPoints(pt_cloud, needles, distance))
 
 
 def PointCoordinates(object_id, point=None):
