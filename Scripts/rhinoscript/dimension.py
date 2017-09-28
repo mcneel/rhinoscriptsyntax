@@ -226,8 +226,8 @@ def DimensionStyle(object_id, dimstyle_name=None):
       object_id (guid): identifier of the object
       dimstyle_name (str, optional): the name of an existing dimension style
     Returns:
-      str: if dimstyle_name is specified, the object's current dimension style name
-      str: if dimstyle_name is not specified, the object's previous dimension style name
+      str: if dimstyle_name is not specified, the object's current dimension style name
+      str: if dimstyle_name is specified, the object's previous dimension style name
       None: on error
     Example:
       import rhinoscriptsyntax as rs
@@ -238,7 +238,7 @@ def DimensionStyle(object_id, dimstyle_name=None):
       IsDimStyle
     """
     annotation_object = __coerceannotation(object_id)
-    ds = annotation_object.DimensionStyle
+    ds = annotation_object.AnnotationGeometry.ParentDimensionStyle
     rc = ds.Name
     if dimstyle_name:
         ds = scriptcontext.doc.DimStyles.FindName(dimstyle_name)
