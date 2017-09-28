@@ -619,73 +619,92 @@ def PointCloudPoints(object_id):
     if isinstance(pc, Rhino.Geometry.PointCloud): return pc.GetPoints()
 
 
+def __simplify_PointCloudKNeighbors(result, amount):
+    if amount == 1:
+        return [item[0] for item in result]
+    else:
+        return [list(item) for item in result]
+
+
 def PointCloudKNeighbors(pt_cloud, needle_points, amount=1):
     """Returns a list of lists of point indices in a point cloud that are
     closest to needle_points. Each inner list references all indices of the hay_number closest neighbors.
     Parameters:
-      pt_cloud (guid): the point cloud to consider.
-      needle_points ([point, ...]|point): a list of points. A single point can also be specified.
+      pt_cloud (guid|[point, ...]): the point cloud to be searched, or the "hay stack". This can also be a list of points.
+      needle_points (guid|[point, ...]): a list of points to search in the point_cloud. This can also be specified as a point cloud.
       amount (int, optional): the amount of required closest points. Defaults to 1.
     Returns:
-      [[int, ...], ...]: a list of lists with the indices of the found points.
+      [int, int,...]: a list of indices of the found points, if amount equals 1.
+      [[int, ...], ...]: nested lists with amount items within a list, with the indices of the found points.
     Example:
-      import rhinoscriptsyntax as rs
-      id = rs.GetObject("Select point cloud", rs.filter.pointcloud)
-      print "The closest point to origin has index : %s" % rs.PointCloudClosestPoints(id, [[0,0,0]], 1)[0][0]
+import rhinoscriptsyntax as rs
+id = rs.GetObject("Select point cloud", rs.filter.pointcloud)
+result = rs.PointCloudKNeighbors(id, [[0,0,0]], 1)
+if result and result[0]:
+    print "The closest point to origin has index : %s" % result[0][0]
     See Also:
       AddPointCloud
       IsPointCloud
       PointCloudPoints
     """
-    needles = rhutil.coerce3dpointlist(needle_points, True)
+    needles = rhutil.coercegeometry(needle_points, False)
+    if isinstance(needles, Rhino.Geometry.PointCloud): needles = needles.AsReadOnlyListOfPoints()
+    else: needles = rhutil.coerce3dpointlist(needle_points, True)
+
     pc_geom = rhutil.coercegeometry(pt_cloud, False)
     if isinstance(pc_geom, Rhino.Geometry.PointCloud):
-        if len(needle_points) > 100:
+        if len(needles) > 100:
             search = Rhino.Geometry.RTree.PointCloudKNeighbors
         else:
             search = Rhino.Collections.RhinoList.PointCloudKNeighbors
 
-        return list(search(pc_geom, needles, amount))
+        return __simplify_PointCloudKNeighbors(search(pc_geom, needles, amount), amount)
 
-    if len(needle_points) > 100:
+    if len(needles) > 100:
         search = Rhino.Geometry.RTree.Point3dKNeighbors
     else:
         search = Rhino.Collections.RhinoList.Point3dKNeighbors
 
     if isinstance(pt_cloud, System.Collections.Generic.IEnumerable[Rhino.Geometry.Point3d]):
-        return list(search(pt_cloud, needles, amount))
+        return __simplify_PointCloudKNeighbors(search(pt_cloud, needles, amount), amount)
     pts = rhutil.coerce3dpointlist(pt_cloud, True)
-    return list(search(pt_cloud, needles, amount))
+    return __simplify_PointCloudKNeighbors(search(pt_cloud, needles, amount), amount)
 
+
+def __simplify_PointCloudClosestPoints(result):
+    return [list(item) for item in result]
 
 def PointCloudClosestPoints(pt_cloud, needle_points, distance):
     """Returns a list of lists of point indices in a point cloud that are
     closest to needle_points. Each inner list references all points within a sphere of hay_distance radius, or
     indices exactly hay_number closest neighbors.
     Parameters:
-      pt_cloud (guid): the point cloud to consider.
-      needle_points ([point, ...]|point): a list of points. A single point can also be specified.
-      distance (float): the included limit for listing points
+      pt_cloud (guid|[point, ...]): the point cloud to be searched, or the "hay stack". This can also be a list of points.
+      needle_points (guid|[point, ...]): a list of points to search in the point_cloud. This can also be specified as a point cloud.
+      distance (float): the included limit for listing points.
     Returns:
       [[int, ...], ...]: a list of lists with the indices of the found points.
     Example:
-      import rhinoscriptsyntax as rs
-      id = rs.GetObject("Select point cloud", rs.filter.pointcloud)
-      print "The closest point to origin has index : %s" % rs.PointCloudClosestPoints(id, [[0,0,0]], 1)[0][0]
+import rhinoscriptsyntax as rs
+id = rs.GetObject("Select point cloud", rs.filter.pointcloud)
+result = rs.PointCloudClosestPoints(id, [[0,0,0]], 1.0)
+if result and result[0]:
+    print "The first point next to origin within a 1.0 unit radius is: %s" % result[0][0]
     See Also:
       AddPointCloud
       IsPointCloud
       PointCloudPoints
     """
-
-    needles = rhutil.coerce3dpointlist(needle_points, True)
+    needles = rhutil.coercegeometry(needle_points, False)
+    if isinstance(needles, Rhino.Geometry.PointCloud): needles = needles.AsReadOnlyListOfPoints()
+    else: needles = rhutil.coerce3dpointlist(needle_points, True)
     pc_geom = rhutil.coercegeometry(pt_cloud, False)
     if isinstance(pc_geom, Rhino.Geometry.PointCloud):
-        return list(Rhino.Geometry.RTree.PointCloudClosestPoints(pc_geom, needles, distance))
+        return __simplify_PointCloudClosestPoints(Rhino.Geometry.RTree.PointCloudClosestPoints(pc_geom, needles, distance))
     if isinstance(pt_cloud, System.Collections.Generic.IEnumerable[Rhino.Geometry.Point3d]):
-        return list(Rhino.Geometry.RTree.Point3dClosestPoints(pt_cloud, needles, distance))
+        return __simplify_PointCloudClosestPoints(Rhino.Geometry.RTree.Point3dClosestPoints(pt_cloud, needles, distance))
     pts = rhutil.coerce3dpointlist(pt_cloud, True)
-    return list(Rhino.Geometry.RTree.Point3dClosestPoints(pt_cloud, needles, distance))
+    return __simplify_PointCloudClosestPoints(Rhino.Geometry.RTree.Point3dClosestPoints(pt_cloud, needles, distance))
 
 
 def PointCoordinates(object_id, point=None):
