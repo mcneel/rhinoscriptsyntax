@@ -627,8 +627,7 @@ def __simplify_PointCloudKNeighbors(result, amount):
 
 
 def PointCloudKNeighbors(pt_cloud, needle_points, amount=1):
-    """Returns a list of lists of point indices in a point cloud that are
-    closest to needle_points. Each inner list references all indices of the hay_number closest neighbors.
+    """Returns amount indices of points in a point cloud that are near needle_points.
     Parameters:
       pt_cloud (guid|[point, ...]): the point cloud to be searched, or the "hay stack". This can also be a list of points.
       needle_points (guid|[point, ...]): a list of points to search in the point_cloud. This can also be specified as a point cloud.
@@ -639,9 +638,10 @@ def PointCloudKNeighbors(pt_cloud, needle_points, amount=1):
     Example:
 import rhinoscriptsyntax as rs
 id = rs.GetObject("Select point cloud", rs.filter.pointcloud)
-result = rs.PointCloudKNeighbors(id, [(0,0,0)])
-if result:
-    print "The closest point to origin has index : %s" % result[0]
+if id:
+    result = rs.PointCloudKNeighbors(id, [(0,0,0)])
+    if result:
+        print("The closest point to origin has index : %s." % result[0])
     See Also:
       AddPointCloud
       IsPointCloud
@@ -676,8 +676,7 @@ def __simplify_PointCloudClosestPoints(result):
 
 def PointCloudClosestPoints(pt_cloud, needle_points, distance):
     """Returns a list of lists of point indices in a point cloud that are
-    closest to needle_points. Each inner list references all points within a sphere of hay_distance radius, or
-    indices exactly hay_number closest neighbors.
+    closest to needle_points. Each inner list references all points within or on the surface of a sphere of distance radius.
     Parameters:
       pt_cloud (guid|[point, ...]): the point cloud to be searched, or the "hay stack". This can also be a list of points.
       needle_points (guid|[point, ...]): a list of points to search in the point_cloud. This can also be specified as a point cloud.
@@ -687,9 +686,12 @@ def PointCloudClosestPoints(pt_cloud, needle_points, distance):
     Example:
 import rhinoscriptsyntax as rs
 id = rs.GetObject("Select point cloud", rs.filter.pointcloud)
-result = rs.PointCloudClosestPoints(id, [[0,0,0]], 1.0)
-if result and result[0]:
-    print "The first point next to origin within a 1.0 unit radius is: %s" % result[0][0]
+if id:
+    result = rs.PointCloudClosestPoints(id, [[0,0,0]], 1.0)
+    if result and result[0]:
+        print("The first point next to origin within a 1.0 unit radius is: %s." % result[0][0])
+    else:
+        print("There is no point in the point cloud within a 1.0 unit radius sphere from origin.")
     See Also:
       AddPointCloud
       IsPointCloud
