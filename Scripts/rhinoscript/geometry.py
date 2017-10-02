@@ -639,9 +639,9 @@ def PointCloudKNeighbors(pt_cloud, needle_points, amount=1):
     Example:
 import rhinoscriptsyntax as rs
 id = rs.GetObject("Select point cloud", rs.filter.pointcloud)
-result = rs.PointCloudKNeighbors(id, [[0,0,0]], 1)
-if result and result[0]:
-    print "The closest point to origin has index : %s" % result[0][0]
+result = rs.PointCloudKNeighbors(id, [(0,0,0)])
+if result:
+    print "The closest point to origin has index : %s" % result[0]
     See Also:
       AddPointCloud
       IsPointCloud
@@ -668,7 +668,7 @@ if result and result[0]:
     if isinstance(pt_cloud, System.Collections.Generic.IEnumerable[Rhino.Geometry.Point3d]):
         return __simplify_PointCloudKNeighbors(search(pt_cloud, needles, amount), amount)
     pts = rhutil.coerce3dpointlist(pt_cloud, True)
-    return __simplify_PointCloudKNeighbors(search(pt_cloud, needles, amount), amount)
+    return __simplify_PointCloudKNeighbors(search(pts, needles, amount), amount)
 
 
 def __simplify_PointCloudClosestPoints(result):
@@ -704,7 +704,7 @@ if result and result[0]:
     if isinstance(pt_cloud, System.Collections.Generic.IEnumerable[Rhino.Geometry.Point3d]):
         return __simplify_PointCloudClosestPoints(Rhino.Geometry.RTree.Point3dClosestPoints(pt_cloud, needles, distance))
     pts = rhutil.coerce3dpointlist(pt_cloud, True)
-    return __simplify_PointCloudClosestPoints(Rhino.Geometry.RTree.Point3dClosestPoints(pt_cloud, needles, distance))
+    return __simplify_PointCloudClosestPoints(Rhino.Geometry.RTree.Point3dClosestPoints(pts, needles, distance))
 
 
 def PointCoordinates(object_id, point=None):
