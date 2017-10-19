@@ -65,10 +65,10 @@ def IsToolbar(name, toolbar, group=False):
       file = "C:\\SteveBaer\\AppData\\Roaming\\McNeel\\Rhinoceros\\5.0\\UI\\default.rui"
       name = rs.IsToolbarCollection(file)
       if name:
-      if rs.IsToolbar(name, "Layer"):
-      print "The collection contains the Layer toolbar."
-      else:
-      print "The collection does not contain the Layer toolbar."
+          if rs.IsToolbar(name, "Layer"):
+              print "The collection contains the Layer toolbar."
+          else:
+              print "The collection does not contain the Layer toolbar."
     See Also:
       HideToolbar
       IsToolbarVisible
@@ -117,11 +117,11 @@ def IsToolbarDocked(name, toolbar_group):
       import rhinoscriptsyntax as rs
       rc = rs.IsToolbarDocked("Default", "Main1")
       if rc==True:
-      print "The Main1 toolbar is docked."
+          print "The Main1 toolbar is docked."
       elif rc==False:
-      print "The Main1 toolbar is not docked."
+          print "The Main1 toolbar is not docked."
       else:
-      print "The Main1 toolbar is not visible."
+          print "The Main1 toolbar is not visible."
     See Also:
       IsToolbar
       IsToolbarVisible
@@ -316,8 +316,8 @@ def ToolbarCount(name, groups=False):
       import rhinoscriptsyntax as rs
       names = rs.ToolbarCollectionNames()
       if names:
-      count = rs.ToolbarCount(names[0])
-      print "The", names[0], " collection contains", count, " toolbars."
+          count = rs.ToolbarCount(names[0])
+          print "The", names[0], " collection contains", count, " toolbars."
     See Also:
       HideToolbar
       IsToolbar
@@ -344,9 +344,9 @@ def ToolbarNames(name, groups=False):
       import rhinoscriptsytax as rs
       names = rs.ToolbarCollectionNames()
       if names:
-      toolbars = rs.ToolbarNames(names[0])
-      if toolbars:
-      for toolbar in toolbars: print toolbar
+          toolbars = rs.ToolbarNames(names[0])
+          if toolbars:
+              for toolbar in toolbars: print toolbar
     See Also:
       HideToolbar
       IsToolbar

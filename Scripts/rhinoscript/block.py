@@ -24,10 +24,10 @@ def AddBlock(object_ids, base_point, name=None, delete_input=False):
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select objects to define block")
       if objs:
-      point = rs.GetPoint("Block base point")
-      if point:
-      block = rs.AddBlock(objs, point, None, True)
-      rs.InsertBlock(block, point)
+          point = rs.GetPoint("Block base point")
+          if point:
+              block = rs.AddBlock(objs, point, None, True)
+              rs.InsertBlock(block, point)
     See Also:
       InsertBlock
     """
@@ -73,8 +73,8 @@ def BlockContainerCount(block_name):
       import rhinoscriptscriptsyntax as rs
       block = rs.GetString("Block name to query")
       if rs.IsBlock(block):
-      count = rs.BlockContainerCount(block)
-      print "This block is nested in", count, "block(s)."
+          count = rs.BlockContainerCount(block)
+          print "This block is nested in", count, "block(s)."
     See Also:
       BlockContainers
       IsBlock
@@ -93,8 +93,8 @@ def BlockContainers(block_name):
       import rhinoscriptsyntax as rs
       blockname = rs.GetString("Block name to query")
       if rs.IsBlock(blockname):
-      blocks = rs.BlockContainers(blockname)
-      for block in blocks: print block
+          blocks = rs.BlockContainers(blockname)
+          for block in blocks: print block
     See Also:
       BlockContainerCount
       IsBlock
@@ -135,9 +135,9 @@ def BlockDescription(block_name, description=None):
       import rhinoscriptsyntax as rs
       blockname = rs.GetString("Block name to list description")
       if rs.IsBlock(blockname):
-      desc = rs.BlockDescription(blockname)
-      if desc is None: print "No description"
-      else: print desc
+          desc = rs.BlockDescription(blockname)
+          if desc is None: print "No description"
+          else: print desc
     See Also:
       IsBlock
     """
@@ -163,8 +163,8 @@ def BlockInstanceCount(block_name,where_to_look=0):
       import rhinoscriptsyntax as rs
       blockname = rs.GetString("Block to count")
       if rs.IsBlock(blockname):
-      count = rs.BlockInstanceCount(blockname)
-      print count, "block(s) found."
+          count = rs.BlockInstanceCount(blockname)
+          print count, "block(s) found."
     See Also:
       BlockInstanceInsertPoint
       BlockInstances
@@ -187,7 +187,7 @@ def BlockInstanceInsertPoint(object_id):
       import rhinoscriptsyntax as rs
       strObject = rs.GetObject("Select block")
       if rs.IsBlockInstance(strObject):
-      rs.AddPoint( rs.BlockInstanceInsertPoint(strObject) )
+          rs.AddPoint( rs.BlockInstanceInsertPoint(strObject) )
     See Also:
       BlockInstanceCount
       BlockInstances
@@ -211,7 +211,7 @@ def BlockInstanceName(object_id):
       import rhinoscriptsyntax as rs
       strObject = rs.GetObject("Select block")
       if rs.IsBlockInstance(strObject):
-      print rs.BlockInstanceName(strObject)
+          print rs.BlockInstanceName(strObject)
     See Also:
       BlockInstanceCount
       BlockInstances
@@ -233,9 +233,9 @@ def BlockInstances(block_name):
       import rhinoscriptsyntax as rs
       strBlock = rs.GetString("Block to select")
       if rs.IsBlock(strBlock):
-      arrObjects = rs.BlockInstances(strBlock)
-      if arrobjects:
-      rs.SelectObjects(arrObjects)
+          arrObjects = rs.BlockInstances(strBlock)
+          if arrobjects:
+              rs.SelectObjects(arrObjects)
     See Also:
       BlockInstanceCount
       BlockInstanceInsertPoint
@@ -261,10 +261,10 @@ def BlockInstanceXform(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select block to query")
       if rs.IsBlockInstance(obj):
-      arrMatrix = rs.BlockInstanceXform(obj)
-      if arrMatrix is not None:
-      pointId = rs.AddPoint([0,0,0])
-      rs.TransformObject( pointId, arrMatrix)
+          arrMatrix = rs.BlockInstanceXform(obj)
+          if arrMatrix is not None:
+              pointId = rs.AddPoint([0,0,0])
+              rs.TransformObject( pointId, arrMatrix)
     See Also:
       BlockInstanceCount
       BlockInstanceInsertPoint
@@ -325,9 +325,9 @@ def BlockObjects(block_name):
       import rhinoscriptsyntax as rs
       strBlock = rs.GetString("Block name to list identifiers")
       if rs.IsBlock(strBlock):
-      objects = rs.BlockObjects(strBlock)
-      if objects:
-      for item in objects: print item
+          objects = rs.BlockObjects(strBlock)
+          if objects:
+              for item in objects: print item
     See Also:
       BlockNames
       BlockObjectCount
@@ -351,7 +351,7 @@ def BlockPath(block_name):
       import rhinoscriptsyntax as rs
       strBlock = rs.GetString("Block name to list path")
       if rs.IsBlockEmbedded(strBlock):
-      print rs.BlockPath(strBlock)
+          print rs.BlockPath(strBlock)
     See Also:
       IsBlock
       IsBlockEmbedded
@@ -379,8 +379,8 @@ def BlockStatus(block_name):
       import rhinoscriptsyntax as rs
       block = rs.GetString("Block name to list description")
       if rs.IsBlock(block):
-      status = rs.BlockStatus(block)
-      print "block status for", block, "is", status
+          status = rs.BlockStatus(block)
+          print "block status for", block, "is", status
     See Also:
       IsBlock
     """
@@ -399,7 +399,7 @@ def DeleteBlock(block_name):
       import rhinoscriptsyntax as rs
       strBlock = rs.GetString("Block name to delete")
       if rs.IsBlock(strBlock):
-      rs.DeleteBlock(strBlock)
+          rs.DeleteBlock(strBlock)
     See Also:
       BlockNames
       ExplodeBlockInstance
@@ -424,7 +424,7 @@ def ExplodeBlockInstance(object_id, explode_nested_instances=False):
       import rhinoscriptsyntax as rs
       strObject = rs.GetObject("Select block instance to explode")
       if rs.IsBlockInstance(strObject):
-      rs.ExplodeBlockInstance(strObject)
+          rs.ExplodeBlockInstance(strObject)
     See Also:
       DeleteBlock
       IsBlockInstance
@@ -489,9 +489,9 @@ def IsBlock(block_name):
       import rhinoscriptsyntax as rs
       strBlock = rs.GetString("Block name")
       if rs.IsBlock(strBlock):
-      print "The block definition exists."
+          print "The block definition exists."
       else:
-      print "The block definition does not exist."
+          print "The block definition does not exist."
     See Also:
       IsBlockEmbedded
       IsBlockInstance
@@ -512,12 +512,12 @@ def IsBlockEmbedded(block_name):
       import rhinoscriptsyntax as rs
       strBlock = rs.GetString("Block name")
       if rs.IsBlock(strBlock):
-      if rs.IsBlockEmbedded(strBlock):
-      print "The block definition is embedded."
+          if rs.IsBlockEmbedded(strBlock):
+              print "The block definition is embedded."
+          else:
+              print "The block definition is not embedded."
       else:
-      print "The block definition is not embedded."
-      else:
-      print "The block definition does not exist."
+          print "The block definition does not exist."
     See Also:
       IsBlock
       IsBlockInstance
@@ -540,9 +540,9 @@ def IsBlockInstance(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select block instance")
       if rs.IsBlockInstance(obj):
-      print "The object is a block instance."
+          print "The object is a block instance."
       else:
-      print "The object is not a block instance."
+          print "The object is not a block instance."
     See Also:
       IsBlock
       IsBlockEmbedded
@@ -566,12 +566,12 @@ def IsBlockInUse(block_name, where_to_look=0):
       import rhinoscriptsyntax as rs
       strBlock = rs.GetString("Block name")
       if rs.IsBlock(strBlock):
-      if rs.IsBlockInUse(strBlock):
-      print "The block definition is in use."
+          if rs.IsBlockInUse(strBlock):
+              print "The block definition is in use."
+          else:
+              print "The block definition is not in use."
       else:
-      print "The block definition is not in use."
-      else:
-      print "The block definition does not exist."
+          print "The block definition does not exist."
     See Also:
       IsBlock
       IsBlockInstance
@@ -593,12 +593,12 @@ def IsBlockReference(block_name):
       import rhinoscriptsyntax as rs
       strBlock = rs.GetString("Block name")
       if rs.IsBlock(strBlock):
-      if rs.IsBlockReference(strBlock):
-      print "The block definition is a reference definition."
+          if rs.IsBlockReference(strBlock):
+              print "The block definition is a reference definition."
+          else:
+              print "The block definition is not a reference definition."
       else:
-      print "The block definition is not a reference definition."
-      else:
-      print "The block definition does not exist."
+          print "The block definition does not exist."
     See Also:
       IsBlock
       IsBlockEmbedded
@@ -621,9 +621,9 @@ def RenameBlock( block_name, new_name ):
       import rhinoscriptsyntax as rs
       strOldBlock = rs.GetString("Old block name")
       if strOldBlock:
-      strNewBlock = rs.GetString("New block name")
-      if strNewBlock:
-      rs.RenameBlock (strOldBlock, strNewBlock)
+          strNewBlock = rs.GetString("New block name")
+          if strNewBlock:
+              rs.RenameBlock (strOldBlock, strNewBlock)
     See Also:
       BlockNames
       IsBlock

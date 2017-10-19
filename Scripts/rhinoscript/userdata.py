@@ -68,10 +68,8 @@ def GetDocumentData(section=None, entry=None):
       import rhinoscriptsyntax as rs
       value = rs.GetDocumentData("MySection1", "MyEntry1")
       print value
-      
       value = rs.GetDocumentData("MySection1", "MyEntry2")
       print value
-      
       value = rs.GetDocumentData("MySection2", "MyEntry1")
       print value
     See Also:
@@ -126,8 +124,8 @@ def GetUserText(object_id, key=None, attached_to_geometry=False):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if obj:
-      print rs.GetUserText(obj, "PartNo")
-      print rs.GetUserText(obj, "Price")
+          print rs.GetUserText(obj, "PartNo")
+          print rs.GetUserText(obj, "Price")
     See Also:
       IsUserText
       SetUserText
@@ -150,9 +148,9 @@ def IsDocumentData():
       import rhinoscriptsyntax as rs
       result = rs.IsDocumentData()
       if result:
-      print "This document contains Script document user data"
+          print "This document contains Script document user data"
       else:
-      print "This document contains no Script document user data"
+          print "This document contains no Script document user data"
     See Also:
       DeleteDocumentData
       DocumentDataCount
@@ -187,13 +185,13 @@ def IsUserText(object_id):
         3 = both attribute and geometry user text
     Example:
       import rhinoscriptsyntax as rs
-      obj = rs.GetObject("Select object") 
+      obj = rs.GetObject("Select object")  
       if obj:
-      usertext_type = rs.IsUserText(obj)
-      if usertext_type==0: print "Object has no user text"
-      elif usertext_type==1: print "Object has attribute user text"
-      elif usertext_type==2: print "Object has geometry user text"
-      elif usertext_type==3: print "Object has attribute and geometry user text"
+          usertext_type = rs.IsUserText(obj)
+          if usertext_type==0: print "Object has no user text"
+          elif usertext_type==1: print "Object has attribute user text"
+          elif usertext_type==2: print "Object has geometry user text"
+          elif usertext_type==3: print "Object has attribute and geometry user text"
     See Also:
       GetUserText
       SetUserText
@@ -262,8 +260,8 @@ def SetUserText(object_id, key, value=None, attach_to_geometry=False):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if obj:
-      rs.SetUserText( obj, "PartNo", "KM40-4960" )
-      rs.SetUserText( obj, "Price", "1.25" )
+        rs.SetUserText( obj, "PartNo", "KM40-4960" )
+        rs.SetUserText( obj, "Price", "1.25" )
     See Also:
       GetUserText
       IsUserText

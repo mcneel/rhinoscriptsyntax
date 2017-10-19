@@ -128,13 +128,13 @@ def CurveMeshIntersection(curve_id, mesh_id, return_faces=False):
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select curve to intersect", rs.filter.curve)
       if curve:
-      mesh = rs.GetObject("Select mesh to intersect", rs.filter.mesh)
-      if mesh:
-      cmx = rs.CurveMeshIntersection(curve, mesh, True)
-      if cmx:
-      for element in cmx:
-      print element[0], ", Face index = ", element[1]
-      rs.AddPoint(element[0])
+          mesh = rs.GetObject("Select mesh to intersect", rs.filter.mesh)
+          if mesh:
+              cmx = rs.CurveMeshIntersection(curve, mesh, True)
+              if cmx:
+                  for element in cmx:
+                      print element[0], ", Face index = ", element[1]
+                      rs.AddPoint(element[0])
     See Also:
       MeshClosestPoint
       MeshMeshIntersection
@@ -238,9 +238,9 @@ def IsMesh(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh")
       if rs.IsMesh(obj):
-      print "The object is a mesh."
+          print "The object is a mesh."
       else:
-      print "The object is not a mesh."
+          print "The object is not a mesh."
     See Also:
       IsMeshClosed
       MeshFaceCount
@@ -262,9 +262,9 @@ def IsMeshClosed(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh", rs.filter.mesh)
       if rs.IsMeshClosed(obj):
-      print "The mesh is closed."
+          print "The mesh is closed."
       else:
-      print "The mesh is not closed."
+          print "The mesh is not closed."
     See Also:
       IsMesh
     """
@@ -284,9 +284,9 @@ def IsMeshManifold(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh", rs.filter.mesh)
       if rs.IsMeshClosed(obj):
-      print "The mesh is manifold."
+          print "The mesh is manifold."
       else:
-      print "The mesh is non-manifold."
+          print "The mesh is non-manifold."
     See Also:
       IsMesh
       IsMeshClosed
@@ -308,12 +308,12 @@ def IsPointOnMesh(object_id, point):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh")
       if rs.IsMesh(obj):
-      point = rs.GetPointOnMesh(strObject, "Pick a test point")
-      if point:
-      if rs.IsPointOnMesh(obj, point):
-      print "The point is on the mesh"
-      else:
-      print "The point is not on the mesh"
+          point = rs.GetPointOnMesh(strObject, "Pick a test point")
+          if point:
+              if rs.IsPointOnMesh(obj, point):
+                  print "The point is on the mesh"
+              else:
+                  print "The point is not on the mesh"
     See Also:
       IsMesh
       MeshClosestPoint
@@ -366,8 +366,8 @@ def MeshArea(object_ids):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh )
       if obj:
-      area_rc = rs.MeshArea(obj)
-      if area_rc: print "Mesh area:", area_rc[1]
+          area_rc = rs.MeshArea(obj)
+          if area_rc: print "Mesh area:", area_rc[1]
     See Also:
       MeshVolume
     """
@@ -423,8 +423,8 @@ def MeshBooleanDifference(input0, input1, delete_input=True, tolerance=None):
       import rhinoscriptsyntax as rs
       input0 = rs.GetObjects("Select first set of meshes", rs.filter.mesh)
       if input0:
-      input1 = rs.GetObjects("Select second set of meshes", rs.filter.mesh)
-      if input1: rs.MeshBooleanDifference(input0, input1)
+          input1 = rs.GetObjects("Select second set of meshes", rs.filter.mesh)
+          if input1: rs.MeshBooleanDifference(input0, input1)
     See Also:
       MeshBooleanIntersection
       MeshBooleanSplit
@@ -462,8 +462,8 @@ def MeshBooleanIntersection(input0, input1, delete_input=True):
       import rhinoscriptsyntax as rs
       input0 = rs.GetObjects("Select first set of meshes", rs.filter.mesh)
       if input0:
-      input1 = rs.GetObjects("Select second set of meshes", rs.filter.mesh)
-      if input1: rs.MeshBooleanIntersection(input0, input1)
+          input1 = rs.GetObjects("Select second set of meshes", rs.filter.mesh)
+          if input1: rs.MeshBooleanIntersection(input0, input1)
     See Also:
       MeshBooleanDifference
       MeshBooleanSplit
@@ -502,8 +502,8 @@ def MeshBooleanSplit(input0, input1, delete_input=True):
       import rhinoscriptsyntax as rs
       input0 = rs.GetObjects("Select first set of meshes", rs.filter.mesh)
       if input0:
-      input1 = rs.GetObjects("Select second set of meshes", rs.filter.mesh)
-      if input1: rs.MeshBooleanSplit(input0, input1)
+          input1 = rs.GetObjects("Select second set of meshes", rs.filter.mesh)
+          if input1: rs.MeshBooleanSplit(input0, input1)
     See Also:
       MeshBooleanDifference
       MeshBooleanIntersection
@@ -604,7 +604,7 @@ def MeshFaceCenters(mesh_id):
       obj = rs.GetObject("Select mesh", rs.filter.mesh)
       centers = rs.MeshFaceCenters(obj)
       if centers:
-      for point in centers: rs.AddPoint(point)
+          for point in centers: rs.AddPoint(point)
     See Also:
       IsMesh
       MeshFaceCount
@@ -648,7 +648,7 @@ def MeshFaceNormals(mesh_id):
       obj = rs.GetObject("Select mesh", rs.filter.mesh)
       normals = rs.MeshFaceNormals(obj)
       if normals:
-      for vector in normals: print vector
+          for vector in normals: print vector
     See Also:
       MeshHasFaceNormals
       MeshFaceCount
@@ -681,10 +681,10 @@ def MeshFaces(object_id, face_type=True):
       obj = rs.GetObject("Select mesh", rs.filter.mesh)
       faces = rs.MeshFaces(obj, False)
       if faces:
-      rs.EnableRedraw(False)
-      i = 0
-      rs.AddPolyline( face )
-      i += 3
+          rs.EnableRedraw(False)
+          i = 0
+              rs.AddPolyline( face )
+              i += 3
       rs.EnableRedraw(True)
     See Also:
       IsMesh
@@ -726,8 +726,8 @@ def MeshFaceVertices(object_id):
       obj = rs.GetObject("Select mesh", rs.filter.mesh)
       faceVerts = rs.MeshFaceVertices( obj )
       if faceVerts:
-      for count, face in enumerate(faceVerts):
-      print "face(", count, ") = (", face[0], ",", face[1], ",", face[2], ",", face[3], ")"
+          for count, face in enumerate(faceVerts):
+              print "face(", count, ") = (", face[0], ",", face[1], ",", face[2], ",", face[3], ")"
     See Also:
       IsMesh
       MeshFaceCount
@@ -751,9 +751,9 @@ def MeshHasFaceNormals(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh", rs.filter.mesh)
       if rs.MeshHasFaceNormals(obj):
-      print "The mesh has face normal."
+          print "The mesh has face normal."
       else:
-      print "The mesh does not have face normals."
+          print "The mesh does not have face normals."
     See Also:
       MeshFaceNormals
     """
@@ -771,9 +771,9 @@ def MeshHasTextureCoordinates(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh", rs.filter.mesh)
       if rs.MeshHasTextureCoordinates(obj):
-      print "The mesh has texture coordinates."
+          print "The mesh has texture coordinates."
       else:
-      print "The mesh does not have texture coordinates."
+          print "The mesh does not have texture coordinates."
     See Also:
       
     """
@@ -791,9 +791,9 @@ def MeshHasVertexColors(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh", rs.filter.mesh)
       if rs.mesh.MeshHasVertexColors(obj):
-      print "The mesh has vertex colors."
+          print "The mesh has vertex colors."
       else:
-      print "The mesh does not have vertex colors."
+          print "The mesh does not have vertex colors."
     See Also:
       MeshVertexColors
     """
@@ -811,9 +811,9 @@ def MeshHasVertexNormals(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh", rs.filter.mesh)
       if rs.MeshHasVertexNormals(obj):
-      print "The mesh has vertex normals."
+          print "The mesh has vertex normals."
       else:
-      print "The mesh does not have vertex normals."
+          print "The mesh does not have vertex normals."
     See Also:
       MeshVertexNormals
     """
@@ -834,7 +834,7 @@ def MeshMeshIntersection(mesh1, mesh2, tolerance=None):
       mesh2 = rs.GetObject("Select second mesh to intersect", rs.filter.mesh)
       results = rs.MeshMeshIntersection(mesh1, mesh2)
       if results:
-      for points in results: rs.AddPolyline(points)
+          for points in results: rs.AddPolyline(points)
     See Also:
       CurveMeshIntersection
       MeshClosestPoint
@@ -865,7 +865,7 @@ def MeshNakedEdgePoints(object_id):
       vertices = rs.MeshVertices( obj )
       naked = rs.MeshNakedEdgePoints( obj )
       for i, vertex in enumerate(vertices):
-      if naked[i]: rs.AddPoint(vertex)
+          if naked[i]: rs.AddPoint(vertex)
     See Also:
       IsMesh
       MeshVertexCount
@@ -960,7 +960,7 @@ def MeshQuadsToTriangles(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh )
       if rs.MeshQuadCount(obj)>0:
-      rs.MeshQuadsToTriangles(obj)
+          rs.MeshQuadsToTriangles(obj)
     See Also:
       
     """
@@ -1037,18 +1037,18 @@ def MeshVertexColors(mesh_id, colors=0):
     Example:
       import rhinoscriptsyntax as rs
       import random
-      
+       
       def randomcolor():
-      r = random.randint(0,255)
-      g = random.randint(0,255)
-      b = random.randint(0,255)
-      return r,g,b
-      
+          r = random.randint(0,255)
+          g = random.randint(0,255)
+          b = random.randint(0,255)
+          return r,g,b
+       
       obj = rs.GetObject("Select mesh", rs.filter.mesh)
       if obj:
-      colors = []
-      for i in range(rs.MeshVertexCount(obj)):colors.append( randomcolor() )
-      rs.MeshVertexColors( obj, colors )
+          colors = []
+          for i in range(rs.MeshVertexCount(obj)): colors.append( randomcolor() )
+          rs.MeshVertexColors( obj, colors )
     See Also:
       MeshHasVertexColors
       MeshVertexCount
@@ -1104,24 +1104,24 @@ def MeshVertexFaces(mesh_id, vertex_index):
       import rhinoscriptsyntax as rs
       import random
       def TestMeshVertexFaces():
-      mesh = rs.GetObject("Select mesh", rs.filter.mesh)
-      vertices = rs.MeshVertices(mesh)
-      meshfaces = rs.MeshFaceVertices(mesh)
-      vertex = random.randint(0, len(vertices)-1) #some random vertex
-      vertex_faces = rs.MeshVertexFaces(mesh, vertex )
-      if vertex_faces:
-      rs.AddPoint( vertices[vertex] )
-      for face_index in vertex_faces:
-      face = meshfaces[face_index]
-      polyline = []
-      polyline.append( vertices[face[0]] )
-      polyline.append( vertices[face[1]] )
-      polyline.append( vertices[face[2]] )
-      if face[2]!=face[3]:
-      polyline.append( vertices[face[3]] )
-      polyline.append( polyline[0] )
-      rs.AddPolyline(polyline)
-      
+          mesh = rs.GetObject("Select mesh", rs.filter.mesh)
+          vertices = rs.MeshVertices(mesh)
+          meshfaces = rs.MeshFaceVertices(mesh)
+          vertex = random.randint(0, len(vertices)-1) #some random vertex
+          vertex_faces = rs.MeshVertexFaces(mesh, vertex )
+          if vertex_faces:
+              rs.AddPoint( vertices[vertex] )
+              for face_index in vertex_faces:
+                  face = meshfaces[face_index]
+                  polyline = []
+                  polyline.append( vertices[face[0]] )
+                  polyline.append( vertices[face[1]] )
+                  polyline.append( vertices[face[2]] )
+                  if face[2]!=face[3]:
+                      polyline.append( vertices[face[3]] )
+                  polyline.append( polyline[0] )
+                  rs.AddPolyline(polyline)
+       
       TestMeshVertexFaces()
     See Also:
       MeshFaces
@@ -1194,8 +1194,8 @@ def MeshVolume(object_ids):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh )
       if obj and rs.IsMeshClosed(obj):
-      volume = rs.MeshVolume(obj)
-      if volume: print "Mesh volume:", volume[1]
+          volume = rs.MeshVolume(obj)
+          if volume: print "Mesh volume:", volume[1]
     See Also:
       IsMeshClosed
       MeshArea

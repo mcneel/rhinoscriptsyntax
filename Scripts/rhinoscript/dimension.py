@@ -135,7 +135,7 @@ def AddLinearDimension(plane, start_point, end_point, point_on_dimension_line):
       import rhinoscriptsyntax as  rs
       points = rs.GetPoints(True,  False, "Select 3 dimension points")
       if points and len(points)>2:
-      rs.AddLinearDimension(rs.WorldXYPlane(),  points[0], points[1], points[2] )
+          rs.AddLinearDimension(rs.WorldXYPlane(),  points[0], points[1], points[2] )
     See Also:
       IsLeader
       LeaderText
@@ -259,7 +259,7 @@ def DimensionText(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a dimension")
       if rs.IsDimension(obj):
-      print rs.DimensionText(obj)
+          print rs.DimensionText(obj)
     See Also:
       DimensionUserText
       DimensionValue
@@ -282,8 +282,8 @@ def DimensionUserText(object_id, usertext=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a dimension")
       if rs.IsDimension(obj):
-      usertext = "<> " + chr(177) + str(rs.UnitAbsoluteTolerance())
-      rs.DimensionUserText( obj, usertext )
+          usertext = "<> " + chr(177) + str(rs.UnitAbsoluteTolerance())
+          rs.DimensionUserText( obj, usertext )
     See Also:
       DimensionText
       DimensionValue
@@ -308,7 +308,7 @@ def DimensionValue(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a dimension")
       if rs.IsDimension(obj):
-      print rs.DimensionValue(obj)
+          print rs.DimensionValue(obj)
     See Also:
       DimensionText
       DimensionUserText
@@ -332,7 +332,7 @@ def DimStyleAnglePrecision(dimstyle, precision=None):
       dimstyle = rs.CurrentDimStyle()
       precision = rs.DimStyleAnglePrecision(dimstyle)
       if precision>2:
-      rs.DimStyleAnglePrecision( dimstyle, 2 )
+          rs.DimStyleAnglePrecision( dimstyle, 2 )
     See Also:
       DimStyleArrowSize
       DimStyleExtension
@@ -573,7 +573,7 @@ def DimStyleNames(sort=False):
       import rhinoscriptsyntax as rs
       dimstyles = rs.DimStyleNames()
       if dimstyles:
-      for dimstyle in dimstyles: print dimstyle
+          for dimstyle in dimstyles: print dimstyle
     See Also:
       DimStyleCount
       IsDimStyle
@@ -827,9 +827,9 @@ def IsAlignedDimension(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a dimension")
       if rs.IsAlignedDimension(obj):
-      print "The object is an aligned dimension."
+          print "The object is an aligned dimension."
       else:
-      print "The object is not an aligned dimension."
+          print "The object is not an aligned dimension."
     See Also:
       IsAngularDimension
       IsDiameterDimension
@@ -857,9 +857,9 @@ def IsAngularDimension(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a dimension")
       if rs.IsAngularDimension(obj):
-      print "The object is an angular dimension."
+          print "The object is an angular dimension."
       else:
-      print "The object is not an angular dimension."
+          print "The object is not an angular dimension."
     See Also:
       IsAlignedDimension
       IsDiameterDimension
@@ -885,9 +885,9 @@ def IsDiameterDimension(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a dimension")
       if rs.IsDiameterDimension(obj):
-      print "The object is a diameter dimension."
+          print "The object is a diameter dimension."
       else:
-      print "The object is not a diameter dimension."
+          print "The object is not a diameter dimension."
     See Also:
       IsAlignedDimension
       IsAngularDimension
@@ -915,9 +915,9 @@ def IsDimension(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a dimension")
       if rs.IsDimension(obj):
-      print "The object is a dimension."
+          print "The object is a dimension."
       else:
-      print "The object is not a dimension."
+          print "The object is not a dimension."
     See Also:
       IsAlignedDimension
       IsAngularDimension
@@ -943,12 +943,12 @@ def IsDimStyle(dimstyle):
       import rhinoscriptsyntax as rs
       dimstyle = rs.GetString("Dimension style to test")
       if rs.IsDimStyle(dimstyle):
-      if rs.IsDimStyleReference(dimstyle):
-      print "The dimension style is from a reference file."
+          if rs.IsDimStyleReference(dimstyle):
+              print "The dimension style is from a reference file."
+          else:
+              print "The dimension style is not from a reference file."
       else:
-      print "The dimension style is not from a reference file."
-      else:
-      print "The dimension style does not exist."
+          print "The dimension style does not exist."
     See Also:
       IsDimStyleReference
     """
@@ -967,12 +967,12 @@ def IsDimStyleReference(dimstyle):
       import rhinoscriptsyntax as rs
       dimstyle = rs.GetString("Dimension style to test")
       if rs.IsDimStyle(dimstyle):
-      if rs.IsDimStyleReference(dimstyle):
-      print "The dimension style is from a reference file."
+          if rs.IsDimStyleReference(dimstyle):
+              print "The dimension style is from a reference file."
+          else:
+              print "The dimension style is not from a reference file."
       else:
-      print "The dimension style is not from a reference file."
-      else:
-      print "The dimension style does not exist."
+          print "The dimension style does not exist."
     See Also:
       IsDimStyle
     """
@@ -992,9 +992,9 @@ def IsLeader(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a leader")
       if rs.IsLeader(obj):
-      print "The object is a leader."
+          print "The object is a leader."
       else:
-      print "The object is not a leader."
+          print "The object is not a leader."
     See Also:
       AddLeader
       LeaderText
@@ -1016,9 +1016,9 @@ def IsLinearDimension(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a dimension")
       if rs.IsLinearDimension(obj):
-      print "The object is a linear dimension."
+          print "The object is a linear dimension."
       else:
-      print "The object is not a linear dimension."
+          print "The object is not a linear dimension."
     See Also:
       IsAlignedDimension
       IsAngularDimension
@@ -1044,9 +1044,9 @@ def IsOrdinateDimension(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a dimension")
       if rs.IsOrdinateDimension(obj):
-      print "The object is an ordinate dimension."
+          print "The object is an ordinate dimension."
       else:
-      print "The object is not an ordinate dimension."
+          print "The object is not an ordinate dimension."
     See Also:
       IsAlignedDimension
       IsAngularDimension
@@ -1072,9 +1072,9 @@ def IsRadialDimension(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a dimension")
       if rs.IsRadialDimension(obj):
-      print "The object is a radial dimension."
+          print "The object is a radial dimension."
       else:
-      print "The object is not a radial dimension."
+          print "The object is not a radial dimension."
     See Also:
       IsAlignedDimension
       IsAngularDimension
@@ -1130,7 +1130,7 @@ def RenameDimStyle(oldstyle, newstyle):
       import rhinoscriptsyntax as rs
       oldstyle = rs.GetString("Old dimension style name")
       if oldstyle:
-      newstyle = rs.GetString("New dimension style name")
+          newstyle = rs.GetString("New dimension style name")
     See Also:
       AddDimStyle
       CurrentDimStyle

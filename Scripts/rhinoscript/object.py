@@ -18,12 +18,12 @@ def CopyObject(object_id, translation=None):
     Example:
       import rhinoscriptsyntax as rs
       if id:
-      start = rs.GetPoint("Point to copy from")
-      if start:
-      end = rs.GetPoint("Point to copy to", start)
-      if end:
-      translation = end-start
-      rs.CopyObject( id, translation )
+          start = rs.GetPoint("Point to copy from")
+          if start:
+              end = rs.GetPoint("Point to copy to", start)
+              if end:
+                  translation = end-start
+                  rs.CopyObject( id, translation )
     See Also:
       CopyObjects
     """
@@ -43,11 +43,11 @@ def CopyObjects(object_ids, translation=None):
       import rhinoscriptsyntax as rs
       objectIds = rs.GetObjects("Select objects to copy")
       if objectIds:
-      start = rs.GetPoint("Point to copy from")
-      if start:
-      end = rs.GetPoint("Point to copy to", start)
-      if end:
-      rs.CopyObjects( objectIds, translation )
+          start = rs.GetPoint("Point to copy from")
+          if start:
+              end = rs.GetPoint("Point to copy to", start)
+              if end:
+                  rs.CopyObjects( objectIds, translation )
     See Also:
       CopyObject
     """
@@ -182,10 +182,10 @@ def IsLayoutObject(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select object")
       if id:
-      if rs.IsLayoutObject(id):
-      print "The object is in page layout space."
-      else:
-      print "The object is in model space."
+          if rs.IsLayoutObject(id):
+              print "The object is in page layout space."
+          else:
+              print "The object is in model space."
     See Also:
       IsObject
       IsObjectReference
@@ -205,9 +205,9 @@ def IsObject(object_id):
       import rhinoscriptsyntax as rs
       #Do something here...
       if rs.IsObject(id):
-      print "The object exists."
+          print "The object exists."
       else:
-      print "The object does not exist."
+          print "The object does not exist."
     See Also:
       IsObjectHidden
       IsObjectInGroup
@@ -233,9 +233,9 @@ def IsObjectHidden(object_id):
       import rhinoscriptsyntax as rs
       # Do something here...
       if rs.IsObjectHidden(id):
-      print "The object is hidden."
+          print "The object is hidden."
       else:
-      print "The object is not hidden."
+          print "The object is not hidden."
     See Also:
       IsObject
       IsObjectInGroup
@@ -264,12 +264,12 @@ def IsObjectInBox(object_id, box, test_mode=True):
       import rhinoscriptsyntax as rs
       box = rs.GetBox()
       if box:
-      rs.EnableRedraw(False)
-      object_list = rs.AllObjects()
-      for obj in object_list:
-      if rs.IsObjectInBox(obj, box, False):
-      rs.SelectObject( obj )
-      rs.EnableRedraw( True )
+          rs.EnableRedraw(False)
+          object_list = rs.AllObjects()
+          for obj in object_list:
+              if rs.IsObjectInBox(obj, box, False):
+                  rs.SelectObject( obj )
+          rs.EnableRedraw( True )
     See Also:
       BoundingBox
       GetBox
@@ -297,13 +297,13 @@ def IsObjectInGroup(object_id, group_name=None):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select object")
       if id:
-      name = rs.GetString("Group name")
-      if name:
-      result = rs.IsObjectInGroup(id, name)
-      if result:
-      print "The object belongs to the group."
-      else:
-      print "The object does not belong to the group."
+          name = rs.GetString("Group name")
+          if name:
+              result = rs.IsObjectInGroup(id, name)
+              if result:
+                  print "The object belongs to the group."
+              else:
+                  print "The object does not belong to the group."
     See Also:
       IsObject
       IsObjectHidden
@@ -338,9 +338,9 @@ def IsObjectLocked(object_id):
       import rhinoscriptsyntax as rs
       # Do something here...
       if rs.IsObjectLocked(object):
-      print "The object is locked."
+          print "The object is locked."
       else:
-      print "The object is not locked."
+          print "The object is not locked."
     See Also:
       IsObject
       IsObjectHidden
@@ -367,9 +367,9 @@ def IsObjectNormal(object_id):
       import rhinoscriptsyntax as rs
       #Do something here...
       if rs.IsObjectNormal(object):
-      print "The object is normal."
+          print "The object is normal."
       else:
-      print "The object is not normal."
+          print "The object is not normal."
     See Also:
       IsObject
       IsObjectHidden
@@ -396,9 +396,9 @@ def IsObjectReference(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select object")
       if rs.IsObjectReference(id):
-      print "The object is a reference object."
+          print "The object is a reference object."
       else:
-      print "The object is not a reference object."
+          print "The object is not a reference object."
     See Also:
       IsObject
       IsObjectHidden
@@ -451,9 +451,9 @@ def IsObjectSelected(object_id):
       import rhinocsriptsyntax as rs
       object = rs.GetObject()
       if rs.IsObjectSelected(object):
-        print "The object is selected."
+          print "The object is selected."
       else:
-        print "The object is not selected."
+          print "The object is not selected."
     See Also:
       IsObject
       IsObjectHidden
@@ -479,9 +479,9 @@ def IsObjectSolid(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select object")
       if rs.IsObjectSolid(id):
-      print "The object is solid."
+          print "The object is solid."
       else:
-      print "The object is not solid."
+          print "The object is not solid."
     See Also:
       IsObject
       IsObjectHidden
@@ -515,9 +515,9 @@ def IsObjectValid(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select object")
       if rs.IsObjectValid(id):
-      print "The object is valid."
+          print "The object is valid."
       else:
-      print "The object is not valid."
+          print "The object is not valid."
     See Also:
       IsObject
     """
@@ -536,11 +536,11 @@ def IsVisibleInView(object_id, view=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if rs.IsObject(obj):
-      view = rs.CurrentView()
-      if rs.IsVisibleInView(obj, view):
-      print "The object is visible in", view, "."
-      else:
-      print "The object is not visible in", view, "."
+          view = rs.CurrentView()
+          if rs.IsVisibleInView(obj, view):
+              print "The object is visible in", view, "."
+          else:
+              print "The object is not visible in", view, "."
     See Also:
       IsObject
       IsView
@@ -610,8 +610,8 @@ def MatchObjectAttributes(target_ids, source_id=None):
       import rhinoscriptsyntax as rs
       targets = rs.GetObjects("Select objects")
       if targets:
-      source = rs.GetObject("Select object to match")
-      if source: rs.MatchObjectAttributes( targets, source )
+          source = rs.GetObject("Select object to match")
+          if source: rs.MatchObjectAttributes( targets, source )
     See Also:
       GetObject
       GetObjects
@@ -645,10 +645,10 @@ def MirrorObject(object_id, start_point, end_point, copy=False):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object to mirror")
       if obj:
-      start = rs.GetPoint("Start of mirror plane")
-      end = rs.GetPoint("End of mirror plane")
-      if start and end:
-      rs.MirrorObject( obj, start, end, True )
+          start = rs.GetPoint("Start of mirror plane")
+          end = rs.GetPoint("End of mirror plane")
+          if start and end:
+              rs.MirrorObject( obj, start, end, True )
     See Also:
       MirrorObjects
     """
@@ -669,10 +669,10 @@ def MirrorObjects(object_ids, start_point, end_point, copy=False):
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select objects to mirror")
       if objs:
-      start = rs.GetPoint("Start of mirror plane")
-      end = rs.GetPoint("End of mirror plane")
-      if start and end:
-      rs.MirrorObjects( objs, start, end, True )
+          start = rs.GetPoint("Start of mirror plane")
+          end = rs.GetPoint("End of mirror plane")
+          if start and end:
+              rs.MirrorObjects( objs, start, end, True )
     See Also:
       MirrorObject
     """
@@ -700,11 +700,11 @@ def MoveObject(object_id, translation):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select object to move")
       if id:
-      start = rs.GetPoint("Point to move from")
-      if start:
-      end = rs.GetPoint("Point to move to")
-      if end:
-      rs.MoveObject(id, translation)
+          start = rs.GetPoint("Point to move from")
+          if start:
+              end = rs.GetPoint("Point to move to")
+              if end:
+                  rs.MoveObject(id, translation)
     See Also:
       MoveObjects
     """
@@ -723,12 +723,12 @@ def MoveObjects(object_ids, translation):
       import rhinoscriptsyntax as rs
       ids = rs.GetObjects("Select objects to move")
       if ids:
-      start = rs.GetPoint("Point to move from")
-      if start:
-      end = rs.GetPoint("Point to move to")
-      if end:
-      translation = end-start
-      rs.MoveObjects( ids, translation )
+          start = rs.GetPoint("Point to move from")
+          if start:
+              end = rs.GetPoint("Point to move to")
+              if end:
+                  translation = end-start
+                  rs.MoveObjects( ids, translation )
     See Also:
       MoveObject
     """
@@ -754,9 +754,9 @@ def ObjectColor(object_ids, color=None):
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select objects to change color")
       if objs:
-      color = rs.GetColor(0)
-      if color:
-      for obj in objs: rs.ObjectColor( obj, color )
+          color = rs.GetColor(0)
+          if color:
+              for obj in objs: rs.ObjectColor( obj, color )
     See Also:
       ObjectColorSource
       ObjectsByColor
@@ -810,7 +810,7 @@ def ObjectColorSource(object_ids, source=None):
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select objects to reset color source")
       if objs:
-      for obj In objs: rs.ObjectColorSource(obj, 0)
+          for obj In objs: rs.ObjectColorSource(obj, 0)
     See Also:
       ObjectColor
     """
@@ -845,8 +845,8 @@ def ObjectDescription(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if obj:
-      description = rs.ObjectDescription(obj)
-      print "Object description:" , description
+          description = rs.ObjectDescription(obj)
+          print "Object description:" , description
     See Also:
       ObjectType
     """
@@ -864,11 +864,11 @@ def ObjectGroups(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if obj:
-      groups = rs.ObjectGroups(obj)
-      if groups:
-      for group in groups: print "Object group: ", group
-      else:
-      print "No groups."
+          groups = rs.ObjectGroups(obj)
+          if groups:
+              for group in groups: print "Object group: ", group
+          else:
+              print "No groups."
     See Also:
       ObjectsByGroup
     """
@@ -1021,7 +1021,7 @@ def ObjectLinetypeSource(object_ids, source=None):
       import rhinoscriptsyntax as rs
       objects = rs.GetObjects("Select objects to reset linetype source")
       if objects:
-      for obj in objects: rs.ObjectLinetypeSource( obj, 0 )
+          for obj in objects: rs.ObjectLinetypeSource( obj, 0 )
     See Also:
       ObjectLinetype
     """
@@ -1062,12 +1062,12 @@ def ObjectMaterialIndex(object_id, material_index=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if obj:
-      source = rs.ObjectMaterialSource(obj)
-      if source==0:
-      print "The material source is by layer"
-      else:
-      print "The material source is by object"
-      index = rs.ObjectMaterialIndex(obj)
+          source = rs.ObjectMaterialSource(obj)
+          if source==0:
+              print "The material source is by layer"
+          else:
+              print "The material source is by object"
+              index = rs.ObjectMaterialIndex(obj)
     See Also:
       ObjectMaterialSource
     """
@@ -1098,7 +1098,7 @@ def ObjectMaterialSource(object_ids, source=None):
       import rhinoscriptsyntax as rs
       objects = rs.GetObjects("Select objects to reset rendering material source")
       if objects:
-      [rs.ObjectMaterialSource(obj, 0) for obj in objects]
+          [rs.ObjectMaterialSource(obj, 0) for obj in objects]
     See Also:
       ObjectMaterialIndex
     """
@@ -1133,12 +1133,12 @@ def ObjectName(object_id, name=None):
       import rhinoscriptsyntax as rs
       points = rs.GetPoints(message1="Pick some points")
       if points:
-      count = 0
-      for point in points:
-      obj = rs.AddPoint(point)
-      if obj:
-      rs.ObjectName( obj, "Point"+str(count) )
-      count += 1
+          count = 0
+          for point in points:
+              obj = rs.AddPoint(point)
+              if obj:
+                  rs.ObjectName( obj, "Point"+str(count) )
+                  count += 1
     See Also:
       ObjectsByName
     """
@@ -1182,9 +1182,9 @@ def ObjectPrintColor(object_ids, color=None):
       import rhinoscriptsyntax as rs
       objects = rs.GetObjects("Select objects to change print color")
       if objects:
-      color = rs.GetColor()
-      if color:
-      for object in objects: rs.ObjectPrintColor(object, color)
+          color = rs.GetColor()
+          if color:
+              for object in objects: rs.ObjectPrintColor(object, color)
     See Also:
       ObjectPrintColorSource
     """
@@ -1224,7 +1224,7 @@ def ObjectPrintColorSource(object_ids, source=None):
       import rhinoscriptsyntax as rs
       objects = rs.GetObjects("Select objects to reset print color source")
       if objects:
-      for object in objects: rs.ObjectPrintColorSource(object, 0)
+          for object in objects: rs.ObjectPrintColorSource(object, 0)
     See Also:
       ObjectPrintColor
     """
@@ -1260,7 +1260,7 @@ def ObjectPrintWidth(object_ids, width=None):
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select objects to change print width")
       if objs:
-      for obj in objs: rs.ObjectPrintWidth(obj,0.5)
+          for obj in objs: rs.ObjectPrintWidth(obj,0.5)
     See Also:
       ObjectPrintWidthSource
     """
@@ -1299,7 +1299,7 @@ def ObjectPrintWidthSource(object_ids, source=None):
       import rhinoscriptsyntax as rs
       objects = rs.GetObjects("Select objects to reset print width source")
       if objects:
-      for obj in objects: rs.ObjectPrintWidthSource(obj,0)
+          for obj in objects: rs.ObjectPrintWidthSource(obj,0)
     See Also:
       ObjectPrintColor
     """
@@ -1350,8 +1350,8 @@ def ObjectType(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if obj:
-      objtype = rs.ObjectType(obj)
-      print "Object type:", objtype
+          objtype = rs.ObjectType(obj)
+          print "Object type:", objtype
     See Also:
       ObjectsByType
     """
@@ -1385,11 +1385,11 @@ def OrientObject(object_id, reference, target, flags=0):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object to orient")
       if obj:
-      reference = rs.GetPoints(message1="First reference point")
-      if reference and len(reference)>0:
-      target = rs.GetPoints(message1="First target point")
-      if target and len(target)>0:
-      rs.OrientObject( obj, reference, target )
+          reference = rs.GetPoints(message1="First reference point")
+          if reference and len(reference)>0:
+              target = rs.GetPoints(message1="First target point")
+              if target and len(target)>0:
+                  rs.OrientObject( obj, reference, target )
     See Also:
       
     """
@@ -1452,8 +1452,8 @@ def RotateObject(object_id, center_point, rotation_angle, axis=None, copy=False)
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object to rotate")
       if obj:
-      point = rs.GetPoint("Center point of rotation")
-      if point: rs.RotateObject(obj, point, 45.0, None, copy=True)
+          point = rs.GetPoint("Center point of rotation")
+          if point: rs.RotateObject(obj, point, 45.0, None, copy=True)
     See Also:
       RotateObjects
     """
@@ -1477,9 +1477,9 @@ def RotateObjects( object_ids, center_point, rotation_angle, axis=None, copy=Fal
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select objects to rotate")
       if objs:
-      point = rs.GetPoint("Center point of rotation")
-      if point:
-      rs.RotateObjects( objs, point, 45.0, None, True )
+          point = rs.GetPoint("Center point of rotation")
+          if point:
+              rs.RotateObjects( objs, point, 45.0, None, True )
     See Also:
       RotateObject
     """
@@ -1508,9 +1508,9 @@ def ScaleObject(object_id, origin, scale, copy=False):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object to scale")
       if obj:
-      origin = rs.GetPoint("Origin point")
-      if origin:
-      rs.ScaleObject( obj, origin, (1,2,3), True )
+          origin = rs.GetPoint("Origin point")
+          if origin:
+              rs.ScaleObject( obj, origin, (1,2,3), True )
     See Also:
       ScaleObjects
     """
@@ -1534,9 +1534,9 @@ def ScaleObjects(object_ids, origin, scale, copy=False):
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select objects to scale")
       if objs:
-      origin = rs.GetPoint("Origin point")
-      if origin:
-      rs.ScaleObjects( objs, origin, (2,2,2), True )
+          origin = rs.GetPoint("Origin point")
+          if origin:
+              rs.ScaleObjects( objs, origin, (2,2,2), True )
     See Also:
       ScaleObject
     """
@@ -1585,9 +1585,9 @@ def SelectObjects( object_ids):
       import rhinoscriptsyntax as rs
       ids = rs.GetObjects("Select object to copy in-place")
       if ids:
-      rs.UnselectObjects(ids)
-      copies = rs.CopyObjects(ids)
-      if copies: rs.SelectObjects(copies)
+          rs.UnselectObjects(ids)
+          copies = rs.CopyObjects(ids)
+          if copies: rs.SelectObjects(copies)
     See Also:
       IsObjectSelectable
       IsObjectSelected
@@ -1617,10 +1617,10 @@ def ShearObject(object_id, origin, reference_point, angle_degrees, copy=False):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object to shear")
       if obj:
-      origin = rs.GetPoint("Origin point")
-      refpt = rs.GetPoint("Reference point")
-      if origin and refpt:
-      rs.ShearObject(obj, origin, refpt, 45.0, True)
+          origin = rs.GetPoint("Origin point")
+          refpt = rs.GetPoint("Reference point")
+          if origin and refpt:
+              rs.ShearObject(obj, origin, refpt, 45.0, True)
     See Also:
       ShearObjects
     """
@@ -1640,10 +1640,10 @@ def ShearObjects(object_ids, origin, reference_point, angle_degrees, copy=False)
       import rhinoscriptsyntax as rs
       object_ids = rs.GetObjects("Select objects to shear")
       if object_ids:
-      origin = rs.GetPoint("Origin point")
-      refpt = rs.GetPoint("Reference point")
-      if origin and refpt:
-      rs.ShearObjects( object_ids, origin, refpt, 45.0, True )
+          origin = rs.GetPoint("Origin point")
+          refpt = rs.GetPoint("Reference point")
+          if origin and refpt:
+              rs.ShearObjects( object_ids, origin, refpt, 45.0, True )
     See Also:
       ShearObject
     """
@@ -1891,9 +1891,9 @@ def UnselectObjects(object_ids):
       import rhinoscriptsyntax as rs
       objects = rs.GetObjects("Select object to copy in-place")
       if objects:
-      rs.UnselectObjects(objects)
-      copies= rs.CopyObjects(objects)
-      if copies: rs.SelectObjects(copies)
+          rs.UnselectObjects(objects)
+          copies= rs.CopyObjects(objects)
+          if copies: rs.SelectObjects(copies)
     See Also:
       IsObjectSelected
       SelectObject

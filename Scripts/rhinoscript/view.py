@@ -37,7 +37,7 @@ def AddDetail(layout_id, corner1, corner2, title=None, projection=1):
       import rhinoscriptsyntax as rs
       layout = rs.AddLayout("Portrait", (8.5,11))
       if layout:
-      rs.AddDetail(layout, (0.5,0.5), (8,10.5), None, 7)
+          rs.AddDetail(layout, (0.5,0.5), (8,10.5), None, 7)
     See Also:
       DeleteNamedView
       NamedViews
@@ -90,9 +90,9 @@ def AddNamedCPlane(cplane_name, view=None):
       import rhinoscriptsyntax as rs
       views = rs.ViewNames()
       if views:
-      for view in views:
-      name = view + "_cplane"
-      rs.AddNamedCPlane( name, view )
+          for view in views:
+              name = view + "_cplane"
+              rs.AddNamedCPlane( name, view )
     See Also:
       DeleteNamedCPlane
       NamedCPlane
@@ -120,9 +120,9 @@ def AddNamedView(name, view=None):
       import rhinoscriptsyntax as rs
       views = rs.ViewNames()
       if views:
-      for view in views:
-      name = view + "_view"
-      rs.AddNamedView( name, view )
+          for view in views:
+              name = view + "_view"
+              rs.AddNamedView( name, view )
     See Also:
       DeleteNamedView
       NamedViews
@@ -150,7 +150,7 @@ def CurrentDetail(layout, detail=None, return_name=True):
       import rhinoscriptsyntax as rs
       layout = rs.CurrentView(return_name=False)
       if rs.IsLayout(layout):
-      rs.CurrentDetail( layout, layout )
+          rs.CurrentDetail( layout, layout )
     See Also:
       IsDetail
       IsLayout
@@ -219,7 +219,7 @@ def DeleteNamedCPlane(name):
       import rhinoscriptsyntax as rs
       cplanes = rs.NamedCplanes()
       if cplanes:
-      for cplane in cplanes: rs.DeleteNamedCPlane(cplane)
+          for cplane in cplanes: rs.DeleteNamedCPlane(cplane)
     See Also:
       AddNamedCPlane
       NamedCPlane
@@ -239,7 +239,7 @@ def DeleteNamedView(name):
       import rhinoscriptsyntax as rs
       views = rs.NamedViews()
       if views:
-      for view in views: rs.DeleteNamedView(view)
+          for view in views: rs.DeleteNamedView(view)
     See Also:
       AddNamedView
       NamedViews
@@ -321,11 +321,11 @@ def IsDetail(layout, detail):
       import rhinoscriptsyntax as rs
       view = rs.CurrentView()
       if rs.IsLayout(view):
-      isdetail = rs.IsDetail(view, "Top")
-      if isdetail:
-      print "Top is a detail view."
-      else:
-      print "Top is not a detail view."
+          isdetail = rs.IsDetail(view, "Top")
+          if isdetail:
+              print "Top is a detail view."
+          else:
+              print "Top is not a detail view."
     See Also:
       IsLayout
       CurrentDetail
@@ -366,9 +366,9 @@ def IsLayout(layout):
       import rhinoscriptsyntax as rs
       view = rs.CurrentView()
       if rs.IsLayout(view):
-      print "The current view is a page layout view."
+          print "The current view is a page layout view."
       else:
-      print "The current view is standard, model view."
+          print "The current view is standard, model view."
     See Also:
       IsLayout
       CurrentDetail
@@ -398,9 +398,9 @@ def IsView(view):
       title = "Perspective"
       result = rs.IsView(title)
       if result:
-      print "The " + title + " view exists."
+          print "The " + title + " view exists."
       else:
-      print "The " + title + " view does not exist."
+          print "The " + title + " view does not exist."
     See Also:
       ViewNames
     """
@@ -425,9 +425,9 @@ def IsViewCurrent(view):
       title = "Perspective"
       result = rs.IsViewCurrent(title)
       if result:
-      print "The " + title + " view is current."
+          print "The " + title + " view is current."
       else:
-      print "The " + title + " view is not current."
+          print "The " + title + " view is not current."
     See Also:
       CurrentView
     """
@@ -450,9 +450,9 @@ def IsViewMaximized(view=None):
       title = rs.CurrentView()
       result = rs.IsViewMaximized(title)
       if result:
-      print "The " + title + " view is maximized."
+          print "The " + title + " view is maximized."
       else:
-      print "The " + title + " view is not maximized."
+          print "The " + title + " view is not maximized."
     See Also:
       MaximizeRestoreView
     """
@@ -471,9 +471,9 @@ def IsViewPerspective(view):
       title = rs.CurrentView()
       result = rs.IsViewPerspective(title)
       if result:
-      print "The " + title + " view is set to perspective projection."
+          print "The " + title + " view is set to perspective projection."
       else:
-      print "The " + title + " view is set to parallel projection."
+          print "The " + title + " view is set to parallel projection."
     See Also:
       ViewProjection
     """
@@ -493,9 +493,9 @@ def IsViewTitleVisible(view=None):
       title = rs.CurrentView()
       vis = rs.IsViewTitleVisible(title)
       if vis:
-      print "The ", title, " view's title is visible."
+          print "The ", title, " view's title is visible."
       else:
-      print "The ", title, " view's title is not visible."
+          print "The ", title, " view's title is not visible."
     See Also:
       ShowViewTitle
     """
@@ -514,7 +514,7 @@ def IsWallpaper(view):
       view = rs.CurrentView()
       filename = rs.OpenFileName()
       if filename and not rs.IsWallpaper(view):
-      rs.Wallpaper(view, filename)
+          rs.Wallpaper(view, filename)
     See Also:
       Wallpaper
     """
@@ -533,7 +533,7 @@ def MaximizeRestoreView(view=None):
       import rhinoscriptsyntax as rs
       title = rs.CurrentView()
       if rs.IsViewMaximized(title):
-      rs.MaximizeRestoreView( title )
+          rs.MaximizeRestoreView( title )
     See Also:
       IsViewMaximized
     """
@@ -552,13 +552,13 @@ def NamedCPlane(name):
       import rhinoscriptsyntax as rs
       names = rs.NamedCPlanes()
       if names:
-      for name in names:
-      plane = rs.NamedCPlane(name)
-      print "CPlane name:" + name
-      print "CPlane origin:" + plane.Origin
-      print "CPlane x-axis:" + plane.Xaxis
-      print "CPlane y-axis:" + plane.Yaxis
-      print "CPlane z-axis:" + plane.Zaxis
+          for name in names:
+              plane = rs.NamedCPlane(name)
+              print "CPlane name:" + name
+              print "CPlane origin:" + plane.Origin
+              print "CPlane x-axis:" + plane.Xaxis
+              print "CPlane y-axis:" + plane.Yaxis
+              print "CPlane z-axis:" + plane.Zaxis
     See Also:
       AddNamedCPlane
       DeleteNamedCPlane
@@ -578,7 +578,7 @@ def NamedCPlanes():
       import rhinoscriptsyntax as rs
       cplanes = rs.NamedCPlanes()
       if cplanes:
-      for cplane in cplanes: print cplane
+          for cplane in cplanes: print cplane
     See Also:
       AddNamedCPlane
       DeleteNamedCPlane
@@ -598,7 +598,7 @@ def NamedViews():
       import rhinoscriptsyntax as rs
       views = rs.NamedViews()
       if views:
-      for view in views: print view
+          for view in views: print view
     See Also:
       AddNamedView
       DeleteNamedView
@@ -798,7 +798,7 @@ def ShowGrid(view=None, show=None):
       import rhinoscriptsyntax as rs
       view = rs.CurrentView()
       if rs.ShowGrid(view)==False:
-      rs.ShowGrid( view, True )
+          rs.ShowGrid( view, True )
     See Also:
       ShowGridAxes
       ShowWorldAxes
@@ -824,7 +824,7 @@ def ShowGridAxes(view=None, show=None):
       import rhinoscriptsyntax as rs
       view = rs.CurrentView()
       if rs.ShowGridAxes(view)==False:
-      rs.ShowGridAxes( view, True )
+          rs.ShowGridAxes( view, True )
     See Also:
       ShowGrid
       ShowWorldAxes
@@ -849,7 +849,7 @@ def ShowViewTitle(view=None, show=True):
       import rhinoscriptsyntax as rs
       view = rs.CurrentView()
       if rs.IsViewTitleVisible(view)==False:
-      rs.ShowViewTitle( view, True )
+          rs.ShowViewTitle( view, True )
     See Also:
       IsViewTitleVisible
     """
@@ -870,7 +870,7 @@ def ShowWorldAxes(view=None, show=None):
       import rhinoscriptsyntax as rs
       view = rs.CurrentView()
       if rs.ShowWorldAxes(view)==False:
-      rs.ShowWorldAxes( view, True )
+          rs.ShowWorldAxes( view, True )
     See Also:
       ShowGrid
       ShowGridAxes
@@ -962,7 +962,7 @@ def ViewCameraLens(view=None, length=None):
       import rhinoscriptsyntax as rs
       view = rs.CurrentView()
       if rs.IsViewPerspective(view):
-      length = rs.ViewCameraLens(view, 100)
+          length = rs.ViewCameraLens(view, 100)
     See Also:
       ViewCameraTarget
       ViewCPlane
@@ -1021,7 +1021,7 @@ def ViewCameraTarget(view=None, camera=None, target=None):
       camera = rs.GetPoint("Select new camera location")
       target = rs.GetPoint("Select new target location")
       if camera and target:
-      rs.ViewCameraTarget( view, camera, target )
+          rs.ViewCameraTarget( view, camera, target )
     See Also:
       ViewCamera
       ViewTarget
@@ -1075,9 +1075,9 @@ def ViewCPlane(view=None, plane=None):
       import rhinoscriptsyntax as rs
       origin = rs.GetPoint("CPlane origin")
       if origin:
-      plane = rs.ViewCPlane()
-      plane = rs.MovePlane(plane,origin)
-      rs.ViewCPlane(None, plane)
+          plane = rs.ViewCPlane()
+          plane = rs.MovePlane(plane,origin)
+          rs.ViewCPlane(None, plane)
     See Also:
       ViewCameraLens
       ViewCameraTarget
@@ -1106,7 +1106,7 @@ def ViewDisplayMode(view=None, mode=None, return_name=True):
       import rhinoscriptsyntax as rs
       views = rs.ViewNames()
       for view in views:
-      rs.ViewDisplayMode(view, 'Ghosted')
+          rs.ViewDisplayMode(view, 'Ghosted')
     See Also:
       CurrentView
       ViewNames
@@ -1197,12 +1197,12 @@ def ViewNames(return_names=True, view_type=0):
       # Print view names
       views = rs.ViewNames()
       if views:
-      for view in views:print view
+          for view in views: print view
       # Print view identifiers
       view_ids = rs.ViewNames(False)
       if view_ids:
-      for id in view_ids:
-      print id, " = ", rs.ViewTitle(id)
+          for id in view_ids:
+              print id, " = ", rs.ViewTitle(id)
     See Also:
       IsView
       ViewTitle
@@ -1224,7 +1224,7 @@ def ViewNearCorners(view=None):
       import rhinoscriptsyntax as rs
       rect = rs.ViewNearCorners()
       if rect:
-      for i in range(4):rs.AddTextDot( i, rect[i] )
+          for i in range(4): rs.AddTextDot( i, rect[i] )
     See Also:
       CurrentView
     """
@@ -1248,7 +1248,7 @@ def ViewProjection(view=None, mode=None):
       import rhinoscriptsyntax as rs
       views = rs.ViewNames()
       if views:
-      for view in views: rs.ViewProjection(view,1)
+          for view in views: rs.ViewProjection(view,1)
     See Also:
       IsViewPerspective
     """
@@ -1283,9 +1283,9 @@ def ViewRadius(view=None, radius=None, mode=False):
       rhParallelView = 1
       views = rs.ViewNames()
       if views:
-      for view in views:
-      if rs.ViewProjection(view)==rhParallelView:
-      rs.ViewRadius(view, 10.0)
+          for view in views:
+              if rs.ViewProjection(view)==rhParallelView:
+                  rs.ViewRadius(view, 10.0)
     See Also:
       IsViewPerspective
       ViewProjection
@@ -1315,8 +1315,8 @@ def ViewSize(view=None):
       import rhinoscriptsyntax as rs
       size = rs.ViewSize()
       if size:
-      print "Width: ", size[0], " pixels."
-      print "Height: ", size[1], " pixels."
+          print "Width: ", size[0], " pixels."
+          print "Height: ", size[1], " pixels."
     See Also:
       ViewCameraLens
       ViewCameraTarget
@@ -1349,7 +1349,7 @@ def ViewSpeedTest(view=None, frames=100, freeze=True, direction=0, angle_degrees
       view = "Perspective"
       seconds = rs.ViewSpeedTest(view, 100)
       if seconds:
-      print "Time to regen viewport 100 times =", seconds, "seconds."
+          print "Time to regen viewport 100 times =", seconds, "seconds."
     See Also:
       
     """
@@ -1399,7 +1399,7 @@ def ViewTitle(view_id):
       import rhinoscriptsyntax as rs
       view_ids = rs.ViewNames(False)
       for id in view_ids:
-      print id + " = " + rs.ViewTitle(id)
+          print id + " = " + rs.ViewTitle(id)
     See Also:
       CurrentView
       ViewNames
@@ -1426,7 +1426,7 @@ def Wallpaper(view=None, filename=None):
       view = rs.CurrentView()
       filename = rs.OpenFileName()
       if filename and not rs.IsWallpaper(view):
-      rs.Wallpaper(view, filename)
+          rs.Wallpaper(view, filename)
     See Also:
       IsWallpaper
       WallpaperGrayScale
@@ -1507,8 +1507,8 @@ def ZoomBoundingBox(bounding_box, view=None, all=False):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject()
       if obj:
-      bbox = rs.BoundingBox(obj)
-      rs.ZoomBoundingBox( bbox )
+          bbox = rs.BoundingBox(obj)
+          rs.ZoomBoundingBox( bbox )
     See Also:
       ZoomExtents
       ZoomSelected

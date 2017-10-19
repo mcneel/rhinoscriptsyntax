@@ -55,10 +55,10 @@ def Angle(point1, point2, plane=True):
       import rhinoscriptsyntax as  rs
       point1 = rs.GetPoint("First  point")
       if point1:
-      point2  = rs.GetPoint("Second point")
-      if point2:
-      angle  = rs.Angle(point1, point2)
-      if  angle: print "Angle: ", angle[0]
+          point2  = rs.GetPoint("Second point")
+          if point2:
+              angle  = rs.Angle(point1, point2)
+              if  angle: print "Angle: ", angle[0]
     See Also:
       Angle2
       Distance
@@ -330,8 +330,8 @@ def CullDuplicatePoints(points, tolerance=-1):
       import rhinoscriptsyntax as rs
       points = rs.GetPoints(,,"First point", "Next point")
       if points:
-      points= rs.CullDuplicatePoints(points)
-      for p in points: print p
+          points= rs.CullDuplicatePoints(points)
+          for p in points: print p
     See Also:
       CullDuplicateNumbers
     """
@@ -355,9 +355,9 @@ def Distance(point1, point2):
       import rhinoscriptsyntax as rs
       point1 = rs.GetPoint("First point")
       if point1:
-      point2 = rs.GetPoint("Second point")
-      if point2:
-      print "Distance: ", rs.Distance(point1, point2)
+          point2 = rs.GetPoint("Second point")
+          if point2:
+              print "Distance: ", rs.Distance(point1, point2)
     See Also:
       Angle
       Angle2
@@ -386,15 +386,15 @@ def GetSettings(filename, section=None, entry=None):
       import rhinoscriptsyntax as rs
       filename = rs.OpenFileName("Open", "Initialization Files (*.ini)|*.ini||")
       if filename:
-      sections = rs.GetSettings(filename)
-      if sections:
-      section = rs.ListBox(sections, "Select a section", filename)
-      if section:
-      entries = rs.GetSettings(filename, section)
-      if entries:
-      entry = rs.ListBox(entries, "Select an entry", section)
-      if entry
-      value = rs.GetSettings(filename, section, entry)
+          sections = rs.GetSettings(filename)
+          if sections:
+              section = rs.ListBox(sections, "Select a section", filename)
+              if section:
+                  entries = rs.GetSettings(filename, section)
+                  if entries:
+                      entry = rs.ListBox(entries, "Select an entry", section)
+                      if entry
+                          value = rs.GetSettings(filename, section, entry)
     See Also:
       
     """
@@ -456,8 +456,8 @@ def SimplifyArray(points):
       import rhinoscriptsyntax as rs
       points = rs.GetPoints()
       if points:
-      numbers = rs.SimplifyArray(points)
-      for n in numbers: print n
+          numbers = rs.SimplifyArray(points)
+          for n in numbers: print n
     See Also:
       
     """
@@ -506,8 +506,8 @@ def SortPointList(points, tolerance=None):
       import rhinoscriptsyntax as rs
       points = rs.GetPointCoordinates()
       if points:
-      sorted = rs.SortPointList(points)
-      rs.AddPolyline(sorted)
+          sorted = rs.SortPointList(points)
+          rs.AddPolyline(sorted)
     See Also:
       SortPoints
     """
@@ -536,8 +536,8 @@ def SortPoints(points, ascending=True, order=0):
       import rhinoscriptsyntax as rs
       points = rs.GetPoints()
       if points:
-      points = rs.SortPoints(points)
-      for p in points: print p
+          points = rs.SortPoints(points)
+          for p in points: print p
     See Also:
       
     """

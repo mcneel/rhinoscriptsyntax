@@ -43,7 +43,7 @@ def AddMaterialToObject(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject()
       if obj:
-      index = rs.ObjectMaterialIndex(obj)
+          index = rs.ObjectMaterialIndex(obj)
     See Also:
       IsMaterialDefault
       ObjectMaterialIndex
@@ -74,7 +74,7 @@ def CopyMaterial(source_index, destination_index):
       src = rs.LayerMaterialIndex("Default")
       dest = rs.LayerMaterialIndex(rs.CurrentLayer())
       if src>=0 and dest>=0 and src!=dest:
-      rs.CopyMaterial( src, dest )
+          rs.CopyMaterial( src, dest )
     See Also:
       LayerMaterialIndex
       ObjectMaterialIndex
@@ -99,11 +99,11 @@ def IsMaterialDefault(material_index):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject()
       if obj:
-      index = rs.ObjectMaterialIndex(obj)
-      if rs.IsMaterialDefault(index):
-      print "Object is assigned default material."
-      else:
-      print "Object is not assigned default material."
+          index = rs.ObjectMaterialIndex(obj)
+          if rs.IsMaterialDefault(index):
+              print "Object is assigned default material."
+          else:
+              print "Object is not assigned default material."
     See Also:
       LayerMaterialIndex
       ObjectMaterialIndex
@@ -122,11 +122,11 @@ def IsMaterialReference(material_index):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject()
       if obj:
-      index = rs.ObjectMaterialIndex(obj)
-      if rs.IsMaterialReference(index):
-      print "The material is referenced from another file."
-      else:
-      print "The material is not referenced from another file."
+          index = rs.ObjectMaterialIndex(obj)
+          if rs.IsMaterialReference(index):
+              print "The material is referenced from another file."
+          else:
+              print "The material is not referenced from another file."
     See Also:
       IsLayerReference
       IsLightReference
@@ -149,8 +149,8 @@ def MatchMaterial(source, destination):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select source object")
       if obj and rs.ObjectMaterialIndex(obj)>-1:
-      objects = rs.GetObjects("Select destination objects")
-      if objects: rs.MatchMaterial( obj, objects )
+          objects = rs.GetObjects("Select destination objects")
+          if objects: rs.MatchMaterial( obj, objects )
     See Also:
       CopyMaterial
       LayerMaterialIndex
@@ -191,9 +191,9 @@ def MaterialBump(material_index, filename=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if obj:
-      index = rs.ObjectMaterialIndex(obj)
-      if index>-1:
-      rs.MaterialBump( index, "C:\\Users\\Steve\\Desktop\\bumpimage.png" )
+          index = rs.ObjectMaterialIndex(obj)
+          if index>-1:
+              rs.MaterialBump( index, "C:\\Users\\Steve\\Desktop\\bumpimage.png" )
     See Also:
       MaterialColor
       MaterialName
@@ -226,9 +226,9 @@ def MaterialColor(material_index, color=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if obj:
-      index = rs.ObjectMaterialIndex(obj)
-      if index>-1:
-      rs.MaterialColor( index, (127, 255, 191) )
+          index = rs.ObjectMaterialIndex(obj)
+          if index>-1:
+              rs.MaterialColor( index, (127, 255, 191) )
     See Also:
       MaterialBump
       MaterialName
@@ -261,9 +261,9 @@ def MaterialEnvironmentMap(material_index, filename=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if obj:
-      index = rs.ObjectMaterialIndex(obj)
-      if index>-1:
-      rs.MaterialEnvironmentMap( index, "C:\\Users\\Steve\\Desktop\\emapimage.png" )
+          index = rs.ObjectMaterialIndex(obj)
+          if index>-1:
+              rs.MaterialEnvironmentMap( index, "C:\\Users\\Steve\\Desktop\\emapimage.png" )
     See Also:
       MaterialBump
       MaterialTexture
@@ -293,9 +293,9 @@ def MaterialName(material_index, name=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if obj:
-      index = rs.ObjectMaterialIndex(obj)
-      if index>-1:
-      rs.MaterialName( index, "Fancy_Material" )
+          index = rs.ObjectMaterialIndex(obj)
+          if index>-1:
+              rs.MaterialName( index, "Fancy_Material" )
     See Also:
       MaterialBump
       MaterialColor
@@ -326,9 +326,9 @@ def MaterialReflectiveColor(material_index, color=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if obj:
-      index = rs.ObjectMaterialIndex(obj)
-      if index>-1:
-      rs.MaterialReflectiveColor( index, (191, 191, 255) )
+          index = rs.ObjectMaterialIndex(obj)
+          if index>-1:
+              rs.MaterialReflectiveColor( index, (191, 191, 255) )
     See Also:
       MaterialBump
       MaterialColor
@@ -363,9 +363,9 @@ def MaterialShine(material_index, shine=None):
       MAX_SHINE = 255.0
       obj = rs.GetObject("Select object")
       if obj:
-      index = rs.ObjectMaterialIndex(obj)
-      if index>-1:
-      rs.MaterialShine( index, MAX_SHINE/2 )
+          index = rs.ObjectMaterialIndex(obj)
+          if index>-1:
+              rs.MaterialShine( index, MAX_SHINE/2 )
     See Also:
       MaterialBump
       MaterialColor
@@ -397,9 +397,9 @@ def MaterialTexture(material_index, filename=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if obj:
-      index = rs.ObjectMaterialIndex(obj)
-      if index>-1:
-      rs.MaterialTexture( index, "C:\\Users\\Steve\\Desktop\\textureimage.png" )
+          index = rs.ObjectMaterialIndex(obj)
+          if index>-1:
+              rs.MaterialTexture( index, "C:\\Users\\Steve\\Desktop\\textureimage.png" )
     See Also:
       MaterialBump
       MaterialColor
@@ -433,9 +433,9 @@ def MaterialTransparency(material_index, transparency=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if obj:
-      index = rs.ObjectMaterialIndex(obj)
-      if index>-1:
-      rs.MaterialTransparency( index, 0.50 )
+          index = rs.ObjectMaterialIndex(obj)
+          if index>-1:
+              rs.MaterialTransparency( index, 0.50 )
     See Also:
       MaterialBump
       MaterialColor
@@ -467,9 +467,9 @@ def MaterialTransparencyMap(material_index, filename=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if obj:
-      index = rs.ObjectMaterialIndex(obj)
-      if index>-1:
-      rs.MaterialTransparencyMap( index, "C:\\Users\\Steve\\Desktop\\texture.png" )
+          index = rs.ObjectMaterialIndex(obj)
+          if index>-1:
+              rs.MaterialTransparencyMap( index, "C:\\Users\\Steve\\Desktop\\texture.png" )
     See Also:
       MaterialBump
       MaterialEnvironmentMap
@@ -496,8 +496,8 @@ def ResetMaterial(material_index):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if obj:
-      index = rs.ObjectMaterialIndex(obj)
-      if index>-1: rs.ResetMaterial(index)
+          index = rs.ObjectMaterialIndex(obj)
+          if index>-1: rs.ResetMaterial(index)
     See Also:
       LayerMaterialIndex
       ObjectMaterialIndex

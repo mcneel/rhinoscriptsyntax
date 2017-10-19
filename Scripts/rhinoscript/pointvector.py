@@ -60,9 +60,9 @@ def IsVectorTiny(vector):
       pt2 = rs.GetPoint("Next point")
       vector = pt2 - pt1
       if rs.IsVectorTiny(vector):
-      print "The vector is tiny."
+          print "The vector is tiny."
       else:
-      print "The vector is not tiny."
+          print "The vector is not tiny."
     See Also:
       IsVectorZero
       VectorCreate
@@ -83,9 +83,9 @@ def IsVectorZero(vector):
       pt2 = rs.GetPoint("Next point")
       vector = pt2 - pt1
       if rs.IsVectorZero(vector):
-      print "The vector is zero."
+          print "The vector is zero."
       else:
-      print "The vector is not zero."
+          print "The vector is not zero."
     See Also:
       IsVectorTiny
       VectorCreate
@@ -127,15 +127,15 @@ def PointArrayClosestPoint(points, test_point):
       number: index of the element in the point list that is closest to the test point
     Example:
       import rhinoscriptsyntax as rs
-      cloud= rs.GetObject("Select point cloud")
+      cloud = rs.GetObject("Select point cloud")
       if cloud:
-      point = rs.GetPoint("Point to test")
-      if point:
-      cloud = rs.PointCloudPoints(cloud)
-      index = rs.PointArrayClosestPoint(cloud, point)
-      if index is not None:
-      point_id = rs.AddPoint(cloud[index])
-      rs.SelectObject( point_id )
+          point = rs.GetPoint("Point to test")
+          if point:
+              cloud = rs.PointCloudPoints(cloud)
+              index = rs.PointArrayClosestPoint(cloud, point)
+              if index is not None:
+                  point_id = rs.AddPoint(cloud[index])
+                  rs.SelectObject( point_id )
     See Also:
       CurveClosestPoint
       SurfaceClosestPoint
@@ -180,12 +180,12 @@ def PointClosestObject(point, object_ids):
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select target objects for closest point", 63)
       if objs:
-      point = rs.GetPoint("Test point")
-      if point:
-      results = rs.PointClosestObject(point, objs)
-      if results:
-      print "Object id:", results[0]
-      rs.AddPoint( results[1] )
+          point = rs.GetPoint("Test point")
+          if point:
+              results = rs.PointClosestObject(point, objs)
+              if results:
+                    print "Object id:", results[0]
+                    rs.AddPoint( results[1] )
     See Also:
       CurveClosestObject
     """
@@ -291,13 +291,13 @@ def PointsAreCoplanar(points, tolerance=1.0e-12):
     Example:
       import rhinoscriptsyntax as rs
       def SurfacesAreCoplanar(srf1, srf2):
-      if( not rs.IsSurface(srf1) or not rs.IsSurface(srf2) ): return False
-      pts1 = rs.SurfacePoints(srf1)
-      pts2 = rs.SurfacePoints(srf2)
-      if( pts1==None or pts2==None ): return False
-      pts1.extend(pts2)
-      return rs.PointsAreCoplanar(pts1)
-      
+          if( not rs.IsSurface(srf1) or not rs.IsSurface(srf2) ): return False
+          pts1 = rs.SurfacePoints(srf1)
+          pts2 = rs.SurfacePoints(srf2)
+          if( pts1==None or pts2==None ): return False
+          pts1.extend(pts2)
+          return rs.PointsAreCoplanar(pts1)
+       
       x = rs.GetObject( "First surface to test", rs.filter.surface)
       y = rs.GetObject( "Second surface to test", rs.filter.surface)
       print SurfacesAreCoplanar(x, y)

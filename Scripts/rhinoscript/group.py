@@ -92,7 +92,7 @@ def DeleteGroup(group_name):
       import rhinoscriptsyntax as rs
       groups = rs.GroupNames()
       if groups:
-      for group in groups: rs.DeleteGroup(group)
+          for group in groups: rs.DeleteGroup(group)
     See Also:
       AddGroup
       GroupCount
@@ -132,7 +132,7 @@ def GroupNames():
       import rhinoscriptsyntax as rs
       groups = rs.GroupNames()
       if groups:
-      for group in groups: print group
+          for group in groups: print group
     See Also:
       AddGroup
       DeleteGroup
@@ -156,7 +156,7 @@ def HideGroup(group_name):
       import rhinoscriptsyntax as rs
       groups = rs.GroupNames()
       if groups:
-      for group in groups: rs.HideGroup(group)
+          for group in groups: rs.HideGroup(group)
     See Also:
       LockGroup
       ShowGroup
@@ -177,9 +177,9 @@ def IsGroup(group_name):
       import rhinoscriptsyntax as rs
       group = rs.GetString("Group name to verify")
       if rs.IsGroup(group):
-      print "The group exists."
+          print "The group exists."
       else:
-      print "The group does not exist."
+          print "The group does not exist."
     See Also:
       AddGroup
       DeleteGroup
@@ -202,8 +202,8 @@ def IsGroupEmpty(group_name):
       import rhinoscriptsyntax as rs
       names = rs.GroupNames()
       if names:
-      for name in names:
-      if rs.IsGroupEmpty(name): rs.DeleteGroup(name)
+          for name in names:
+              if rs.IsGroupEmpty(name): rs.DeleteGroup(name)
     See Also:
       AddObjectsToGroup
       AddObjectToGroup
@@ -229,7 +229,7 @@ def LockGroup(group_name):
       import rhinoscriptsyntax as rs
       names = rs.GroupNames()
       if names:
-      for name in names: rs.LockGroup(name)
+          for name in names: rs.LockGroup(name)
     See Also:
       HideGroup
       ShowGroup
@@ -336,8 +336,8 @@ def RenameGroup(old_name, new_name):
       import rhinoscriptsyntax as rs
       strOldGroup = rs.GetString("Old group name")
       if strOldGroup:
-      strNewGroup = rs.GetString("New group name")
-      if strNewName: rs.RenameGroup(strOldGroup, strNewGroup)
+          strNewGroup = rs.GetString("New group name")
+          if strNewName: rs.RenameGroup(strOldGroup, strNewGroup)
     See Also:
       AddGroup
       DeleteGroup
@@ -366,7 +366,7 @@ def ShowGroup(group_name):
       import rhinoscriptsyntax as rs
       groups = rs.GroupNames()
       if groups:
-      for group in groups: rs.ShowGroup(group)
+          for group in groups: rs.ShowGroup(group)
     See Also:
       HideGroup
       LockGroup
@@ -390,7 +390,7 @@ def UnlockGroup(group_name):
       import rhinoscriptsyntax as rs
       groups = rs.GroupNames()
       if groups:
-      for group in groups: rs.UnlockGroup(group)
+          for group in groups: rs.UnlockGroup(group)
     See Also:
       HideGroup
       LockGroup

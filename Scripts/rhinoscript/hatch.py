@@ -19,9 +19,9 @@ def AddHatch(curve_id, hatch_pattern=None, scale=1.0, rotation=0.0):
       import rhinoscriptsyntax as rs
       circle = rs.AddCircle(rs.WorldXYPlane(), 10.0)
       if rs.IsHatchPattern("Grid"):
-      rs.AddHatch( circle, "Grid" )
+          rs.AddHatch( circle, "Grid" )
       else:
-      rs.AddHatch( circle, rs.CurrentHatchPattern() )
+          rs.AddHatch( circle, rs.CurrentHatchPattern() )
     See Also:
       AddHatches
       CurrentHatchPattern
@@ -49,10 +49,10 @@ def AddHatches(curve_ids, hatch_pattern=None, scale=1.0, rotation=0.0, tolerance
       import rhinoscriptsyntax as rs
       curves = rs.GetObjects("Select closed planar curves", rs.filter.curve)
       if curves:
-      if rs.IsHatchPattern("Grid"):
-      rs.AddHatches( curves, "Grid" )
-      else:
-      rs.AddHatches( curves, rs.CurrentHatchPattern() )
+          if rs.IsHatchPattern("Grid"):
+              rs.AddHatches( curves, "Grid" )
+          else:
+              rs.AddHatches( curves, rs.CurrentHatchPattern() )
     See Also:
       AddHatch
       CurrentHatchPattern
@@ -99,9 +99,9 @@ def AddHatchPatterns(filename, replace=False):
       import rhinoscriptsyntax as rs
       filename = rs.OpenFileName("Import", "Pattern Files (*.pat)|*.pat||")
       if filename:
-      patterns = rs.AddHatchPatterns(filename)
-      if patterns:
-      for pattern in patterns: print pattern
+          patterns = rs.AddHatchPatterns(filename)
+          if patterns:
+              for pattern in patterns: print pattern
     See Also:
       HatchPatternCount
       HatchPatternNames
@@ -192,9 +192,9 @@ def HatchPattern(hatch_id, hatch_pattern=None):
       import rhinoscriptsyntax as rs
       objects = rs.AllObjects()
       if objects is not None:
-      for obj in objects:
-      if rs.IsHatch(obj) and rs.HatchPattern(obj)=="Solid":
-      rs.SelectObject(obj)
+          for obj in objects:
+              if rs.IsHatch(obj) and rs.HatchPattern(obj)=="Solid":
+                  rs.SelectObject(obj)
     See Also:
       AddHatch
       AddHatches
@@ -239,8 +239,8 @@ def HatchPatternDescription(hatch_pattern):
       import rhinoscriptsyntax as rs
       patterns = rs.HatchPatternNames()
       for pattern in patterns:
-      description = rs.HatchPatternDescription(pattern)
-      if description:print pattern, "-", description
+          description = rs.HatchPatternDescription(pattern)
+          if description: print pattern, "-", description
     See Also:
       HatchPatternCount
       HatchPatternNames
@@ -264,8 +264,8 @@ def HatchPatternFillType(hatch_pattern):
       import rhinoscriptsyntax as rs
       patterns = rs.HatchPatternNames()
       for pattern in patterns:
-      fill = rs.HatchPatternFillType(pattern)
-      print pattern, "-", fill
+          fill = rs.HatchPatternFillType(pattern)
+          print pattern, "-", fill
     See Also:
       HatchPatternCount
       HatchPatternNames
@@ -283,9 +283,9 @@ def HatchPatternNames():
       import rhinoscriptsyntax as rs
       patterns = rs.HatchPatternNames()
       for pattern in patterns:
-      description = rs.HatchPatternDescription(pattern)
-      if description: print pattern, "-", description
-      else: print pattern
+          description = rs.HatchPatternDescription(pattern)
+          if description: print pattern, "-", description
+          else: print pattern
     See Also:
       HatchPatternCount
     """
@@ -310,9 +310,9 @@ def HatchRotation(hatch_id, rotation=None):
       import rhinoscriptsyntax as rs
       objects = rs.AllObjects()
       if objects:
-      for obj in objects:
-      if rs.IsHatch(obj) and rs.HatchRotation(obj)>0:
-      rs.HatchRotation(obj,0)
+          for obj in objects:
+              if rs.IsHatch(obj) and rs.HatchRotation(obj)>0:
+                  rs.HatchRotation(obj,0)
     See Also:
       AddHatch
       AddHatches
@@ -347,9 +347,9 @@ def HatchScale(hatch_id, scale=None):
       import rhinoscriptsyntax as rs
       objects = rs.NormalObjects()
       if objects:
-      for obj in objects:
-      if rs.IsHatch(obj) and rs.HatchScale(obj)>1.0:
-      rs.HatchScale(obj, 1.0)
+          for obj in objects:
+              if rs.IsHatch(obj) and rs.HatchScale(obj)>1.0:
+                  rs.HatchScale(obj, 1.0)
     See Also:
       HatchPattern
       HatchRotation
@@ -415,10 +415,10 @@ def IsHatchPatternCurrent(hatch_pattern):
       import rhinoscriptsyntax as rs
       hatch = rs.GetString("Hatch pattern name")
       if rs.IsHatchPattern(hatch):
-      if rs.IsHatchPatternCurrent(hatch):
-      print "The hatch pattern is current."
-      else:
-      print "The hatch pattern is not current."
+          if rs.IsHatchPatternCurrent(hatch):
+              print "The hatch pattern is current."
+          else:
+              print "The hatch pattern is not current."
       else: print "The hatch pattern does not exist."
     See Also:
       IsHatchPattern
@@ -440,12 +440,12 @@ def IsHatchPatternReference(hatch_pattern):
       import rhinoscriptsyntax as rs
       hatch = rs.GetString("Hatch pattern name")
       if rs.IsHatchPattern(hatch):
-      if rs.IsHatchPatternReference(hatch):
-      print "The hatch pattern is reference."
+          if rs.IsHatchPatternReference(hatch):
+              print "The hatch pattern is reference."
+          else:
+              print "The hatch pattern is not reference."
       else:
-      print "The hatch pattern is not reference."
-      else:
-      print "The hatch pattern does not exist."
+          print "The hatch pattern does not exist."
     See Also:
       IsHatchPattern
       IsHatchPatternCurrent

@@ -80,14 +80,14 @@ def XformChangeBasis(initial_plane, final_plane):
       import math
       objs = rs.GetObjects("Select objects to shear")
       if objs:
-      cplane = rs.ViewCPlane()
-      cob = rs.XformChangeBasis(rs.WorldXYPlane(), cplane)
-      shear2d = rs.XformIdentity()
-      shear2d[0,2] = math.tan(math.radians(45.0))
-      cob_inverse = rs.XformChangeBasis(cplane, rs.WorldXYPlane())
-      temp = rs.XformMultiply(shear2d, cob)
-      xform = rs.XformMultiply(cob_inverse, temp)
-      rs.TransformObjects( objs, xform, True )
+          cplane = rs.ViewCPlane()
+          cob = rs.XformChangeBasis(rs.WorldXYPlane(), cplane)
+          shear2d = rs.XformIdentity()
+          shear2d[0,2] = math.tan(math.radians(45.0))
+          cob_inverse = rs.XformChangeBasis(cplane, rs.WorldXYPlane())
+          temp = rs.XformMultiply(shear2d, cob)
+          xform = rs.XformMultiply(cob_inverse, temp)
+          rs.TransformObjects( objs, xform, True )
     See Also:
       XformCPlaneToWorld
       XformWorldToCPlane
@@ -196,8 +196,8 @@ def XformDiagonal(diagonal_value):
     Example:
       import rhinoscriptsyntax as rs
       def printmatrix(xform):
-      for i in range(4):
-      print "[", xform[i,0], ", ", xform[i,1], ", ", xform[i,2], ", ", xform[i,3], "]"
+          for i in range(4):
+              print "[", xform[i,0], ", ", xform[i,1], ", ", xform[i,2], ", ", xform[i,3], "]"
       printmatrix(rs.XformDiagonal(3))
     See Also:
       XformIdentity
@@ -213,8 +213,8 @@ def XformIdentity():
     Example:
       import rhinoscriptsyntax as rs
       def printmatrix(xform):
-      for i in range(4):
-      print "[", xform[i,0], ", ", xform[i,1], ", ", xform[i,2], ", ", xform[i,3], "]"
+          for i in range(4):
+              print "[", xform[i,0], ", ", xform[i,1], ", ", xform[i,2], ", ", xform[i,3], "]"
       printmatrix(rs.XformIdentity())
     See Also:
       XformDiagonal
@@ -234,7 +234,7 @@ def XformInverse(xform):
       import rhinoscriptsyntax as rs
       xform = rs.BlockInstanceXform(obj)
       if xform:
-      rs.TransformObject( obj, rs.XformInverse(xform) )
+          rs.TransformObject( obj, rs.XformInverse(xform) )
     See Also:
       XformDeterminant
     """
@@ -255,9 +255,9 @@ def XformMirror(mirror_plane_point, mirror_plane_normal):
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select objects to mirror")
       if objs:
-      plane = rs.ViewCPlane()
-      xform = rs.XformMirror(plane.Origin, plane.Normal)
-      rs.TransformObjects( objs, xform, True )
+          plane = rs.ViewCPlane()
+          xform = rs.XformMirror(plane.Origin, plane.Normal)
+          rs.TransformObjects( objs, xform, True )
     See Also:
       XformPlanarProjection
       XformRotation1
@@ -285,14 +285,14 @@ def XformMultiply(xform1, xform2):
       import math
       objs = rs.GetObjects("Select objects to shear")
       if objs:
-      cplane = rs.ViewCPlane()
-      cob = rs.XformChangeBasis(rs.WorldXYPlane(), cplane)
-      shear2d = rs.XformIdentity()
-      shear2d[0,2] = math.tan(math.radians(45.0))
-      cob_inv = rs.XformChangeBasis(cplane, rs.WorldXYPlane())
-      temp = rs.XformMultiply(shear2d, cob)
-      xform = rs.XformMultiply(cob_inv, temp)
-      rs.TransformObjects( objs, xform, True )
+          cplane = rs.ViewCPlane()
+          cob = rs.XformChangeBasis(rs.WorldXYPlane(), cplane)
+          shear2d = rs.XformIdentity()
+          shear2d[0,2] = math.tan(math.radians(45.0))
+          cob_inv = rs.XformChangeBasis(cplane, rs.WorldXYPlane())
+          temp = rs.XformMultiply(shear2d, cob)
+          xform = rs.XformMultiply(cob_inv, temp)
+          rs.TransformObjects( objs, xform, True )
     See Also:
       XformPlanarProjection
       XformRotation1
@@ -318,9 +318,9 @@ def XformPlanarProjection(plane):
       import rhinoscriptsyntax as rs
       objects = rs.GetObjects("Select objects to project")
       if objects:
-      cplane = rs.ViewCPlane()
-      xform = rs.XformPlanarProjection(cplane)
-      rs.TransformObjects( objects, xform, True )
+          cplane = rs.ViewCPlane()
+          xform = rs.XformPlanarProjection(cplane)
+          rs.TransformObjects( objects, xform, True )
     See Also:
       XformMirror
       XformRotation1
@@ -428,8 +428,8 @@ def XformScale(scale, point=None):
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select objects to scale")
       if objs:
-      xform = rs.XformScale( (3.0,1.0,1.0) )
-      rs.TransformObjects( objs, xform, True)
+          xform = rs.XformScale( (3.0,1.0,1.0) )
+          rs.TransformObjects( objs, xform, True)
     See Also:
       XformMirror
       XformPlanarProjection
@@ -497,9 +497,9 @@ def XformShear(plane, x, y, z):
       import rhinoscriptsyntax as rs
       objects = rs.GetObjects("Select objects to shear")
       if objects:
-      cplane = rs.ViewCPlane()
-      xform = rs.XformShear(cplane, (1,1,0), (-1,1,0), (0,0,1))
-      rs.TransformObjects(objects, xform, True)
+          cplane = rs.ViewCPlane()
+          xform = rs.XformShear(cplane, (1,1,0), (-1,1,0), (0,0,1))
+          rs.TransformObjects(objects, xform, True)
     See Also:
       XformMirror
       XformPlanarProjection
@@ -527,8 +527,8 @@ def XformTranslation(vector):
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select objects to copy")
       if objs:
-      xform = rs.XformTranslation([1,0,0])
-      rs.TransformObjects( objs, xform, True )
+          xform = rs.XformTranslation([1,0,0])
+          rs.TransformObjects( objs, xform, True )
     See Also:
       XformMirror
       XformPlanarProjection
@@ -605,8 +605,8 @@ def XformZero():
     Example:
       import rhinoscriptsyntax as rs
       def printmatrix(xform):
-      for i in range(4):
-      print "[", xform[i,0], ", ", xform[i,1], ", ", xform[i,2], ", ", xform[i,3], "]"
+          for i in range(4):
+              print "[", xform[i,0], ", ", xform[i,1], ", ", xform[i,2], ", ", xform[i,3], "]"
       printmatrix( rs.XformZero() )
     See Also:
       XformDiagonal

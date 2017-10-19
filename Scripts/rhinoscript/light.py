@@ -21,8 +21,8 @@ def AddDirectionalLight(start_point, end_point):
       import rhinoscriptsyntax as rs
       end = rs.GetPoint("End of light vector direction")
       if end:
-      start = rs.GetPoint("Start of light vector direction", end)
-      if start: rs.AddDirectionalLight( start, end )
+          start = rs.GetPoint("Start of light vector direction", end)
+          if start: rs.AddDirectionalLight( start, end )
     See Also:
       IsDirectionalLight
     """
@@ -52,8 +52,8 @@ def AddLinearLight(start_point, end_point, width=None):
       import rhinoscriptsyntax as rs
       start = rs.GetPoint("Light origin")
       if start:
-      end = rs.GetPoint("Light length and direction", start)
-      if end: rs.AddLinearLight(start, end)
+          end = rs.GetPoint("Light length and direction", start)
+          if end: rs.AddLinearLight(start, end)
     See Also:
       IsLinearLight
     """
@@ -158,8 +158,8 @@ def AddSpotLight(origin, radius, apex_point):
       radius = 5.0
       origin = rs.GetPoint("Base of cone")
       if origin:
-      apex = rs.GetPoint("End of cone", origin)
-      if apex: rs.AddSpotLight(origin, radius, apex)
+          apex = rs.GetPoint("End of cone", origin)
+          if apex: rs.AddSpotLight(origin, radius, apex)
     See Also:
       IsSpotLight
       SpotLightHardness
@@ -222,9 +222,9 @@ def IsDirectionalLight(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a light", rs.filter.light)
       if rs.IsDirectionalLight(id):
-      print "The object is a directional light."
+          print "The object is a directional light."
       else:
-      print "The object is not a directional light."
+          print "The object is not a directional light."
     See Also:
       AddDirectionalLight
     """
@@ -242,9 +242,9 @@ def IsLight(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a light")
       if rs.IsLight(id):
-      print "The object is a light."
+          print "The object is a light."
       else:
-      print "The object is not a light."
+          print "The object is not a light."
     See Also:
       EnableLight
       IsLightEnabled
@@ -267,9 +267,9 @@ def IsLightEnabled(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a light", rs.filter.light)
       if rs.IsLightEnabled(id):
-      print "The light is enabled (on)."
+          print "The light is enabled (on)."
       else:
-      print "The light is disabled (off)."
+          print "The light is disabled (off)."
     See Also:
       EnableLight
       IsLight
@@ -292,9 +292,9 @@ def IsLightReference(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a light", rs.filter.light)
       if rs.IsLightReference(id):
-      print "The light is a reference object."
+          print "The light is a reference object."
       else:
-      print "The light is not a reference object."
+          print "The light is not a reference object."
     See Also:
       IsObjectReference
     """
@@ -312,9 +312,9 @@ def IsLinearLight(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a light", rs.filter.light)
       if rs.IsLinearLight(id):
-      print "The object is a linear light."
+          print "The object is a linear light."
       else:
-      print "The object is not a linear light."
+          print "The object is not a linear light."
     See Also:
       AddLinearLight
     """
@@ -332,9 +332,9 @@ def IsPointLight(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a light", rs.filter.light)
       if rs.IsPointLight(id):
-      print "The object is a point light."
+          print "The object is a point light."
       else:
-      print "The object is not a point light."
+          print "The object is not a point light."
     See Also:
       AddPointLight
     """
@@ -352,9 +352,9 @@ def IsRectangularLight(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a light", rs.filter.light)
       if rs.IsRectangularLight(id):
-      print "The object is a rectangular light."
+          print "The object is a rectangular light."
       else:
-      print "The object is not a rectangular light."
+          print "The object is not a rectangular light."
     See Also:
       AddRectangularLight
     """
@@ -372,9 +372,9 @@ def IsSpotLight(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a light", rs.filter.light)
       if rs.IsSpotLight(id):
-      print "The object is a spot light."
+          print "The object is a spot light."
       else:
-      print "The object is not a spot light."
+          print "The object is not a spot light."
     See Also:
       AddSpotLight
       SpotLightHardness
@@ -505,8 +505,8 @@ def LightName(object_id, name=None):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a light", rs.filter.light)
       if id:
-      name = rs.GetString("New light name")
-      if name: rs.LightName(id, name)
+          name = rs.GetString("New light name")
+          if name: rs.LightName(id, name)
     See Also:
       EnableLight
       IsLight
@@ -534,8 +534,8 @@ def LightObjects():
       import rhinoscriptsyntax as rs
       lights = rs.LightObjects()
       if lights:
-      rs.AddLayer( "Lights" )
-      for light in lights: rs.ObjectLayer( light, "Lights" )
+          rs.AddLayer( "Lights" )
+          for light in lights: rs.ObjectLayer( light, "Lights" )
     See Also:
       EnableLight
       IsLight
@@ -563,10 +563,10 @@ def RectangularLightPlane(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a rectangular light", rs.filter.light)
       if id:
-      rc = rs.RectangularLightPlane(id)
-      if rc:
-      plane, extents = rc
-      rs.AddPlaneSurface( plane, extents[0], extents[1] )
+          rc = rs.RectangularLightPlane(id)
+          if rc:
+              plane, extents = rc
+              rs.AddPlaneSurface( plane, extents[0], extents[1] )
     See Also:
       IsRectangularLight
     """

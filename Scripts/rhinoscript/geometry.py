@@ -260,10 +260,10 @@ def BoundingBox(objects, view_or_plane=None, in_world_coords=True):
       import rhinoscriptsyntax as rs
       object = rs.GetObject("Select object")
       if object:
-      box = rs.BoundingBox(object)
-      if box:
-      for i, point in enumerate(box):
-      rs.AddTextDot( i, point )
+          box = rs.BoundingBox(object)
+          if box:
+              for i, point in enumerate(box):
+                  rs.AddTextDot( i, point )
     See Also:
       
     """
@@ -366,9 +366,9 @@ def IsClippingPlane(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a clipping plane")
       if rs.IsClippingPlane(id):
-      print "The object is a clipping plane."
+          print "The object is a clipping plane."
       else:
-      print "The object is not a clipping plane."
+          print "The object is not a clipping plane."
     See Also:
       AddClippingPlane
     """
@@ -386,9 +386,9 @@ def IsPoint(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a point")
       if rs.IsPoint(id):
-      print "The object is a point."
+          print "The object is a point."
       else:
-      print "The object is not a point."
+          print "The object is not a point."
     See Also:
       AddPoint
       PointCoordinates
@@ -407,9 +407,9 @@ def IsPointCloud(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a point cloud")
       if rs.IsPointCloud(id):
-      print "The object is a point cloud."
+          print "The object is a point cloud."
       else:
-      print "The object is not a point cloud."
+          print "The object is not a point cloud."
     See Also:
       AddPointCloud
       PointCloudCount
@@ -429,9 +429,9 @@ def IsText(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a text object")
       if rs.IsText(id):
-      print "The object is a text object."
+          print "The object is a text object."
       else:
-      print "The object is not a text object."
+          print "The object is not a text object."
     See Also:
       AddText
     """
@@ -449,9 +449,9 @@ def IsTextDot(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a text dot object")
       if rs.IsTextDot(id):
-      print "The object is a text dot object."
+          print "The object is a text dot object."
       else:
-      print "The object is not a text dot object."
+          print "The object is not a text dot object."
     See Also:
       AddTextDot
     """
@@ -488,9 +488,9 @@ def PointCloudHasHiddenPoints(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a point cloud", rs.filter.pointcloud)
       if rs.PointCloudHasHiddenPoints(obj):
-      print "The point cloud has hidden points."
+          print "The point cloud has hidden points."
       else:
-      print "The point cloud has no hidden points."
+          print "The point cloud has no hidden points."
     See Also:
       PointCloudHasPointColors
       PointCloudHidePoints
@@ -510,9 +510,9 @@ def PointCloudHasPointColors(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a point cloud", rs.filter.pointcloud)
       if rs.PointCloudHasPointColors(obj):
-      print "The point cloud has point colors."
+          print "The point cloud has point colors."
       else:
-      print "The point cloud has no point colors."
+          print "The point cloud has no point colors."
     See Also:
       PointCloudHasPointColors
       PointCloudHidePoints
@@ -533,10 +533,10 @@ def PointCloudHidePoints(object_id, hidden=[]):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a point cloud", rs.filter.pointcloud)
       if obj:
-      hidden = [True] * rs.PointCloudCount(obj)
-      for i in range(len(hidden)):
-      hidden[i] = (i%2==0)
-      rs.PointCloudHidePoints(obj, hidden)
+          hidden = [True] * rs.PointCloudCount(obj)
+          for i in range(len(hidden)):
+              hidden[i] = (i%2==0)
+          rs.PointCloudHidePoints(obj, hidden)
     See Also:
       PointCloudHasPointColors
       PointCloudPointColors
@@ -567,17 +567,17 @@ def PointCloudPointColors(object_id, colors=[]):
     Example:
       import rhinoscriptsyntax as rs
       import random
-      
+       
       def RandomColor():
-      red = random.randint(0,255)
-      green = random.randint(0,255)
-      blue = random.randint(0,255)
-      return rs.coercecolor((red,green,blue))
-      
+          red = random.randint(0,255)
+          green = random.randint(0,255)
+          blue = random.randint(0,255)
+          return rs.coercecolor((red,green,blue))
+       
       obj = rs.GetObject("Select point cloud", rs.filter.pointcloud)
       if obj:
-      colors = [RandomColor() for i in range(rs.PointCloudCount(obj))]
-      rs.PointCloudColors(obj, colors)
+          colors = [RandomColor() for i in range(rs.PointCloudCount(obj))]
+          rs.PointCloudColors(obj, colors)
     See Also:
       PointCloudHasHiddenPoints
       PointCloudHasPointColors
@@ -810,9 +810,9 @@ def TextDotPoint(object_id, point=None):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select text dot")
       if rs.IsTextDot(id):
-      point = rs.TestDotPoint(id)
-      rs.AddPoint( point )
-      rs.TextDotPoint(id, [0,0,0])
+          point = rs.TestDotPoint(id)
+          rs.AddPoint( point )
+          rs.TextDotPoint(id, [0,0,0])
     See Also:
       AddTextDot
       IsTextDot
@@ -842,7 +842,7 @@ def TextDotText(object_id, text=None):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select text dot")
       if rs.IsTextDot(id):
-      rs.TextDotText( id, "Rhino")
+          rs.TextDotText( id, "Rhino")
     See Also:
       AddTextDot
       IsTextDot
@@ -909,7 +909,7 @@ def TextObjectHeight(object_id, height=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select text")
       if rs.IsText(obj):
-      rs.TextObjectHeight( obj, 1.0 )
+          rs.TextObjectHeight( obj, 1.0 )
     See Also:
       AddText
       IsText
@@ -944,8 +944,8 @@ def TextObjectPlane(object_id, plane=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select text")
       if rs.IsText(obj):
-      plane = rs.ViewCPlane("Top")
-      rs.TextObjectPlane( obj, plane )
+          plane = rs.ViewCPlane("Top")
+          rs.TextObjectPlane( obj, plane )
     See Also:
       AddText
       IsText
@@ -980,7 +980,7 @@ def TextObjectPoint(object_id, point=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select text")
       if rs.IsText(obj):
-      rs.TextObjectPoint( obj, [0,0,0] )
+          rs.TextObjectPoint( obj, [0,0,0] )
     See Also:
       AddText
       IsText
@@ -1020,7 +1020,7 @@ def TextObjectStyle(object_id, style=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select text")
       if rs.IsText(obj):
-      rs.TextObjectStyle( obj, 3 )
+          rs.TextObjectStyle( obj, 3 )
     See Also:
       AddText
       IsText

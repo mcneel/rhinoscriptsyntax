@@ -14,11 +14,11 @@ def DistanceToPlane(plane, point):
       import rhinoscriptsyntax as rs
       point = rs.GetPoint("Point to test")
       if point:
-      plane = rs.ViewCPlane()
-      if plane:
-      distance = rs.DistanceToPlane(plane, point)
-      if distance is not None:
-      print "Distance to plane: ", distance
+          plane = rs.ViewCPlane()
+          if plane:
+              distance = rs.DistanceToPlane(plane, point)
+              if distance is not None:
+                  print "Distance to plane: ", distance
     See Also:
       Distance
       PlaneClosestPoint
@@ -87,9 +87,9 @@ def MovePlane(plane, origin):
       import rhinoscriptsyntax as rs
       origin = rs.GetPoint("CPlane origin")
       if origin:
-      plane = rs.ViewCPlane()
-      plane = rs.MovePlane(plane,origin)
-      rs.ViewCplane(plane)
+          plane = rs.ViewCPlane()
+          plane = rs.MovePlane(plane,origin)
+          rs.ViewCplane(plane)
     See Also:
       PlaneFromFrame
       PlaneFromNormal
@@ -120,9 +120,9 @@ def PlaneClosestPoint(plane, point, return_point=True):
       import rhinoscriptsyntax as rs
       point = rs.GetPoint("Point to test")
       if point:
-      plane = rs.ViewCPlane()
-      if plane:
-      print rs.PlaneClosestPoint(plane, point)
+          plane = rs.ViewCPlane()
+          if plane:
+              print rs.PlaneClosestPoint(plane, point)
     See Also:
       DistanceToPlane
       EvaluatePlane
@@ -183,14 +183,13 @@ def PlaneCurveIntersection(plane, curve, tolerance=None):
       None: on error
     Example:
       import rhinoscriptsyntax as rs
-      
       curve = rs.GetObject("Select curve", rs.filter.curve)
       if curve:
-      plane = rs.WorldXYPlane()
-      intersections = rs.PlaneCurveIntersection(plane, curve)
-      if intersections:
-      for intersection in intersections:
-      rs.AddPoint(intersection[1])
+          plane = rs.WorldXYPlane()
+          intersections = rs.PlaneCurveIntersection(plane, curve)
+          if intersections:
+              for intersection in intersections:
+                  rs.AddPoint(intersection[1])
     See Also:
       IntersectPlanes
       PlanePlaneIntersection
@@ -256,11 +255,11 @@ def PlaneFitFromPoints(points):
       import rhinoscriptsyntax as rs
       points = rs.GetPoints()
       if points:
-      plane = rs.PlaneFitFromPoints(points)
-      if plane:
-      magX = plane.XAxis.Length
-      magY = plane.YAxis.Length
-      rs.AddPlaneSurface( plane, magX, magY )
+          plane = rs.PlaneFitFromPoints(points)
+          if plane:
+              magX = plane.XAxis.Length
+              magY = plane.YAxis.Length
+              rs.AddPlaneSurface( plane, magX, magY )
     See Also:
       PlaneFromFrame
       PlaneFromNormal
@@ -286,10 +285,10 @@ def PlaneFromFrame(origin, x_axis, y_axis):
       import rhinoscriptsyntax as rs
       origin = rs.GetPoint("CPlane origin")
       if origin:
-      xaxis = (1,0,0)
-      yaxis = (0,0,1)
-      plane = rs.PlaneFromFrame( origin, xaxis, yaxis )
-      rs.ViewCPlane(None, plane)
+          xaxis = (1,0,0)
+          yaxis = (0,0,1)
+          plane = rs.PlaneFromFrame( origin, xaxis, yaxis )
+          rs.ViewCPlane(None, plane)
     See Also:
       MovePlane
       PlaneFromNormal
@@ -314,11 +313,11 @@ def PlaneFromNormal(origin, normal, xaxis=None):
       import rhinoscriptsyntax as rs
       origin = rs.GetPoint("CPlane origin")
       if origin:
-      direction = rs.GetPoint("CPlane direction")
-      if direction:
-      normal = direction - origin
-      normal = rs.VectorUnitize(normal)
-      rs.ViewCPlane( None, rs.PlaneFromNormal(origin, normal) )
+          direction = rs.GetPoint("CPlane direction")
+          if direction:
+              normal = direction - origin
+              normal = rs.VectorUnitize(normal)
+              rs.ViewCPlane( None, rs.PlaneFromNormal(origin, normal) )
     See Also:
       MovePlane
       PlaneFromFrame
@@ -348,7 +347,7 @@ def PlaneFromPoints(origin, x, y):
       import rhinoscriptsyntax as rs
       corners = rs.GetRectangle()
       if corners:
-      rs.ViewCPlane( rs.PlaneFromPoints(corners[0], corners[1], corners[3]))
+          rs.ViewCPlane( rs.PlaneFromPoints(corners[0], corners[1], corners[3]))
     See Also:
       PlaneFromFrame
       PlaneFromNormal
@@ -406,10 +405,10 @@ def PlaneSphereIntersection(plane, sphere_plane, sphere_radius):
       radius = 10
       results = rs.PlaneSphereIntersection(plane, plane, radius)
       if results:
-      if results[0]==0:
-      rs.AddPoint(results[1])
-      else:
-      rs.AddCircle(results[1], results[2])
+          if results[0]==0:
+              rs.AddPoint(results[1])
+          else:
+              rs.AddCircle(results[1], results[2])
     See Also:
       IntersectPlanes
       LinePlaneIntersection

@@ -51,10 +51,10 @@ def CheckListBox(items, message=None, title=None):
       import rhinoscriptsyntax as  rs
       layers = rs.LayerNames()
       if layers:
-      items  = [(layer, rs.IsLayerOn(layer)) for layer in layers]
-      results  = rs.CheckListBox(items, "Turn layers on/off", "Layers")
-      if results:
-      for  layer, state in results: rs.LayerVisible(layer, state)
+          items  = [(layer, rs.IsLayerOn(layer)) for layer in layers]
+          results  = rs.CheckListBox(items, "Turn layers on/off", "Layers")
+          if results:
+              for  layer, state in results: rs.LayerVisible(layer, state)
     See Also:
       ComboListBox
       ListBox
@@ -83,8 +83,8 @@ def ComboListBox(items, message=None, title=None):
       import rhinoscriptsyntax as rs
       layers = rs.LayerNames()
       if layers:
-      layer = rs.ComboListBox(layers, "Select current layer")
-      if layer: rs.CurrentLayer(layer)
+          layer = rs.ComboListBox(layers, "Select current layer")
+          if layer: rs.CurrentLayer(layer)
     See Also:
       CheckListBox
       ListBox
@@ -130,10 +130,10 @@ def GetAngle(point=None, reference_point=None, default_angle_degrees=0, message=
       import rhinoscriptsyntax as rs
       point = rs.GetPoint("Base point")
       if point:
-      reference = rs.GetPoint("Reference point", point)
-      if reference:
-      angle = rs.GetAngle(point, reference)
-      if angle!=None: print "Angle:", angle
+          reference = rs.GetPoint("Reference point", point)
+          if reference:
+              angle = rs.GetAngle(point, reference)
+              if angle!=None: print "Angle:", angle
     See Also:
       GetDistance
     """
@@ -164,7 +164,7 @@ def GetBoolean(message, items, defaults):
       import rhinoscriptsyntax as rs
       results = rs.GetBoolean("Boolean options", items, (True, True, True) )
       if results:
-      for val in results: print val
+          for val in results: print val
     See Also:
       GetString
     """
@@ -211,7 +211,7 @@ def GetBox(mode=0, base_point=None, prompt1=None, prompt2=None, prompt3=None):
       import rhinoscriptsyntax as rs
       box = rs.GetBox()
       if box:
-      for i, pt in enumerate(box): rs.AddTextDot( i, pt )
+          for i, pt in enumerate(box): rs.AddTextDot( i, pt )
     See Also:
       GetRectangle
     """
@@ -282,7 +282,7 @@ def GetDistance(first_pt=None, distance=None, first_pt_msg='First distance point
       import rhinoscriptsyntax as  rs
       dist = rs.GetDistance()
       if dist:
-      print  dist
+          print  dist
     See Also:
       GetAngle
     """
@@ -337,10 +337,10 @@ def GetEdgeCurves(message=None, min_count=1, max_count=0, select=False):
       import rhinoscriptsyntax as rs
       edges = rs.GetEdgeCurves()
       if edges:
-      for edgeinfo in edges:
-      print "Curve Id =", edgeinfo[0]
-      print "Parent Id =", edgeinfo[1]
-      print "Pick point =", edgeinfo[2]
+          for edgeinfo in edges:
+              print "Curve Id =", edgeinfo[0]
+              print "Parent Id =", edgeinfo[1]
+              print "Pick point =", edgeinfo[2]
     See Also:
       DuplicateEdgeCurves
     """
@@ -412,8 +412,8 @@ def GetLayer(title="Select Layer", layer=None, show_new_button=False, show_set_c
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if obj:
-      layer = rs.GetLayer("Select Layer", rs.ObjectLayer(obj), True, True)
-      if layer: rs.ObjectLayer( obj, layer )
+          layer = rs.GetLayer("Select Layer", rs.ObjectLayer(obj), True, True)
+          if layer: rs.ObjectLayer( obj, layer )
     See Also:
       
     """
@@ -438,7 +438,7 @@ def GetLayers(title="Select Layers", show_new_button=False):
       import rhinoscriptsyntax as rs
       layers = rs.GetLayers("Select Layers")
       if layers:
-      for layer in layers: print layer
+          for layer in layers: print layer
     See Also:
       GetLayer
     """
@@ -528,9 +528,9 @@ def GetMeshFaces(object_id, message="", min_count=1, max_count=0):
       import rhinoscriptsyntax as rs
       mesh = rs.GetObject("Select mesh", rs.filter.mesh)
       if mesh:
-      indices = rs.GetMeshFaces(mesh)
-      if indices:
-      for index in indices: print index
+          indices = rs.GetMeshFaces(mesh)
+          if indices:
+              for index in indices: print index
     See Also:
       GetMeshVertices
       MeshFaces
@@ -570,9 +570,9 @@ def GetMeshVertices(object_id, message="", min_count=1, max_count=0):
       import rhinoscriptsyntax as rs
       mesh = rs.GetObject("Select mesh", rs.filter.mesh)
       if mesh:
-      indices = rs.GetMeshVertices(mesh)
-      if indices:
-      for index in indices: print index
+          indices = rs.GetMeshVertices(mesh)
+          if indices:
+              for index in indices: print index
     See Also:
       GetMeshFaces
       MeshFaces
@@ -610,13 +610,13 @@ def GetPoint(message=None, base_point=None, distance=None, in_plane=False):
       import rhinoscriptsyntax as rs
       point1 = rs.GetPoint("Pick first point")
       if point1:
-      rs.AddPoint(point1)
-      point2 = rs.GetPoint("Pick second point", point1)
-      if point2:
-      rs.AddPoint(point2)
-      distance = (point1-point2).Length
-      point3 = rs.GetPoint("Pick third point", point2, distance)
-      if point3: rs.AddPoint(point3)
+          rs.AddPoint(point1)
+          point2 = rs.GetPoint("Pick second point", point1)
+          if point2:
+              rs.AddPoint(point2)
+              distance = (point1-point2).Length
+              point3 = rs.GetPoint("Pick third point", point2, distance)
+              if point3: rs.AddPoint(point3)
     See Also:
       GetPointOnCurve
       GetPointOnSurface
@@ -651,8 +651,8 @@ def GetPointOnCurve(curve_id, message=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Pick a curve")
       if rs.IsCurve(obj):
-      point = rs.GetPointOnCurve(obj, "Point on curve")
-      if point: rs.AddPoint(point)
+          point = rs.GetPointOnCurve(obj, "Point on curve")
+          if point: rs.AddPoint(point)
     See Also:
       GetPoint
       GetPointOnMesh
@@ -683,8 +683,8 @@ def GetPointOnMesh(mesh_id, message=None):
       import rhinoscriptsyntax as rs
       mesh = rs.GetObject("Pick a mesh", rs.filter.mesh)
       if mesh:
-      point = rs.GetPointOnMesh(mesh, "Point on mesh")
-      if point: rs.AddPoint( point )
+          point = rs.GetPointOnMesh(mesh, "Point on mesh")
+          if point: rs.AddPoint( point )
     See Also:
       GetPoint
       GetPointOnCurve
@@ -710,8 +710,8 @@ def GetPointOnSurface(surface_id, message=None):
       import rhinoscriptsyntax as rs
       surface = rs.GetObject("Pick a surface")
       if surface:
-      point = rs.GetPointOnSurface(surface, "Point on surface")
-      if point: rs.AddPoint(point)
+          point = rs.GetPointOnSurface(surface, "Point on surface")
+          if point: rs.AddPoint(point)
     See Also:
       GetPoint
       GetPointOnCurve
@@ -876,8 +876,8 @@ def GetRectangle(mode=0, base_point=None, prompt1=None, prompt2=None, prompt3=No
       import rhinoscriptsyntax as rs
       rect = rs.GetRectangle()
       if rect:
-      for i, corner in enumerate(rect):
-      rs.AddTextDot( i, corner )
+          for i, corner in enumerate(rect):
+              rs.AddTextDot( i, corner )
     See Also:
       GetPoint
       GetPoints
@@ -941,8 +941,8 @@ def ListBox(items, message=None, title=None, default=None):
       import rhinoscriptsyntax as rs
       layers = rs.LayerNames()
       if layers:
-      result = rs.ListBox(layers, "Layer to set current")
-      if result:rs.CurrentLayer( result )
+          result = rs.ListBox(layers, "Layer to set current")
+          if result: rs.CurrentLayer( result )
     See Also:
       CheckListBox
       ComboListBox
@@ -1044,14 +1044,14 @@ def PropertyListBox(items, values, message=None, title=None):
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select Objects")
       if objs:
-      names = []
-      for obj in objs:
-      name = rs.ObjectName(obj)
-      if name is None: name=""
-      names.append(name)
-      results = rs.PropertyListBox(objs, names, "Modify object name(s)")
-      if results:
-      rs.ObjectName( objs[i], results[i] )
+          names = []
+          for obj in objs:
+              name = rs.ObjectName(obj)
+              if name is None: name=""
+              names.append(name)
+          results = rs.PropertyListBox(objs, names, "Modify object name(s)")
+          if results:
+                  rs.ObjectName( objs[i], results[i] )
     See Also:
       CheckListBox
       ComboListBox
@@ -1077,10 +1077,10 @@ def MultiListBox(items, message=None, title=None, defaults=None):
       import rhinoscriptsyntax as  rs
       layers = rs.LayerNames()
       if layers:
-      layers  = rs.MultiListBox(layers, "Layers to lock")
+          layers  = rs.MultiListBox(layers, "Layers to lock")
       if layers:
-      for  layer in layers:
-      rs.LayerLocked(layer,  True)
+          for  layer in layers:
+              rs.LayerLocked(layer,  True)
     See Also:
       CheckListBox
       ComboListBox
@@ -1212,8 +1212,8 @@ def RealBox(message="", default_number=None, title="", minimum=None, maximum=Non
       import rhinoscriptsyntax as rs
       radius = rs.RealBox("Enter a radius value", 5.0 )
       if radius:
-      point = (0,0,0)
-      rs.AddCircle( point, radius )
+          point = (0,0,0)
+          rs.AddCircle( point, radius )
     See Also:
       GetReal
     """
@@ -1242,10 +1242,8 @@ def SaveFileName(title=None, filter=None, folder=None, filename=None, extension=
       import rhinoscriptsyntax as rs
       filename = rs.SaveFileName()
       if filename: rs.MessageBox(filename)
-      
       filename = rs.SaveFileName ("Save", "Text Files (*.txt)|*.txt||")
       if filename: rs.MessageBox(filename)
-      
       filename = rrshui.SaveFileName ("Save", "Text Files (*.txt)|*.txt|All Files (*.*)|*.*||")
       if filename: rs.MessageBox(filename)
     See Also:

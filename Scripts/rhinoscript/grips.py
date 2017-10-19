@@ -45,9 +45,9 @@ def GetObjectGrip(message=None, preselect=False, select=False):
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select a curve", rs.filter.curve)
       if curve:
-      rs.EnableObjectGrips( curve )
-      grip = rs.GetObjectGrip("Select a curve grip")
-      if grip: print grip[2]
+          rs.EnableObjectGrips( curve )
+          grip = rs.GetObjectGrip("Select a curve grip")
+          if grip: print grip[2]
     See Also:
       GetObjectGrips
     """
@@ -78,9 +78,9 @@ def GetObjectGrips(message=None, preselect=False, select=False):
       import rhinoscriptsyntax as rs
       curves = rs.GetObjects("Select curves", rs.filter.curves)
       if curves:
-      for curve in curves: rs.EnableObjectGrips(curve)
-      grips = rs.GetObjectGrips("Select curve grips")
-      if grips: for grip in grips: print grip[0]
+          for curve in curves: rs.EnableObjectGrips(curve)
+          grips = rs.GetObjectGrips("Select curve grips")
+          if grips: for grip in grips: print grip[0]
     See Also:
       GetObjectGrip
     """
@@ -131,9 +131,9 @@ def NextObjectGrip(object_id, index, direction=0, enable=True):
       import rhinoscriptsyntax as rs
       object_id = rs.GetObject("Select curve", rs.filter.curve)
       if object_id:
-      rs.EnableObjectGrips( object_id )
-      for i in range(0,count,2):
-      rs.NextObjectGrip(object_id, i, 0, True)
+          rs.EnableObjectGrips( object_id )
+          for i in range(0,count,2):
+              rs.NextObjectGrip(object_id, i, 0, True)
     See Also:
       EnableObjectGrips
       PrevObjectGrip
@@ -152,7 +152,7 @@ def ObjectGripCount(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if rs.ObjectGripsOn(obj):
-      print "Grip count =", rs.ObjectGripCount(obj)
+          print "Grip count =", rs.ObjectGripCount(obj)
     See Also:
       EnableObjectGrips
       ObjectGripsOn
@@ -180,10 +180,10 @@ def ObjectGripLocation(object_id, index, point=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select curve", rs.filter.curve)
       if obj:
-      rs.EnableObjectGrips(obj)
-      point = rs.ObjectGripLocation(obj, 0)
-      rs.ObjectGripLocation(obj, 0, point)
-      rs.EnableObjectGrips(obj, False)
+          rs.EnableObjectGrips(obj)
+          point = rs.ObjectGripLocation(obj, 0)
+          rs.ObjectGripLocation(obj, 0, point)
+          rs.EnableObjectGrips(obj, False)
     See Also:
       EnableObjectGrips
       ObjectGripLocations
@@ -219,8 +219,8 @@ def ObjectGripLocations(object_id, points=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select curve", rs.filter.curve)
       if obj:
-      rs.EnableObjectGrips( obj )
-      points = rs.ObjectGripLocations(obj)
+          rs.EnableObjectGrips( obj )
+          points = rs.ObjectGripLocations(obj)
     See Also:
       EnableObjectGrips
       ObjectGripCount
@@ -252,7 +252,7 @@ def ObjectGripsOn(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if rs.ObjectGripsOn(obj):
-      print "Grip count =", rs.ObjectGripCount(obj)
+          print "Grip count =", rs.ObjectGripCount(obj)
     See Also:
       EnableObjectGrips
       ObjectGripCount
@@ -275,7 +275,7 @@ def ObjectGripsSelected(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if rs.ObjectGripsSelected(obj):
-      rs.UnselectObjectGrips( obj )
+          rs.UnselectObjectGrips( obj )
     See Also:
       EnableObjectGrips
       ObjectGripCount
@@ -306,9 +306,9 @@ def PrevObjectGrip(object_id, index, direction=0, enable=True):
       import rhinoscriptsyntax as rs
       object_id = rs.GetObject("Select curve", rs.filter.curve)
       if object_id:
-      rs.EnableObjectGrips(object_id)
-      for i in range(count-1, 0, -2):
-      rs.PrevObjectGrip(object_id, i, 0, True)
+          rs.EnableObjectGrips(object_id)
+          for i in range(count-1, 0, -2):
+              rs.PrevObjectGrip(object_id, i, 0, True)
     See Also:
       EnableObjectGrips
       NextObjectGrip
@@ -327,11 +327,11 @@ def SelectedObjectGrips(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select curve", rs.filter.curve)
       if obj:
-      rs.EnableObjectGrips( obj )
-      for i in xrange(0,count,2):
-      rs.SelectObjectGrip( obj, i )
-      grips = rs.SelectedObjectGrips(obj)
-      if grips: print len(grips), "grips selected"
+          rs.EnableObjectGrips( obj )
+          for i in xrange(0,count,2):
+              rs.SelectObjectGrip( obj, i )
+          grips = rs.SelectedObjectGrips(obj)
+          if grips: print len(grips), "grips selected"
     See Also:
       EnableObjectGrips
       SelectObjectGrip
@@ -359,8 +359,8 @@ def SelectObjectGrip(object_id, index):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select curve", rs.filter.curve)
       if obj:
-      rs.EnableObjectGrips( obj )
-      for i in xrange(0,count,2): rs.SelectObjectGrip(obj,i)
+          rs.EnableObjectGrips( obj )
+          for i in xrange(0,count,2): rs.SelectObjectGrip(obj,i)
     See Also:
       EnableObjectGrips
       ObjectGripCount
@@ -390,7 +390,7 @@ def SelectObjectGrips(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if rs.ObjectGripsSelected(obj)==False:
-      rs.SelectObjectGrips( obj )
+          rs.SelectObjectGrips( obj )
     See Also:
       EnableObjectGrips
       ObjectGripCount
@@ -421,9 +421,9 @@ def UnselectObjectGrip(object_id, index):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select curve", rs.filter.curve)
       if obj:
-      rs.EnableObjectGrips( obj )
-      for i in xrange(0,count,2):
-      rs.UnselectObjectGrip( obj, i )
+          rs.EnableObjectGrips( obj )
+          for i in xrange(0,count,2):
+              rs.UnselectObjectGrip( obj, i )
     See Also:
       EnableObjectGrips
       ObjectGripCount

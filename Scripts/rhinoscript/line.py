@@ -42,7 +42,7 @@ def LineCylinderIntersection(line, cylinder_plane, cylinder_height, cylinder_rad
       line = (-10,0,0), (10,0,10)
       points = rs.LineCylinderIntersection(line, plane, cylinder_height=10, cylinder_radius=5)
       if points:
-      for point in points: rs.AddPoint(point)
+          for point in points: rs.AddPoint(point)
     See Also:
       LineLineIntersection
       LinePlaneIntersection
@@ -105,8 +105,8 @@ def LineLineIntersection(lineA, lineB):
       lineB = (1,3,0), (5,5,0)
       point = rs.LineLineIntersection(lineA, lineB)
       if point:
-      rs.AddPoint(point[0])
-      rs.AddPoint(point[1])
+          rs.AddPoint(point[0])
+          rs.AddPoint(point[1])
     See Also:
       IntersectPlanes
       LinePlaneIntersection
@@ -235,7 +235,7 @@ def LineSphereIntersection(line, sphere_center, sphere_radius):
       line = (-10,0,0), (10,0,10)
       points = rs.LineSphereIntersection(line, (0,0,0), radius)
       if points:
-      for point in points:rs.AddPoint(point)
+          for point in points: rs.AddPoint(point)
     See Also:
       LineCylinderIntersection
       LineLineIntersection

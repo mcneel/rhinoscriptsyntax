@@ -23,9 +23,9 @@ def CreatePreviewImage(filename, view=None, size=None, flags=0, wireframe=False)
       import rhinoscriptsyntax as  rs
       result = rs.CreatePreviewImage("test.jpg")
       if result:
-      print  "test.jpg created successfully."
+          print  "test.jpg created successfully."
       else:
-      print  "Unable to create preview image."
+          print  "Unable to create preview image."
     See Also:
       ExtractPreviewImage
     """
@@ -131,9 +131,9 @@ def ExtractPreviewImage(filename, modelname=None):
       import rhinoscriptsyntax as rs
       result = rs.ExtractPreviewImage("test.jpg")
       if result:
-      print "Test.jpg created successfully."
+          print "Test.jpg created successfully."
       else:
-      print "Unable to extract preview image."
+          print "Unable to extract preview image."
     See Also:
       CreatePreviewImage
     """
@@ -688,8 +688,8 @@ def RenderSettings(settings=None):
       render_annotations = 8
       settings = rs.RenderSettings()
       if settings & render_annotations:
-      settings = settings - render_annotations
-      rs.RenderSettings( settings )
+          settings = settings - render_annotations
+          rs.RenderSettings( settings )
     See Also:
       RenderAntialias
       RenderColor
@@ -725,7 +725,7 @@ def UnitAbsoluteTolerance(tolerance=None, in_model_units=True):
       import rhinoscriptsyntax as rs
       tol = rs.UnitAbsoluteTolerance()
       if tol<0.01:
-      rs.UnitAbsoluteTolerance( 0.01 )
+          rs.UnitAbsoluteTolerance( 0.01 )
     See Also:
       UnitAngleTolerance
       UnitDistanceDisplayPrecision
@@ -758,7 +758,7 @@ def UnitAngleTolerance(angle_tolerance_degrees=None, in_model_units=True):
       import rhinoscriptsyntax as rs
       tol = rs.UnitAngleTolerance()
       if tol<3.0:
-      rs.UnitAngleTolerance(3.0)
+          rs.UnitAngleTolerance(3.0)
     See Also:
       UnitAbsoluteTolerance
       UnitDistanceDisplayPrecision
@@ -819,7 +819,7 @@ def UnitRelativeTolerance(relative_tolerance=None, in_model_units=True):
       import rhinoscriptsyntax as rs
       tol = rs.UnitRelativeTolerance()
       if tol<1.0:
-      rs.UnitRelativeTolerance(1.0)
+          rs.UnitRelativeTolerance(1.0)
     See Also:
       UnitAbsoluteTolerance
       UnitAngleTolerance
@@ -931,7 +931,7 @@ def UnitSystem(unit_system=None, scale=False, in_model_units=True):
       rhUnitInches = 8
       current_system = rs.UnitSystem()
       if current_system==rhUnitMillimeters:
-      rs.UnitSystem(rhUnitInches, True)
+          rs.UnitSystem(rhUnitInches, True)
     See Also:
       UnitAbsoluteTolerance
       UnitAngleTolerance

@@ -82,7 +82,7 @@ def AliasMacro(alias, macro=None):
       import rhinoscriptsyntax as rs
       aliases = rs.AliasNames()
       for alias in aliases:
-      print alias, " -> ", rs.AliasMacro(alias)(guid
+          print alias, " -> ", rs.AliasMacro(alias)
     See Also:
       AddAlias
       AliasCount
@@ -142,8 +142,8 @@ def AppearanceColor(item, color=None):
       oldColor = rs.AppearanceColor(0)
       newColor = rs.GetColor(oldColor)
       if newColor is not None:
-      rs.AppearanceColor(0, newColor)
-      rs.Redraw()
+          rs.AppearanceColor(0, newColor)
+          rs.Redraw()
     See Also:
       GetColor
     """
@@ -426,7 +426,7 @@ def EdgeAnalysisColor(color=None):
       oldcolor = rs.EdgeAnalysisColor()
       newcolor = rs.GetColor(oldcolor)
       if newcolor is not None:
-      rs.EdgeAnalysisColor(newcolor)
+          rs.EdgeAnalysisColor(newcolor)
     See Also:
       EdgeAnalysisMode
     """
@@ -484,9 +484,9 @@ def EnablePlugIn(plugin, enable=None):
       Returns:
         bool: True if set to load silently otherwise False
       Example:
-        import rhinoscriptsyntax as rs
-        print rs.EnablePlugIn("RhinoCrasher", False)
-      See Also:
+      import rhinoscriptsyntax as rs
+      print rs.EnablePlugIn("RhinoCrasher", False)
+    See Also:
         IsPlugIn
         PlugInId
         PlugIns
@@ -520,9 +520,9 @@ def ExePlatform():
     Example:
       import rhinoscriptsyntax as rs
       if rs.ExePlatform() == 1:
-      print "You are using a 64-bit version of Rhino."
+          print "You are using a 64-bit version of Rhino."
       else:
-      print "You are using a 32-bit version of Rhino."
+          print "You are using a 32-bit version of Rhino."
     See Also:
       BuildDate
       ExeVersion
@@ -623,7 +623,7 @@ def GetPlugInObject(plug_in):
       import rhinoscriptsyntax as rs
       objPlugIn = rs.GetPlugInObject("SomePlugIn")
       if objPlugIn is not None:
-      print objPlugIn.About()
+          print objPlugIn.About()
     See Also:
 
     """
@@ -644,9 +644,9 @@ def InCommand(ignore_runners=True):
       import rhinoscriptsyntax as rs
       commands = rs.InCommand()
       if commands > 0:
-      print "Rhino is running", commands, "command(s)."
+          print "Rhino is running", commands, "command(s)."
       else:
-      print "Rhino is not running any command(s)."
+          print "Rhino is not running any command(s)."
     See Also:
       Command
       IsCommand
@@ -698,11 +698,11 @@ def IsCommand(command_name):
       import rhinoscriptsyntax as rs
       GetString("Command name to test")
       if cmdname is not None:
-      iscmd = rs.IsCommand(cmdname)
-      if iscmd:
-      print "The", cmdname, "command exists."
-      else:
-      print "The", cmdname, "command does not exist."
+          iscmd = rs.IsCommand(cmdname)
+          if iscmd:
+              print "The", cmdname, "command exists."
+          else:
+              print "The", cmdname, "command does not exist."
     See Also:
       Command
       InCommand
@@ -738,9 +738,9 @@ def IsRunningOnWindows():
     Example:
       import rhinoscriptsyntax as rs
       if rs.IsRunngingOnWindows():
-      print "Running on Windows"
+          print "Running on Windows"
       else:
-      print "Running on Mac"
+          print "Running on Mac"
     See Also:
 
     """
@@ -778,9 +778,9 @@ def LastCommandResult():
       rs.Command( "Line" )
       result = rs.LastCommandResult()
       if result==0:
-      print "The command completed."
+          print "The command completed."
       else:
-      print "The command did not complete."
+          print "The command did not complete."
     See Also:
       Command
       IsCommand
@@ -807,21 +807,21 @@ def LocaleID():
       import rhinoscriptsyntax as rs
       lcid = rs.LocaleID()
       if lcid==1029:
-      print "message in Czech"
+          print "message in Czech"
       elif lcid==1031:
-      print "message in German"
+          print "message in German"
       elif lcid==1033:
-      print "message in English"
+          print "message in English"
       elif lcid==1034:
-      print "message in Spanish"
+          print "message in Spanish"
       elif lcid==1036:
-      print "message in Italian"
+          print "message in Italian"
       elif lcid==1040:
-      print "message in Japanese"
+          print "message in Japanese"
       elif lcid==1042:
-      print "message in Korean"
+          print "message in Korean"
       elif lcid==1045:
-      print "message in Polish"
+          print "message in Polish"
     See Also:
 
     """
@@ -917,8 +917,8 @@ def OsnapMode(mode=None):
       rhOsnapModeEnd = 128
       mode = rs.OsnapMode()
       if not (mode & rhOSnapModeEnd):
-      mode = mode + rhOsnapModeEnd
-      rs.OsnapMode(mode)
+          mode = mode + rhOsnapModeEnd
+          rs.OsnapMode(mode)
     See Also:
       Osnap
       OsnapDialog
@@ -1081,7 +1081,7 @@ def SearchPathCount():
       import rhinoscriptsyntax as rs
       count = rs.SearchPathCount()
       if count>0:
-      paths = rs.SearchPathList()
+          paths = rs.SearchPathList()
     See Also:
       AddSearchPath
       DeleteSearchPath
@@ -1099,7 +1099,7 @@ def SearchPathList():
       import rhinoscriptsyntax as rs
       count = rs.SearchPathCount()
       if count>0:
-      paths = rs.SearchPathList()
+          paths = rs.SearchPathList()
     See Also:
       AddSearchPath
       DeleteSearchPath
@@ -1168,9 +1168,9 @@ def StatusBarMessage(message=None):
       Returns:
         none
       Example:
-        import rhinoscriptsyntax as rs
-        rs.StatusBarMessage("Hello Rhino!")
-      See Also:
+      import rhinoscriptsyntax as rs
+      rs.StatusBarMessage("Hello Rhino!")
+    See Also:
         StatusBarDistance
         StatusBarPoint
     """
@@ -1306,7 +1306,7 @@ def WorkingFolder(folder=None):
       folder = rs.WorkingFolder()
       folder = rs.BrowseForFolder(folder,  "Directory", "Select Directory")
       if folder is not None:
-      rs.WorkingFolder(folder)
+          rs.WorkingFolder(folder)
     See Also:
       BrowseForFolder
     """
