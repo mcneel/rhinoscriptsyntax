@@ -217,8 +217,10 @@ def GetObject(message=None, filter=0, preselect=False, select=False, custom_filt
       import rhinoscriptsyntax as rs
       objectId = rs.GetObject("Pick any object")
       if objectId:
+          print "Object identifier: ", objectId
       objectId = rs.GetObject("Pick a curve or surface", rs.filter.curve | rs.filter.surface)
       if objectId:
+          print "Object identifier: ", objectId
     See Also:
       GetCurveObject
       GetObjectEx
@@ -294,6 +296,7 @@ def GetObjectEx(message=None, filter=0, preselect=False, select=False, objects=N
           print "Object id = ", obj[0]
           print "Object was preselected = ", obj[1]
           if obj[2]==0:
+              print "Selection method = 0 (non-mouse)"
           elif obj[2]==1:
               print "Selection method = 1 (mouse)"
               print "Pick point = ", obj[3]

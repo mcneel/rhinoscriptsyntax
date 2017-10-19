@@ -696,7 +696,7 @@ def IsCommand(command_name):
       bool: True if the string is a command or False if it is not a command.
     Example:
       import rhinoscriptsyntax as rs
-      GetString("Command name to test")
+      cmdname = rs.GetString("Command name to test")
       if cmdname is not None:
           iscmd = rs.IsCommand(cmdname)
           if iscmd:
@@ -719,6 +719,8 @@ def IsPlugIn(plugin):
     Example:
       import rhinoscriptsyntax as rs
       plugin = rs.GetString("Plug-in name")
+      if rs.IsPlugIn(plugin): print "The  plug-in is registered."
+      else: print "The  plug-in is not registered."
     See Also:
       EnablePlugIn
       PlugInId
@@ -964,6 +966,7 @@ def PlugInId(plugin):
       import rhinoscriptsyntax as rs
       plugins = rs.PlugIns(0, 1)
       if plugins:
+          for plugin in plugins: print rs.PlugInId(plugin)
     See Also:
       EnablePlugIn
       IsPlugIn
@@ -990,6 +993,7 @@ def PlugIns(types=0, status=0):
     Example:
       import rhinoscriptsyntax as rs
       plugins = rs.PlugIns(0, 1)
+      for plugin in plugins: print plugin
     See Also:
 
     """
@@ -1082,6 +1086,7 @@ def SearchPathCount():
       count = rs.SearchPathCount()
       if count>0:
           paths = rs.SearchPathList()
+          for path in paths: print path
     See Also:
       AddSearchPath
       DeleteSearchPath
@@ -1100,6 +1105,7 @@ def SearchPathList():
       count = rs.SearchPathCount()
       if count>0:
           paths = rs.SearchPathList()
+          for path in paths: print path
     See Also:
       AddSearchPath
       DeleteSearchPath

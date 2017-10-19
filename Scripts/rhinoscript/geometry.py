@@ -531,7 +531,7 @@ def PointCloudHidePoints(object_id, hidden=[]):
       list(bool, ....): List of point cloud hidden states
     Example:
       import rhinoscriptsyntax as rs
-      obj = rs.GetObject("Select a point cloud", rs.filter.pointcloud)
+      obj = rs.GetObject("Select point cloud", rs.filter.pointcloud)
       if obj:
           hidden = [True] * rs.PointCloudCount(obj)
           for i in range(len(hidden)):
@@ -721,6 +721,7 @@ def PointCoordinates(object_id, point=None):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select point", rs.filter.point)
       point = rs.PointCoordinates(id)
+      if point: print point
     See Also:
       AddPoint
       IsPoint
@@ -748,6 +749,7 @@ def TextDotFont(object_id, fontface=None):
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select text dot")
+      if rs.IsTextDot(obj): rs.TextDotFont( obj, "Arial" )
     See Also:
       AddTextDot
       IsTextDot

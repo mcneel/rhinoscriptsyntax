@@ -690,6 +690,7 @@ def LayerNames(sort=False):
       import rhinoscriptsyntax as rs
       layers = rs.LayerNames()
       if layers:
+          for layer in layers: print layer
     See Also:
       LayerCount
     """

@@ -12,6 +12,7 @@ def CloseToolbarCollection(name, prompt=False):
       import rhinoscriptsyntax as rs
       names = rs.ToolbarCollectionNames()
       if names:
+          for name in names: rs.CloseToolbarCollection( name, True )
     See Also:
       IsToolbarCollection
       OpenToolbarCollection
@@ -94,6 +95,8 @@ def IsToolbarCollection(file):
       import rhinoscriptsyntax as rs
       file = "C:\\SteveBaer\\AppData\\Roaming\\McNeel\\Rhinoceros\\5.0\\UI\\default.rui"
       name = rs.IsToolbarCollection(file)
+      if name: print "The default toolbar collection is loaded."
+      else: print "The default toolbar collection is not loaded."
     See Also:
       CloseToolbarCollection
       OpenToolbarCollection
@@ -145,6 +148,8 @@ def IsToolbarVisible(name, toolbar_group):
       file = "C:\\SteveBaer\\AppData\\Roaming\\McNeel\\Rhinoceros\\5.0\\UI\\default.rui"
       name = rs.IsToolbarCollection(file)
       if name:
+          if rs.IsToolbarVisible(name, "Layer"): print "The Layer toolbar is visible."
+          else: print "The Layer toolbar is not visible."
     See Also:
       HideToolbar
       IsToolbar
@@ -169,6 +174,7 @@ def OpenToolbarCollection(file):
       import rhinoscriptsyntax as rs
       file = "C:\\SteveBaer\\AppData\\Roaming\\McNeel\\Rhinoceros\\5.0\\UI\\default.rui"
       name = Rhino.IsToolbarCollection(file)
+      if name is None: rs.OpenToolbarCollection(file)
     See Also:
       CloseToolbarCollection
       IsToolbarCollection
@@ -272,6 +278,7 @@ def ToolbarCollectionNames():
       import rhinoscriptsyntax as rs
       names = rs.ToolbarCollectionNames()
       if names:
+          for name in names: print name
     See Also:
       CloseToolbarCollection
       IsToolbarCollection
@@ -293,6 +300,7 @@ def ToolbarCollectionPath(name):
       import rhinoscriptsyntax as rs
       names = rs.ToolbarCollectionNames()
       if names:
+          for name in names: print rs.ToolbarCollectionPath(name)
     See Also:
       CloseToolbarCollection
       IsToolbarCollection

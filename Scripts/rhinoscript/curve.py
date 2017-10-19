@@ -389,6 +389,7 @@ def AddInterpCrvOnSrfUV(surface_id, points):
       import rhinoscriptsyntax as rs
       surface_id = rs.GetObject("Select surface to draw curve on", rs.filter.surface)
       if surface_id:
+          domainU = rs.SurfaceDomain( surface_id, 0)
           u0 = domainU[0]/2
           u1 = domainU[1]/2
           domainV = rs.SurfaceDomain( surface_id, 1)
@@ -501,6 +502,7 @@ def AddNurbsCurve(points, knots, degree, weights=None):
           points = rs.CurvePoints(curve_id)
           knots = rs.CurveKnots(curve_id)
           degree = rs.CurveDegree(curve_id)
+          newcurve = rs.AddNurbsCurve( points, knots, degree)
           if newcurve: rs.SelectObject(newcurve)
     See Also:
       CurveDegree
@@ -752,6 +754,7 @@ def ArcRadius(curve_id, segment_index=-1):
       id = rs.GetObject("Select arc")
       if rs.IsArc(id):
           radius = rs.ArcRadius(id)
+          print "Arc radius:", radius
     See Also:
       AddArc3Pt
       ArcAngle
@@ -1041,6 +1044,8 @@ def CurveArrows(curve_id, arrow_style=None):
         number: if arrow_style is specified, the previous arrow style
     Example:
       import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select a curve", rs.filter.curve)
+      if rs.CurveArrows(obj)!=3: rs.CurveArrows(obj, 3)
     See Also:
       IsCurve
     """
@@ -1412,6 +1417,7 @@ def CurveCurveIntersection(curveA, curveB=None, tolerance=-1):
     Example:
       import rhinoscriptsyntax as rs
       def ccx():
+          curve1 = rs.GetObject("Select first curve", rs.filter.curve)
           if curve1 is None: return
           curve2 = rs.GetObject("Select second curve", rs.filter.curve)
           if curve2 is None: return
@@ -1645,6 +1651,7 @@ def CurveEditPoints(curve_id, return_parameters=False, segment_index=-1):
       obj = rs.GetObject("Select a curve")
       if rs.IsCurve(obj):
           points = rs.CurveEditPoints(obj)
+          if points: rs.AddPointCloud( points )
     See Also:
       IsCurve
       CurvePointCount
@@ -1819,7 +1826,8 @@ def CurveKnots(curve_id, segment_index=-1):
       obj = rs.GetObject("Select a curve")
       if rs.IsCurve(obj):
           knots = rs.CurveKnots(obj)
-          if knots: print(knots)
+          if knots:
+              for knot in knots: print "Curve knot value:", knot
     See Also:
       CurveKnotCount
       IsCurve
@@ -2327,6 +2335,7 @@ def DivideCurve(curve_id, segments, create_points=False, return_points=True):
       obj = rs.GetObject("Select a curve")
       if obj:
           points = rs.DivideCurve(obj, 4)
+          for point in points: rs.AddPoint(point)
     See Also:
       DivideCurveEquidistant
       DivideCurveLength
@@ -2542,6 +2551,7 @@ def ExtendCurve(curve_id, extension_type, side, boundary_object_ids):
       objects = rs.GetObjects("Select boundary objects", filter)
       if objects:
           curve = rs.GetObject("Select curve to extend", rs.filter.curve)
+          if curve: rs.ExtendCurve( curve, 2, 1, objects )
     See Also:
       ExtendCurveLength
       ExtendCurvePoint
@@ -2591,6 +2601,7 @@ def ExtendCurveLength(curve_id, extension_type, side, length):
       curve = rs.GetObject("Select curve to extend", rs.filter.curve)
       if curve:
           length = rs.GetReal("Length to extend", 3.0)
+          if length: rs.ExtendCurveLength( curve, 2, 2, length )
     See Also:
       ExtendCurve
       ExtendCurvePoint
@@ -2838,6 +2849,7 @@ def IsCurve(object_id):
       import rhinoscriptsyntax as rs
       object = rs.GetObject("Select a curve")
       if rs.IsCurve(object):
+          print "The object is a curve."
       else:
           print "The object is not a curve."
     See Also:
@@ -2864,6 +2876,7 @@ def IsCurveClosable(curve_id, tolerance=None):
       import rhinoscriptsyntax as rs
       crv = rs.GetObject("Select curve", rs.filter.curve)
       if not rs.IsCurveClosed(crv) and rs.IsCurveClosable(crv):
+          rs.CloseCurve( crv, 0.1 )
     See Also:
       CloseCurve
       IsCurveClosed
@@ -3223,6 +3236,7 @@ def MakeCurveNonPeriodic(curve_id, delete_input=False):
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select a curve", rs.filter.curve)
+      if rs.IsCurvePeriodic(curve): rs.MakeCurveNonPeriodic( curve )
     See Also:
       IsCurvePeriodic
     """
@@ -3262,6 +3276,7 @@ def MeanCurve(curve0, curve1, tolerance=None):
       import rhinoscriptsyntax as rs
       curve0 = rs.GetObject("Select the first curve", rs.filter.curve)
       curve1 = rs.GetObject("Select the second curve", rs.filter.curve)
+      rs.MeanCurve( curve0, curve1 )
     See Also:
       UnitAngleTolerance
     """
@@ -3410,8 +3425,13 @@ def PlanarClosedCurveContainment(curve_a, curve_b, plane=None, tolerance=None):
       curve1 = rs.GetObject("Select first curve", rs.filter.curve )
       curve2 = rs.GetObject("Select second curve", rs.filter.curve )
       if rs.IsCurvePlanar(curve1) and rs.IsCurvePlanar(curve2):
+          if rs.IsCurveClosed(curve1) and rs.IsCurveClosed(curve2):
               if rs.IsCurveInPlane(curve1) and rs.IsCurveInPlane(curve2):
                   result = rs.PlanarClosedCurveContainment(curve1, curve2)
+                  if result==0: print "The regions bounded by the curves are disjoint."
+                  elif result==1: print "The two curves intersect.."
+                  elif result==2: print "The region bounded by Curve1 is inside of Curve2."
+                  else: print "The region bounded by Curve2 is inside of Curve1."
     See Also:
       PlanarCurveCollision
       PointInPlanarClosedCurve
@@ -3441,6 +3461,8 @@ def PlanarCurveCollision(curve_a, curve_b, plane=None, tolerance=None):
       import rhinoscriptsyntax as rs
       curve1 = rs.GetObject("Select first curve")
       curve2 = rs.GetObject("Select second curve")
+      if( rs.IsCurvePlanar(curve1) and rs.IsCurvePlanar(curve2) and rs.IsCurveInPlane(curve1) and rs.IsCurveInPlane(curve2) ):
+          if rs.PlanarCurveCollision(curve1, curve2):
               print "The coplanar curves intersect."
           else:
               print "The coplanar curves do not intersect."
@@ -3481,6 +3503,9 @@ def PointInPlanarClosedCurve(point, curve, plane=None, tolerance=None):
           point = rs.GetPoint("Pick a point")
           if point:
               result = rs.PointInPlanarClosedCurve(point, curve)
+              if result==0: print "The point is outside of the closed curve."
+              elif result==1: print "The point is inside of the closed curve."
+              else: print "The point is on the closed curve."
     See Also:
       PlanarClosedCurveContainment
       PlanarCurveCollision
@@ -3717,6 +3742,7 @@ def SimplifyCurve(curve_id, flags=0):
     Example:
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select a curve to simplify", rs.filter.curve)
+      if curve: rs.SimplifyCurve(curve)
     See Also:
       IsArc
       IsCurveLinear

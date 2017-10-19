@@ -285,6 +285,7 @@ def BlockNames( sort=False ):
       import rhinoscriptsyntax as rs
       names = rs.BlockNames(True)
       if names:
+          for name in names: print name
     See Also:
       BlockCount
       IsBlock

@@ -201,6 +201,7 @@ def DeleteDimStyle(dimstyle_name):
     Example:
       import rhinoscriptsyntax as rs
       dimstyle = rs.GetString("Dimension style to remove")
+      if dimstyle: rs.DeleteDimStyle(dimstyle)
     See Also:
       AddDimStyle
       CurrentDimStyle
@@ -366,6 +367,7 @@ def DimStyleArrowSize(dimstyle, size=None):
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
       size = rs.DimStyleArrowSize(dimstyle)
+      if size>1.0: rs.DimStyleArrowSize( dimstyle, 1.0 )
     See Also:
       DimStyleAnglePrecision
       DimStyleExtension
@@ -414,6 +416,7 @@ def DimStyleExtension(dimstyle, extension=None):
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
       extension = rs.DimStyleExtension(dimstyle)
+      if extension>0.5: rs.DimStyleExtension( dimstyle, 0.5 )
     See Also:
       DimStyleAnglePrecision
       DimStyleArrowSize
@@ -447,6 +450,7 @@ def DimStyleFont(dimstyle, font=None):
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
       font = rs.DimStyleFont(dimstyle)
+      if font!="Arial": rs.DimStyleFont( dimstyle, "Arial" )
     See Also:
       DimStyleAnglePrecision
       DimStyleArrowSize
@@ -481,6 +485,7 @@ def DimStyleLeaderArrowSize(dimstyle, size=None):
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
       size = rs.DimStyleLeaderArrowSize(dimstyle)
+      if size>1.0: rs.DimStyleLeaderArrowSize( dimstyle, 1.0 )
     See Also:
       DimStyleAnglePrecision
       DimStyleArrowSize
@@ -516,6 +521,7 @@ def DimStyleLengthFactor(dimstyle, factor=None):
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
       factor = rs.DimStyleLengthFactor(dimstyle)
+      if factor>1.0: rs.DimStyleLengthFactor( dimstyle, 1.0 )
     See Also:
       DimStylePrefix
       DimStyleSuffix
@@ -543,6 +549,7 @@ def DimStyleLinearPrecision(dimstyle, precision=None):
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
       precision = rs.DimStyleLinearPrecision(dimstyle)
+      if precision>2: rs.DimStyleLinearPrecision( dimstyle, 2 )
     See Also:
       DimStyleAnglePrecision
       DimStyleArrowSize
@@ -599,6 +606,7 @@ def DimStyleNumberFormat(dimstyle, format=None):
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
       format = rs.DimStyleNumberFormat(dimstyle)
+      if format>0: rs.DimStyleNumberFormat( dimstyle, 0 )
     See Also:
       DimStyleAnglePrecision
       DimStyleArrowSize
@@ -634,6 +642,7 @@ def DimStyleOffset(dimstyle, offset=None):
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
       offset = rs.DimStyleOffset(dimstyle)
+      if offset>0.5: rs.DimStyleOffset( dimstyle, 0.5 )
     See Also:
       DimStyleAnglePrecision
       DimStyleArrowSize
@@ -727,6 +736,7 @@ def DimStyleTextAlignment(dimstyle, alignment=None):
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
       alignment = rs.DimStyleTextAlignment(dimstyle)
+      if alignment!=2: rs.DimStyleTextAlignment( dimstyle, 2 )
     See Also:
       DimStyleAnglePrecision
       DimStyleArrowSize
@@ -763,6 +773,7 @@ def DimStyleTextGap(dimstyle, gap=None):
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
       gap = rs.DimStyleTextGap(dimstyle)
+      if gap>0.25: rs.DimStyleTextGap( dimstyle, 0.25 )
     See Also:
       DimStyleAnglePrecision
       DimStyleArrowSize
@@ -797,6 +808,7 @@ def DimStyleTextHeight(dimstyle, height=None):
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
       height = rs.DimStyleTextHeight(dimstyle)
+      if offset>1.0: rs.DimStyleTextHeight( dimstyle, 1.0 )
     See Also:
       DimStyleAnglePrecision
       DimStyleArrowSize
@@ -1101,6 +1113,7 @@ def LeaderText(object_id, text=None):
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a leader")
+      if rs.IsLeader(obj): print rs.LeaderText(obj)
     See Also:
       AddLeader
       IsLeader
@@ -1131,6 +1144,7 @@ def RenameDimStyle(oldstyle, newstyle):
       oldstyle = rs.GetString("Old dimension style name")
       if oldstyle:
           newstyle = rs.GetString("New dimension style name")
+          if newstyle: rs.RenameDimStyle( oldstyle, newstyle )
     See Also:
       AddDimStyle
       CurrentDimStyle

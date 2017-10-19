@@ -160,6 +160,7 @@ def DisjointMeshCount(object_id):
       number: The number of meshes that could be created
     Example:
       import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select mesh", rs.filter.mesh)
       if rs.DisjointMeshCount(obj)>1: rs.SplitDisjointMesh(obj)
     See Also:
       IsMesh
@@ -683,6 +684,8 @@ def MeshFaces(object_id, face_type=True):
       if faces:
           rs.EnableRedraw(False)
           i = 0
+          while( i<=len(faces) ):
+              face = faces[i], faces[i+1], faces[i+2], faces[i]
               rs.AddPolyline( face )
               i += 3
       rs.EnableRedraw(True)
@@ -1143,6 +1146,7 @@ def MeshVertexNormals(mesh_id):
       obj = rs.GetObject("Select mesh", rs.filter.mesh)
       normals = rs.MeshVertexNormals(obj)
       if normals:
+          for normal in normals: print normal
     See Also:
       MeshHasVertexNormals
       MeshVertexCount

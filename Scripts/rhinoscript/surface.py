@@ -176,6 +176,7 @@ def AddEdgeSrf(curve_ids):
       None: on error
     Example:
       import rhinoscriptsyntax as rs
+      curves = rs.GetObjects("Select 2, 3, or 4 curves", rs.filter.curve)
       if curves and len(curves)>1 ): rs.AddEdgeSrf(curves)
     See Also:
       AddPlanarSrf
@@ -741,6 +742,7 @@ def AddSweep2(rails, shapes, closed=False):
       rails = rs.GetObjects("Select two rail curve", rs.filter.curve)
       if rails and len(rails)==2:
           shapes = rs.GetObjects("Select cross-section curves", rs.filter.curve)
+          if shapes: rs.AddSweep2(rails, shapes)
     See Also:
       AddSweep1
       CurveDirectionsMatch
@@ -894,6 +896,7 @@ def BooleanIntersection(input0, input1, delete_input=True):
       input0 = rs.GetObjects("Select first set of surfaces or polysurfaces", rs.filter.surface | rs.filter.polysurface)
       if input0:
           input1 = rs.GetObjects("Select second set of surfaces or polysurfaces", rs.filter.surface | rs.filter.polysurface)
+          if input1: rs.BooleanIntersection( input0, input1 )
     See Also:
       BooleanDifference
       BooleanUnion
@@ -929,7 +932,7 @@ def BooleanUnion(input, delete_input=True):
         None on error
     Example:
       import rhinoscriptsyntax as rs
-      nput = rs.GetObjects("Select surfaces or polysurfaces to union", rs.filter.surface | rs.filter.polysurface)
+      input = rs.GetObjects("Select surfaces or polysurfaces to union", rs.filter.surface | rs.filter.polysurface)
       if input and len(input)>1: rs.BooleanUnion(input)
     See Also:
       BooleanDifference
@@ -1002,6 +1005,7 @@ def CapPlanarHoles(surface_id):
     Example:
       import rhinoscriptsyntax as rs
       surface = rs.GetObject("Select surface or polysurface to cap", rs.filter.surface | rs.filter.polysurface)
+      if surface: rs.CapPlanarHoles( surface )
     See Also:
       ExtrudeCurve
       ExtrudeCurvePoint
@@ -1070,6 +1074,7 @@ def DuplicateSurfaceBorder(surface_id, type=0):
     Example:
       import rhinoscriptsyntax as rs
       surface = rs.GetObject("Select surface or polysurface", rs.filter.surface | rs.filter.polysurface)
+      if surface: rs.DuplicateSurfaceBorder( surface )
     See Also:
       DuplicateEdgeCurves
       DuplicateMeshBorder
@@ -2528,6 +2533,7 @@ def SurfaceCone(surface_id):
       None: on error
     Example:
       import rhinoscriptsyntax as rs
+      cone = rs.AddCone(rs.WorldXYPlane(), 6, 2, False)
       if rs.IsCone(cone):
           cone_def = rs.SurfaceCone(cone)
           rs.AddCone( cone_def[0], cone_def[1], cone_def[2], False )
@@ -2919,6 +2925,7 @@ def SurfaceNormalizedParameter(surface_id, parameter):
       if rs.IsSurface(obj):
           domain_u = rs.SurfaceDomain(obj, 0)
           domain_v = rs.SurfaceDomain(obj, 1)
+          parameter = (domain_u[1] + domain_u[0]) / 2.0, (domain_v[1] + domain_v[0]) / 2.0
           print "Surface parameter: ", parameter
           normalized = rs.SurfaceNormalizedParameter(obj, parameter)
           print "Normalized parameter: ", normalized
@@ -2999,6 +3006,7 @@ def SurfacePoints(surface_id, return_all=True):
       None: on error
     Example:
       import rhinoscriptsyntax as rs
+      def PrintControlPoints():
           surface = rs.GetObject("Select surface", rs.filter.surface)
           points = rs.SurfacePoints(surface)
           if points is None: return

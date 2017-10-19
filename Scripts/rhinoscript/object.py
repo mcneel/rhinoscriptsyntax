@@ -17,6 +17,7 @@ def CopyObject(object_id, translation=None):
       None: if not able to copy
     Example:
       import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select object to copy")
       if id:
           start = rs.GetPoint("Point to copy from")
           if start:
@@ -47,6 +48,7 @@ def CopyObjects(object_ids, translation=None):
           if start:
               end = rs.GetPoint("Point to copy to", start)
               if end:
+                  translation = end-start
                   rs.CopyObjects( objectIds, translation )
     See Also:
       CopyObject
@@ -704,6 +706,7 @@ def MoveObject(object_id, translation):
           if start:
               end = rs.GetPoint("Point to move to")
               if end:
+                  translation = end-start
                   rs.MoveObject(id, translation)
     See Also:
       MoveObjects
@@ -1068,6 +1071,8 @@ def ObjectMaterialIndex(object_id, material_index=None):
           else:
               print "The material source is by object"
               index = rs.ObjectMaterialIndex(obj)
+              if index==-1: print "The material is default."
+              else: print "The material is custom."
     See Also:
       ObjectMaterialSource
     """
@@ -1736,13 +1741,17 @@ def TransformObject(object_id, matrix, copy=False):
       # Rotate an object by theta degrees about the world Z axis
       import math
       import rhinoscriptsyntax as rs
+      degrees = 90.0 # Some angle
       radians = math.radians(degrees)
       c = math.cos(radians)
       s = math.sin(radians)
       matrix = []
+      matrix.append( [c,-s, 0, 0] )
+      matrix.append( [s, c, 0, 0] )
       matrix.append( [0, 0, 1, 0] )
       matrix.append( [0, 0, 0, 1] )
       obj = rs.GetObject("Select object to rotate")
+      if obj: rs.TransformObject( obj, matrix )
     See Also:
       TransformObjects
     """

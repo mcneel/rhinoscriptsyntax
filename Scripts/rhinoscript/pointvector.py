@@ -269,6 +269,7 @@ def PointDivide(point, divide):
       point: resulting point
     Example:
       import rhinoscriptsyntax as rs
+      point = rs.PointDivide([5,5,0], 5)
       print point
     See Also:
       PointAdd
@@ -292,6 +293,7 @@ def PointsAreCoplanar(points, tolerance=1.0e-12):
       import rhinoscriptsyntax as rs
       def SurfacesAreCoplanar(srf1, srf2):
           if( not rs.IsSurface(srf1) or not rs.IsSurface(srf2) ): return False
+          if( not rs.IsSurfacePlanar(srf1) or not rs.IsSurfacePlanar(srf2) ): return False
           pts1 = rs.SurfacePoints(srf1)
           pts2 = rs.SurfacePoints(srf2)
           if( pts1==None or pts2==None ): return False
@@ -429,6 +431,7 @@ def ProjectPointToSurface(points, surface_ids, direction):
       surface = rs.GetObject("Select surface to project onto", rs.filter.surface)
       objects = rs.GetObjects("Select points to project", rs.filter.point)
       points = [rs.PointCoordinates(obj) for obj in objects]
+      # Project down...
       results = rs.ProjectPointToSurface(points, surface, (0,0,-1))
       rs.AddPoints(results)
     See Also:
@@ -615,6 +618,7 @@ def VectorDivide(vector, divide):
       vector: resulting vector on success
     Example:
       import rhinoscriptsyntax as rs
+      vector = rs.VectorDivide((5,5,0), 5)
       print vector
     See Also:
       VectorAdd
@@ -738,6 +742,7 @@ def VectorScale(vector, scale):
       vector: resulting vector on success
     Example:
       import rhinoscriptsyntax as rs
+      vector = rs.VectorScale([1,0,0], 5)
       print vector
     See Also:
       VectorAdd

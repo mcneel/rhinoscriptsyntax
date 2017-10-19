@@ -241,6 +241,7 @@ def HatchPatternDescription(hatch_pattern):
       for pattern in patterns:
           description = rs.HatchPatternDescription(pattern)
           if description: print pattern, "-", description
+          else: print pattern
     See Also:
       HatchPatternCount
       HatchPatternNames

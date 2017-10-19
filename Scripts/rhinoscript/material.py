@@ -17,6 +17,7 @@ def AddMaterialToLayer(layer):
       import rhinoscriptsyntax as rs
       layer = rs.CurrentLayer()
       index = rs.LayerMaterialIndex(layer)
+      if index==-1: index = rs.AddMaterialToLayer(layer)
     See Also:
       LayerMaterialIndex
       IsMaterialDefault
@@ -44,6 +45,7 @@ def AddMaterialToObject(object_id):
       obj = rs.GetObject()
       if obj:
           index = rs.ObjectMaterialIndex(obj)
+          if index==-1: index = rs.AddMaterialToObject(obj)
     See Also:
       IsMaterialDefault
       ObjectMaterialIndex

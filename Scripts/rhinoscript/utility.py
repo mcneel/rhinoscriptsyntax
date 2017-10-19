@@ -395,6 +395,7 @@ def GetSettings(filename, section=None, entry=None):
                       entry = rs.ListBox(entries, "Select an entry", section)
                       if entry
                           value = rs.GetSettings(filename, section, entry)
+                          if value: rs.MessageBox( value, 0, entry )
     See Also:
       
     """

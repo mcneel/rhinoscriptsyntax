@@ -132,6 +132,7 @@ def NextObjectGrip(object_id, index, direction=0, enable=True):
       object_id = rs.GetObject("Select curve", rs.filter.curve)
       if object_id:
           rs.EnableObjectGrips( object_id )
+          count = rs.ObjectGripCount( object_id )
           for i in range(0,count,2):
               rs.NextObjectGrip(object_id, i, 0, True)
     See Also:
@@ -182,6 +183,9 @@ def ObjectGripLocation(object_id, index, point=None):
       if obj:
           rs.EnableObjectGrips(obj)
           point = rs.ObjectGripLocation(obj, 0)
+          point[0] = point[0] + 1.0
+          point[1] = point[1] + 1.0
+          point[2] = point[2] + 1.0
           rs.ObjectGripLocation(obj, 0, point)
           rs.EnableObjectGrips(obj, False)
     See Also:
@@ -221,6 +225,7 @@ def ObjectGripLocations(object_id, points=None):
       if obj:
           rs.EnableObjectGrips( obj )
           points = rs.ObjectGripLocations(obj)
+          for point in points:  print point
     See Also:
       EnableObjectGrips
       ObjectGripCount
@@ -307,6 +312,7 @@ def PrevObjectGrip(object_id, index, direction=0, enable=True):
       object_id = rs.GetObject("Select curve", rs.filter.curve)
       if object_id:
           rs.EnableObjectGrips(object_id)
+          count = rs.ObjectGripCount(object_id)
           for i in range(count-1, 0, -2):
               rs.PrevObjectGrip(object_id, i, 0, True)
     See Also:
@@ -328,6 +334,7 @@ def SelectedObjectGrips(object_id):
       obj = rs.GetObject("Select curve", rs.filter.curve)
       if obj:
           rs.EnableObjectGrips( obj )
+          count = rs.ObjectGripCount( obj )
           for i in xrange(0,count,2):
               rs.SelectObjectGrip( obj, i )
           grips = rs.SelectedObjectGrips(obj)
@@ -360,6 +367,7 @@ def SelectObjectGrip(object_id, index):
       obj = rs.GetObject("Select curve", rs.filter.curve)
       if obj:
           rs.EnableObjectGrips( obj )
+          count = rs.ObjectGripCount( obj )
           for i in xrange(0,count,2): rs.SelectObjectGrip(obj,i)
     See Also:
       EnableObjectGrips
@@ -422,6 +430,7 @@ def UnselectObjectGrip(object_id, index):
       obj = rs.GetObject("Select curve", rs.filter.curve)
       if obj:
           rs.EnableObjectGrips( obj )
+          count = rs.ObjectGripCount(obj)
           for i in xrange(0,count,2):
               rs.UnselectObjectGrip( obj, i )
     See Also:

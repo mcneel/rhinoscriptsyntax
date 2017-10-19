@@ -1135,6 +1135,7 @@ def ViewDisplayModeId(name):
     Example:
       import rhinoscriptsyntax as rs
       modes = rs.ViewDisplayModes(True)
+      for mode in modes: print mode,"=",rs.ViewDisplayModeId(mode)
     See Also:
       ViewDisplayMode
       ViewDisplayModes
@@ -1152,6 +1153,7 @@ def ViewDisplayModeName(mode_id):
     Example:
       import rhinoscriptsyntax as rs
       modes = rs.ViewDisplayModes(False)
+      for mode in modes: print mode, "=", rs.ViewDisplayModeName(mode)
     See Also:
       ViewDisplayMode
       ViewDisplayModes
@@ -1170,6 +1172,7 @@ def ViewDisplayModes(return_names=True):
     Example:
       import rhinoscriptsyntax as rs
       modes = rs.ViewDisplayModes(False)
+      for mode in modes: print mode, "=", rs.ViewDisplayModeName(mode)
     See Also:
       ViewDisplayMode
       ViewDisplayModeName

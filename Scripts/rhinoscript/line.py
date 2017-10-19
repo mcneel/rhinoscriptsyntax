@@ -12,6 +12,7 @@ def LineClosestPoint(line, testpoint):
       point: the point on the line that is closest to the test point if successful, otherwise None
     Example:
       import rhinoscriptsyntax as rs
+      line = (0,0,0), (5,5,0)
       point = (15, 10, 0)
       result = rs.LineClosestPoint( line, point)
       if result: rs.AddPoint(result)
@@ -75,6 +76,7 @@ def LineIsFartherThan(line, distance, point_or_line):
       None: on error
     Example:
       import rhinoscriptsyntax as rs
+      line = (0,0,0), (10,10,0)
       testPoint = (10,5,0)
       print rs.LineIsFartherThan(line, 3, testPoint)
     See Also:
@@ -130,6 +132,7 @@ def LineMaxDistanceTo(line, point_or_line):
       None: on error
     Example:
       import rhinoscriptsyntax as rs
+      line = (0,0,0), (10,10,0)
       print rs.LineMaxDistanceTo( line, (10,5,0) )
     See Also:
       LineClosestPoint
@@ -155,6 +158,7 @@ def LineMinDistanceTo(line, point_or_line):
       None: on error
     Example:
       import rhinoscriptsyntax as rs
+      line = (0,0,0), (10,10,0)
       print rs.LineMinDistanceTo(line, (10,5,0))
     See Also:
       LineClosestPoint
@@ -208,7 +212,9 @@ def LinePlaneIntersection(line, plane):
     Example:
       import rhinoscriptsyntax as rs
       plane = rs.WorldXYPlane()
+      line = (2, 11, 13), (20, 4, -10)
       point = rs.LinePlaneIntersection(line, plane)
+      if( point!=None ): rs.AddPoint(point)
     See Also:
       LineLineIntersection
       PlanePlaneIntersection

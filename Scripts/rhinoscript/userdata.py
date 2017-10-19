@@ -192,6 +192,7 @@ def IsUserText(object_id):
           elif usertext_type==1: print "Object has attribute user text"
           elif usertext_type==2: print "Object has geometry user text"
           elif usertext_type==3: print "Object has attribute and geometry user text"
+          else: print "Object does not exist"
     See Also:
       GetUserText
       SetUserText

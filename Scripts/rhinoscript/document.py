@@ -269,8 +269,9 @@ def RenderResolution(resolution=None):
       tuple(number, number): if resolution is specified, the previous resolution width, height
     Example:
       import rhinoscriptsyntax as rs
-      sizex, sizey = rs.RenderResolution()
-      print sizex, sizey
+      sizex, sizey = rs.Viewsize()
+      resolution = sizex/2 , sizey/2
+      rs.RenderResolution( resolution )
     See Also:
       RenderAntialias
       RenderColor
@@ -872,8 +873,11 @@ def UnitScale(to_system, from_system=None):
   Returns:
     number: scale factor for changing between unit systems
   Example:
-    import rhinoscriptsyntax as rs
-  See Also:
+      import rhinoscriptsyntax as rs
+      print rs.UnitScale(3, 4) # 100.0
+      print rs.UnitScale(3, 8) # 2.54
+      print rs.UnitScale(8, 9) # 12.0
+    See Also:
     UnitSystem
     UnitSystemName
   """

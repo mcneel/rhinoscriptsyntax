@@ -162,6 +162,7 @@ def GetBoolean(message, items, defaults):
       None: on error
     Example:
       import rhinoscriptsyntax as rs
+      items = ("Lights", "Off", "On"), ("Cameras", "Disabled", "Enabled"), ("Action", "False", "True")
       results = rs.GetBoolean("Boolean options", items, (True, True, True) )
       if results:
           for val in results: print val
@@ -1051,6 +1052,7 @@ def PropertyListBox(items, values, message=None, title=None):
               names.append(name)
           results = rs.PropertyListBox(objs, names, "Modify object name(s)")
           if results:
+              for i in xrange(len(objs)):
                   rs.ObjectName( objs[i], results[i] )
     See Also:
       CheckListBox
@@ -1183,7 +1185,8 @@ def PopupMenu(items, modes=None, point=None, view=None):
       import rhinoscriptsyntax as rs
       items = "Line", "", "Circle", "Arc"
       modes = 2,0,0,0
-      rs.PopupMenu(items, modes)
+      result = rs.PopupMenu(items, modes)
+      if result>=0: rs.MessageBox(items[result])
     See Also:
       
     """
