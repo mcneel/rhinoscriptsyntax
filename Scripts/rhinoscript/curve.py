@@ -423,7 +423,7 @@ def AddInterpCurve(points, degree=3, knotstyle=0, start_tangent=None, end_tangen
       degree (number, optional): The degree of the curve (must be >=1).
           Periodic curves must have a degree >= 2. For knotstyle = 1 or 2,
           the degree must be 3. For knotstyle = 4 or 5, the degree must be odd
-      knotstyle[opt]
+      knotstyle(opt):
           0 Uniform knots.  Parameter spacing between consecutive knots is 1.0.
           1 Chord length spacing.  Requires degree = 3 with arrCV1 and arrCVn1 specified.
           2 Sqrt (chord length).  Requires degree = 3 with arrCV1 and arrCVn1 specified.
@@ -2709,7 +2709,7 @@ def FitCurve(curve_id, degree=3, distance_tolerance=-1, angle_tolerance=-1):
                      The default is 3.
       distance_tolerance (number, optional): The fitting tolerance. If distance_tolerance
           is not specified or <= 0.0, the document absolute tolerance is used.
-      angle_tolerance (number, optional) The kink smoothing tolerance in degrees. If
+      angle_tolerance (number, optional): The kink smoothing tolerance in degrees. If
           angle_tolerance is 0.0, all kinks are smoothed. If angle_tolerance
           is > 0.0, kinks smaller than angle_tolerance are smoothed. If
           angle_tolerance is not specified or < 0.0, the document angle
