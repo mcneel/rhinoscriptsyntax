@@ -570,11 +570,11 @@ def AddSphere(center_or_plane, radius):
       AddCylinder
       AddTorus
     """
-    center = rhutil.coerce3dpoint(center_or_plane)
-    if center is None:
-        plane = rhutil.coerceplane(center_or_plane, True)
-        center = plane.Origin
-    sphere = Rhino.Geometry.Sphere(center, radius)
+    c_or_p = rhutil.coerce3dpoint(center_or_plane)
+    if c_or_p is None:
+        c_or_p = rhutil.coerceplane(center_or_plane)
+    if c_or_p is None: return None
+    sphere = Rhino.Geometry.Sphere(c_or_p, radius)
     rc = scriptcontext.doc.Objects.AddSphere(sphere)
     if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()

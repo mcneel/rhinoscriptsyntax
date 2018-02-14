@@ -69,7 +69,7 @@ def GetObjectGrips(message=None, preselect=False, select=False):
       preselect (bool, optional): allow for selection of pre-selected object grips
       select (bool, optional) select the picked object grips
     Returns:
-      list((guid, number, point), ...) containing one or more grip records. Each grip record is a tuple
+      list((guid, number, point), ...): containing one or more grip records. Each grip record is a tuple
         [n][0] = identifier of the object that owns the grip
         [n][1] = index value of the grip
         [n][2] = location of the grip
