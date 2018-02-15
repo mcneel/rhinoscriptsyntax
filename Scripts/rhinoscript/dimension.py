@@ -38,6 +38,10 @@ def AddAlignedDimension(start_point, end_point, point_on_dimension_line, style=N
     ldim = Rhino.Geometry.LinearDimension(plane, start, end, onpoint)
     if not ldim: return scriptcontext.errorhandler()
     ldim.Aligned = True
+    if style:
+        ds = scriptcontext.doc.DimStyles.FindName(style)
+        if ds is None: return scriptcontext.errorhandler()
+        ldim.DimensionStyleId = ds.Id
     rc = scriptcontext.doc.Objects.AddLinearDimension(ldim)
     if rc==System.Guid.Empty: raise Exception("unable to add dimension to document")
     scriptcontext.doc.Views.Redraw()
