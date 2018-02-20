@@ -271,6 +271,7 @@ def BoundingBox(objects, view_or_plane=None, in_world_coords=True):
         geom = rhutil.coercegeometry(object, False)
         if not geom:
             pt = rhutil.coerce3dpoint(object, True)
+            if xform: pt = xform * pt
             return Rhino.Geometry.BoundingBox(pt,pt)
         if xform: return geom.GetBoundingBox(xform)
         return geom.GetBoundingBox(True)
