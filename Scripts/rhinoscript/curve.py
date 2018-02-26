@@ -394,8 +394,8 @@ def AddInterpCrvOnSrfUV(surface_id, points):
           u1 = domainU[1]/2
           domainV = rs.SurfaceDomain( surface_id, 1)
           v0 = domainV[0]/2
-          V1 = domainV[1]/2
-          rs.AddInterpCrvOnSrfUV( surface_d, [[u0,v0],[u1,v1]])
+          v1 = domainV[1]/2
+          rs.AddInterpCrvOnSrfUV( surface_id, [[u0,v0],[u1,v1]])
     See Also:
       AddCurve
       AddInterpCurve
