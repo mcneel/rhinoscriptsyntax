@@ -925,8 +925,15 @@ def ObjectsByType(geometry_type, select=False, state=0):
                134217728   Cage
                268435456   Phantom
                536870912   Clipping plane
+               1073741824  Extrusion
       select (bool, optional): Select the objects
-      state (bool, optional): Object state. See help
+      state (bool, optional): The object state (normal, locked, and hidden). Object states can be 
+        added together to filter several different states of geometry.
+              Value     Description
+              0         All objects
+              1         Normal objects
+              2         Locked objects
+              4         Hidden objects
     Returns:
       list(guid, ...): identifiers of object that fit the specified type(s).
     Example:
