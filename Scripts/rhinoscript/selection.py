@@ -965,14 +965,16 @@ def ObjectsByType(geometry_type, select=False, state=0):
     it.IncludeGrips = bGrips
     it.IncludePhantoms = bPhantoms
 
-    it.NormalObjects = True
-    it.LockedObjects = True
-    it.HiddenObjects = True
+    if state:
+        it.NormalObjects = False
+        it.LockedObjects = False
+    if state & 1: it.NormalObjects = True
+    if state & 2: it.LockedObjects = True
+    if state & 4: it.HiddenObjects = True
 
     object_ids = []
     e = scriptcontext.doc.Objects.GetObjectList(it)
     for object in e:
-      if state & 1 and object.IsNormal or state & 2 and object.IsLocked or state & 4 and object.IsHidden:
         bFound = False
         object_type = object.ObjectType
         if object_type==Rhino.DocObjects.ObjectType.Brep and (bSurface or bPolySurface):
