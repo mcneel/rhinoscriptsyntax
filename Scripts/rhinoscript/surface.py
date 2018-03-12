@@ -2761,7 +2761,8 @@ def SurfaceEvaluate(surface_id, parameter, derivative):
     success, point, der = surface.Evaluate(parameter[0], parameter[1], derivative)
     if not success: return scriptcontext.errorhandler()
     rc = [point]
-    for d in der: rc.append(d)
+    if der:
+      for d in der: rc.append(d)
     return rc
 
 
