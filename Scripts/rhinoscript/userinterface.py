@@ -218,7 +218,17 @@ def GetBox(mode=0, base_point=None, prompt1=None, prompt2=None, prompt3=None):
     """
     base_point = rhutil.coerce3dpoint(base_point)
     if base_point is None: base_point = Rhino.Geometry.Point3d.Unset
-    rc, box = Rhino.Input.RhinoGet.GetBox(mode, base_point, prompt1, prompt2, prompt3)
+    def intToEnum(m):
+      if m not in range(1,5):
+        m = 0
+      return {
+        0 : Rhino.Input.GetBoxMode.All,
+        1 : Rhino.Input.GetBoxMode.Corner,
+        2 : Rhino.Input.GetBoxMode.ThreePoint,
+        3 : Rhino.Input.GetBoxMode.Vertical,
+        4 : Rhino.Input.GetBoxMode.Center
+      }[m]
+    rc, box = Rhino.Input.RhinoGet.GetBox(intToEnum(mode), base_point, prompt1, prompt2, prompt3)
     if rc==Rhino.Commands.Result.Success: return tuple(box.GetCorners())
 
 
