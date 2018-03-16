@@ -2541,6 +2541,7 @@ def ExtendCurve(curve_id, extension_type, side, boundary_object_ids):
       side (number):
         0=extend from the start of the curve
         1=extend from the end of the curve
+        2=extend from both the start and the end of the curve
       boundary_object_ids (guid): curve, surface, and polysurface objects to extend to
     Returns:
       guid: The identifier of the new object if successful.
