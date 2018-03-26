@@ -353,7 +353,27 @@ def GetObjects(message=None, filter=0, group=True, preselect=False, select=False
       filter (number, optional): The type(s) of geometry (points, curves, surfaces, meshes,...)
           that can be selected. Object types can be added together to filter
           several different kinds of geometry. use the filter class to get values
-      group (bool, optional) Honor object grouping.  If omitted and the user picks a group,
+              Value         Description
+              0             All objects (default)
+              1             Point
+              2             Point cloud
+              4             Curve
+              8             Surface or single-face brep
+              16            Polysurface or multiple-face
+              32            Mesh
+              256           Light
+              512           Annotation
+              4096          Instance or block reference
+              8192          Text dot object
+              16384         Grip object
+              32768         Detail
+              65536         Hatch
+              131072        Morph control
+              134217728     Cage
+              268435456     Phantom
+              536870912     Clipping plane
+              1073741824    Extrusion
+      group (bool, optional): Honor object grouping.  If omitted and the user picks a group,
           the entire group will be picked (True). Note, if filter is set to a
           value other than 0 (All objects), then group selection will be disabled.
       preselect (bool, optional):  Allow for the selection of pre-selected objects.
