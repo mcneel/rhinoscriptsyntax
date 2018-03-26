@@ -1333,24 +1333,25 @@ def ObjectType(object_id):
       number: The object type if successful.
         The valid object types are as follows:
         Value   Description
-          0       Unknown object
-          1       Point
-          2       Point cloud
-          4       Curve
-          8       Surface or single-face brep
-          16      Polysurface or multiple-face
-          32      Mesh
-          256     Light
-          512     Annotation
-          4096    Instance or block reference
-          8192    Text dot object
-          16384   Grip object
-          32768   Detail
-          65536   Hatch
-          131072  Morph control
-          134217728  Cage
-          268435456  Phantom
-          536870912  Clipping plane
+          0           Unknown object
+          1           Point
+          2           Point cloud
+          4           Curve
+          8           Surface or single-face brep
+          16          Polysurface or multiple-face
+          32          Mesh
+          256         Light
+          512         Annotation
+          4096        Instance or block reference
+          8192        Text dot object
+          16384       Grip object
+          32768       Detail
+          65536       Hatch
+          131072      Morph control
+          134217728   Cage
+          268435456   Phantom
+          536870912   Clipping plane
+          1073741824  Extrusion
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
