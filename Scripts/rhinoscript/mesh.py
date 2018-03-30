@@ -225,6 +225,9 @@ def ExplodeMeshes(mesh_ids, delete=False):
                 for submesh in submeshes:
                     id = scriptcontext.doc.Objects.AddMesh(submesh)
                     if id!=System.Guid.Empty: rc.append(id)
+            if delete:
+                scriptcontext.doc.Objects.Delete(mesh_id, True)
+                
     if rc: scriptcontext.doc.Views.Redraw()
     return rc
 
