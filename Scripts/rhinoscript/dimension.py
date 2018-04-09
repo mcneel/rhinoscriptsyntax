@@ -190,7 +190,7 @@ def CurrentDimStyle(dimstyle_name=None):
     if dimstyle_name:
         ds = scriptcontext.doc.DimStyles.FindName(dimstyle_name)
         if ds is None: return scriptcontext.errorhandler()
-        scriptcontext.doc.DimStyles.SetCurrentDimensionStyleIndex(ds.Index, False)
+        scriptcontext.doc.DimStyles.SetCurrent(ds.Index, False)
     return rc
 
 
