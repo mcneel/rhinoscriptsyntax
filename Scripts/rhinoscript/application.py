@@ -916,11 +916,12 @@ def OsnapMode(mode=None):
       number: if mode is specified, then the previous object snap mode(s)
     Example:
       import rhinoscriptsyntax as rs
-      rhOsnapModeEnd = 128
+      rhOsnapModeEnd = 131072
+      #add 'End' mode while keeping the ones that are already set
       mode = rs.OsnapMode()
-      if not (mode & rhOSnapModeEnd):
-          mode = mode + rhOsnapModeEnd
-          rs.OsnapMode(mode)
+      rs.OsnapMode(mode + rhOsnapModeEnd)
+      #add 'End' mode while clearing the others
+      rs.OsnapMode(rhOsnapModeEnd)
     See Also:
       Osnap
       OsnapDialog
