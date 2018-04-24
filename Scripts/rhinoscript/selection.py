@@ -489,7 +489,7 @@ def GetObjectsEx(message=None, filter=0, group=True, preselect=False, select=Fal
     geometry_filter = __FilterHelper(filter)
     if filter>0: go.GeometryFilter = geometry_filter
     go.SubObjectSelect = False
-    go.GroupSelect = False
+    go.GroupSelect = group
     go.AcceptNothing(True)      
     if go.GetMultiple(1,0)!=Rhino.Input.GetResult.Object: return []
     if not select:
