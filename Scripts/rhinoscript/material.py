@@ -26,10 +26,9 @@ def AddMaterialToLayer(layer):
     if layer.RenderMaterialIndex>-1: return layer.RenderMaterialIndex
     material_index = scriptcontext.doc.Materials.Add()
     layer.RenderMaterialIndex = material_index
-    if scriptcontext.doc.Layers.Modify( layer, layer.LayerIndex, True):
-        scriptcontext.doc.Views.Redraw()
-        return material_index
-    return scriptcontext.errorhandler()
+    scriptcontext.doc.Views.Redraw()
+    return material_index
+    #return scriptcontext.errorhandler()
 
 
 def AddMaterialToObject(object_id):

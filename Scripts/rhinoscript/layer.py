@@ -143,7 +143,7 @@ def ExpandLayer( layer, expand ):
     layer = __getlayer(layer, True)
     if layer.IsExpanded==expand: return True
     layer.IsExpanded = expand
-    return scriptcontext.doc.Layers.Modify(layer, layer.LayerIndex, True)
+    return expanded
 
 
 def IsLayer(layer):
@@ -519,9 +519,9 @@ def LayerColor(layer, color=None):
     rc = layer.Color
     if color:
         color = rhutil.coercecolor(color)
-        layer.Color = color
-        if scriptcontext.doc.Layers.Modify(layer, layer.LayerIndex, False):
-            scriptcontext.doc.Views.Redraw()
+        if color is not None:
+          layer.Color = color
+          scriptcontext.doc.Views.Redraw()
     return rc
 
 
