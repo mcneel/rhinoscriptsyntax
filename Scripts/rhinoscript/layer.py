@@ -141,9 +141,9 @@ def ExpandLayer( layer, expand ):
       IsLayerExpanded
     """
     layer = __getlayer(layer, True)
-    if layer.IsExpanded==expand: return True
+    if layer.IsExpanded==expand: return False
     layer.IsExpanded = expand
-    return expanded
+    return True
 
 
 def IsLayer(layer):
