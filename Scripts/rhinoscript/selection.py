@@ -190,7 +190,7 @@ def GetCurveObject(message=None, preselect=False, select=False):
     viewname = go.View().ActiveViewport.Name
     obj = go.Object(0).Object()
     go.Dispose()
-    if not select:
+    if not select and not presel:
         scriptcontext.doc.Objects.UnselectAll()
         scriptcontext.doc.Views.Redraw()
     obj.Select(select)
@@ -252,8 +252,9 @@ def GetObject(message=None, filter=0, preselect=False, select=False, custom_filt
     if go.Get()!=Rhino.Input.GetResult.Object: return None
     objref = go.Object(0)
     obj = objref.Object()
+    presel = go.ObjectsWerePreselected
     go.Dispose()
-    if not select:
+    if not select and not presel:
         scriptcontext.doc.Objects.UnselectAll()
         scriptcontext.doc.Views.Redraw()
     if subobjects: return objref
@@ -339,7 +340,7 @@ def GetObjectEx(message=None, filter=0, preselect=False, select=False, objects=N
     viewname = go.View().ActiveViewport.Name
     obj = go.Object(0).Object()
     go.Dispose()
-    if not select:
+    if not select and not presel:
         scriptcontext.doc.Objects.UnselectAll()
         scriptcontext.doc.Views.Redraw()
     obj.Select(select)
@@ -418,7 +419,7 @@ def GetObjects(message=None, filter=0, group=True, preselect=False, select=False
     go.GroupSelect = group
     go.AcceptNothing(True)
     if go.GetMultiple(minimum_count,maximum_count)!=Rhino.Input.GetResult.Object: return None
-    if not select:
+    if not select and not go.ObjectsWerePreselected:
         scriptcontext.doc.Objects.UnselectAll()
         scriptcontext.doc.Views.Redraw()
     rc = []
@@ -492,7 +493,7 @@ def GetObjectsEx(message=None, filter=0, group=True, preselect=False, select=Fal
     go.GroupSelect = group
     go.AcceptNothing(True)      
     if go.GetMultiple(1,0)!=Rhino.Input.GetResult.Object: return []
-    if not select:
+    if not select and not go.ObjectsWerePreselected:
         scriptcontext.doc.Objects.UnselectAll()
         scriptcontext.doc.Views.Redraw()
     rc = []
@@ -594,6 +595,9 @@ def GetSurfaceObject(message="Select surface", preselect=False, select=False):
     view = go.View()
     name = view.ActiveViewport.Name
     go.Dispose()
+    if not select and not prepicked:
+      scriptcontext.doc.Objects.UnselectAll()
+      scriptcontext.doc.Views.Redraw()
     return id, prepicked, selmethod, point, uv, name
 
 
