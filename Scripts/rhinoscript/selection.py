@@ -21,7 +21,7 @@ class filter:
     grip = 16384
     detail = 32768
     hatch = 65536
-    morph = 13072
+    morph = 131072
     cage = 134217728
     phantom = 268435456
     clippingplane = 536870912
