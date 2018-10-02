@@ -519,9 +519,11 @@ def GetLinetype(default_linetype=None, show_by_layer=False):
     if default_linetype:
         lt_new = scriptcontext.doc.Linetypes.FindName(default_linetype)
         if lt_new is not None: lt_instance = lt_new
-    rc, new_lt_index = Rhino.UI.Dialogs.ShowSelectLinetypeDialog(lt_instance.Index, show_by_layer)
-    if rc == False: return None
-    linetype = scriptcontext.doc.Linetypes[new_lt_index]
+    #rc, new_lt_index = Rhino.UI.Dialogs.ShowSelectLinetypeDialog(lt_instance.Index, show_by_layer)
+    id = Rhino.UI.Dialogs.ShowLineTypes("Select Linetype", "", doc)
+    if id == "": return None
+    #linetype = scriptcontext.doc.Linetypes[new_lt_index]
+    linetype = doc.LineTypes.FindId(id)
     return linetype.Name
 
 def GetMeshFaces(object_id, message="", min_count=1, max_count=0):
