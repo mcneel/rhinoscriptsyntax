@@ -1,3 +1,5 @@
+My fork of rhinoscriptsyntax used for translating the API to F#
+
 RhinoPython Scripts
 ===================
 
