@@ -423,7 +423,7 @@ def AddInterpCurve(points, degree=3, knotstyle=0, start_tangent=None, end_tangen
       degree (number, optional): The degree of the curve (must be >=1).
           Periodic curves must have a degree >= 2. For knotstyle = 1 or 2,
           the degree must be 3. For knotstyle = 4 or 5, the degree must be odd
-      knotstyle(opt):
+      knotstyle(int):
           0 Uniform knots.  Parameter spacing between consecutive knots is 1.0.
           1 Chord length spacing.  Requires degree = 3 with arrCV1 and arrCVn1 specified.
           2 Sqrt (chord length).  Requires degree = 3 with arrCV1 and arrCVn1 specified.
@@ -975,11 +975,7 @@ def CurveArea(curve_id):
     Parameters:
       curve_id (guid): The identifier of a closed, planar curve object.
     Returns:
-      list[number, number]: List of area information. The list will contain the following information:
-        Element  Description
-        [0]      The area. If more than one curve was specified, the
-                   value will be the cumulative area.
-        [1]      The absolute (+/-) error bound for the area.
+      number: The area. If more than one curve was specified, the value will be the cumulative area.
     Example:
       import rhinocsriptsyntax as rs
       id = rs.GetObject("Select a curve", rs.filter.curve)
@@ -996,7 +992,7 @@ def CurveArea(curve_id):
     tol = scriptcontext.doc.ModelAbsoluteTolerance
     mp = Rhino.Geometry.AreaMassProperties.Compute(curve, tol)
     if mp == None: return None
-    return mp.Area, mp.AreaError
+    return mp.Area
 
 
 def CurveAreaCentroid(curve_id):
@@ -1005,12 +1001,7 @@ def CurveAreaCentroid(curve_id):
     Parameters:
       curve_id (guid)The identifier of a closed, planar curve object.
     Returns:
-      tuple(point, vector): of area centroid information containing the following information:
-        Element  Description
-        [0]        The 3d centroid point. If more than one curve was specified,
-                 the value will be the cumulative area.
-        [1]        A 3d vector with the absolute (+/-) error bound for the area
-                 centroid.
+      point:The 3d centroid point.
     Example:
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a curve", rs.filter.curve)
@@ -1027,7 +1018,7 @@ def CurveAreaCentroid(curve_id):
     tol = scriptcontext.doc.ModelAbsoluteTolerance
     mp = Rhino.Geometry.AreaMassProperties.Compute(curve, tol)
     if mp == None: return None
-    return mp.Centroid, mp.CentroidError
+    return mp.Centroid 
 
 
 def CurveArrows(curve_id, arrow_style=None):
@@ -1071,12 +1062,12 @@ def CurveArrows(curve_id, arrow_style=None):
     if rc==Rhino.DocObjects.ObjectDecoration.BothArrowhead: return 3
 
 
-def CurveBooleanDifference(curve_id_0, curve_id_1, tolerance=None):
+def CurveBooleanDifference(curveA, curveB, tolerance=None):
     """Calculates the difference between two closed, planar curves and
     adds the results to the document. Note, curves must be coplanar.
     Parameters:
-      curve_id_0 (guid): identifier of the first curve object.
-      curve_id_1 (guid): identifier of the second curve object.
+      curveA (guid): identifier of the first curve object.
+      curveB (guid): identifier of the second curve object.
       tolerance (float, optional): a positive tolerance value, or None for the doc default.
     Returns:
       list(guid, ...): The identifiers of the new objects if successful, None on error.
@@ -1092,8 +1083,8 @@ def CurveBooleanDifference(curve_id_0, curve_id_1, tolerance=None):
       CurveBooleanIntersection
       CurveBooleanUnion
     """
-    curve0 = rhutil.coercecurve(curve_id_0, -1, True)
-    curve1 = rhutil.coercecurve(curve_id_1, -1, True)
+    curve0 = rhutil.coercecurve(curveA, -1, True)
+    curve1 = rhutil.coercecurve(curveB, -1, True)
     if tolerance is None or tolerance<0:
         tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     out_curves = Rhino.Geometry.Curve.CreateBooleanDifference(curve0, curve1, tolerance)
@@ -1109,12 +1100,12 @@ def CurveBooleanDifference(curve_id_0, curve_id_1, tolerance=None):
     return curves
 
 
-def CurveBooleanIntersection(curve_id_0, curve_id_1, tolerance=None):
+def CurveBooleanIntersection(curveA, curveB, tolerance=None):
     """Calculates the intersection of two closed, planar curves and adds
     the results to the document. Note, curves must be coplanar.
     Parameters:
-      curve_id_0 (guid): identifier of the first curve object.
-      curve_id_1 (guid): identifier of the second curve object.
+      curveA (guid): identifier of the first curve object.
+      curveB (guid): identifier of the second curve object.
       tolerance (float, optional): a positive tolerance value, or None for the doc default.
     Returns:
       list(guid, ...): The identifiers of the new objects.
@@ -1130,8 +1121,8 @@ def CurveBooleanIntersection(curve_id_0, curve_id_1, tolerance=None):
       CurveBooleanDifference
       CurveBooleanUnion
     """
-    curve0 = rhutil.coercecurve(curve_id_0, -1, True)
-    curve1 = rhutil.coercecurve(curve_id_1, -1, True)
+    curve0 = rhutil.coercecurve(curveA, -1, True)
+    curve1 = rhutil.coercecurve(curveB, -1, True)
     if tolerance is None or tolerance<0:
         tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     out_curves = Rhino.Geometry.Curve.CreateBooleanIntersection(curve0, curve1, tolerance)
@@ -1386,6 +1377,7 @@ def CurveCurveIntersection(curveA, curveB=None, tolerance=-1):
       tolerance (number, optional): absolute tolerance in drawing units. If omitted,
                         the document's current absolute tolerance is used.
     Returns:
+      list(list(point, point, point, point, number, number, number, number, number, number), ...):
       list of tuples: containing intersection information if successful.
       The list will contain one or more of the following elements:
         Element Type     Description
@@ -1545,14 +1537,14 @@ def CurveDim(curve_id, segment_index=-1):
     return curve.Dimension
 
 
-def CurveDirectionsMatch(curve_id_0, curve_id_1):
+def CurveDirectionsMatch(curveA, curveB):
     """Tests if two curve objects are generally in the same direction or if they
     would be more in the same direction if one of them were flipped. When testing
     curve directions, both curves must be either open or closed - you cannot test
     one open curve and one closed curve.
     Parameters:
-      curve_id_0 (guid): identifier of first curve object
-      curve_id_1 (guid): identifier of second curve object
+      curveA (guid): identifier of first curve object
+      curveB (guid): identifier of second curve object
     Returns:
       bool: True if the curve directions match, otherwise False.
     Example:
@@ -1566,8 +1558,8 @@ def CurveDirectionsMatch(curve_id_0, curve_id_1):
     See Also:
       ReverseCurve
     """
-    curve0 = rhutil.coercecurve(curve_id_0, -1, True)
-    curve1 = rhutil.coercecurve(curve_id_1, -1, True)
+    curve0 = rhutil.coercecurve(curveA, -1, True)
+    curve1 = rhutil.coercecurve(curveB, -1, True)
     return Rhino.Geometry.Curve.DoDirectionsMatch(curve0, curve1)
 
 
@@ -1687,22 +1679,22 @@ def CurveEndPoint(curve_id, segment_index=-1):
     return curve.PointAtEnd
 
 
-def CurveFilletPoints(curve_id_0, curve_id_1, radius=1.0, base_point_0=None, base_point_1=None, return_points=True):
+def CurveFilletPoints(curveA, curveB, radius=1.0, basepointA=None, basepointB=None, return_points=True):
     """Find points at which to cut a pair of curves so that a fillet of a
     specified radius fits. A fillet point is a pair of points (point0, point1)
     such that there is a circle of radius tangent to curve curve0 at point0 and
     tangent to curve curve1 at point1. Of all possible fillet points, this
-    function returns the one which is the closest to the base point base_point_0,
-    base_point_1. Distance from the base point is measured by the sum of arc
+    function returns the one which is the closest to the base point basepointA,
+    basepointB. Distance from the base point is measured by the sum of arc
     lengths along the two curves. 
     Parameters:
-      curve_id_0 (guid): identifier of the first curve object.
-      curve_id_1 (guid): identifier of the second curve object.
+      curveA (guid): identifier of the first curve object.
+      curveB (guid): identifier of the second curve object.
       radius (number, optional): The fillet radius. If omitted, a radius
                      of 1.0 is specified.
-      base_point_0 (point, optional): The base point on the first curve.
+      basepointA (point, optional): The base point on the first curve.
                      If omitted, the starting point of the curve is used.
-      base_point_1 (point, optional): The base point on the second curve. If omitted,
+      basepointB (point, optional): The base point on the second curve. If omitted,
                      the starting point of the curve is used.
       return_points (bool, optional): If True (Default), then fillet points are
                      returned. Otherwise, a fillet curve is created and
@@ -1733,17 +1725,17 @@ def CurveFilletPoints(curve_id_0, curve_id_1, radius=1.0, base_point_0=None, bas
     See Also:
       AddFilletCurve
     """
-    curve0 = rhutil.coercecurve(curve_id_0, -1, True)
-    curve1 = rhutil.coercecurve(curve_id_1, -1, True)
+    curve0 = rhutil.coercecurve(curveA, -1, True)
+    curve1 = rhutil.coercecurve(curveB, -1, True)
     t0_base = curve0.Domain.Min
     
-    if base_point_0:
-        rc = curve0.ClosestPoint(base_point_0, t0_base)
+    if basepointA:
+        rc = curve0.ClosestPoint(basepointA, t0_base)
         if not rc[0]: return scriptcontext.errorhandler()
     
     t1_base = curve1.Domain.Min
-    if base_point_1:
-        rc = curve1.ClosestPoint(base_point_1, t1_base)
+    if basepointB:
+        rc = curve1.ClosestPoint(basepointB, t1_base)
         if not rc[0]: return scriptcontext.errorhandler()
 
     r = radius if (radius and radius>0) else 1.0
@@ -2869,7 +2861,7 @@ def IsCurveClosable(curve_id, tolerance=None):
     approximated by chord defined by 6 points
     Parameters:
       curve_id (guid): identifier of the curve object
-      tolerance[opt] = maximum allowable distance between start point and end
+      tolerance[float] = maximum allowable distance between start point and end
         point. If omitted, the document's current absolute tolerance is used
     Returns:
       bool: True or False

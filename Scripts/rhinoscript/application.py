@@ -243,7 +243,7 @@ def AutosaveInterval(minutes=None):
 def BuildDate():
     """Returns the build date of Rhino
     Returns:
-      Datetime.date: the build date of Rhino. Will be converted to a string by most functions.
+      DateTime: the build date of Rhino. Will be converted to a string by most functions.
     Example:
       import rhinoscriptsyntax as rs
       build = rs.BuildDate()
@@ -275,12 +275,6 @@ def Command(commandString, echo=True):
     """Runs a Rhino command script. All Rhino commands can be used in command
     scripts. The command can be a built-in Rhino command or one provided by a
     3rd party plug-in.
-    Parameters:
-      commandString (str): A Rhino command including any arguments
-      echo (bool, optional): The command echo mode True will display the commands on the commandline. If omitted, command prompts are echoed (True)
-    Returns:
-      bool: True or False indicating success or failure
-
     Write command scripts just as you would type the command sequence at the
     command line. A space or a new line acts like pressing <Enter> at the
     command line. For more information, see "Scripting" in Rhino help.
@@ -302,7 +296,12 @@ def Command(commandString, echo=True):
       CORRECT:
         rs.Command("_Line _Pause _Pause")
     After the command script has run, you can obtain the identifiers of most
-    recently created or changed object by calling LastCreatedObjects.
+    recently created or changed object by calling LastCreatedObjects.    
+    Parameters:
+      commandString (str): A Rhino command including any arguments
+      echo (bool, optional): The command echo mode True will display the commands on the commandline. If omitted, command prompts are echoed (True)
+    Returns:
+      bool: True or False indicating success or failure
     Example:
       import rhinoscriptsyntax as rs
       rs.Command("_Line 0,0,0 2,2,2")
@@ -927,13 +926,8 @@ def OsnapMode(mode=None):
       OsnapDialog
       ProjectOsnaps
     """
-    rc = int(modelaid.OsnapModes)
-    # RH-39062 reverts RH-31758
-    #m = [(0,0), (1,2), (2,8), (4,0x20), (8,0x80), (16,0x200), (32,0x800), (64,0x2000),
-    #      (128,0x20000), (256,0x80000), (512,0x200000), (1024,0x8000000), (2048, 0x40)]
-    #rc = sum([x[0] for x in m if x[1] & rc])
-    if mode is not None:
-        #mode = sum([x[1] for x in m if x[0] & int(mode)])
+    rc = int(modelaid.OsnapModes)    
+    if mode is not None:       
         modelaid.OsnapModes = System.Enum.ToObject(Rhino.ApplicationSettings.OsnapModes, mode)
     return rc
 

@@ -4,7 +4,16 @@ import utility as rhutil
 import math
 import System.Guid
 
+
+
+
 def __InstanceObjectFromId(id, raise_if_missing):
+    """Returns the Rhino Block instance object for a given Id
+    Parameters:
+      object_id (guid): Id of block instance
+    Returns:
+      Rhino.DocObjects.InstanceObject: block instance object
+    """
     rhobj = rhutil.coercerhinoobject(id, True, raise_if_missing)
     if isinstance(rhobj, Rhino.DocObjects.InstanceObject): return rhobj
     if raise_if_missing: raise ValueError("unable to find InstanceObject")

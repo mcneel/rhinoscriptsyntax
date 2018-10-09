@@ -286,6 +286,12 @@ def RenderResolution(resolution=None):
 
 
 def _SetRenderMeshAndUpdateStyle(current):
+      """Helper Function to set SetRenderMeshAndUpdateStyle.
+    Parameters:
+      current (MeshingParameters): custom MeshingParameters
+    Returns:
+      unit: sets doc.MeshingParameterStyle and doc.SetCustomMeshingParameters
+    """
     scriptcontext.doc.SetCustomMeshingParameters(current)
     scriptcontext.doc.MeshingParameterStyle = Rhino.Geometry.MeshingParameterStyle.Custom
 
@@ -623,6 +629,12 @@ print("Other settings: %s" % rs.RenderMeshSettings())
 def RenderMeshSettings(settings=None):
     """Returns or sets the render mesh settings of the active document.
       For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
+      The bits can be added together in any combination to form a value between 0 and 7.  The bit values are as follows:
+          0: No settings enabled.
+          1: Refine mesh enabled.
+          2: Jagged seams enabled.
+          4: Simple planes enabled.
+          8: Texture is packed, scaled and normalized; otherwise unpacked, unscaled and normalized.
     Parameters:
       settings (number, optional): the render mesh settings, which is a bit-coded number that allows or disallows certain features.
       The bits can be added together in any combination to form a value between 0 and 7.  The bit values are as follows:
