@@ -39,7 +39,7 @@ def AddSearchPath(folder, index=-1):
                              If omitted, path will be appended to the end of the
                              search path list.
     Returns:
-      number: The index where the item was inserted if success.
+      int: The index where the item was inserted if success.
            -1 on failure.
     Example:
       import rhinoscriptsyntax as rs
@@ -55,7 +55,7 @@ def AddSearchPath(folder, index=-1):
 def AliasCount():
     """Returns number of command aliases in Rhino.
     Returns:
-      number: the number of command aliases in Rhino.
+      int: the number of command aliases in Rhino.
     Example:
       import rhinoscriptsyntax as rs
       print "alias count = ", rs.AliasCount()
@@ -100,7 +100,7 @@ def AliasMacro(alias, macro=None):
 def AliasNames():
     """Returns a list of command alias names.
     Returns:
-      str: a list of command alias names.
+      list(str, ...): a list of command alias names.
     Example:
       import rhinoscriptsyntax as rs
       aliases = rs.AliasNames()
