@@ -1056,10 +1056,14 @@ def ObjectMaterialIndex(object_id, material_index=None):
       object_id (guid): identifier of an object
       index (number, optional): the new material index
     Returns:
-      number: If the return value of ObjectMaterialSource is "material by object", then
+      number: if material_index is not specified, If the return value of ObjectMaterialSource is "material by object", then
           the return value of this function is the index of the object's rendering
           material. A material index of -1 indicates no material has been assigned,
           and that Rhino's internal default material has been assigned to the object.
+      number: if material_index is specified, If the return value of ObjectMaterialSource is "material by object", then
+          the return value of this function is the index of the object's rendering
+          material. A material index of -1 indicates no material has been assigned,
+          and that Rhino's internal default material has been assigned to the object.          
       None: on failure
     Example:
       import rhinoscriptsyntax as rs
