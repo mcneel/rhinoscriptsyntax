@@ -872,7 +872,7 @@ def Osnap(enable=None):
 
 
 def OsnapDialog(visible=None):
-    """Shows or hides Rhino's dockable object snap bar
+    """Returns or sets the Shows-Hide Status of  Rhino's dockable object snap bar
     Parameters:
       visible (bool, optional): The new visibility state. If omitted then the current state is returned.
     Returns:

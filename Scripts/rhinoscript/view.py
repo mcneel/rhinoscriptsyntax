@@ -787,7 +787,7 @@ def RotateView(view=None, direction=0, angle=None):
 
 
 def ShowGrid(view=None, show=None):
-    """Shows or hides a view's construction plane grid
+    """Returns or sets the Shows-Hide Status of a view's construction plane grid
     Parameters:
       view (str|guid, optional): title or id of the view. If omitted, the current active view is used
       show (bool, optional): The grid state to set. If omitted, the current grid display state is returned
@@ -813,7 +813,7 @@ def ShowGrid(view=None, show=None):
 
 
 def ShowGridAxes(view=None, show=None):
-    """Shows or hides a view's construction plane grid axes.
+    """Returns or sets the Shows-Hide Status of a view's construction plane grid axes.
     Parameters:
       view (str|guid, optional): title or id of the view. If omitted, the current active view is used
       show (bool, optional): The state to set. If omitted, the current grid axes display state is returned
@@ -859,7 +859,7 @@ def ShowViewTitle(view=None, show=True):
 
 
 def ShowWorldAxes(view=None, show=None):
-    """Shows or hides a view's world axis icon
+    """Returns or sets the Shows-Hide Status of a view's world axis icon
     Parameters:
       view (str|guid, optional):  title or id of the view. If omitted, the current active view is used
       show: (bool, optional): The state to set.
