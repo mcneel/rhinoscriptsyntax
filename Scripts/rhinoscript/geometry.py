@@ -741,7 +741,7 @@ def PointCoordinates(object_id, point=None):
 
 
 def TextDotFont(object_id, fontface=None):
-    """Returns or modified the font of a text dot
+    """Returns or modifies the font of a text dot
     Parameters:
       object_id (guid): identifier of a text dot object
       fontface (str, optional): new font face name
@@ -772,7 +772,7 @@ def TextDotFont(object_id, fontface=None):
 
 
 def TextDotHeight(object_id, height=None):
-    """Returns or modified the font height of a text dot
+    """Returns or modifies the font height of a text dot
     Parameters:
       object_id (guid): identifier of a text dot object
       height (number, optional) new font height
@@ -866,7 +866,7 @@ def TextDotText(object_id, text=None):
 
 
 def TextObjectFont(object_id, font=None):
-    """Returns of modifies the font used by a text object
+    """Returns or modifies the font used by a text object
     Parameters:
       object_id (guid): the identifier of a text object
       font (str): the new font face name

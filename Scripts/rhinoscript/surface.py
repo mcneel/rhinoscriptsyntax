@@ -1414,7 +1414,7 @@ def FilletSurfaces(surface0, surface1, radius, uvparam0=None, uvparam1=None):
 
 
 def FlipSurface(surface_id, flip=None):
-    """Returns or changes the normal direction of a surface. This feature can
+    """Returns or modifies the normal direction of a surface. This feature can
     also be found in Rhino's Dir command
     Parameters:
       surface_id (guid): identifier of a surface object
@@ -2792,7 +2792,7 @@ def SurfaceFrame(surface_id, uv_parameter):
 
 
 def SurfaceIsocurveDensity(surface_id, density=None):
-    """Returns or sets the isocurve density of a surface or polysurface object.
+    """Returns or modifies the isocurve density of a surface or polysurface object.
     An isoparametric curve is a curve of constant U or V value on a surface.
     Rhino uses isocurves and surface edge curves to visualize the shape of a
     NURBS surface

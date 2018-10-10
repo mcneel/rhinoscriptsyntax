@@ -1031,7 +1031,7 @@ def MeshTriangleCount(object_id):
 
 
 def MeshVertexColors(mesh_id, colors=0):
-    """Returns of modifies vertex colors of a mesh
+    """Returns or modifies vertex colors of a mesh
     Parameters:
       mesh_id (guid): identifier of a mesh object
       colors 9{color, ...], optional) A list of color values. Note, for each vertex, there must

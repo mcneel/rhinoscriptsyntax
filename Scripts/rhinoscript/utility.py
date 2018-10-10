@@ -132,7 +132,7 @@ def Angle2(line1, line2):
 
 
 def ClipboardText(text=None):
-    """Returns or sets a text string to the Windows clipboard
+    """Returns or modifies a text string to the Windows clipboard
     Parameters:
       text (str, optional): text to set
     Returns:

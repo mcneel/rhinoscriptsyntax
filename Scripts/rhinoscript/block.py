@@ -133,7 +133,7 @@ def BlockCount():
 
 
 def BlockDescription(block_name, description=None):
-    """Returns or sets the description of a block definition
+    """Returns or modifies the description of a block definition
     Parameters:
       block_name (str): the name of an existing block definition
       description (str, optional): The new description.

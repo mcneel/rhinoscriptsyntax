@@ -169,7 +169,7 @@ def AddLinearDimension(plane, start_point, end_point, point_on_dimension_line):
 
 
 def CurrentDimStyle(dimstyle_name=None):
-    """Returns or changes the current default dimension style
+    """Returns or modifies the current default dimension style
     Parameters:
       dimstyle_name (str, optional): name of an existing dimension style to make current
     Returns:
@@ -275,7 +275,7 @@ def DimensionText(object_id):
 
 
 def DimensionUserText(object_id, usertext=None):
-    """Returns of modifies the user text string of a dimension object. The user
+    """Returns or modifies the user text string of a dimension object. The user
     text is the string that gets printed when the dimension is specified
     Parameters:
       object_id (guid): identifier of the object
@@ -324,7 +324,7 @@ def DimensionValue(object_id):
 
 
 def DimStyleAnglePrecision(dimstyle, precision=None):
-    """Returns or changes the angle display precision of a dimension style
+    """Returns or modifies the angle display precision of a dimension style
     Parameters:
       dimstyle (str): the name of an existing dimension style
       precision (number, optional): the new angle precision value. If omitted, the current angle
@@ -359,7 +359,7 @@ def DimStyleAnglePrecision(dimstyle, precision=None):
 
 
 def DimStyleArrowSize(dimstyle, size=None):
-    """Returns or changes the arrow size of a dimension style
+    """Returns or modifies the arrow size of a dimension style
     Parameters:
       dimstyle (str): the name of an existing dimension style
       size (number, optional): the new arrow size. If omitted, the current arrow size is returned
@@ -408,7 +408,7 @@ def DimStyleCount():
 
 
 def DimStyleExtension(dimstyle, extension=None):
-    """Returns or changes the extension line extension of a dimension style
+    """Returns or modifies the extension line extension of a dimension style
     Parameters:
       dimstyle (str): the name of an existing dimension style
       extension (number, optional): the new extension line extension
@@ -442,7 +442,7 @@ def DimStyleExtension(dimstyle, extension=None):
 
 
 def DimStyleFont(dimstyle, font=None):
-    """Returns or changes the font used by a dimension style
+    """Returns or modifies the font used by a dimension style
     Parameters:
       dimstyle (str): the name of an existing dimension style
       font (str, optional): the new font face name
@@ -477,7 +477,7 @@ def DimStyleFont(dimstyle, font=None):
 
 
 def DimStyleLeaderArrowSize(dimstyle, size=None):
-    """Returns or changes the leader arrow size of a dimension style
+    """Returns or modifies the leader arrow size of a dimension style
     Parameters:
       dimstyle (str): the name of an existing dimension style
       size (number, optional) the new leader arrow size
@@ -512,7 +512,7 @@ def DimStyleLeaderArrowSize(dimstyle, size=None):
 
 
 def DimStyleLengthFactor(dimstyle, factor=None):
-    """Returns or changes the length factor of a dimension style. Length factor
+    """Returns or modifies the length factor of a dimension style. Length factor
     is the conversion between Rhino units and dimension units
     Parameters:
       dimstyle (str): the name of an existing dimension style
@@ -541,7 +541,7 @@ def DimStyleLengthFactor(dimstyle, factor=None):
 
 
 def DimStyleLinearPrecision(dimstyle, precision=None):
-    """Returns or changes the linear display precision of a dimension style
+    """Returns or modifies the linear display precision of a dimension style
     Parameters:
       dimstyle (str): the name of an existing dimension style
       precision (number, optional): the new linear precision value
@@ -595,7 +595,7 @@ def DimStyleNames(sort=False):
 
 
 def DimStyleNumberFormat(dimstyle, format=None):
-    """Returns or changes the number display format of a dimension style
+    """Returns or modifies the number display format of a dimension style
     Parameters:
       dimstyle (str): the name of an existing dimension style
       format (number, optional) the new number format
@@ -634,7 +634,7 @@ def DimStyleNumberFormat(dimstyle, format=None):
 
 
 def DimStyleOffset(dimstyle, offset=None):
-    """Returns or changes the extension line offset of a dimension style
+    """Returns or modifies the extension line offset of a dimension style
     Parameters:
       dimstyle (str): the name of an existing dimension style
       offset (number, optional): the new extension line offset
@@ -668,7 +668,7 @@ def DimStyleOffset(dimstyle, offset=None):
 
 
 def DimStylePrefix(dimstyle, prefix=None):
-    """Returns or changes the prefix of a dimension style - the text to
+    """Returns or modifies the prefix of a dimension style - the text to
     prefix to the dimension text.
     Parameters:
       dimstyle (str): the name of an existing dimstyle
@@ -696,7 +696,7 @@ def DimStylePrefix(dimstyle, prefix=None):
 
 
 def DimStyleSuffix(dimstyle, suffix=None):
-    """Returns or changes the suffix of a dimension style - the text to
+    """Returns or modifies the suffix of a dimension style - the text to
     append to the dimension text.
     Parameters:
       dimstyle (str): the name of an existing dimstyle
@@ -724,7 +724,7 @@ def DimStyleSuffix(dimstyle, suffix=None):
 
 
 def DimStyleTextAlignment(dimstyle, alignment=None):
-    """Returns or changes the text alignment mode of a dimension style
+    """Returns or modifies the text alignment mode of a dimension style
     Parameters:
       dimstyle (str): the name of an existing dimension style
       alignment (number, optional): the new text alignment
@@ -765,7 +765,7 @@ def DimStyleTextAlignment(dimstyle, alignment=None):
 
 
 def DimStyleTextGap(dimstyle, gap=None):
-    """Returns or changes the text gap used by a dimension style
+    """Returns or modifies the text gap used by a dimension style
     Parameters:
       dimstyle (str): the name of an existing dimension style
       gap (number, optional): the new text gap
@@ -800,7 +800,7 @@ def DimStyleTextGap(dimstyle, gap=None):
 
 
 def DimStyleTextHeight(dimstyle, height=None):
-    """Returns or changes the text height used by a dimension style
+    """Returns or modifies the text height used by a dimension style
     Parameters:
       dimstyle (str): the name of an existing dimension style
       height (number, optional): the new text height

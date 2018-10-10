@@ -198,7 +198,7 @@ def AppearanceColor(item, color=None):
 
 
 def AutosaveFile(filename=None):
-    """Returns or changes the file name used by Rhino's automatic file saving
+    """Returns or modifies the file name used by Rhino's automatic file saving
     Parameters:
       filename (str, optional): Name of the new autosave file
     Returns:
@@ -218,7 +218,7 @@ def AutosaveFile(filename=None):
 
 
 def AutosaveInterval(minutes=None):
-    """Returns or changes how often the document will be saved when Rhino's
+    """Returns or modifies how often the document will be saved when Rhino's
     automatic file saving mechanism is enabled
     Parameters:
       minutes (number, optional): The number of minutes between saves
@@ -336,7 +336,7 @@ def CommandHistory():
 
 
 def DefaultRenderer(renderer=None):
-    """Returns or changes the default render plug-in
+    """Returns or modifies the default render plug-in
     Parameters:
       renderer (str, optional): The name of the renderer to set as default renderer.  If omitted the Guid of the current renderer is returned.
     Returns:
@@ -831,7 +831,7 @@ def LocaleID():
 
 
 def Ortho(enable=None):
-    """Returns or sets the Enable-Disable status of Rhino's ortho modeling aid.
+    """Returns or modifies the Enable-Disable status of Rhino's ortho modeling aid.
     Parameters:
       enable (bool, optional): The new enabled status (True or False). If omitted the current state is returned.
     Returns:
@@ -851,7 +851,7 @@ def Ortho(enable=None):
 
 
 def Osnap(enable=None):
-    """Returns or sets the Enable-Disable status of Rhino's object snap modeling aid.
+    """Returns or modifies the Enable-Disable status of Rhino's object snap modeling aid.
     Object snaps are tools for specifying points on existing objects.
     Parameters:
       enable (bool, optional): The new enabled status.
@@ -873,7 +873,7 @@ def Osnap(enable=None):
 
 
 def OsnapDialog(visible=None):
-    """Returns or sets the Shows-Hide status of  Rhino's dockable object snap bar
+    """Returns or modifies the Shows-Hide status of  Rhino's dockable object snap bar
     Parameters:
       visible (bool, optional): The new visibility state. If omitted then the current state is returned.
     Returns:
@@ -893,7 +893,7 @@ def OsnapDialog(visible=None):
 
 
 def OsnapMode(mode=None):
-    """Returns or sets the object snap mode. Object snaps are tools for
+    """Returns or modifies the object snap mode. Object snaps are tools for
     specifying points on existing objects
     Parameters:
       mode (number, optional): The object snap mode or modes to set. Object snap modes
@@ -1242,7 +1242,7 @@ def StatusBarProgressMeterHide():
 
 
 def TemplateFile(filename=None):
-    """Returns or sets Rhino's default template file. This is the file used
+    """Returns or modifies Rhino's default template file. This is the file used
     when Rhino starts.
     Parameters:
       filename (str, optional): The name of the new default template file. If omitted the current default template name is returned.
@@ -1263,7 +1263,7 @@ def TemplateFile(filename=None):
 
 
 def TemplateFolder(folder=None):
-    """Returns or sets the location of Rhino's template folder
+    """Returns or modifies the location of Rhino's template folder
     Parameters:
       folder (str, optional): The location of Rhino's template files. Note, the location must exist.
     Returns:
@@ -1297,7 +1297,7 @@ def WindowHandle():
 
 
 def WorkingFolder(folder=None):
-    """Returns or sets Rhino's working folder (directory).
+    """Returns or modifies Rhino's working folder (directory).
     The working folder is the default folder for all file operations.
     Parameters:
       folder (str, optional): The new working folder for the current Rhino session.

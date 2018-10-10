@@ -742,7 +742,7 @@ def MoveObjects(object_ids, translation):
 
 
 def ObjectColor(object_ids, color=None):
-    """Returns of modifies the color of an object. Object colors are represented
+    """Returns or modifies the color of an object. Object colors are represented
     as RGB colors. An RGB color specifies the relative intensity of red, green,
     and blue to cause a specific color to be displayed
     Parameters:
@@ -797,7 +797,7 @@ def ObjectColor(object_ids, color=None):
 
 
 def ObjectColorSource(object_ids, source=None):
-    """Returns of modifies the color source of an object.
+    """Returns or modifies the color source of an object.
     Parameters:
       object_ids ([guid, ...]): single identifier of list of identifiers
       source (number, optional) = new color source
@@ -921,7 +921,7 @@ def ObjectLayer(object_id, layer=None):
 
 
 def ObjectLayout(object_id, layout=None, return_name=True):
-    """Returns or changes the layout or model space of an object
+    """Returns or modifies the layout or model space of an object
     Parameters:
       object_id (guid): identifier of the object
       layout (str|guid, optional): to change, or move, an object from model space to page
@@ -967,7 +967,7 @@ def ObjectLayout(object_id, layout=None, return_name=True):
 
 
 def ObjectLinetype(object_ids, linetype=None):
-    """Returns of modifies the linetype of an object
+    """Returns or modifies the linetype of an object
     Parameters:
       object_ids ({guid, ...]): identifiers of object(s)
       linetype (str, optional): name of an existing linetype. If omitted, the current
@@ -1008,7 +1008,7 @@ def ObjectLinetype(object_ids, linetype=None):
 
 
 def ObjectLinetypeSource(object_ids, source=None):
-    """Returns of modifies the linetype source of an object
+    """Returns or modifies the linetype source of an object
     Parameters:
       object_ids ([guid, ...]): identifiers of object(s)
       source (number, optional): new linetype source. If omitted, the current source is returned.
@@ -1048,7 +1048,7 @@ def ObjectLinetypeSource(object_ids, source=None):
 
 
 def ObjectMaterialIndex(object_id, material_index=None):
-    """Returns or changes the material index of an object. Rendering materials are stored in
+    """Returns or modifies the material index of an object. Rendering materials are stored in
     Rhino's rendering material table. The table is conceptually an array. Render
     materials associated with objects and layers is specified by zero based
     indices into this array.

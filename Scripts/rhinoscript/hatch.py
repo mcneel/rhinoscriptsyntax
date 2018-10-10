@@ -119,7 +119,7 @@ def AddHatchPatterns(filename, replace=False):
 
 
 def CurrentHatchPattern(hatch_pattern=None):
-    """Returns or sets the current hatch pattern file
+    """Returns or modifies the current hatch pattern file
     Parameters:
       hatch_pattern(str, optional):  name of an existing hatch pattern to make current
     Returns:
@@ -179,7 +179,7 @@ def ExplodeHatch(hatch_id, delete=False):
 
 
 def HatchPattern(hatch_id, hatch_pattern=None):
-    """Returns or changes a hatch object's hatch pattern
+    """Returns or modifies a hatch object's hatch pattern
     Parameters:
       hatch_id (guid): identifier of a hatch object
       hatch_pattern (str, optional): name of an existing hatch pattern to replace the
