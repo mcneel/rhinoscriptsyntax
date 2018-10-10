@@ -160,7 +160,7 @@ def Notes(newnotes=None):
     Parameters:
       newnotes (str): new notes to set
     Returns:
-      str: if `newnotes` is omitted, the current notes if successful
+      str: if `newnotes` is not specified, the current notes if successful
       str: if `newnotes` is specified, the previous notes if successful
     Example:
       import rhinoscriptsyntax as rs

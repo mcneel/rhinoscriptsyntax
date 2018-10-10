@@ -112,7 +112,7 @@ def PlaneClosestPoint(plane, point, return_point=True):
          parameter of the point on the plane that is closest to the test
          point is returned.
     Returns:
-      point: If return_point is omitted or True, then the 3-D point
+      point: If return_point is not specified or True, then the 3-D point
       point: If return_point is False, then an array containing the U,V parameters
       of the point
       None: if not successful, or on error.

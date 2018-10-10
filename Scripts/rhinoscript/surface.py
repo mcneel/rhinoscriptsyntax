@@ -465,10 +465,10 @@ def AddLoftSrf(object_ids, start=None, end=None, loft_type=0, simplify_method=0,
       value (number, optional): Additional value based on the specified `simplify_method`:
         Simplify  -   Description
         Rebuild(1) - then value is the number of control point used to rebuild
-        Rebuild(1) - is specified and this argument is omitted, then curves will be
+        Rebuild(1) - is specified and this argument is not specified, then curves will be
                      rebuilt using 10 control points.
         Refit(2) - then value is the tolerance used to rebuild.
-        Refit(2) - is specified and this argument is omitted, then the document's
+        Refit(2) - is specified and this argument is not specified, then the document's
                      absolute tolerance us used for refitting.
       closed (bool, optional): close the loft back to the first curve
     Returns:
