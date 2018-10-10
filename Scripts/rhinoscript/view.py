@@ -254,8 +254,8 @@ def DetailLock(detail_id, lock=None):
       detail_id (guid): identifier of a detail object
       lock (bool, optional) the new lock state
     Returns:
-      bool: if lock==None, the current detail projection locked state
-      bool: if lock is True or False, the previous detail projection locked state
+      bool: if lock is not specified, the current detail projection locked state
+      bool: if lock is specified, the previous detail projection locked state
       None: on error
     Example:
       import rhinoscriptsyntax as rs
@@ -282,8 +282,8 @@ def DetailScale(detail_id, model_length=None, page_length=None):
       model_length (number, optional): a length in the current model units
       page_length (number, optional): a length in the current page units
     Returns:
-      number: current page to model scale ratio if model_length and page_length are both None
-      number: previous page to model scale ratio if model_length and page_length are values
+      number: if model_length and page_length are both is not specified, current page to model scale ratio
+      number: if model_length and page_length are both is specified,previous page to model scale ratio
       None: on error
     Example:
       import rhinoscriptsyntax as rs

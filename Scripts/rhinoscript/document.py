@@ -52,7 +52,7 @@ def DocumentModified(modified=None):
     Parameters:
       modified (bool): the modified state, either True or False
     Returns:
-      bool: if no modified state is specified, the current modified state
+      bool: if a modified state is not specified, the current modified state
       bool: if a modified state is specified, the previous modified state
     Example:
       import rhinoscriptsyntax as rs
