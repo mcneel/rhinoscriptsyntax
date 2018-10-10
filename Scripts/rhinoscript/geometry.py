@@ -566,7 +566,7 @@ def PointCloudPointColors(object_id, colors=[]):
       colors ([color, ...]) list of color values if you want to adjust colors
     Returns:
       list(color, ...): if hidden is not specified, List of point cloud colors
-      list(color, ...): if hidden is  specified, List of point cloud colors
+      list(color, ...): if hidden is specified, List of point cloud colors
     Example:
       import rhinoscriptsyntax as rs
       import random
