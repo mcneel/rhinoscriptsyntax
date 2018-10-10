@@ -304,7 +304,7 @@ def HatchRotation(hatch_id, rotation=None):
       hatch_id (guid): identifier of a hatch object
       rotation (number, optional): rotation angle in degrees
     Returns:
-      number: if rotation is not defined, the current rotation angle
+      number: if rotation is not specified, the current rotation angle
       number: if rotation is specified, the previous rotation angle
       None: on error
     Example:
@@ -341,8 +341,8 @@ def HatchScale(hatch_id, scale=None):
       hatch_id (guid): identifier of a hatch object
       scale (number, optional):  scale factor
     Returns:
-      number: if scale is not defined, the current scale factor
-      number: if scale is defined, the previous scale factor
+      number: if scale is not specified, the current scale factor
+      number: if scale is specified, the previous scale factor
       None: on error
     Example:
       import rhinoscriptsyntax as rs

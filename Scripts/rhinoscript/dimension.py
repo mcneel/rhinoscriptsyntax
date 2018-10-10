@@ -276,7 +276,7 @@ def DimensionText(object_id):
 
 def DimensionUserText(object_id, usertext=None):
     """Returns of modifies the user text string of a dimension object. The user
-    text is the string that gets printed when the dimension is defined
+    text is the string that gets printed when the dimension is specified
     Parameters:
       object_id (guid): identifier of the object
       usertext (str, optional): the new user text string value
@@ -518,8 +518,8 @@ def DimStyleLengthFactor(dimstyle, factor=None):
       dimstyle (str): the name of an existing dimension style
       factor (number, optional): the new length factor
     Returns:
-      number: if factor is not defined, the current length factor
-      number: if factor is defined, the previous length factor
+      number: if factor is not specified, the current length factor
+      number: if factor is specified, the previous length factor
       None: on error
     Example:
       import rhinoscriptsyntax as rs
