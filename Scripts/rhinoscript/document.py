@@ -694,8 +694,8 @@ def RenderSettings(settings=None):
         4=render curves and isocurves,
         8=render dimensions and text
     Returns:
-      number: if settings are not specified, the current render settings in bit-coded flags
-      number: if settings are specified, the previous render settings in bit-coded flags
+      number: if settings is not specified, the current render settings in bit-coded flags
+      number: if settings is specified, the previous render settings in bit-coded flags
     Example:
       import rhinoscriptsyntax as rs
       render_annotations = 8

@@ -1007,13 +1007,13 @@ def ViewCameraTarget(view=None, camera=None, target=None):
     Parameters:
       view (str|guid, optional): title or id of the view. If omitted, current active view is used
       camera (point): 3d point identifying the new camera location. If camera and
-         target are not specified, current camera and target locations are returned
+         target is not specified, current camera and target locations are returned
       target (point): 3d point identifying the new target location. If camera and
-         target are not specified, current camera and target locations are returned
+         target is not specified, current camera and target locations are returned
     Returns:
-      list(point, point): if both camera and target are not specified, then the 3d points containing
+      list(point, point): if both camera and target is not specified, then the 3d points containing
         the current camera and target locations is returned
-      point: if either camera or target are specified, then the 3d points containing the
+      point: if either camera or target is specified, then the 3d points containing the
         previous camera and target locations is returned
     Example:
       import rhinoscriptsyntax as rs

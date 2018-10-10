@@ -62,7 +62,7 @@ def GetDocumentData(section=None, entry=None):
     Returns:
       list(str, ...): of all section names if section name is omitted
       list(str, ...) of all entry names for a section if entry is omitted
-      str: value of the entry if both section and entry are specified
+      str: value of the entry if both section and entry is specified
       None: if not successful
     Example:
       import rhinoscriptsyntax as rs

@@ -1050,7 +1050,7 @@ def ObjectLinetypeSource(object_ids, source=None):
 def ObjectMaterialIndex(object_id, material_index=None):
     """Returns or changes the material index of an object. Rendering materials are stored in
     Rhino's rendering material table. The table is conceptually an array. Render
-    materials associated with objects and layers are specified by zero based
+    materials associated with objects and layers is specified by zero based
     indices into this array.
     Parameters:
       object_id (guid): identifier of an object
@@ -1371,7 +1371,7 @@ def ObjectType(object_id):
 def OrientObject(object_id, reference, target, flags=0):
     """Orients a single object based on input points.  
 
-    If two 3-D points are specified, then this method will function similar to Rhino's Orient command.  If more than two 3-D points are specified, then the function will orient similar to Rhino's Orient3Pt command.
+    If two 3-D points is specified, then this method will function similar to Rhino's Orient command.  If more than two 3-D points is specified, then the function will orient similar to Rhino's Orient3Pt command.
 
     The orient flags values can be added together to specify multiple options.
         Value   Description

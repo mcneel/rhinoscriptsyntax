@@ -380,7 +380,7 @@ def GetSettings(filename, section=None, entry=None):
     Returns:
       list(str, ...): If section is not specified, a list containing all section names
       list:(str, ...): If entry is not specified, a list containing all entry names for a given section
-      str: If section and entry are specified, a value for entry
+      str: If section and entry is specified, a value for entry
       None: if not successful
     Example:
       import rhinoscriptsyntax as rs
