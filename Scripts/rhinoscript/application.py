@@ -830,7 +830,7 @@ def LocaleID():
 
 
 def Ortho(enable=None):
-    """Enables or disables Rhino's ortho modeling aid.
+    """Returns or sets the Enable-Disable status of Rhino's ortho modeling aid.
     Parameters:
       enable (bool, optional): The new enabled status (True or False). If omitted the current state is returned.
     Returns:
@@ -850,7 +850,7 @@ def Ortho(enable=None):
 
 
 def Osnap(enable=None):
-    """Enables or disables Rhino's object snap modeling aid.
+    """Returns or sets the Enable-Disable status of Rhino's object snap modeling aid.
     Object snaps are tools for specifying points on existing objects.
     Parameters:
       enable (bool, optional): The new enabled status.
@@ -872,7 +872,7 @@ def Osnap(enable=None):
 
 
 def OsnapDialog(visible=None):
-    """Returns or sets the Shows-Hide Status of  Rhino's dockable object snap bar
+    """Returns or sets the Shows-Hide status of  Rhino's dockable object snap bar
     Parameters:
       visible (bool, optional): The new visibility state. If omitted then the current state is returned.
     Returns:

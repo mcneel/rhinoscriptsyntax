@@ -182,7 +182,7 @@ def AddSpotLight(origin, radius, apex_point):
 
 
 def EnableLight(object_id, enable=None):
-    """Enables or disables a light object
+    """Returns or sets the Enable-Disable status of a light object
     Parameters:
       object_id (guid): the light object's identifier
       enable (bool, optional): the light's enabled status

@@ -1022,7 +1022,7 @@ def CurveAreaCentroid(curve_id):
 
 
 def CurveArrows(curve_id, arrow_style=None):
-    """Enables or disables a curve object's annotation arrows
+    """Returns or sets the Enable-Disable status of a curve object's annotation arrows
     Parameters:
       curve_id (guid): identifier of a curve
       arrow_style (number, optional): the style of annotation arrow to be displayed. If omitted the current type is returned.
