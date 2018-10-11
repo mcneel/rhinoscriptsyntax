@@ -668,7 +668,7 @@ def ArcAngle(curve_id, segment_index=-1):
     Parameters:
       curve_id (guid): identifier of a curve object
       segment_index (number, optional): identifies the curve segment if
-      curve_id (guid): identifies a polycurve
+        curve_id identifies a polycurve
     Returns:
       number: The angle in degrees if successful.
     Example:
@@ -874,7 +874,7 @@ def CloseCurve(curve_id, tolerance=-1.0):
     scriptcontext.doc.Views.Redraw()
     return rc
 
-def ClosedCurveOrientation(curve_id, direction=(0,0,1)):
+def ClosedCurveOrientation(curve_id, direction=Geometry.Vector3d.ZAxis):
     """Determine the orientation (counter-clockwise or clockwise) of a closed,
     planar curve
     Parameters:
