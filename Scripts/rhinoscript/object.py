@@ -1563,6 +1563,7 @@ def SelectObject(object_id, redraw=True):
     """Selects a single object
     Parameters:
       object_id (guid): the identifier of the object to select
+      redraw(bool): refresh view too
     Returns:
       bool: True on success
     Example:
@@ -1619,6 +1620,7 @@ def ShearObject(object_id, origin, reference_point, angle_degrees, copy=False):
     Parameters:
       object_id (guid, ...): The identifier of an object
       origin, reference_point (point) origin/reference point of the shear transformation
+      angle_degrees(float): Shearing angle in Degrees
       copy (bool, optional): copy the objects
     Returns:
       guid: Identifier of the sheared object if successful
@@ -1643,6 +1645,7 @@ def ShearObjects(object_ids, origin, reference_point, angle_degrees, copy=False)
     Parameters:
       object_ids ([guid, ...]): The identifiers objects to shear
       origin, reference_point (point): origin/reference point of the shear transformation
+      angle_degrees(float): Shearing angle in Degrees
       copy (bool, optional): copy the objects
     Returns:
       list(guid, ...]): identifiers of the sheared objects if successful

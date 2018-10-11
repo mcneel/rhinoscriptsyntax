@@ -202,6 +202,9 @@ def AddNetworkSrf(curves, continuity=1, edge_tolerance=0, interior_tolerance=0, 
                  1 = position
                  2 = tangency
                  3 = curvature
+      edge_tolerance(float): edge tolerance
+      interior_tolerance(float):interior tolerance
+      angle_tolerance(float):angle tolerance
     Returns:
       guid: identifier of new object if successful
     Example:
@@ -1032,7 +1035,7 @@ def DuplicateEdgeCurves(object_id, select=False):
     Parameters:
       object_id (guid): The identifier of the surface or polysurface object.
       select (bool, optional):  Select the duplicated edge curves. The default is not
-      to select (False).
+        to select (False).
     Returns:
       list(guid, ..): identifying the newly created curve objects if successful.
       None: if not successful, or on error.
@@ -1156,7 +1159,7 @@ def ExplodePolysurfaces(object_ids, delete_input=False):
     will be exploded into separate surfaces
     Parameters:
       object_ids ([guid, ...]): identifiers of polysurfaces to explode
-      delete_input 9bool, optional): delete input objects after exploding
+      delete_input (bool, optional): delete input objects after exploding
     Returns:
       list(guid, ...): of identifiers of exploded pieces on success
     Example:
@@ -2361,8 +2364,9 @@ def __GetMassProperties(object_id, area):
 def SplitBrep(brep_id, cutter_id, delete_input=False):
     """Splits a brep
     Parameters:
-      brep (guid): identifier of the brep to split
-      cutter (guid): identifier of the brep to split with
+      brep_id (guid): identifier of the brep to split
+      cutter_id (guid): identifier of the brep to split with
+      delete_input(bool): delete input
     Returns:
       list(guid, ...): identifiers of split pieces on success
       None: on error
@@ -3267,6 +3271,8 @@ def UnrollSurface(surface_id, explode=False, following_geometry=None, absolute_t
       explode (bool, optional): If True, the resulting surfaces ar not joined
       following_geometry ({guid, ...]): List of curves, dots, and points which
         should be unrolled with the surface
+      absolute_tolerance(float):absolute tolerance
+      relative_tolerance(float):relative tolerance
     Returns:
       list(guid, ...): of unrolled surface ids
       tuple((guid, ...),(guid, ...)): if following_geometry is not None, a tuple

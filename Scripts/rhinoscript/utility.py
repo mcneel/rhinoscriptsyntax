@@ -417,6 +417,8 @@ def Polar(point, angle_degrees, distance, plane=None):
     """Returns 3D point that is a specified angle and distance from a 3D point
     Parameters:
       point (point): the point to transform
+      angle_degrees(float): a specified angle from the point
+      distance(floatr):a specified disctance from the point
       plane (plane, optional): plane to base the transformation. If omitted, the world
         x-y plane is used
     Returns:
@@ -663,6 +665,8 @@ def CreatePoint(point, y=None, z=None):
     point on the XY plane, or three for a 3D point.
     Parameters:
       point (Point3d|Vector3d|Point3f|Vector3f|str|guid|[number, number, number])
+      y(float): Y Coordinate
+      z(float): Z Coordinate
     Returns:
       point: a Rhino.Geometry.Point3d. This can be seen as an object with three indices:
         [0]  X coordinate
@@ -723,7 +727,8 @@ def CreateVector(vector, y=None, z=None):
     vector on the XY plane, or three for a 3D vector.
     Parameters:
       vector (Vector3d|Point3d|Point3f|Vector3f\str|guid|[number, number, number])
-      raise_on_error (bool, optionals): True or False
+      y(float): Y coordinate 
+      z(float): Z coordinate 
     Returns:
       a Rhino.Geometry.Vector3d. This can be seen as an object with three indices:
       result[0]: X component, result[1]: Y component, and result[2] Z component.
@@ -786,6 +791,7 @@ def coerceplane(plane, raise_on_bad_input=False):
     """Convert input into a Rhino.Geometry.Plane if possible.
     Parameters:
       plane = Plane, list, tuple
+      raise_on_bad_input(bool)raise error on bad input
     Returns:
       a Rhino.Geometry.Plane
     Example:
@@ -817,27 +823,29 @@ def coerceplane(plane, raise_on_bad_input=False):
     if raise_on_bad_input: raise TypeError("%s can not be converted to a Plane"%plane)
 
 
-def CreatePlane(plane_or_origin, x_axis=None, y_axis=None, ignored=None):
+def CreatePlane(origin, x_axis=None, y_axis=None):
     """Converts input into a Rhino.Geometry.Plane object if possible.
     If the provided object is already a plane, its value is copied.
     The returned data is accessible by indexing[origin, X axis, Y axis, Z axis], and that is the suggested method to interact with the type.
     The Z axis is in any case computed from the X and Y axes, so providing it is possible but not required.
     If the conversion fails, an error is raised.
     Parameters:
-      plane (plane|point|point, vector, vector|[point, vector, vector])
+      origin (point): plane Origin
+      x_axis(vector):direction of X Axis 
+      y_axis(vector):direction of Y Axis       
     Returns:
       plane: A Rhino.Geometry.plane.
     Example:
     See Also:
     """
-    if type(plane_or_origin) is Rhino.Geometry.Plane: return plane_or_origin.Clone()
+    if type(origin) is Rhino.Geometry.Plane: return origin.Clone()
     if x_axis != None:
         if y_axis == None: raise Exception("A value for the Y axis is expected if the X axis is specified.")
-        origin = coerce3dpoint(plane_or_origin, True)
+        origin = coerce3dpoint(origin, True)
         x_axis = coerce3dvector(x_axis, True)
         y_axis = coerce3dvector(y_axis, True)
         return Rhino.Geometry.Plane(origin, x_axis, y_axis)
-    return coerceplane(plane_or_origin, True)
+    return coerceplane(origin, True)
 
 
 def coercexform(xform, raise_on_bad_input=False):
@@ -926,6 +934,9 @@ def CreateColor(color, g=None, b=None, a=None):
     for an RGBA color point.
     Parameters:
       color ([number, number, number]): list or 3 or 4 items. Also, a single int can be passed and it will be bitwise-parsed.
+      g(int):Green
+      b(int):Blue
+      a(int):Alpha, transparency
     Returns:
       color: An object that can be indexed for red, green, blu, alpha. Item[0] is red.
     Example:
@@ -1072,7 +1083,8 @@ def CreateInterval(interval, y=None):
     In case a single number is provided, it will be translated to an increasing interval that includes
     the provided input and 0. If two values are provided, they will be used instead.
     Parameters:
-      interval ([number, number]): or any item that can be accessed at index 0 and 1; an Interval
+      interval (number): or any item that can be accessed at index 0 and 1; an Interval
+      y(float): other end of interval
     Returns:
       interval: a Rhino.Geometry.Interval. This can be seen as an object made of two items:
         [0] start of interval

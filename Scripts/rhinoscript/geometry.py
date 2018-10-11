@@ -82,6 +82,8 @@ def AddPoint(point, y=None, z=None):
     """Adds point object to the document.
     Parameters:
       point (point): a point3d or list(x,y,z) location of point to add
+      y(float): Y coordinate 
+      z(float): Z coordinate 
     Returns:
       guid: identifier for the object that was added to the doc
     Example:

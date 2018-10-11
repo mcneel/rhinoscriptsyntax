@@ -1034,7 +1034,7 @@ def MeshVertexColors(mesh_id, colors=0):
     """Returns or modifies vertex colors of a mesh
     Parameters:
       mesh_id (guid): identifier of a mesh object
-      colors 9{color, ...], optional) A list of color values. Note, for each vertex, there must
+      colors ({color, ...], optional) A list of color values. Note, for each vertex, there must
         be a corresponding vertex color. If the value is None, then any
         existing vertex colors will be removed from the mesh
     Returns:
