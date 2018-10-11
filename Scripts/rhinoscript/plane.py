@@ -141,7 +141,7 @@ def PlaneCurveIntersection(plane, curve, tolerance=None):
     Parameters:
       plane (plane): The plane to intersect.
       curve (guid): The identifier of the curve object
-      torerance (number, optional): The intersection tolerance. If omitted, the document's absolute tolerance is used.
+      tolerance (number, optional): The intersection tolerance. If omitted, the document's absolute tolerance is used.
     Returns:
       A list of intersection information tuple if successful.  The list will contain one or more of the following tuple:
 

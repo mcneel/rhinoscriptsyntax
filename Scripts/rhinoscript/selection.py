@@ -798,7 +798,7 @@ def NormalObjects(include_lights=False, include_grips=False):
     are visible, can be snapped to, and are independent of selection state
     Parameters:
       include_lights (bool, optional): Include light objects.  If omitted (False), light objects are not returned.
-      include_gripts (bool, optional): Include grips objects.  If omitted (False), grips objects are not returned.
+      include_grips (bool, optional): Include grips objects.  If omitted (False), grips objects are not returned.
     Returns:
       list(guid, ...): identifier of normal objects if successful.
     Example:

@@ -248,7 +248,7 @@ def ColorHLSToRGB(hls):
 def ColorRedValue(rgb):
     """Retrieves intensity value for the red component of an RGB color
     Parameters:
-      hls (color): the HLS color value
+      rgb (color): the RGB color value
     Returns:
       color: The red color value if successful, otherwise False
     Example:

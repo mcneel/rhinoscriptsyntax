@@ -77,7 +77,7 @@ def AddCutPlane(object_ids, start_point, end_point, normal=None):
     """Adds a planar surface through objects at a designated location. For more
     information, see the Rhino help file for the CutPlane command
     Parameters:
-      objects_ids ([guid, ...]): identifiers of objects that the cutting plane will
+      object_ids ([guid, ...]): identifiers of objects that the cutting plane will
           pass through
       start_point, end_point (line): line that defines the cutting plane
       normal (vector, optional): vector that will be contained in the returned planar
@@ -230,7 +230,7 @@ def AddNurbsSurface(point_count, points, knots_u, knots_v, degree, weights=None)
       knots_v ([number, ...]): knot values for the surface in the v direction.
                 Must contain point_count[1]+degree[1]-1 elements
       degree ([number, number]): degree of the surface in the u and v directions.
-      weights [(number, ...]): weight values for the surface. The number of elements in
+      weights ([number, ...]): weight values for the surface. The number of elements in
         weights must equal the number of elements in points. Values must be
         greater than zero.
     Returns:
@@ -801,7 +801,7 @@ def AddTorus(base, major_radius, minor_radius, direction=None):
     Parameters:
       base (point): 3D origin point of the torus or the base plane of the torus
       major_radius, minor_radius (number): the two radii of the torus
-      directions (point):  A point that defines the direction of the torus when base is a point.
+      direction (point):  A point that defines the direction of the torus when base is a point.
         If omitted, a torus that is parallel to the world XY plane is created
     Returns:
       guid: The identifier of the new object if successful.

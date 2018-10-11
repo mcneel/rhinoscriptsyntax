@@ -910,7 +910,7 @@ def MeshOffset(mesh_id, distance):
 def MeshOutline(object_ids, view=None):
     """Creates polyline curve outlines of mesh objects
     Parameters:
-      objects_ids ([guid, ...]): identifiers of meshes to outline
+      object_ids ([guid, ...]): identifiers of meshes to outline
       view (str, optional): view to use for outline direction
     Returns:
       list(guid, ...): polyline curve identifiers on success

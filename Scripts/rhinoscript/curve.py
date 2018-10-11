@@ -1264,7 +1264,7 @@ def CurveClosestPoint(curve_id, test_point, segment_index=-1 ):
     """Returns parameter of the point on a curve that is closest to a test point.
     Parameters:
       curve_id (guid): identifier of a curve object
-      point (point): sampling point
+      test_point (point): sampling point
       segment_index (number, optional): curve segment index if `curve_id` identifies a polycurve
     Returns:
       number: The parameter of the closest point on the curve
@@ -2937,7 +2937,7 @@ def IsCurveInPlane(object_id, plane=None):
 def IsCurveLinear(object_id, segment_index=-1):
     """Verifies an object is a linear curve
     Parameters:
-      curve_id (guid):identifier of the curve object
+      object_id (guid):identifier of the curve object
       segment_index (number): the curve segment index if `curve_id` identifies a polycurve
     Returns:
       bool: True or False indicating success or failure
@@ -3047,8 +3047,8 @@ def IsCurveRational(curve_id, segment_index=-1):
 def IsEllipse(object_id, segment_index=-1):
     """Verifies an object is an elliptical-shaped curve
     Parameters:
-      curve_id (guid): identifier of the curve object
-      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
+      object_id (guid): identifier of the curve object
+      segment_index (number, optional): the curve segment index if `object_id` identifies a polycurve
     Returns:
       bool: True or False indicating success or failure
     Example:
@@ -3069,8 +3069,8 @@ def IsEllipse(object_id, segment_index=-1):
 def IsLine(object_id, segment_index=-1):
     """Verifies an object is a line curve
     Parameters:
-      curve_id (guid): identifier of the curve object
-      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
+      object_id (guid): identifier of the curve object
+      segment_index (number, optional): the curve segment index if `object_id` identifies a polycurve
     Returns:
       bool: True or False indicating success or failure
     Example:
@@ -3093,9 +3093,9 @@ def IsLine(object_id, segment_index=-1):
 def IsPointOnCurve(object_id, point, segment_index=-1):
     """Verifies that a point is on a curve
     Parameters:
-      curve_id (guid): identifier of the curve object
+      object_id (guid): identifier of the curve object
       point (point): the test point
-      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
+      segment_index (number, optional): the curve segment index if `object_id` identifies a polycurve
     Returns:
       bool: True or False indicating success or failure
     Example:
@@ -3120,8 +3120,8 @@ def IsPointOnCurve(object_id, point, segment_index=-1):
 def IsPolyCurve(object_id, segment_index=-1):
     """Verifies an object is a PolyCurve curve
     Parameters:
-      curve_id (guid): identifier of the curve object
-      segment_index (number, optional) the curve segment index if `curve_id` identifies a polycurve
+      object_id (guid): identifier of the curve object
+      segment_index (number, optional) the curve segment index if `object_id` identifies a polycurve
     Returns:
       bool: True or False
     Example:
@@ -3141,8 +3141,8 @@ def IsPolyCurve(object_id, segment_index=-1):
 def IsPolyline( object_id, segment_index=-1 ):
     """Verifies an object is a Polyline curve object
     Parameters:
-      curve_id (guid): identifier of the curve object
-      segment_index (number, optional): the curve segment index if `curve_id` identifies a polycurve
+      object_id (guid): identifier of the curve object
+      segment_index (number, optional): the curve segment index if `object_id` identifies a polycurve
     Returns:
       bool: True or False
     Example:
