@@ -1166,7 +1166,7 @@ def ViewDisplayModeName(mode_id):
 def ViewDisplayModes(return_names=True):
     """Return list of display modes
     Parameters:
-      return_names (bool, otpional): If True, return mode names. If False, return ids
+      return_names (bool, optional): If True, return mode names. If False, return ids
     Returns:
       list(str|guid, ...): strings identifying the display mode names or identifiers if successful
     Example:
