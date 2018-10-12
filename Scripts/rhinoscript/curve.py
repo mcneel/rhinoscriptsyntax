@@ -2318,8 +2318,8 @@ def DivideCurve(curve_id, segments, create_points=False, return_points=True):
       return_points (bool, optional): If omitted or True, points are returned.
           If False, then a list of curve parameters are returned.
     Returns:
-      list(point|number, ...): If `return_points` is not specified or True, then a list containing 3D division points.
-      list(point|number, ...): If `return_points` is False, then an array containing division curve parameters.
+      list(point, ...): If `return_points` is not specified or True, then a list containing 3D division points.
+      list(number, ...): If `return_points` is False, then an array containing division curve parameters.
       None: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
@@ -2353,7 +2353,8 @@ def DivideCurveEquidistant(curve_id, distance, create_points=False, return_point
       return_points (bool, optional): If True, return a list of points.
                                       If False, return a list of curve parameters
     Returns:
-      list(point|number, ...): points or curve parameters based on the value of return_points
+      list(point, ...): If `return_points` is not specified or True, then a list containing 3D division points.
+      list(number, ...): If `return_points` is False, then an array containing division curve parameters.      
       none on error
     Example:
       import rhinoscriptsyntax as rs
