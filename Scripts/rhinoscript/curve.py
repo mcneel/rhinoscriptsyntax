@@ -904,7 +904,7 @@ def ConvertCurveToPolyline(curve_id, angle_tolerance=5.0, tolerance=0.01, delete
       tolerance(number, optional): The distance tolerance at segment midpoints. If omitted, the tolerance is set to 0.01.
       delete_input(bool, optional): Delete the curve object specified by curve_id. If omitted, curve_id will not be deleted.
       min_edge_length (number, optional): Minimum segment length
-      max_edge_length (number, optonal): Maximum segment length
+      max_edge_length (number, optional): Maximum segment length
     Returns:
       guid: The new curve if successful.
     Example:

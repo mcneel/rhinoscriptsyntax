@@ -418,7 +418,7 @@ def Polar(point, angle_degrees, distance, plane=None):
     Parameters:
       point (point): the point to transform
       angle_degrees(float): a specified angle from the point
-      distance(floatr):a specified disctance from the point
+      distance(float):a specified disctance from the point
       plane (plane, optional): plane to base the transformation. If omitted, the world
         x-y plane is used
     Returns:
@@ -523,7 +523,7 @@ def SortPoints(points, ascending=True, order=0):
     """Sorts the components of an array of 3D points
     Parameters:
       points ([point, ...]): points to sort
-      ascending (bool, optional: ascending if omitted (True) or True, descending if False.
+      ascending (bool, optional): ascending if omitted or True, descending if False.
       order (number, optional): the component sort order
         Value       Component Sort Order
         0 (default) X, Y, Z
@@ -873,7 +873,7 @@ def CreateXform(xform):
     The returned data is accessible by indexing[row, column], and that is the suggested method to interact with the type.
     If the conversion fails, an error is raised.
     Parameters:
-      xform (list): the transform. This can be seen as a 4x4 matrix, given as nested lists or tuples.
+      xform (list[float,..]): the transform. This can be seen as a 4x4 matrix, given as nested lists or tuples.
     Returns:
       transform: A Rhino.Geometry.Transform. result[0,3] gives access to the first row, last column.
     Example:

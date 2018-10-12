@@ -141,7 +141,7 @@ def GetCurveObject(message=None, preselect=False, select=False):
     """Prompts user to pick or select a single curve object
     Parameters:
       message (str, optional): a prompt or message.
-      preselect (bool,, optional): Allow for the selection of pre-selected objects.
+      preselect (bool, optional): Allow for the selection of pre-selected objects.
       select (bool, optional): Select the picked objects. If False, objects that
         are picked are not selected.
     Returns:
