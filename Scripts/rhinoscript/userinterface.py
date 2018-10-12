@@ -258,7 +258,7 @@ def GetColor(color=Drawing.Color.Black):
 def GetCursorPos():
     """Retrieves the cursor's position
     Returns:
-      tuple(point, point, guid, point) containing the following information
+      tuple(point, point, guid, point): containing the following information
         [0]  cursor position in world coordinates
         [1]  cursor position in screen coordinates
         [2]  id of the active viewport

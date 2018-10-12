@@ -145,7 +145,7 @@ def GetCurveObject(message=None, preselect=False, select=False):
       select (bool, optional): Select the picked objects. If False, objects that
         are picked are not selected.
     Returns:
-      Tuple containing the following information
+      Tuple[guid,bool,int, point,float,str ]: containing the following information
         [0]  guid     identifier of the curve object
         [1]  bool     True if the curve was preselected, otherwise False
         [2]  number   selection method

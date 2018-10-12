@@ -317,7 +317,7 @@ def CompareGeometry(first, second):
       first (guid|geometry): The identifier of the first object to compare.
       second (guid|geometry): The identifier of the second object to compare.
     Returns:
-      True if the objects are geometrically identical, otherwise False.
+      bool:True if the objects are geometrically identical, otherwise False.
     Example:
       import rhinoscriptsyntax as rs
       object1 = rs.GetObject("Select first object")

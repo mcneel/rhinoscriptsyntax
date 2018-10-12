@@ -1227,10 +1227,10 @@ def CurveClosestObject(curve_id, object_ids):
         polysurface to test against
     Returns:
       tuple[guid, point, point]: containing the results of the closest point calculation.
-      The elements are as follows:
-        [0]    The identifier of the closest object.
-        [1]    The 3-D point that is closest to the closest object.
-        [2]    The 3-D point that is closest to the test curve.
+        The elements are as follows:
+          [0]    The identifier of the closest object.
+          [1]    The 3-D point that is closest to the closest object.
+          [2]    The 3-D point that is closest to the test curve.
     Example:
       import rhinoscriptsyntax as rs
       filter = rs.filter.curve | rs.filter.pointcloud | rs.filter.surface | rs.filter.polysurface
@@ -1376,36 +1376,35 @@ def CurveCurveIntersection(curveA, curveB=None, tolerance=-1):
                self-intersection test will be performed on curveA.
       tolerance (number, optional): absolute tolerance in drawing units. If omitted,
                         the document's current absolute tolerance is used.
-    Returns:
-      list(list(point, point, point, point, number, number, number, number, number, number), ...):
+    Returns:      
       list of tuples: containing intersection information if successful.
-      The list will contain one or more of the following elements:
-        Element Type     Description
-        [n][0]  Number   The intersection event type, either Point (1) or Overlap (2).
-        [n][1]  Point3d  If the event type is Point (1), then the intersection point 
-                         on the first curve. If the event type is Overlap (2), then
-                         intersection start point on the first curve.
-        [n][2]  Point3d  If the event type is Point (1), then the intersection point
-                         on the first curve. If the event type is Overlap (2), then
-                         intersection end point on the first curve.
-        [n][3]  Point3d  If the event type is Point (1), then the intersection point 
-                         on the second curve. If the event type is Overlap (2), then
-                         intersection start point on the second curve.
-        [n][4]  Point3d  If the event type is Point (1), then the intersection point
-                         on the second curve. If the event type is Overlap (2), then
-                         intersection end point on the second curve.
-        [n][5]  Number   If the event type is Point (1), then the first curve parameter.
-                         If the event type is Overlap (2), then the start value of the
-                         first curve parameter range.
-        [n][6]  Number   If the event type is Point (1), then the first curve parameter.
-                         If the event type is Overlap (2), then the end value of the
-                         first curve parameter range.
-        [n][7]  Number   If the event type is Point (1), then the second curve parameter.
-                         If the event type is Overlap (2), then the start value of the
-                         second curve parameter range.
-        [n][8]  Number   If the event type is Point (1), then the second curve parameter.
-                         If the event type is Overlap (2), then the end value of the 
-                         second curve parameter range.
+        The list will contain one or more of the following elements:
+          Element Type     Description
+          [n][0]  Number   The intersection event type, either Point (1) or Overlap (2).
+          [n][1]  Point3d  If the event type is Point (1), then the intersection point 
+                          on the first curve. If the event type is Overlap (2), then
+                          intersection start point on the first curve.
+          [n][2]  Point3d  If the event type is Point (1), then the intersection point
+                          on the first curve. If the event type is Overlap (2), then
+                          intersection end point on the first curve.
+          [n][3]  Point3d  If the event type is Point (1), then the intersection point 
+                          on the second curve. If the event type is Overlap (2), then
+                          intersection start point on the second curve.
+          [n][4]  Point3d  If the event type is Point (1), then the intersection point
+                          on the second curve. If the event type is Overlap (2), then
+                          intersection end point on the second curve.
+          [n][5]  Number   If the event type is Point (1), then the first curve parameter.
+                          If the event type is Overlap (2), then the start value of the
+                          first curve parameter range.
+          [n][6]  Number   If the event type is Point (1), then the first curve parameter.
+                          If the event type is Overlap (2), then the end value of the
+                          first curve parameter range.
+          [n][7]  Number   If the event type is Point (1), then the second curve parameter.
+                          If the event type is Overlap (2), then the start value of the
+                          second curve parameter range.
+          [n][8]  Number   If the event type is Point (1), then the second curve parameter.
+                          If the event type is Overlap (2), then the end value of the 
+                          second curve parameter range.
     Example:
       import rhinoscriptsyntax as rs
       def ccx():
