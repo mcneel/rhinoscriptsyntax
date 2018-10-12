@@ -1038,7 +1038,7 @@ def SelectedObjects(include_lights=False, include_grips=False):
       include_lights (bool, optional): include light objects
       include_grips (bool, optional): include grip objects
     Returns:
-      list(guid, ...) identifiers of selected objects
+      list(guid, ...): identifiers of selected objects
     Example:
       import rhinoscriptsyntax as rs
       objects = rs.SelectedObjects()

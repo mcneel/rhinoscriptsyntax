@@ -806,9 +806,9 @@ def ObjectColorSource(object_ids, source=None):
           2 = color from material
           3 = color from parent
     Returns:
-      if color source is not specified, the current color source
-      is color source is specified, the previous color source
-      if color_ids is a list, then the number of objects modifief
+      int:if color source is not specified, the current color source
+      int:is color source is specified, the previous color source
+      int:if color_ids is a list, then the number of objects modifief
     Example:
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select objects to reset color source")
@@ -843,7 +843,7 @@ def ObjectDescription(object_id):
     Parameters:
       object_id = identifier of an object
     Returns:
-      A short text description of the object if successful.
+      str:A short text description of the object if successful.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
