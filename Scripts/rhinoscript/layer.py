@@ -807,6 +807,7 @@ def LayerVisible(layer, visible=None, forcevisible_or_donotpersist=False):
         if visible and forcevisible_or_donotpersist:
             scriptcontext.doc.Layers.ForceLayerVisible(layer.Id)
         if not visible and not forcevisible_or_donotpersist:
+          if layer.ParentLayerId != System.Guid.Empty:
             layer.SetPersistentVisibility(visible)
         scriptcontext.doc.Views.Redraw()
     return rc
