@@ -346,7 +346,7 @@ def JoinMeshes(object_ids, delete_input=False):
     """
     meshes = [rhutil.coercemesh(id,True) for id in object_ids]
     joined_mesh = Rhino.Geometry.Mesh()
-    for mesh in meshes: joined_mesh.Append(mesh)
+    joined_mesh.Append(meshes)
     rc = scriptcontext.doc.Objects.AddMesh(joined_mesh)
     if delete_input:
         for id in object_ids:
