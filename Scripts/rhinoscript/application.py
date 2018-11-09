@@ -212,8 +212,8 @@ def AutosaveFile(filename=None):
       AutosaveInterval
       EnableAutosave
     """
-    rc = Rhino.ApplicationSettings.FileSettings.AutosaveFile
-    if filename: Rhino.ApplicationSettings.FileSettings.AutosaveFile = filename
+    rc = Rhino.ApplicationSettings.FileSettings.AutoSaveFile
+    if filename: Rhino.ApplicationSettings.FileSettings.AutoSaveFile = filename
     return rc
 
 
@@ -233,10 +233,10 @@ def AutosaveInterval(minutes=None):
       AutosaveFile
       EnableAutosave
     """
-    rc = Rhino.ApplicationSettings.FileSettings.AutosaveInterval.TotalMinutes
+    rc = Rhino.ApplicationSettings.FileSettings.AutoSaveInterval.TotalMinutes
     if minutes:
         timespan = System.TimeSpan.FromMinutes(minutes)
-        Rhino.ApplicationSettings.FileSettings.AutosaveInterval = timespan
+        Rhino.ApplicationSettings.FileSettings.AutoSaveInterval = timespan
     return rc
 
 
