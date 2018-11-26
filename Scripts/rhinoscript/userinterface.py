@@ -5,6 +5,7 @@ import scriptcontext
 import System.Drawing.Color
 import System.Enum
 import System.Array
+import Eto.Forms
 import math
 from view import __viewhelper
 
@@ -26,15 +27,15 @@ def BrowseForFolder(folder=None, message=None, title=None):
       OpenFileName
       SaveFileName
     """
-    dlg = System.Windows.Forms.FolderBrowserDialog()
+    dlg = Eto.Forms.SelectFolderDialog()
     if folder:
         if not isinstance(folder, str): folder = str(folder)
-        dlg.SelectedPath = folder
+        dlg.Directory = folder
     if message:
         if not isinstance(message, str): message = str(message)
-        dlg.Description = message
-    if dlg.ShowDialog()==System.Windows.Forms.DialogResult.OK:
-        return dlg.SelectedPath
+        dlg.Title = message
+    if dlg.ShowDialog(None)==Eto.Forms.DialogResult.Ok:
+        return dlg.Directory
 
 
 def CheckListBox(items, message=None, title=None):
