@@ -1306,4 +1306,4 @@ def TextOut(message=None, title=None):
     See Also:
       MessagBox
     """
-    rc, text = Rhino.UI.Dialogs.ShowTextDialog(message, title)
+    Rhino.UI.Dialogs.ShowTextDialog(message, title)
