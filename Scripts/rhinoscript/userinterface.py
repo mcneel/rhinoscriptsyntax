@@ -824,7 +824,7 @@ def GetPolyline(flags=3, message1=None, message2=None, message3=None, message4=N
     from scriptcontext import doc
     arr = rs.GetPolyline()
     if arr is not None:
-      doc.AddPolyline(arr)
+        doc.AddPolyline(arr)
   See Also:
     GetBox
     GetLine
