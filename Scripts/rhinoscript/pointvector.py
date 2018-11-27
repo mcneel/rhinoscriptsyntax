@@ -184,8 +184,8 @@ def PointClosestObject(point, object_ids):
           if point:
               results = rs.PointClosestObject(point, objs)
               if results:
-                    print "Object id:", results[0]
-                    rs.AddPoint( results[1] )
+                  print "Object id:", results[0]
+                  rs.AddPoint( results[1] )
     See Also:
       CurveClosestObject
     """

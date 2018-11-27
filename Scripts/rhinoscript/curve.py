@@ -1249,9 +1249,9 @@ def CurveClosestObject(curve_id, object_ids):
           if curve:
               results = rs.CurveClosestObject(curve, objects)
               if results:
-                    print "Curve id:", results[0]
-                    rs.AddPoint( results[1] )
-                    rs.AddPoint( results[2] )
+                  print "Curve id:", results[0]
+                  rs.AddPoint( results[1] )
+                  rs.AddPoint( results[2] )
     See Also:
       CurveClosestPoint
       EvaluateCurve
@@ -3040,7 +3040,7 @@ def IsCurveRational(curve_id, segment_index=-1):
           else:
               print "The object is not a rational NURBS curve."
       else:
-         print "The object is not a curve."
+          print "The object is not a curve."
     See Also:
       IsCurve
       IsCurveClosed

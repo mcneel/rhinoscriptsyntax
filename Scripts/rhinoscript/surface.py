@@ -208,7 +208,7 @@ def AddNetworkSrf(curves, continuity=1, edge_tolerance=0, interior_tolerance=0, 
       import rhinoscriptsyntax as  rs
       curve_ids = rs.GetObjects("Select  curves in network", 4, True, True)
       if len(curve_ids) > 0:
-        rs.AddNetworkSrf(curve_ids)
+          rs.AddNetworkSrf(curve_ids)
     See Also:
       
     """
@@ -774,9 +774,9 @@ def AddRailRevSrf(profile, rail, axis, scale_height=False):
       import rhinoscriptsyntax as rs
       profile = rs.GetObject("Select a profile", rs.filter.curve)
       if profile:
-        rail = rs.GetObject("Select a rail", rs.filter.curve)
-        if rail:
-          rs.AddRailRevSrf(profile, rail, ((0,0,0),(0,0,1)))
+          rail = rs.GetObject("Select a rail", rs.filter.curve)
+          if rail:
+              rs.AddRailRevSrf(profile, rail, ((0,0,0),(0,0,1)))
     See Also:
       AddSweep1
       CurveDirectionsMatch
@@ -981,7 +981,7 @@ def BrepClosestPoint(object_id, point):
               arrCP = rs.BrepClosestPoint(obj, point)
               if arrCP:
                   rs.AddPoint(point)
-             rs.AddPoint( arrCP[0] )
+                  rs.AddPoint( arrCP[0] )
     See Also:
       EvaluateSurface
       IsSurface
@@ -1990,9 +1990,9 @@ def SurfaceSphere(surface_id):
       import rhinoscriptsyntax as rs
       surface = rs.GetObject("Select a surface", rs.filter.surface)
       if surface:
-        result = rs.SurfaceSphere(surface)
-        if result:
-          print("The sphere radius is: " + str(result[1]))
+          result = rs.SurfaceSphere(surface)
+          if result:
+              print("The sphere radius is: " + str(result[1]))
     See Also:
       SurfaceCylinder
     """
@@ -2205,8 +2205,8 @@ def ReverseSurface(surface_id, direction):
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface to reverse")
-      ff rs.IsSurface(obj):
-        rs.ReverseSurface( obj, 1 )
+      if rs.IsSurface(obj):
+          rs.ReverseSurface( obj, 1 )
     See Also:
       FlipSurface
       IsSurface

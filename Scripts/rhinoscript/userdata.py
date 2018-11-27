@@ -261,8 +261,8 @@ def SetUserText(object_id, key, value=None, attach_to_geometry=False):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if obj:
-        rs.SetUserText( obj, "PartNo", "KM40-4960" )
-        rs.SetUserText( obj, "Price", "1.25" )
+          rs.SetUserText( obj, "PartNo", "KM40-4960" )
+          rs.SetUserText( obj, "Price", "1.25" )
     See Also:
       GetUserText
       IsUserText
