@@ -3380,7 +3380,7 @@ def OffsetCurveOnSurface(curve_id, surface_id, distance_or_parameter):
           if curve is None: return False
           surface = rs.GetObject("Select base surface", rs.filter.surface)
           if surface is None: return False
-          point = rc.GetPointOnSurface( surface, "Through point" )
+          point = rs.GetPointOnSurface( surface, "Through point" )
           if point is None: return False
           parameter = rs.SurfaceClosestPoint(surface, point)
           rc = rs.OffsetCurveOnSurface( curve, surface, parameter )
