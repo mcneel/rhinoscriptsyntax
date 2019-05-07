@@ -528,7 +528,7 @@ def IsBlockEmbedded(block_name):
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
     ut = Rhino.DocObjects.InstanceDefinitionUpdateType
-    return (idef.UpdateType==ut.Embedded or idef.UpdateType==ut.LinkedAndEmbedded)
+    return (idef.UpdateType==ut.Embedded or idef.UpdateType==ut.Static or idef.UpdateType==ut.LinkedAndEmbedded)
 
 
 def IsBlockInstance(object_id):
