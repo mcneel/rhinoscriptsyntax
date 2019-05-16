@@ -119,7 +119,7 @@ def AddHatchPatterns(filename, replace=False):
 
 
 def CurrentHatchPattern(hatch_pattern=None):
-    """Returns or modifies the current hatch pattern file
+    """Returns or sets the current hatch pattern file
     Parameters:
       hatch_pattern(str, optional):  name of an existing hatch pattern to make current
     Returns:
@@ -179,7 +179,7 @@ def ExplodeHatch(hatch_id, delete=False):
 
 
 def HatchPattern(hatch_id, hatch_pattern=None):
-    """Returns or modifies a hatch object's hatch pattern
+    """Returns or changes a hatch object's hatch pattern
     Parameters:
       hatch_id (guid): identifier of a hatch object
       hatch_pattern (str, optional): name of an existing hatch pattern to replace the
@@ -304,7 +304,7 @@ def HatchRotation(hatch_id, rotation=None):
       hatch_id (guid): identifier of a hatch object
       rotation (number, optional): rotation angle in degrees
     Returns:
-      number: if rotation is not specified, the current rotation angle
+      number: if rotation is not defined, the current rotation angle
       number: if rotation is specified, the previous rotation angle
       None: on error
     Example:
@@ -341,8 +341,8 @@ def HatchScale(hatch_id, scale=None):
       hatch_id (guid): identifier of a hatch object
       scale (number, optional):  scale factor
     Returns:
-      number: if scale is not specified, the current scale factor
-      number: if scale is specified, the previous scale factor
+      number: if scale is not defined, the current scale factor
+      number: if scale is defined, the previous scale factor
       None: on error
     Example:
       import rhinoscriptsyntax as rs

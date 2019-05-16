@@ -45,14 +45,14 @@ def CreatePreviewImage(filename, view=None, size=None, flags=0, wireframe=False)
 
 
 def DocumentModified(modified=None):
-    """Returns or modifies the document's modified flag. This flag indicates whether
+    """Returns or sets the document's modified flag. This flag indicates whether
     or not any changes to the current document have been made. NOTE: setting the
     document modified flag to False will prevent the "Do you want to save this
     file..." from displaying when you close Rhino.
     Parameters:
       modified (bool): the modified state, either True or False
     Returns:
-      bool: if a modified state is not specified, the current modified state
+      bool: if no modified state is specified, the current modified state
       bool: if a modified state is specified, the previous modified state
     Example:
       import rhinoscriptsyntax as rs
@@ -155,12 +155,12 @@ def IsDocumentModified():
 
 
 def Notes(newnotes=None):
-    """Returns or modifies the document's notes. Notes are generally created
+    """Returns or sets the document's notes. Notes are generally created
     using Rhino's Notes command
     Parameters:
       newnotes (str): new notes to set
     Returns:
-      str: if `newnotes` is not specified, the current notes if successful
+      str: if `newnotes` is omitted, the current notes if successful
       str: if `newnotes` is specified, the previous notes if successful
     Example:
       import rhinoscriptsyntax as rs
@@ -208,7 +208,7 @@ def Redraw():
 
 
 def RenderAntialias(style=None):
-    """Returns or modifies render antialiasing style
+    """Returns or sets render antialiasing style
     Parameters:
       style (number, optional): level of antialiasing (0=none, 1=normal, 2=best)
     Returns:
@@ -231,7 +231,7 @@ def RenderAntialias(style=None):
 
 
 def RenderColor(item, color=None):
-    """Returns or modifies the render ambient light or background color
+    """Returns or sets the render ambient light or background color
     Parameters:
       item (number): 0=ambient light color, 1=background color
       color (color, optional): the new color value. If omitted, the current item color is returned
@@ -261,7 +261,7 @@ def RenderColor(item, color=None):
 
 
 def RenderResolution(resolution=None):
-    """Returns or modifies the render resolution
+    """Returns or sets the render resolution
     Parameters:
       resolution ([number, number], optional): width and height of render
     Returns:
@@ -286,18 +286,12 @@ def RenderResolution(resolution=None):
 
 
 def _SetRenderMeshAndUpdateStyle(current):
-      """Helper Function to set SetRenderMeshAndUpdateStyle.
-    Parameters:
-      current (MeshingParameters): custom MeshingParameters
-    Returns:
-      unit: sets doc.MeshingParameterStyle and doc.SetCustomMeshingParameters
-    """
     scriptcontext.doc.SetCustomMeshingParameters(current)
     scriptcontext.doc.MeshingParameterStyle = Rhino.Geometry.MeshingParameterStyle.Custom
 
 
 def RenderMeshDensity(density=None):
-    """Returns or modifies the render mesh density property of the active document.
+    """Returns or sets the render mesh density property of the active document.
         For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
     Parameters:
       density (number, optional): the new render mesh density, which is a number between 0.0 and 1.0.
@@ -336,7 +330,7 @@ print("Other settings: %s" % rs.RenderMeshSettings())
 
 
 def RenderMeshMaxAngle(angle_degrees=None):
-    """Returns or modifies the render mesh maximum angle property of the active document.  
+    """Returns or sets the render mesh maximum angle property of the active document.  
       For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
     Parameters:
       angle_degrees (number, optional): the new maximum angle, which is a positive number in degrees.
@@ -376,7 +370,7 @@ print("Other settings: %s" % rs.RenderMeshSettings())
 
 
 def RenderMeshMaxAspectRatio(ratio=None):
-    """Returns or modifies the render mesh maximum aspect ratio property of the active document.
+    """Returns or sets the render mesh maximum aspect ratio property of the active document.
       For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
      Parameters:
       ratio (number, optional): the render mesh maximum aspect ratio.  The suggested range, when not zero, is from 1 to 100.
@@ -415,7 +409,7 @@ print("Other settings: %s" % rs.RenderMeshSettings())
 
 
 def RenderMeshMaxDistEdgeToSrf(distance=None):
-    """Returns or modifies the render mesh maximum distance, edge to surface parameter of the active document.
+    """Returns or sets the render mesh maximum distance, edge to surface parameter of the active document.
       For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
     Parameters:
       distance (number, optional): the render mesh maximum distance, edge to surface.
@@ -454,7 +448,7 @@ print("Other settings: %s" % rs.RenderMeshSettings())
 
 
 def RenderMeshMaxEdgeLength(distance=None):
-    """Returns or modifies the render mesh maximum edge length parameter of the active document.
+    """Returns or sets the render mesh maximum edge length parameter of the active document.
       For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
     Parameters:
       distance (number, optional): the render mesh maximum edge length.
@@ -493,7 +487,7 @@ print("Other settings: %s" % rs.RenderMeshSettings())
 
 
 def RenderMeshMinEdgeLength(distance=None):
-    """Returns or modifies the render mesh minimum edge length parameter of the active document.
+    """Returns or sets the render mesh minimum edge length parameter of the active document.
       For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
         Parameters:
       distance (number, optional): the render mesh minimum edge length.
@@ -532,7 +526,7 @@ print("Other settings: %s" % rs.RenderMeshSettings())
 
 
 def RenderMeshMinInitialGridQuads(quads=None):
-    """Returns or modifies the render mesh minimum initial grid quads parameter of the active document.
+    """Returns or sets the render mesh minimum initial grid quads parameter of the active document.
       For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
     Parameters:
       quads (number, optional): the render mesh minimum initial grid quads. The suggested range is from 0 to 10000.
@@ -571,7 +565,7 @@ print("Other settings: %s" % rs.RenderMeshSettings())
 
 
 def RenderMeshQuality(quality=None):
-    """Returns or modifies the render mesh quality of the active document.
+    """Returns or sets the render mesh quality of the active document.
         For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
       Parameters:
       quality (number, optional): the render mesh quality, either:
@@ -627,14 +621,8 @@ print("Other settings: %s" % rs.RenderMeshSettings())
 
 
 def RenderMeshSettings(settings=None):
-    """Returns or modifies the render mesh settings of the active document.
+    """Returns or sets the render mesh settings of the active document.
       For more information on render meshes, see the Document Properties: Mesh topic in the Rhino help file.
-      The bits can be added together in any combination to form a value between 0 and 7.  The bit values are as follows:
-          0: No settings enabled.
-          1: Refine mesh enabled.
-          2: Jagged seams enabled.
-          4: Simple planes enabled.
-          8: Texture is packed, scaled and normalized; otherwise unpacked, unscaled and normalized.
     Parameters:
       settings (number, optional): the render mesh settings, which is a bit-coded number that allows or disallows certain features.
       The bits can be added together in any combination to form a value between 0 and 7.  The bit values are as follows:
@@ -685,7 +673,7 @@ print("Other settings: %s" % rs.RenderMeshSettings())
 
 
 def RenderSettings(settings=None):
-    """Returns or modifies render settings
+    """Returns or sets render settings
     Parameters:
       settings (number, optional): bit-coded flags of render settings to modify.
         0=none,
@@ -694,8 +682,8 @@ def RenderSettings(settings=None):
         4=render curves and isocurves,
         8=render dimensions and text
     Returns:
-      number: if settings is not specified, the current render settings in bit-coded flags
-      number: if settings is specified, the previous render settings in bit-coded flags
+      number: if settings are not specified, the current render settings in bit-coded flags
+      number: if settings are specified, the previous render settings in bit-coded flags
     Example:
       import rhinoscriptsyntax as rs
       render_annotations = 8
@@ -724,12 +712,12 @@ def RenderSettings(settings=None):
 
 
 def UnitAbsoluteTolerance(tolerance=None, in_model_units=True):
-    """Returns or modifies the document's absolute tolerance. Absolute tolerance
+    """Resturns or sets the document's absolute tolerance. Absolute tolerance
     is measured in drawing units. See Rhino's document properties command
     (Units and Page Units Window) for details
     Parameters:
       tolerance (number, optional): the absolute tolerance to set
-      in_model_units (bool, optional): Returns or modifies the document's model units (True)
+      in_model_units (bool, optional): Return or modify the document's model units (True)
                             or the document's page units (False)
     Returns:
       number: if tolerance is not specified, the current absolute tolerance
@@ -757,12 +745,12 @@ def UnitAbsoluteTolerance(tolerance=None, in_model_units=True):
 
 
 def UnitAngleTolerance(angle_tolerance_degrees=None, in_model_units=True):
-    """Returns or modifies the document's angle tolerance. Angle tolerance is
+    """Return or set the document's angle tolerance. Angle tolerance is
     measured in degrees. See Rhino's DocumentProperties command
     (Units and Page Units Window) for details
     Parameters:
       angle_tolerance_degrees (number, optional): the angle tolerance to set
-      in_model_units (number, optional): Returns or modifies the document's model units (True)
+      in_model_units (number, optional): Return or modify the document's model units (True)
                              or the document's page units (False)
     Returns:
       number: if angle_tolerance_degrees is not specified, the current angle tolerance
@@ -790,12 +778,12 @@ def UnitAngleTolerance(angle_tolerance_degrees=None, in_model_units=True):
 
 
 def UnitDistanceDisplayPrecision(precision=None, model_units=True):
-    """Returns or modifies the document's distance display precision
+    """Return or set the document's distance display precision
     Parameters:
       precision (number, optional): The distance display precision.  If the current distance display mode is Decimal, then precision is the number of decimal places.
                                     If the current distance display mode is Fractional (including Feet and Inches), then the denominator = (1/2)^precision.
                                     Use UnitDistanceDisplayMode to get the current distance display mode.
-      model_units (bool, optional): Returns or modifies the document's model units (True) or the document's page units (False). The default is True.
+      model_units (bool, optional): Return or modify the document's model units (True) or the document's page units (False). The default is True.
     Returns:
      number: If precision is not specified, the current distance display precision if successful. If precision is specified, the previous distance display precision if successful. If not successful, or on error.
     Example:
@@ -818,12 +806,12 @@ def UnitDistanceDisplayPrecision(precision=None, model_units=True):
 
 
 def UnitRelativeTolerance(relative_tolerance=None, in_model_units=True):
-    """Returns or modifies the document's relative tolerance. Relative tolerance
+    """Return or set the document's relative tolerance. Relative tolerance
     is measured in percent. See Rhino's DocumentProperties command
     (Units and Page Units Window) for details
     Parameters:
       relative_tolerance (number, optional) the relative tolerance in percent
-      in_model_units (bool, optional): Returns or modifies the document's model units (True)
+      in_model_units (bool, optional): Return or modify the document's model units (True)
                              or the document's page units (False)
     Returns:
       number: if relative_tolerance is not specified, the current tolerance in percent
@@ -903,7 +891,7 @@ def UnitScale(to_system, from_system=None):
 
 
 def UnitSystem(unit_system=None, scale=False, in_model_units=True):
-    """Returns or modifies the document's unit system. See Rhino's DocumentProperties
+    """Return or set the document's unit system. See Rhino's DocumentProperties
     command (Units and Page Units Window) for details
     Parameters:
       unit_system (number, optional): The unit system to set the document to. The unit systems are:
@@ -935,7 +923,7 @@ def UnitSystem(unit_system=None, scale=False, in_model_units=True):
         25 - Parsecs (3.08567758e+16)
       scale (bool, optional): Scale existing geometry based on the new unit system.
           If not specified, any existing geometry is not scaled (False)
-      in_model_units (number, optional): Returns or modifies the document's model units (True)
+      in_model_units (number, optional): Return or modify the document's model units (True)
           or the document's page units (False). The default is True.
     Returns:
       number: if unit_system is not specified, the current unit system

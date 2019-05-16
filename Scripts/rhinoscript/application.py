@@ -39,7 +39,7 @@ def AddSearchPath(folder, index=-1):
                              If omitted, path will be appended to the end of the
                              search path list.
     Returns:
-      int: The index where the item was inserted if success.
+      number: The index where the item was inserted if success.
            -1 on failure.
     Example:
       import rhinoscriptsyntax as rs
@@ -55,7 +55,7 @@ def AddSearchPath(folder, index=-1):
 def AliasCount():
     """Returns number of command aliases in Rhino.
     Returns:
-      int: the number of command aliases in Rhino.
+      number: the number of command aliases in Rhino.
     Example:
       import rhinoscriptsyntax as rs
       print "alias count = ", rs.AliasCount()
@@ -100,7 +100,7 @@ def AliasMacro(alias, macro=None):
 def AliasNames():
     """Returns a list of command alias names.
     Returns:
-      list(str, ...): a list of command alias names.
+      str: a list of command alias names.
     Example:
       import rhinoscriptsyntax as rs
       aliases = rs.AliasNames()
@@ -198,7 +198,7 @@ def AppearanceColor(item, color=None):
 
 
 def AutosaveFile(filename=None):
-    """Returns or modifies the file name used by Rhino's automatic file saving
+    """Returns or changes the file name used by Rhino's automatic file saving
     Parameters:
       filename (str, optional): Name of the new autosave file
     Returns:
@@ -218,7 +218,7 @@ def AutosaveFile(filename=None):
 
 
 def AutosaveInterval(minutes=None):
-    """Returns or modifies how often the document will be saved when Rhino's
+    """Returns or changes how often the document will be saved when Rhino's
     automatic file saving mechanism is enabled
     Parameters:
       minutes (number, optional): The number of minutes between saves
@@ -243,7 +243,7 @@ def AutosaveInterval(minutes=None):
 def BuildDate():
     """Returns the build date of Rhino
     Returns:
-      DateTime: the build date of Rhino. Will be converted to a string by most functions.
+      Datetime.date: the build date of Rhino. Will be converted to a string by most functions.
     Example:
       import rhinoscriptsyntax as rs
       build = rs.BuildDate()
@@ -275,6 +275,12 @@ def Command(commandString, echo=True):
     """Runs a Rhino command script. All Rhino commands can be used in command
     scripts. The command can be a built-in Rhino command or one provided by a
     3rd party plug-in.
+    Parameters:
+      commandString (str): A Rhino command including any arguments
+      echo (bool, optional): The command echo mode True will display the commands on the commandline. If omitted, command prompts are echoed (True)
+    Returns:
+      bool: True or False indicating success or failure
+
     Write command scripts just as you would type the command sequence at the
     command line. A space or a new line acts like pressing <Enter> at the
     command line. For more information, see "Scripting" in Rhino help.
@@ -296,12 +302,7 @@ def Command(commandString, echo=True):
       CORRECT:
         rs.Command("_Line _Pause _Pause")
     After the command script has run, you can obtain the identifiers of most
-    recently created or changed object by calling LastCreatedObjects.    
-    Parameters:
-      commandString (str): A Rhino command including any arguments
-      echo (bool, optional): The command echo mode True will display the commands on the commandline. If omitted, command prompts are echoed (True)
-    Returns:
-      bool: True or False indicating success or failure
+    recently created or changed object by calling LastCreatedObjects.
     Example:
       import rhinoscriptsyntax as rs
       rs.Command("_Line 0,0,0 2,2,2")
@@ -336,12 +337,11 @@ def CommandHistory():
 
 
 def DefaultRenderer(renderer=None):
-    """Returns or modifies the default render plug-in
+    """Returns or changes the default render plug-in
     Parameters:
       renderer (str, optional): The name of the renderer to set as default renderer.  If omitted the Guid of the current renderer is returned.
     Returns:
-      guid: if reneder is not specified, the Unique identifier of default renderer
-      guid: if reneder is specified, the Unique identifier of default renderer
+      guid: Unique identifier of default renderer
     Example:
       import rhinoscriptsyntax as rs
       rs.DefaultRenderer("MyRenderPlugIn")
@@ -831,7 +831,7 @@ def LocaleID():
 
 
 def Ortho(enable=None):
-    """Returns or modifies the Enable-Disable status of Rhino's ortho modeling aid.
+    """Enables or disables Rhino's ortho modeling aid.
     Parameters:
       enable (bool, optional): The new enabled status (True or False). If omitted the current state is returned.
     Returns:
@@ -851,7 +851,7 @@ def Ortho(enable=None):
 
 
 def Osnap(enable=None):
-    """Returns or modifies the Enable-Disable status of Rhino's object snap modeling aid.
+    """Enables or disables Rhino's object snap modeling aid.
     Object snaps are tools for specifying points on existing objects.
     Parameters:
       enable (bool, optional): The new enabled status.
@@ -873,7 +873,7 @@ def Osnap(enable=None):
 
 
 def OsnapDialog(visible=None):
-    """Returns or modifies the Shows-Hide status of  Rhino's dockable object snap bar
+    """Shows or hides Rhino's dockable object snap bar
     Parameters:
       visible (bool, optional): The new visibility state. If omitted then the current state is returned.
     Returns:
@@ -893,7 +893,7 @@ def OsnapDialog(visible=None):
 
 
 def OsnapMode(mode=None):
-    """Returns or modifies the object snap mode. Object snaps are tools for
+    """Returns or sets the object snap mode. Object snaps are tools for
     specifying points on existing objects
     Parameters:
       mode (number, optional): The object snap mode or modes to set. Object snap modes
@@ -927,8 +927,13 @@ def OsnapMode(mode=None):
       OsnapDialog
       ProjectOsnaps
     """
-    rc = int(modelaid.OsnapModes)    
-    if mode is not None:       
+    rc = int(modelaid.OsnapModes)
+    # RH-39062 reverts RH-31758
+    #m = [(0,0), (1,2), (2,8), (4,0x20), (8,0x80), (16,0x200), (32,0x800), (64,0x2000),
+    #      (128,0x20000), (256,0x80000), (512,0x200000), (1024,0x8000000), (2048, 0x40)]
+    #rc = sum([x[0] for x in m if x[1] & rc])
+    if mode is not None:
+        #mode = sum([x[1] for x in m if x[0] & int(mode)])
         modelaid.OsnapModes = System.Enum.ToObject(Rhino.ApplicationSettings.OsnapModes, mode)
     return rc
 
@@ -1242,7 +1247,7 @@ def StatusBarProgressMeterHide():
 
 
 def TemplateFile(filename=None):
-    """Returns or modifies Rhino's default template file. This is the file used
+    """Returns or sets Rhino's default template file. This is the file used
     when Rhino starts.
     Parameters:
       filename (str, optional): The name of the new default template file. If omitted the current default template name is returned.
@@ -1263,7 +1268,7 @@ def TemplateFile(filename=None):
 
 
 def TemplateFolder(folder=None):
-    """Returns or modifies the location of Rhino's template folder
+    """Returns or sets the location of Rhino's template folder
     Parameters:
       folder (str, optional): The location of Rhino's template files. Note, the location must exist.
     Returns:
@@ -1297,7 +1302,7 @@ def WindowHandle():
 
 
 def WorkingFolder(folder=None):
-    """Returns or modifies Rhino's working folder (directory).
+    """Returns or sets Rhino's working folder (directory).
     The working folder is the default folder for all file operations.
     Parameters:
       folder (str, optional): The new working folder for the current Rhino session.

@@ -112,7 +112,7 @@ def PlaneClosestPoint(plane, point, return_point=True):
          parameter of the point on the plane that is closest to the test
          point is returned.
     Returns:
-      point: If return_point is not specified or True, then the 3-D point
+      point: If return_point is omitted or True, then the 3-D point
       point: If return_point is False, then an array containing the U,V parameters
       of the point
       None: if not successful, or on error.
@@ -141,9 +141,9 @@ def PlaneCurveIntersection(plane, curve, tolerance=None):
     Parameters:
       plane (plane): The plane to intersect.
       curve (guid): The identifier of the curve object
-      tolerance (number, optional): The intersection tolerance. If omitted, the document's absolute tolerance is used.
+      torerance (number, optional): The intersection tolerance. If omitted, the document's absolute tolerance is used.
     Returns:
-      list[tuple]:A list of intersection information tuple if successful.  The list will contain one or more of the following tuple:
+      A list of intersection information tuple if successful.  The list will contain one or more of the following tuple:
 
         Element Type        Description
 

@@ -137,7 +137,7 @@ def AddNamedView(name, view=None):
 
 
 def CurrentDetail(layout, detail=None, return_name=True):
-    """Returns or modifies the current detail view in a page layout view
+    """Returns or changes the current detail view in a page layout view
     Parameters:
       layout (str|guid): title or identifier of an existing page layout view
       detail (str|guid, optional): title or identifier the the detail view to set
@@ -176,7 +176,7 @@ def CurrentDetail(layout, detail=None, return_name=True):
 
 
 def CurrentView(view=None, return_name=True):
-    """Returns or modifies the currently active view
+    """Returns or sets the currently active view
     Parameters:
       view (str|guid): Title or id of the view to set current.
         If omitted, only the title or identifier of the current view is returned
@@ -254,8 +254,8 @@ def DetailLock(detail_id, lock=None):
       detail_id (guid): identifier of a detail object
       lock (bool, optional) the new lock state
     Returns:
-      bool: if lock is not specified, the current detail projection locked state
-      bool: if lock is specified, the previous detail projection locked state
+      bool: if lock==None, the current detail projection locked state
+      bool: if lock is True or False, the previous detail projection locked state
       None: on error
     Example:
       import rhinoscriptsyntax as rs
@@ -282,8 +282,8 @@ def DetailScale(detail_id, model_length=None, page_length=None):
       model_length (number, optional): a length in the current model units
       page_length (number, optional): a length in the current page units
     Returns:
-      number: if model_length and page_length are both is not specified, current page to model scale ratio
-      number: if model_length and page_length are both is specified,previous page to model scale ratio
+      number: current page to model scale ratio if model_length and page_length are both None
+      number: previous page to model scale ratio if model_length and page_length are values
       None: on error
     Example:
       import rhinoscriptsyntax as rs
@@ -787,7 +787,7 @@ def RotateView(view=None, direction=0, angle=None):
 
 
 def ShowGrid(view=None, show=None):
-    """Returns or modifies the Shows-Hide status of a view's construction plane grid
+    """Shows or hides a view's construction plane grid
     Parameters:
       view (str|guid, optional): title or id of the view. If omitted, the current active view is used
       show (bool, optional): The grid state to set. If omitted, the current grid display state is returned
@@ -813,7 +813,7 @@ def ShowGrid(view=None, show=None):
 
 
 def ShowGridAxes(view=None, show=None):
-    """Returns or modifies the Shows-Hide status of a view's construction plane grid axes.
+    """Shows or hides a view's construction plane grid axes.
     Parameters:
       view (str|guid, optional): title or id of the view. If omitted, the current active view is used
       show (bool, optional): The state to set. If omitted, the current grid axes display state is returned
@@ -859,7 +859,7 @@ def ShowViewTitle(view=None, show=True):
 
 
 def ShowWorldAxes(view=None, show=None):
-    """Returns or modifies the Shows-Hide status of a view's world axis icon
+    """Shows or hides a view's world axis icon
     Parameters:
       view (str|guid, optional):  title or id of the view. If omitted, the current active view is used
       show: (bool, optional): The state to set.
@@ -920,7 +920,7 @@ def TiltView(view=None, direction=0, angle=None):
 
 
 def ViewCamera(view=None, camera_location=None):
-    """Returns or modifies the camera location of the specified view
+    """Returns or sets the camera location of the specified view
     Parameters:
       view (str|guid, optional): title or id of the view. If omitted, the current active view is used
       camera_location (point, optional): a 3D point identifying the new camera location.
@@ -949,7 +949,7 @@ def ViewCamera(view=None, camera_location=None):
 
 
 def ViewCameraLens(view=None, length=None):
-    """Returns or modifies the 35mm camera lens length of the specified perspective
+    """Returns or sets the 35mm camera lens length of the specified perspective
     projection view.
     Parameters:
       view (str|guid, optional): title or id of the view. If omitted, the current active view is used
@@ -1003,17 +1003,17 @@ def ViewCameraPlane(view=None):
 
 
 def ViewCameraTarget(view=None, camera=None, target=None):
-    """Returns or modifies the camera and target positions of the specified view
+    """Returns or sets the camera and target positions of the specified view
     Parameters:
       view (str|guid, optional): title or id of the view. If omitted, current active view is used
       camera (point): 3d point identifying the new camera location. If camera and
-         target is not specified, current camera and target locations are returned
+         target are not specified, current camera and target locations are returned
       target (point): 3d point identifying the new target location. If camera and
-         target is not specified, current camera and target locations are returned
+         target are not specified, current camera and target locations are returned
     Returns:
-      list(point, point): if both camera and target is not specified, then the 3d points containing
+      list(point, point): if both camera and target are not specified, then the 3d points containing
         the current camera and target locations is returned
-      point: if either camera or target is specified, then the 3d points containing the
+      point: if either camera or target are specified, then the 3d points containing the
         previous camera and target locations is returned
     Example:
       import rhinoscriptsyntax as rs
@@ -1039,7 +1039,7 @@ def ViewCameraTarget(view=None, camera=None, target=None):
 
 
 def ViewCameraUp(view=None, up_vector=None):
-    """Returns or modifies the camera up direction of a specified
+    """Returns or sets the camera up direction of a specified
     Parameters:
       view (str|guid, optional): title or id of the view. If omitted, the current active view is used
       up_vector (vector): 3D vector identifying the new camera up direction
@@ -1064,7 +1064,7 @@ def ViewCameraUp(view=None, up_vector=None):
 
 
 def ViewCPlane(view=None, plane=None):
-    """Returns or modifies a view's construction plane
+    """Return or set a view's construction plane
     Parameters:
       view (str|guid, optional): title or id of the view. If omitted, current active view is used.
       plane (plane): the new construction plane if setting
@@ -1094,7 +1094,7 @@ def ViewCPlane(view=None, plane=None):
     return cplane
 
 def ViewDisplayMode(view=None, mode=None, return_name=True):
-    """Returns or modifies a view display mode
+    """Return or set a view display mode
     Parameters:
       view (str|guid, optional): Title or id of a view. If omitted, active view is used
       mode (str|guid, optional): Name or id of a display mode
@@ -1166,7 +1166,7 @@ def ViewDisplayModeName(mode_id):
 def ViewDisplayModes(return_names=True):
     """Return list of display modes
     Parameters:
-      return_names (bool, optional): If True, return mode names. If False, return ids
+      return_name (bool, otpional): If True, return mode names. If False, return ids
     Returns:
       list(str|guid, ...): strings identifying the display mode names or identifiers if successful
     Example:
@@ -1237,7 +1237,7 @@ def ViewNearCorners(view=None):
 
 
 def ViewProjection(view=None, mode=None):
-    """Returns or modifies a view's projection mode.
+    """Return or set a view's projection mode.
     Parameters:
       view (str|guid, optional): title or id of the view. If omitted, current active view is used
       mode (number, optional): the projection mode
@@ -1269,7 +1269,7 @@ def ViewProjection(view=None, mode=None):
     return rc
 
 def ViewRadius(view=None, radius=None, mode=False):
-    """Returns or modifies the radius of a parallel-projected view. Useful
+    """Returns or sets the radius of a parallel-projected view. Useful
     when you need an absolute zoom factor for a parallel-projected view
     Parameters:
       view (str|guid, optional): title or id of the view. If omitted, current active view is used
@@ -1362,7 +1362,7 @@ def ViewSpeedTest(view=None, frames=100, freeze=True, direction=0, angle_degrees
 
 
 def ViewTarget(view=None, target=None):
-    """Returns or modifies the target location of the specified view
+    """Returns or sets the target location of the specified view
     Parameters:
       view (str|guid, optional): title or id of the view. If omitted, current active view is used
       target (point, optional): 3d point identifying the new target location. If omitted,
@@ -1415,7 +1415,7 @@ def ViewTitle(view_id):
 
 
 def Wallpaper(view=None, filename=None):
-    """Returns or modifies the wallpaper bitmap of the specified view. To remove a
+    """Returns or sets the wallpaper bitmap of the specified view. To remove a
     wallpaper bitmap, pass an empty string ""
     Parameters:
       view (str|guid, optional): The identifier of the view. If omitted, the
@@ -1444,7 +1444,7 @@ def Wallpaper(view=None, filename=None):
 
 
 def WallpaperGrayScale(view=None, grayscale=None):
-    """Returns or modifies the grayscale display option of the wallpaper bitmap in a
+    """Returns or sets the grayscale display option of the wallpaper bitmap in a
     specified view
     Parameters:
       view (str|guid, optional):  The identifier of the view. If omitted, the
@@ -1471,7 +1471,7 @@ def WallpaperGrayScale(view=None, grayscale=None):
 
 
 def WallpaperHidden(view=None, hidden=None):
-    """Returns or modifies the visibility of the wallpaper bitmap in a specified view
+    """Returns or sets the visibility of the wallpaper bitmap in a specified view
     Parameters:
       view (str|guid, optional): The identifier of the view. If omitted, the
         active view is used

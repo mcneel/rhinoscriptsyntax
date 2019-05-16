@@ -4,17 +4,7 @@ import utility as rhutil
 import math
 import System.Guid
 
-
-
-
 def __InstanceObjectFromId(id, raise_if_missing):
-    """Returns the Rhino Block instance object for a given Id
-    Parameters:
-      id (guid): Id of block instance
-      raise_if_missing(bool)raise error if missing
-    Returns:
-      Rhino.DocObjects.InstanceObject: block instance object
-    """
     rhobj = rhutil.coercerhinoobject(id, True, raise_if_missing)
     if isinstance(rhobj, Rhino.DocObjects.InstanceObject): return rhobj
     if raise_if_missing: raise ValueError("unable to find InstanceObject")
@@ -134,7 +124,7 @@ def BlockCount():
 
 
 def BlockDescription(block_name, description=None):
-    """Returns or modifies the description of a block definition
+    """Returns or sets the description of a block definition
     Parameters:
       block_name (str): the name of an existing block definition
       description (str, optional): The new description.

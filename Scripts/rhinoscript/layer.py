@@ -80,7 +80,7 @@ def AddLayer(name=None, color=None, visible=True, locked=False, parent=None):
     return scriptcontext.doc.Layers[last_parent_index].FullPath
 
 def CurrentLayer(layer=None):
-    """Returns or modifies the current layer
+    """Returns or changes the current layer
     Parameters:
       layer (guid): the name or Guid of an existing layer to make current
     Returns:
@@ -299,7 +299,7 @@ def IsLayerLocked(layer):
     Parameters:
       layer (str|guid): the name or id of an existing layer
     Returns:
-      bool: True on success otherwise False
+      cool: True on success otherwise False
     Example:
       import rhinoscriptsyntax as rs
       layer = rs.GetString("Layer name")
@@ -491,7 +491,7 @@ def LayerChildren(layer):
 
 
 def LayerColor(layer, color=None):
-    """Returns or modifies the color of a layer.
+    """Returns or changes the color of a layer.
     Parameters:
       layer (str|guid): name or id of an existing layer
       color (color): the new color value. If omitted, the current layer color is returned.
@@ -555,7 +555,7 @@ def LayerIds():
 
 
 def LayerLinetype(layer, linetype=None):
-    """Returns or modifies the linetype of a layer
+    """Returns or changes the linetype of a layer
     Parameters:
       layer (str): name of an existing layer
       linetype (str, optional): name of a linetype
@@ -590,7 +590,7 @@ def LayerLinetype(layer, linetype=None):
 
 
 def LayerLocked(layer, locked=None):
-    """Returns or modifies the locked mode of a layer
+    """Returns or changes the locked mode of a layer
     Parameters:
       layer (str): name of an existing layer
       locked (bool, optional): new layer locked mode
@@ -615,15 +615,14 @@ def LayerLocked(layer, locked=None):
 
 
 def LayerMaterialIndex(layer,index=None):
-    """Returns or modifies the material index of a layer. A material index of -1
+    """Returns or changes the material index of a layer. A material index of -1
     indicates that no material has been assigned to the layer. Thus, the layer
     will use Rhino's default layer material
     Parameters:
       layer (str):  name of existing layer
       index (number, optional): the new material index
     Returns:
-      number: if index is not specified, a zero-based material index if successful
-      number: if index is specified, a zero-based material index if successful
+      number: a zero-based material index if successful
     Example:
       import rhinoscriptsyntax as rs
       index = rs.LayerMaterialIndex("Default")
@@ -724,7 +723,7 @@ def LayerOrder(layer):
 
 
 def LayerPrintColor(layer, color=None):
-    """Returns or modifies the print color of a layer. Layer print colors are
+    """Returns or changes the print color of a layer. Layer print colors are
     represented as RGB colors.
     Parameters:
       layer (str): name of existing layer
@@ -755,7 +754,7 @@ def LayerPrintColor(layer, color=None):
 
 
 def LayerPrintWidth(layer, width=None):
-    """Returns or modifies the print width of a layer. Print width is specified
+    """Returns or changes the print width of a layer. Print width is specified
     in millimeters. A print width of 0.0 denotes the "default" print width.
     Parameters:
       layer (str): name of existing layer
@@ -783,7 +782,7 @@ def LayerPrintWidth(layer, width=None):
 
 
 def LayerVisible(layer, visible=None, forcevisible_or_donotpersist=False):
-    """Returns or modifies the visible property of a layer.
+    """Returns or changes the visible property of a layer.
     Parameters:
       layer (str): name of existing layer
       visible (bool, optional): new visible state
@@ -815,7 +814,7 @@ def LayerVisible(layer, visible=None, forcevisible_or_donotpersist=False):
 
 
 def ParentLayer(layer, parent=None):
-    """Returns or modifies the parent layer of a layer
+    """Return or modify the parent layer of a layer
     Parameters:
       layer (str): name of an existing layer
       parent (str, optional):  name of new parent layer. To remove the parent layer,

@@ -124,8 +124,7 @@ def XformChangeBasis2(x0,y0,z0,x1,y1,z1):
 def XformCompare(xform1, xform2):
     """Compares two transformation matrices
     Parameters:
-      xform1(transform) first matrices to compare
-      xform2(transform) second matrices to compare
+      xform1, xform2 = matrices to compare
     Returns:
         number:
         -1 if xform1<xform2

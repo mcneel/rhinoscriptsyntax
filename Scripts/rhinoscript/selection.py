@@ -34,7 +34,6 @@ def AllObjects(select=False, include_lights=False, include_grips=False, include_
       select(bool, optional): Select the objects
       include_lights (bool, optional): Include light objects
       include_grips (bool, optional): Include grips objects
-      include_references(bool, optional): Include reference objects 
     Returns:
       list(guid, ...): identifiers for all the objects in the document
     Example:
@@ -141,11 +140,11 @@ def GetCurveObject(message=None, preselect=False, select=False):
     """Prompts user to pick or select a single curve object
     Parameters:
       message (str, optional): a prompt or message.
-      preselect (bool, optional): Allow for the selection of pre-selected objects.
+      preselect (bool,, optional): Allow for the selection of pre-selected objects.
       select (bool, optional): Select the picked objects. If False, objects that
         are picked are not selected.
     Returns:
-      Tuple[guid,bool,int, point,float,str ]: containing the following information
+      Tuple containing the following information
         [0]  guid     identifier of the curve object
         [1]  bool     True if the curve was preselected, otherwise False
         [2]  number   selection method
@@ -208,7 +207,6 @@ def GetObject(message=None, filter=0, preselect=False, select=False, custom_filt
       preselect (bool, optional): Allow for the selection of pre-selected objects.
       select (bool, optional): Select the picked objects.  If False, the objects that are
           picked are not selected.
-      custom_filter(RhinoObject*GeometryBase*int -> bool): a custom filtering function taking a  rhino_object, geometry, component_index ; returning true or false
       subobjects (bool, optional): If True, subobjects can be selected. When this is the
           case, an ObjRef is returned instead of a Guid to allow for tracking
           of the subobject when passed into other functions
@@ -609,7 +607,6 @@ def LockedObjects(include_lights=False, include_grips=False, include_references=
     Parameters:
       include_lights (bool, optional): include light objects
       include_grips (bool, optional): include grip objects
-      include_references(bool, optional): include reference objects
     Returns:
       list(guid, ...): identifiers the locked objects if successful.
     Example:
@@ -638,7 +635,6 @@ def HiddenObjects(include_lights=False, include_grips=False, include_references=
     Parameters:
       include_lights (bool, optional): include light objects
       include_grips (bool, optional): include grip objects
-      include_references(bool, optional): include reference objects
     Returns:
       list(guid, ...): identifiers of the hidden objects if successful.
     Example:
@@ -802,7 +798,7 @@ def NormalObjects(include_lights=False, include_grips=False):
     are visible, can be snapped to, and are independent of selection state
     Parameters:
       include_lights (bool, optional): Include light objects.  If omitted (False), light objects are not returned.
-      include_grips (bool, optional): Include grips objects.  If omitted (False), grips objects are not returned.
+      include_gripts (bool, optional): Include grips objects.  If omitted (False), grips objects are not returned.
     Returns:
       list(guid, ...): identifier of normal objects if successful.
     Example:
@@ -902,7 +898,6 @@ def ObjectsByName(name, select=False, include_lights=False, include_references=F
       name (str): name of the object or objects
       select (bool, optional): select the objects
       include_lights (bool, optional): include light objects
-      include_references(bool, optional): include reference objects
     Returns:
       list(guid, ...): identifiers for objects with the specified name.
     Example:
@@ -1038,7 +1033,7 @@ def SelectedObjects(include_lights=False, include_grips=False):
       include_lights (bool, optional): include light objects
       include_grips (bool, optional): include grip objects
     Returns:
-      list(guid, ...): identifiers of selected objects
+      list(guid, ...) identifiers of selected objects
     Example:
       import rhinoscriptsyntax as rs
       objects = rs.SelectedObjects()

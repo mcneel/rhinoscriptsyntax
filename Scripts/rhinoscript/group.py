@@ -62,7 +62,7 @@ def AddObjectToGroup(object_id, group_name):
       object_id (guid): String or Guid representing the object identifier
       group_name (str): the name of an existing group
     Returns:
-      bool:True or False representing success or failure
+      True or False representing success or failure
     Example:
       import rhinoscriptsyntax as rs
       name = "NewGroup"

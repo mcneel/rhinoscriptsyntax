@@ -77,7 +77,7 @@ def AddCutPlane(object_ids, start_point, end_point, normal=None):
     """Adds a planar surface through objects at a designated location. For more
     information, see the Rhino help file for the CutPlane command
     Parameters:
-      object_ids ([guid, ...]): identifiers of objects that the cutting plane will
+      objects_ids ([guid, ...]): identifiers of objects that the cutting plane will
           pass through
       start_point, end_point (line): line that defines the cutting plane
       normal (vector, optional): vector that will be contained in the returned planar
@@ -202,9 +202,6 @@ def AddNetworkSrf(curves, continuity=1, edge_tolerance=0, interior_tolerance=0, 
                  1 = position
                  2 = tangency
                  3 = curvature
-      edge_tolerance(float): edge tolerance
-      interior_tolerance(float):interior tolerance
-      angle_tolerance(float):angle tolerance
     Returns:
       guid: identifier of new object if successful
     Example:
@@ -233,7 +230,7 @@ def AddNurbsSurface(point_count, points, knots_u, knots_v, degree, weights=None)
       knots_v ([number, ...]): knot values for the surface in the v direction.
                 Must contain point_count[1]+degree[1]-1 elements
       degree ([number, number]): degree of the surface in the u and v directions.
-      weights ([number, ...]): weight values for the surface. The number of elements in
+      weights [(number, ...]): weight values for the surface. The number of elements in
         weights must equal the number of elements in points. Values must be
         greater than zero.
     Returns:
@@ -468,10 +465,10 @@ def AddLoftSrf(object_ids, start=None, end=None, loft_type=0, simplify_method=0,
       value (number, optional): Additional value based on the specified `simplify_method`:
         Simplify  -   Description
         Rebuild(1) - then value is the number of control point used to rebuild
-        Rebuild(1) - is specified and this argument is not specified, then curves will be
+        Rebuild(1) - is specified and this argument is omitted, then curves will be
                      rebuilt using 10 control points.
         Refit(2) - then value is the tolerance used to rebuild.
-        Refit(2) - is specified and this argument is not specified, then the document's
+        Refit(2) - is specified and this argument is omitted, then the document's
                      absolute tolerance us used for refitting.
       closed (bool, optional): close the loft back to the first curve
     Returns:
@@ -804,7 +801,7 @@ def AddTorus(base, major_radius, minor_radius, direction=None):
     Parameters:
       base (point): 3D origin point of the torus or the base plane of the torus
       major_radius, minor_radius (number): the two radii of the torus
-      direction (point):  A point that defines the direction of the torus when base is a point.
+      directions (point):  A point that defines the direction of the torus when base is a point.
         If omitted, a torus that is parallel to the world XY plane is created
     Returns:
       guid: The identifier of the new object if successful.
@@ -962,18 +959,18 @@ def BrepClosestPoint(object_id, point):
       point (point): The test, or sampling point.
     Returns:
       tuple(point, [number, number], [number, number], vector): of closest point information if successful. The list will
-        contain the following information:
-        Element     Type             Description
-          0        Point3d          The 3-D point at the parameter value of the 
-                                    closest point.
-          1        (U, V)           Parameter values of closest point. Note, V 
-                                    is 0 if the component index type is brep_edge
-                                    or brep_vertex. 
-          2        (type, index)    The type and index of the brep component that
-                                    contains the closest point. Possible types are
-                                    brep_face, brep_edge or brep_vertex.
-          3        Vector3d         The normal to the brep_face, or the tangent
-                                    to the brep_edge.  
+      contain the following information:
+      Element     Type             Description
+         0        Point3d          The 3-D point at the parameter value of the 
+                                   closest point.
+         1        (U, V)           Parameter values of closest point. Note, V 
+                                   is 0 if the component index type is brep_edge
+                                   or brep_vertex. 
+         2        (type, index)    The type and index of the brep component that
+                                   contains the closest point. Possible types are
+                                   brep_face, brep_edge or brep_vertex.
+         3        Vector3d         The normal to the brep_face, or the tangent
+                                   to the brep_edge.  
       None: if not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
@@ -1035,7 +1032,7 @@ def DuplicateEdgeCurves(object_id, select=False):
     Parameters:
       object_id (guid): The identifier of the surface or polysurface object.
       select (bool, optional):  Select the duplicated edge curves. The default is not
-        to select (False).
+      to select (False).
     Returns:
       list(guid, ..): identifying the newly created curve objects if successful.
       None: if not successful, or on error.
@@ -1159,7 +1156,7 @@ def ExplodePolysurfaces(object_ids, delete_input=False):
     will be exploded into separate surfaces
     Parameters:
       object_ids ([guid, ...]): identifiers of polysurfaces to explode
-      delete_input (bool, optional): delete input objects after exploding
+      delete_input 9bool, optional): delete input objects after exploding
     Returns:
       list(guid, ...): of identifiers of exploded pieces on success
     Example:
@@ -1417,7 +1414,7 @@ def FilletSurfaces(surface0, surface1, radius, uvparam0=None, uvparam1=None):
 
 
 def FlipSurface(surface_id, flip=None):
-    """Returns or modifies the normal direction of a surface. This feature can
+    """Returns or changes the normal direction of a surface. This feature can
     also be found in Rhino's Dir command
     Parameters:
       surface_id (guid): identifier of a surface object
@@ -2364,9 +2361,8 @@ def __GetMassProperties(object_id, area):
 def SplitBrep(brep_id, cutter_id, delete_input=False):
     """Splits a brep
     Parameters:
-      brep_id (guid): identifier of the brep to split
-      cutter_id (guid): identifier of the brep to split with
-      delete_input(bool): delete input
+      brep (guid): identifier of the brep to split
+      cutter (guid): identifier of the brep to split with
     Returns:
       list(guid, ...): identifiers of split pieces on success
       None: on error
@@ -2679,7 +2675,7 @@ def SurfaceEditPoints(surface_id, return_parameters=False, return_all=True):
       return_parameters (bool, optional): If False, edit points are returned as a list of
         3D points. If True, edit points are returned as a list of U,V surface
         parameters
-      return_all (bool, optional): If True, all surface edit points are returned. If False,
+      return_all (bool, options): If True, all surface edit points are returned. If False,
         the function will return surface edit points based on whether or not the
         surface is closed or periodic
     Returns:
@@ -2796,7 +2792,7 @@ def SurfaceFrame(surface_id, uv_parameter):
 
 
 def SurfaceIsocurveDensity(surface_id, density=None):
-    """Returns or modifies the isocurve density of a surface or polysurface object.
+    """Returns or sets the isocurve density of a surface or polysurface object.
     An isoparametric curve is a curve of constant U or V value on a surface.
     Rhino uses isocurves and surface edge curves to visualize the shape of a
     NURBS surface
@@ -3271,8 +3267,6 @@ def UnrollSurface(surface_id, explode=False, following_geometry=None, absolute_t
       explode (bool, optional): If True, the resulting surfaces ar not joined
       following_geometry ({guid, ...]): List of curves, dots, and points which
         should be unrolled with the surface
-      absolute_tolerance(float):absolute tolerance
-      relative_tolerance(float):relative tolerance
     Returns:
       list(guid, ...): of unrolled surface ids
       tuple((guid, ...),(guid, ...)): if following_geometry is not None, a tuple

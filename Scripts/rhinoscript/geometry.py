@@ -82,8 +82,6 @@ def AddPoint(point, y=None, z=None):
     """Adds point object to the document.
     Parameters:
       point (point): a point3d or list(x,y,z) location of point to add
-      y(float): Y coordinate 
-      z(float): Z coordinate 
     Returns:
       guid: identifier for the object that was added to the doc
     Example:
@@ -317,7 +315,7 @@ def CompareGeometry(first, second):
       first (guid|geometry): The identifier of the first object to compare.
       second (guid|geometry): The identifier of the second object to compare.
     Returns:
-      bool:True if the objects are geometrically identical, otherwise False.
+      True if the objects are geometrically identical, otherwise False.
     Example:
       import rhinoscriptsyntax as rs
       object1 = rs.GetObject("Select first object")
@@ -531,8 +529,7 @@ def PointCloudHidePoints(object_id, hidden=[]):
       object_id (guid): the point cloud object's identifier
       hidden ([bool, ....]): list of booleans matched to the index of points to be hidden
     Returns:
-      list(bool, ....): if hidden is not specified,List of point cloud hidden states
-      list(bool, ....): if hidden is specified,List of point cloud hidden states
+      list(bool, ....): List of point cloud hidden states
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select point cloud", rs.filter.pointcloud)
@@ -567,8 +564,7 @@ def PointCloudPointColors(object_id, colors=[]):
       object_id (guid): the point cloud object's identifier
       colors ([color, ...]) list of color values if you want to adjust colors
     Returns:
-      list(color, ...): if hidden is not specified, List of point cloud colors
-      list(color, ...): if hidden is specified, List of point cloud colors
+      list(color, ...): List of point cloud colors
     Example:
       import rhinoscriptsyntax as rs
       import random
@@ -743,7 +739,7 @@ def PointCoordinates(object_id, point=None):
 
 
 def TextDotFont(object_id, fontface=None):
-    """Returns or modifies the font of a text dot
+    """Returns or modified the font of a text dot
     Parameters:
       object_id (guid): identifier of a text dot object
       fontface (str, optional): new font face name
@@ -774,7 +770,7 @@ def TextDotFont(object_id, fontface=None):
 
 
 def TextDotHeight(object_id, height=None):
-    """Returns or modifies the font height of a text dot
+    """Returns or modified the font height of a text dot
     Parameters:
       object_id (guid): identifier of a text dot object
       height (number, optional) new font height
@@ -868,7 +864,7 @@ def TextDotText(object_id, text=None):
 
 
 def TextObjectFont(object_id, font=None):
-    """Returns or modifies the font used by a text object
+    """Returns of modifies the font used by a text object
     Parameters:
       object_id (guid): the identifier of a text object
       font (str): the new font face name
