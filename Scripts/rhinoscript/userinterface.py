@@ -233,7 +233,7 @@ def GetBox(mode=0, base_point=None, prompt1=None, prompt2=None, prompt3=None):
     if rc==Rhino.Commands.Result.Success: return tuple(box.GetCorners())
 
 
-def GetColor(color=[0,0,0]):
+def GetColor(color=Drawing.Color.Black):
     """Display the Rhino color picker dialog allowing the user to select an RGB color
     Parameters:
       color (color, optional): default RGB value. If omitted, the default color is black
@@ -258,7 +258,7 @@ def GetColor(color=[0,0,0]):
 def GetCursorPos():
     """Retrieves the cursor's position
     Returns:
-      tuple(point, point, guid, point) containing the following information
+      tuple(point, point, guid, point): containing the following information
         [0]  cursor position in world coordinates
         [1]  cursor position in screen coordinates
         [2]  id of the active viewport

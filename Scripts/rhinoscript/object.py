@@ -742,7 +742,7 @@ def MoveObjects(object_ids, translation):
 
 
 def ObjectColor(object_ids, color=None):
-    """Returns of modifies the color of an object. Object colors are represented
+    """Returns or modifies the color of an object. Object colors are represented
     as RGB colors. An RGB color specifies the relative intensity of red, green,
     and blue to cause a specific color to be displayed
     Parameters:
@@ -797,7 +797,7 @@ def ObjectColor(object_ids, color=None):
 
 
 def ObjectColorSource(object_ids, source=None):
-    """Returns of modifies the color source of an object.
+    """Returns or modifies the color source of an object.
     Parameters:
       object_ids ([guid, ...]): single identifier of list of identifiers
       source (number, optional) = new color source
@@ -806,9 +806,9 @@ def ObjectColorSource(object_ids, source=None):
           2 = color from material
           3 = color from parent
     Returns:
-      if color source is not specified, the current color source
-      is color source is specified, the previous color source
-      if color_ids is a list, then the number of objects modifief
+      int:if color source is not specified, the current color source
+      int:is color source is specified, the previous color source
+      int:if color_ids is a list, then the number of objects modifief
     Example:
       import rhinoscriptsyntax as rs
       objs = rs.GetObjects("Select objects to reset color source")
@@ -843,7 +843,7 @@ def ObjectDescription(object_id):
     Parameters:
       object_id = identifier of an object
     Returns:
-      A short text description of the object if successful.
+      str:A short text description of the object if successful.
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
@@ -921,14 +921,14 @@ def ObjectLayer(object_id, layer=None):
 
 
 def ObjectLayout(object_id, layout=None, return_name=True):
-    """Returns or changes the layout or model space of an object
+    """Returns or modifies the layout or model space of an object
     Parameters:
       object_id (guid): identifier of the object
       layout (str|guid, optional): to change, or move, an object from model space to page
         layout space, or from one page layout to another, then specify the
         title or identifier of an existing page layout view. To move an object
         from page layout space to model space, just specify None
-      return_name[opt] = If True, the name, or title, of the page layout view
+      return_name(bool, optional) = If True, the name, or title, of the page layout view
         is returned. If False, the identifier of the page layout view is returned
     Returns:
       str: if layout is not specified, the object's current page layout view
@@ -967,7 +967,7 @@ def ObjectLayout(object_id, layout=None, return_name=True):
 
 
 def ObjectLinetype(object_ids, linetype=None):
-    """Returns of modifies the linetype of an object
+    """Returns or modifies the linetype of an object
     Parameters:
       object_ids ({guid, ...]): identifiers of object(s)
       linetype (str, optional): name of an existing linetype. If omitted, the current
@@ -1008,7 +1008,7 @@ def ObjectLinetype(object_ids, linetype=None):
 
 
 def ObjectLinetypeSource(object_ids, source=None):
-    """Returns of modifies the linetype source of an object
+    """Returns or modifies the linetype source of an object
     Parameters:
       object_ids ([guid, ...]): identifiers of object(s)
       source (number, optional): new linetype source. If omitted, the current source is returned.
@@ -1048,18 +1048,22 @@ def ObjectLinetypeSource(object_ids, source=None):
 
 
 def ObjectMaterialIndex(object_id, material_index=None):
-    """Returns or changes the material index of an object. Rendering materials are stored in
+    """Returns or modifies the material index of an object. Rendering materials are stored in
     Rhino's rendering material table. The table is conceptually an array. Render
-    materials associated with objects and layers are specified by zero based
+    materials associated with objects and layers is specified by zero based
     indices into this array.
     Parameters:
       object_id (guid): identifier of an object
-      index (number, optional): the new material index
+      material_index (number, optional): the new material index
     Returns:
-      number: If the return value of ObjectMaterialSource is "material by object", then
+      number: if material_index is not specified, If the return value of ObjectMaterialSource is "material by object", then
           the return value of this function is the index of the object's rendering
           material. A material index of -1 indicates no material has been assigned,
           and that Rhino's internal default material has been assigned to the object.
+      number: if material_index is specified, If the return value of ObjectMaterialSource is "material by object", then
+          the return value of this function is the index of the object's rendering
+          material. A material index of -1 indicates no material has been assigned,
+          and that Rhino's internal default material has been assigned to the object.          
       None: on failure
     Example:
       import rhinoscriptsyntax as rs
@@ -1371,7 +1375,7 @@ def ObjectType(object_id):
 def OrientObject(object_id, reference, target, flags=0):
     """Orients a single object based on input points.  
 
-    If two 3-D points are specified, then this method will function similar to Rhino's Orient command.  If more than two 3-D points are specified, then the function will orient similar to Rhino's Orient3Pt command.
+    If two 3-D points is specified, then this method will function similar to Rhino's Orient command.  If more than two 3-D points is specified, then the function will orient similar to Rhino's Orient3Pt command.
 
     The orient flags values can be added together to specify multiple options.
         Value   Description
@@ -1559,6 +1563,7 @@ def SelectObject(object_id, redraw=True):
     """Selects a single object
     Parameters:
       object_id (guid): the identifier of the object to select
+      redraw(bool): refresh view too
     Returns:
       bool: True on success
     Example:
@@ -1615,6 +1620,7 @@ def ShearObject(object_id, origin, reference_point, angle_degrees, copy=False):
     Parameters:
       object_id (guid, ...): The identifier of an object
       origin, reference_point (point) origin/reference point of the shear transformation
+      angle_degrees(float): Shearing angle in Degrees
       copy (bool, optional): copy the objects
     Returns:
       guid: Identifier of the sheared object if successful
@@ -1639,6 +1645,7 @@ def ShearObjects(object_ids, origin, reference_point, angle_degrees, copy=False)
     Parameters:
       object_ids ([guid, ...]): The identifiers objects to shear
       origin, reference_point (point): origin/reference point of the shear transformation
+      angle_degrees(float): Shearing angle in Degrees
       copy (bool, optional): copy the objects
     Returns:
       list(guid, ...]): identifiers of the sheared objects if successful
@@ -1732,7 +1739,7 @@ def TransformObject(object_id, matrix, copy=False):
     """Moves, scales, or rotates an object given a 4x4 transformation matrix.
     The matrix acts on the left.
     Parameters:
-      object (guid): The identifier of the object.
+      object_id (guid): The identifier of the object.
       matrix (transform): The transformation matrix (4x4 array of numbers).
       copy (bool, optional): Copy the object.
     Returns:
@@ -1772,7 +1779,7 @@ def TransformObjects(object_ids, matrix, copy=False):
     """Moves, scales, or rotates a list of objects given a 4x4 transformation
     matrix. The matrix acts on the left.
     Parameters:
-      object_ids [(guid, ...}): List of object identifiers.
+      object_ids ([guid, ...]): List of object identifiers.
       matrix (transform): The transformation matrix (4x4 array of numbers).
       copy (bool, optional): Copy the objects
     Returns:

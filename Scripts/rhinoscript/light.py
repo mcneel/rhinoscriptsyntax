@@ -182,7 +182,7 @@ def AddSpotLight(origin, radius, apex_point):
 
 
 def EnableLight(object_id, enable=None):
-    """Enables or disables a light object
+    """Returns or modifies the Enable-Disable status of a light object
     Parameters:
       object_id (guid): the light object's identifier
       enable (bool, optional): the light's enabled status
@@ -385,7 +385,7 @@ def IsSpotLight(object_id):
 
 
 def LightColor(object_id, color=None):
-    """Returns or changes the color of a light
+    """Returns or modifies the color of a light
     Parameters:
       object_id (guid): the light object's identifier
       color (color, optional): the light's new color
@@ -436,7 +436,7 @@ def LightCount():
 
 
 def LightDirection(object_id, direction=None):
-    """Returns or changes the direction of a light object
+    """Returns or modifies the direction of a light object
     Parameters:
       object_id (guid): the light object's identifier
       direction (vector, optional): the light's new direction
@@ -465,7 +465,7 @@ def LightDirection(object_id, direction=None):
 
 
 def LightLocation(object_id, location=None):
-    """Returns or changes the location of a light object
+    """Returns or modifies the location of a light object
     Parameters:
       object_id (guid): the light object's identifier
       location (point, optional): the light's new location
@@ -494,7 +494,7 @@ def LightLocation(object_id, location=None):
 
 
 def LightName(object_id, name=None):
-    """Returns or changes the name of a light object
+    """Returns or modifies the name of a light object
     Parameters:
       object_id (guid): the light object's identifier
       name (str, optional): the light's new name
@@ -582,7 +582,7 @@ def RectangularLightPlane(object_id):
 
 
 def SpotLightHardness(object_id, hardness=None):
-    """Returns or changes the hardness of a spot light. Spotlight hardness
+    """Returns or modifies the hardness of a spot light. Spotlight hardness
     controls the fully illuminated region.
     Parameters:
       object_id (guid): the light object's identifier
@@ -614,7 +614,7 @@ def SpotLightHardness(object_id, hardness=None):
 
 
 def SpotLightRadius(object_id, radius=None):
-    """Returns or changes the radius of a spot light.
+    """Returns or modifies the radius of a spot light.
     Parameters:
       object_id (guid): the light object's identifier
       radius (number, optional): the light's new radius
@@ -647,7 +647,7 @@ def SpotLightRadius(object_id, radius=None):
 
 
 def SpotLightShadowIntensity(object_id, intensity=None):
-    """Returns or changes the shadow intensity of a spot light.
+    """Returns or modifies the shadow intensity of a spot light.
     Parameters:
       object_id (guid): the light object's identifier
       intensity (number, optional): the light's new intensity

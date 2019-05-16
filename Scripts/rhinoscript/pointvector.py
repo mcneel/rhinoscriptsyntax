@@ -172,7 +172,7 @@ def PointClosestObject(point, object_ids):
     """Finds the object that is closest to a test point
     Parameters:
       point (point): point to test
-      object_id ([guid, ...]): identifiers of one or more objects
+      object_ids ([guid, ...]): identifiers of one or more objects
     Returns:
       list(guid, point): closest [0] object_id and [1] point on object on success
       None: on failure
