@@ -519,14 +519,12 @@ def AddNurbsCurve(points, knots, degree, weights=None):
     rational = (weights!=None)
     
     nc = Rhino.Geometry.NurbsCurve(3,rational,degree+1,cvcount)
-    for i in xrange(cvcount):
-        cp = Rhino.Geometry.ControlPoint()
-        cp.Location = points[i]
-        if weights: 
-            cp.Weight = weights[i]
-        else:
-            cp.Weight = 1.0
-        nc.Points[i] = cp
+    if rational: 
+        for i in xrange(cvcount):
+            nc.Points.SetPoint(i, points[i], weights[i])
+    else:
+        for i in xrange(cvcount):
+            nc.Points.SetPoint(i, points[i])
     for i in xrange(knotcount): nc.Knots[i] = knots[i]
     rc = scriptcontext.doc.Objects.AddCurve(nc)
     if rc==System.Guid.Empty: raise Exception("Unable to add curve to document")
