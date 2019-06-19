@@ -223,10 +223,14 @@ def BlockInstanceName(object_id):
     return idef.Name
 
 
-def BlockInstances(block_name):
+def BlockInstances(block_name,where_to_look=0):
     """Returns the identifiers of the inserted instances of a block.
     Parameters:
       block_name (str): the name of an existing block definition
+      where_to_look (number, optional):
+        0 = get top level references in active document.
+        1 = get top level and nested references in active document.
+        2 = check for references from other instance definitions
     Returns:
       list(guid, ...): Ids identifying the instances of a block in the model.
     Example:
@@ -244,7 +248,7 @@ def BlockInstances(block_name):
     """
     idef = scriptcontext.doc.InstanceDefinitions.Find(block_name)
     if not idef: raise ValueError("%s does not exist in InstanceDefinitionsTable"%block_name)
-    instances = idef.GetReferences(0)
+    instances = idef.GetReferences(where_to_look)
     return [item.Id for item in instances]
 
 
