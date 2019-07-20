@@ -5,8 +5,10 @@ import System.Guid
 
 def __initHatchPatterns(hn=None):
     hpDict = {p.ToString().split(' ')[1]: p.GetGetMethod() for p in System.Type.GetProperties(Rhino.DocObjects.HatchPattern.Defaults)}
+    def _isHatchPattern(name):
+      scriptcontext.doc.HatchPatterns.FindName(name) is not None
     def loadHatchPatternIfNotLoaded(hp):
-        if not IsHatchPattern(hp):
+        if not _isHatchPattern(hp):
             scriptcontext.doc.HatchPatterns.Add(hpDict[hp].Invoke(hp, None))
     if hn == None:
         for hn in hpDict:
@@ -239,6 +241,7 @@ def HatchPatternCount():
     See Also:
       HatchPatternNames
     """
+    __initHatchPatterns()
     return scriptcontext.doc.HatchPatterns.Count
 
 
@@ -306,6 +309,7 @@ def HatchPatternNames():
     See Also:
       HatchPatternCount
     """
+    __initHatchPatterns()
     rc = []
     for i in range(scriptcontext.doc.HatchPatterns.Count):
         hatchpattern = scriptcontext.doc.HatchPatterns[i]
@@ -418,6 +422,7 @@ def IsHatchPattern(name):
       IsHatchPatternCurrent
       IsHatchPatternReference
     """
+    __initHatchPatterns()
     return scriptcontext.doc.HatchPatterns.FindName(name) is not None
 
 
