@@ -188,12 +188,45 @@ def AddText(text, point_or_plane, height=1.0, font="Arial", font_style=0, justif
         plane.Origin = point
     bold = (1==font_style or 3==font_style)
     italic = (2==font_style or 3==font_style)
-    id = None
-    if justification is None:
-        id = scriptcontext.doc.Objects.AddText(text, plane, height, font, bold, italic)
-    else:
-        just = System.Enum.ToObject(Rhino.Geometry.TextJustification, justification)
-        id = scriptcontext.doc.Objects.AddText(text, plane, height, font, bold, italic, just)
+
+    f = Rhino.DocObjects.Font.FromQuartetProperties(font, False, False)
+    if f == None:
+        print("font error: there is a problem with the font {} and cannot be used to create a text entity".format(font))
+        return scriptcontext.errorhandler()
+
+    ds = scriptcontext.doc.DimStyles.Current
+    te = Rhino.Geometry.TextEntity.Create(text, plane, ds, False, 0, 0)
+    te.TextHeight = height
+
+    te.Font = f
+    if bold == True:
+        if Rhino.DocObjects.Font.FromQuartetProperties(font, bold, False) == None:
+          print("'{}' does not have a 'bold' property so it will not be set.".format(font))
+        te.SetBold(bold)
+    if italic == True:
+        if Rhino.DocObjects.Font.FromQuartetProperties(font, False, italic) == None:
+          print("'{}' does not have an 'italic' property so it will not be set.".format(font))
+        te.SetItalic(italic)
+
+    if justification is not None:
+        h_map = [(1,0), (2,1), (4,2)]
+        v_map = [(65536,5), (131072,3), (262144,0)]
+
+        def getOneAlignFromMap(j, m, e):
+            lst = []
+            for k, v in m:
+                if j & k:
+                    lst.append(v)
+            return System.Enum.ToObject(e, lst[0]) if lst else None
+
+        h = getOneAlignFromMap(justification, h_map, Rhino.DocObjects.TextHorizontalAlignment)
+        if h != None:
+            te.TextHorizontalAlignment = h
+        v = getOneAlignFromMap(justification, v_map, Rhino.DocObjects.TextVerticalAlignment)
+        if v != None:
+            te.TextVerticalAlignment = v
+
+    id = scriptcontext.doc.Objects.Add(te);
     if id==System.Guid.Empty: raise ValueError("unable to add text to document")
     scriptcontext.doc.Views.Redraw()
     return id
