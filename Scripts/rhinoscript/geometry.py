@@ -148,7 +148,7 @@ def AddPoints(points):
     return rc
 
 
-def AddText(text, point_or_plane, height=1.0, font="Arial", font_style=0, justification=None):
+def AddText(text, point_or_plane, height=1.0, font=None, font_style=0, justification=None):
     """Adds a text string to the document
     Parameters:
       text (str): the text to display
@@ -186,27 +186,42 @@ def AddText(text, point_or_plane, height=1.0, font="Arial", font_style=0, justif
     if not plane:
         plane = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
         plane.Origin = point
+    if font != None and type(font) != str:
+      raise ValueError("font needs to be a quartet name")
     bold = (1==font_style or 3==font_style)
     italic = (2==font_style or 3==font_style)
 
-    f = Rhino.DocObjects.Font.FromQuartetProperties(font, False, False)
+    ds = scriptcontext.doc.DimStyles.Current
+    if font == None:
+      qn = ds.Font.QuartetName
+      quartetBoldProp = ds.Font.Bold
+      quartetItalicProp = ds.Font.Bold
+    else:
+      qn = font
+      quartetBoldProp = False
+      quartetItalicProp = False
+
+    f = Rhino.DocObjects.Font.FromQuartetProperties(qn, quartetBoldProp, quartetItalicProp)
     if f == None:
         print("font error: there is a problem with the font {} and cannot be used to create a text entity".format(font))
         return scriptcontext.errorhandler()
 
-    ds = scriptcontext.doc.DimStyles.Current
     te = Rhino.Geometry.TextEntity.Create(text, plane, ds, False, 0, 0)
     te.TextHeight = height
 
-    te.Font = f
-    if bold == True:
-        if Rhino.DocObjects.Font.FromQuartetProperties(font, bold, False) == None:
-          print("'{}' does not have a 'bold' property so it will not be set.".format(font))
-        te.SetBold(bold)
-    if italic == True:
-        if Rhino.DocObjects.Font.FromQuartetProperties(font, False, italic) == None:
-          print("'{}' does not have an 'italic' property so it will not be set.".format(font))
-        te.SetItalic(italic)
+    if font != None:
+      te.Font = f
+
+    if bold != quartetBoldProp:
+        if Rhino.DocObjects.Font.FromQuartetProperties(qn, bold, False) == None:
+          print("'{}' does not have a 'bold' property so it will not be set.".format(qn))
+        else:
+          te.SetBold(bold)
+    if italic != quartetItalicProp:
+        if Rhino.DocObjects.Font.FromQuartetProperties(qn, False, italic) == None:
+          print("'{}' does not have an 'italic' property so it will not be set.".format(qn))
+        else:
+          te.SetItalic(italic)
 
     if justification is not None:
         h_map = [(1,0), (2,1), (4,2)]
