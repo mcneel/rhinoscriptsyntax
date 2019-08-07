@@ -1071,7 +1071,7 @@ def PropertyListBox(items, values, message=None, title=None):
       ListBox
       MultiListBox
     """
-    values = [str(v) for v in values]
+    values = [v.ToString() for v in values]
     return Rhino.UI.Dialogs.ShowPropertyListBox(title, message, items, values)
 
 
