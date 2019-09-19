@@ -237,7 +237,7 @@ def HatchPattern(hatch_id, hatch_pattern=None):
         return scriptcontext.errorhandler()
     old_index = hatchobj.HatchGeometry.PatternIndex
     if hatch_pattern:
-        _initHatchPatterns(hatch_pattern)
+        __initHatchPatterns()
         new_patt = scriptcontext.doc.HatchPatterns.FindName(hatch_pattern)
         if new_patt is None: return scriptcontext.errorhandler()
         hatchobj.HatchGeometry.PatternIndex = new_patt.Index
