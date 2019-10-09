@@ -937,10 +937,20 @@ def TextObjectFont(object_id, font=None):
     if not isinstance(annotation, Rhino.Geometry.TextEntity):
         return scriptcontext.errorhandler()
     fontdata = annotation.Font
-    rc = fontdata.FaceName
+    rc = fontdata.QuartetName
     if font:
-        index = scriptcontext.doc.Fonts.FindOrCreate( font, fontdata.Bold, fontdata.Italic )
-        annotation.Font = scriptcontext.doc.Fonts[index]
+        def q2f(qn, b, i):
+            return Rhino.DocObjects.Font.FromQuartetProperties(qn, b, i)
+        # normally calls will not go further than q2f(font, False, False)
+        # but there are a few rare fonts that don't have a regular font
+        f = q2f(font, fontdata.Bold, fontdata.Italic)\
+            or q2f(font, False, False)\
+            or q2f(font, True, False)\
+            or q2f(font, False, True)\
+            or q2f(font, True, True)
+        if f is None:
+              return scriptcontext.errorhandler()
+        annotation.Font = f
         id = rhutil.coerceguid(object_id, True)
         scriptcontext.doc.Objects.Replace(id, annotation)
         scriptcontext.doc.Views.Redraw()
