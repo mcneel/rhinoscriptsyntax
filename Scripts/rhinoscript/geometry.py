@@ -195,7 +195,7 @@ def AddText(text, point_or_plane, height=1.0, font=None, font_style=0, justifica
     if font == None:
       qn = ds.Font.QuartetName
       quartetBoldProp = ds.Font.Bold
-      quartetItalicProp = ds.Font.Bold
+      quartetItalicProp = ds.Font.Italic
     else:
       qn = font
       quartetBoldProp = False
