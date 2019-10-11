@@ -431,8 +431,17 @@ def GetLayer(title="Select Layer", layer=None, show_new_button=False, show_set_c
     """
     layer_index = scriptcontext.doc.Layers.CurrentLayerIndex
     if layer:
-        layer_instance = scriptcontext.doc.Layers.FindName(layer)
-        if layer_instance is not None: layer_index = layer_instance.Index
+        if "::" in layer:
+            idx = scriptcontext.doc.Layers.FindByFullPath(layer,-1)
+            if idx != -1: 
+                layer_index = idx
+            else:
+                # layer name could have embedded '::'
+                layer_instance = scriptcontext.doc.Layers.FindName(layer)
+                if layer_instance is not None: layer_index = layer_instance.Index
+        else:
+            layer_instance = scriptcontext.doc.Layers.FindName(layer)
+            if layer_instance is not None: layer_index = layer_instance.Index
     rc = Rhino.UI.Dialogs.ShowSelectLayerDialog(layer_index, title, show_new_button, show_set_current, True)
     if rc[0]!=True: return None
     layer = scriptcontext.doc.Layers[rc[1]]
