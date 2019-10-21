@@ -789,7 +789,9 @@ def NextObject(object_id, select=False, include_lights=False, include_grips=Fals
     rhobjs = scriptcontext.doc.Objects.GetObjectList(settings)
     found = False
     for obj in rhobjs:
-        if found and obj: return obj.Id
+        if found and obj: 
+            if select: obj.Select(True)
+            return obj.Id
         if obj.Id == current_obj.Id: found = True
 
 
