@@ -162,7 +162,8 @@ def CurrentHatchPattern(hatch_pattern=None):
       HatchPatternCount
       HatchPatternNames
     """
-    rc = scriptcontext.doc.HatchPatterns.CurrentHatchPatternIndex
+    i = scriptcontext.doc.HatchPatterns.CurrentHatchPatternIndex
+    rc = scriptcontext.doc.HatchPatterns[i].Name
     if hatch_pattern:
         __initHatchPatterns()
         pattern_instance = scriptcontext.doc.HatchPatterns.FindName(hatch_pattern)
