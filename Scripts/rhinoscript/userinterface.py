@@ -35,6 +35,13 @@ def BrowseForFolder(folder=None, message=None, title=None):
     if message:
         if not isinstance(message, str): message = str(message)
         dlg.Title = message
+    if title:
+        if not isinstance(title, str): title = str(title)
+        dlg.Title = title
+    if message and title:
+        if not isinstance(message, str): message = str(message)
+        if not isinstance(title, str): title = str(title)
+        dlg.Title = title + ": " + message
     if dlg.ShowDialog(None)==Eto.Forms.DialogResult.Ok:
         return dlg.Directory
 
