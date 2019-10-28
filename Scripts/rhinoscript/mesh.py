@@ -420,7 +420,9 @@ def MeshBooleanDifference(input0, input1, delete_input=True, tolerance=None):
     Parameters:
       input0, input1 (guid): identifiers of meshes
       delete_input (bool, optional): delete the input meshes
-      tolerance (float, optional): a positive tolerance value, or None to use the default of the document.
+      tolerance (float, optional): this value is ignored. 
+          The parameter is only there to keep the function signature the same, 
+          The build in tolerenace always is used.
     Returns:
       list(guid, ...): identifiers of newly created meshes
     Example:
