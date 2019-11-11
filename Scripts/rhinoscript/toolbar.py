@@ -173,7 +173,7 @@ def OpenToolbarCollection(file):
     Example:
       import rhinoscriptsyntax as rs
       file = "C:\\SteveBaer\\AppData\\Roaming\\McNeel\\Rhinoceros\\5.0\\UI\\default.rui"
-      name = Rhino.IsToolbarCollection(file)
+      name = rs.IsToolbarCollection(file)
       if name is None: rs.OpenToolbarCollection(file)
     See Also:
       CloseToolbarCollection
