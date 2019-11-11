@@ -101,7 +101,7 @@ def AddPlanarMesh(object_id, delete_input=False):
     mesh = Rhino.Geometry.Mesh.CreateFromPlanarBoundary(curve, Rhino.Geometry.MeshingParameters.Default, tolerance)
     if not mesh: return scriptcontext.errorhandler()
     if delete_input:
-        id = rhutil.coerceguid(delete_input, True)
+        id = rhutil.coerceguid(object_id, True)
         rc = scriptcontext.doc.Objects.Replace(id, mesh)
     else:
         rc = scriptcontext.doc.Objects.AddMesh(mesh)
@@ -420,7 +420,9 @@ def MeshBooleanDifference(input0, input1, delete_input=True, tolerance=None):
     Parameters:
       input0, input1 (guid): identifiers of meshes
       delete_input (bool, optional): delete the input meshes
-      tolerance (float, optional): a positive tolerance value, or None to use the default of the document.
+      tolerance (float, optional): this value is ignored. 
+          The parameter is only there to keep the function signature the same, 
+          The build in tolerenace always is used.
     Returns:
       list(guid, ...): identifiers of newly created meshes
     Example:
