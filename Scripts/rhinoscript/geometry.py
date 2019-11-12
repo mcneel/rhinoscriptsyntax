@@ -230,7 +230,7 @@ def AddText(text, point_or_plane, height=1.0, font=None, font_style=0, justifica
         def getOneAlignFromMap(j, m, e):
             lst = []
             for k, v in m:
-                if j & k:
+                if int(j) & k:
                     lst.append(v)
             return System.Enum.ToObject(e, lst[0]) if lst else None
 
