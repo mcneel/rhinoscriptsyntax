@@ -338,7 +338,6 @@ def GetDistance(first_pt=None, distance=None, first_pt_msg='First distance point
       distance = second_pt.DistanceTo(first_pt)
     gp.Dispose()
 
-    print "Distance: {0}".format(distance)
     return distance
 
 
