@@ -409,7 +409,22 @@ def GetSettings(filename, section=None, entry=None):
         entry = string.lower(entry)
         return cp.get(section, entry)
     except IOError:
-        return scriptcontext.errorhander()
+        return scriptcontext.errorhandler()
+    return scriptcontext.errorhandler()
+
+def SetSettings(filename, section=None, entry=None, value=None):
+    import ConfigParser
+    try:
+        cp = ConfigParser.ConfigParser()
+        cp.read(filename)
+        
+        if not section: return
+        if not entry:return
+        cp[section][entry] = value
+        with open(filename, 'w') as ini_file:
+            cp.write(ini_file)
+    except IOError:
+        return scriptcontext.errorhandler()
     return scriptcontext.errorhandler()
 
 
