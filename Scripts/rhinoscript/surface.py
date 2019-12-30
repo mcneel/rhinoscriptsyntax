@@ -1057,7 +1057,7 @@ def DuplicateEdgeCurves(object_id, select=False):
             curves.append(rc)
             if select: 
                 rhobject = rhutil.coercerhinoobject(rc)
-                rhobject.Select(true)
+                rhobject.Select(True)
     if curves: scriptcontext.doc.Views.Redraw()
     return curves
 
