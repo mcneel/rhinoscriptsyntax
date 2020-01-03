@@ -1136,7 +1136,13 @@ def TextObjectText(object_id, text=None):
     rc = annotation.Text
     if text:
         if not isinstance(text, str): text = str(text)
+        isBold = annotation.IsAllBold()
+        isItalic = annotation.IsAllItalic()
+        isUnderlined = annotation.IsAllUnderlined()
         annotation.Text = text
+        if isBold: annotation.SetBold(True)
+        if isItalic: annotation.SetItalic(True)
+        if isUnderlined: annotation.SetUnderline(True)
         id = rhutil.coerceguid(object_id, True)
         scriptcontext.doc.Objects.Replace(id, annotation)
         scriptcontext.doc.Views.Redraw()
