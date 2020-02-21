@@ -90,13 +90,14 @@ def AddHatches(curve_ids, hatch_pattern=None, scale=1.0, rotation=0.0, tolerance
     id = rhutil.coerceguid(curve_ids, False)
     if id: curve_ids = [id]
     index = scriptcontext.doc.HatchPatterns.CurrentHatchPatternIndex
-    if hatch_pattern and hatch_pattern!=index:
-        if isinstance(hatch_pattern, int):
-            index = hatch_pattern
-        else:
-            pattern_instance = scriptcontext.doc.HatchPatterns.FindName(hatch_pattern)
-            index = Rhino.RhinoMath.UnsetIntIndex if pattern_instance is None else pattern_instance.Index
-        if index<0: return scriptcontext.errorhandler()
+    if hatch_pattern is None:
+        hatch_pattern = CurrentHatchPattern()
+    if isinstance(hatch_pattern, int) and hatch_pattern != index:
+        index = hatch_pattern
+    else:
+        pattern_instance = scriptcontext.doc.HatchPatterns.FindName(hatch_pattern)
+        index = Rhino.RhinoMath.UnsetIntIndex if pattern_instance is None else pattern_instance.Index
+    if index<0: return scriptcontext.errorhandler()
     curves = [rhutil.coercecurve(id, -1, True) for id in curve_ids]
     rotation = Rhino.RhinoMath.ToRadians(rotation)
     if tolerance is None or tolerance < 0:
