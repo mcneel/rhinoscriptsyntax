@@ -1184,8 +1184,8 @@ def MeshVertices(object_id):
     count = mesh.Vertices.Count
     rc = []
     for i in xrange(count):
-        vertex = mesh.Vertices[i]
-        rc.append(Rhino.Geometry.Point3d(vertex))
+        vertex = mesh.Vertices.Point3dAt(i)
+        rc.append(vertex)
     return rc
 
 
