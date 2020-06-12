@@ -4,6 +4,7 @@ import utility as rhutil
 import application as rhapp
 from layer import __getlayer
 from view import __viewhelper
+import System.Drawing as sd
 
 
 class filter:
@@ -1120,22 +1121,38 @@ def WindowPick(corner1, corner2, view=None, select=False, in_window=True):
     See Also:
       
     """
-    viewport = __viewhelper(view).MainViewport
-    screen1 = Rhino.Geometry.Point2d(rhutil.coerce3dpoint(corner1, True))
-    screen2 = Rhino.Geometry.Point2d(rhutil.coerce3dpoint(corner2, True))
+    view = __viewhelper(view)
+    viewport = view.MainViewport
+
+    screen1 = rhutil.coerce3dpoint(corner1, True)
+    screen2 = rhutil.coerce3dpoint(corner2, True)
     xf = viewport.GetTransform(Rhino.DocObjects.CoordinateSystem.World, Rhino.DocObjects.CoordinateSystem.Screen)
     screen1.Transform(xf)
     screen2.Transform(xf)
-    objects = None
-    filter = Rhino.DocObjects.ObjectType.AnyObject
-    if in_window:
-        objects = scriptcontext.doc.Objects.FindByWindowRegion(viewport, screen1, screen2, True, filter)
-    else:
-        objects = scriptcontext.doc.Objects.FindByCrossingWindowRegion(viewport, screen1, screen2, True, filter)
+
+    pc = Rhino.Input.Custom.PickContext()
+    pc.View = view
+    pc.PickStyle = Rhino.Input.Custom.PickStyle.WindowPick if in_window else Rhino.Input.Custom.PickStyle.CrossingPick
+    pc.PickGroupsEnabled = True if in_window else False
+    _, frustumLine = viewport.GetFrustumLine((screen1.X + screen2.X) / 2.0, (screen1.Y + screen2.Y) / 2.0)
+    pc.PickLine = frustumLine
+    
+    leftX = min(screen1.X, screen2.X)
+    topY = min(screen1.Y, screen2.Y)
+    w = abs(screen1.X - screen2.X)
+    h = abs(screen1.Y - screen2.Y)
+    rec = sd.Rectangle(leftX, topY, w, h)
+ 
+    pc.SetPickTransform(viewport.GetPickTransform(rec))
+    pc.UpdateClippingPlanes()
+    
+    objects = scriptcontext.doc.Objects.PickObjects(pc)
+
     if objects:
         rc = []
         for rhobj in objects:
-            rc.append(rhobj.Id)
-            if select: rhobj.Select(True)
+            o = rhobj.Object()
+            rc.append(o.Id)
+            if select: o.Select(True)
         if select: scriptcontext.doc.Views.Redraw()
         return rc
