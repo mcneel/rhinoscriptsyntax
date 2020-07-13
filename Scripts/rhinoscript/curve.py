@@ -3399,6 +3399,7 @@ def OffsetCurveOnSurface(curve_id, surface_id, distance_or_parameter):
     tol = scriptcontext.doc.ModelAbsoluteTolerance
     curves = curve.OffsetOnSurface(surface, x, tol)
     if curves is None: return scriptcontext.errorhandler()
+    curves = [curve.ExtendOnSurface(Rhino.Geometry.CurveEnd.Both, surface) for curve in curves]
     rc = [scriptcontext.doc.Objects.AddCurve(curve) for curve in curves]
     if rc: scriptcontext.doc.Views.Redraw()
     return rc
