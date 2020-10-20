@@ -450,7 +450,7 @@ def IsObjectSelected(object_id):
       int: 2, the object is entirely persistently selected
       int: 3, one or more proper sub-objects are selected
     Example:
-      import rhinocsriptsyntax as rs
+      import rhinoscriptsyntax as rs
       object = rs.GetObject()
       if rs.IsObjectSelected(object):
           print "The object is selected."
