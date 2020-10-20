@@ -627,7 +627,7 @@ def MeshFaceCount(object_id):
     Returns:
       number: the number of mesh faces if successful
     Example:
-      import rhinocsriptsyntax as rs
+      import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh )
       print "Quad faces:", rs.MeshQuadCount(obj)
       print "Triangle faces:", rs.MeshTriangleCount(obj)

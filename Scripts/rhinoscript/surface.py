@@ -2865,7 +2865,7 @@ def SurfaceKnots(surface_id):
         [1]     Knot vector in V direction
       None: if not successful, or on error.
     Example:
-      import rhinocsriptsyntax as rs
+      import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface")
       if rs.IsSurface(obj):
           knots = rs.SurfaceKnots(obj)
