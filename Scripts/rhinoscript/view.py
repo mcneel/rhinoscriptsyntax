@@ -986,7 +986,7 @@ def ViewCameraPlane(view=None):
       plane: the view's camera plane if successful
       None: on error
     Example:
-      import rhinocsriptsyntax as rs
+      import rhinoscriptsyntax as rs
       view = rs.CurrentView()
       target = rs.ViewTarget(view)
       camplane = rs.ViewCameraPlane(view)
