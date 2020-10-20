@@ -979,7 +979,7 @@ def CurveArea(curve_id):
                    value will be the cumulative area.
         [1]      The absolute (+/-) error bound for the area.
     Example:
-      import rhinocsriptsyntax as rs
+      import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a curve", rs.filter.curve)
       if id:
           props = rs.CurveArea(id)
