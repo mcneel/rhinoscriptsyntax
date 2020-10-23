@@ -2,7 +2,7 @@ import scriptcontext
 import utility as rhutil
 import Rhino
 import System.Guid
-from view import __viewhelper
+from view import __viewhelper, ViewCPlane
 
 
 def AddAlignedDimension(start_point, end_point, point_on_dimension_line, style=None):
@@ -29,6 +29,9 @@ def AddAlignedDimension(start_point, end_point, point_on_dimension_line, style=N
     end = rhutil.coerce3dpoint(end_point, True)
     onpoint = rhutil.coerce3dpoint(point_on_dimension_line, True)
     plane = Rhino.Geometry.Plane(start, end, onpoint)
+    if not plane.IsValid:
+      # usually when points passed to ctor are colinear
+      plane = ViewCPlane()
     success, s, t = plane.ClosestParameter(start)
     start = Rhino.Geometry.Point2d(s,t)
     success, s, t = plane.ClosestParameter(end)
