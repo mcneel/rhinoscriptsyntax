@@ -2626,7 +2626,7 @@ def ExtendCurveLength(curve_id, extension_type, side, length):
     return scriptcontext.errorhandler()
 
 
-def ExtendCurvePoint(curve_id, side, point):
+def ExtendCurvePoint(curve_id, side, point, extension_type=2):
     """Extends a non-closed curve by smooth extension to a point
     Parameters:
       curve_id (guid): curve to extend
@@ -2634,6 +2634,10 @@ def ExtendCurvePoint(curve_id, side, point):
         0=extend from start of the curve
         1=extend from end of the curve
       point (guid|point): point to extend to
+      extension_type (number, optional): type of extension
+        0 = Line
+        1 = Arc
+        2 = Smooth
     Returns:
       guid: The identifier of the new object if successful.
       None: if not successful, or on error.
@@ -2655,7 +2659,11 @@ def ExtendCurvePoint(curve_id, side, point):
     elif side==2: side = Rhino.Geometry.CurveEnd.Both
     else: raise ValueError("side must be 0, 1, or 2")
     
-    extension_type = Rhino.Geometry.CurveExtensionStyle.Smooth
+    if extension_type==0: extension_type = Rhino.Geometry.CurveExtensionStyle.Line
+    elif extension_type==1: extension_type = Rhino.Geometry.CurveExtensionStyle.Arc
+    elif extension_type==2: extension_type = Rhino.Geometry.CurveExtensionStyle.Smooth
+    else: raise ValueError("extension_type must be 0, 1, or 2")
+    
     newcurve = curve.Extend(side, extension_type, point)
     if newcurve and newcurve.IsValid:
         curve_id = rhutil.coerceguid(curve_id, True)
