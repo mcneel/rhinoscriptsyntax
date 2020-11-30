@@ -400,3 +400,28 @@ def UnlockGroup(group_name):
     index = scriptcontext.doc.Groups.Find(group_name)
     if index<0: return scriptcontext.errorhandler()
     return scriptcontext.doc.Groups.Unlock(index);
+
+def ObjectTopGroup(object_id):
+    """Returns the top most group name that an object is assigned.  This function primarily applies to objects that are members of nested groups
+    Parameters:
+      object_id (guid): String or Guid representing the object identifier
+    Returns:
+      str: the top group's name if successful
+      None: if not successful
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select object to add to group")
+      groupName = rs.ObjectTopGroup(id)
+    See Also:
+      ObjectGroups
+    """
+    object_id = rhutil.coerceguid(object_id)
+    if object_id is None: return None
+    obj = scriptcontext.doc.Objects.FindId(object_id)
+    topGroupName = None
+    groupIndexes = obj.GetGroupList()
+    if groupIndexes is not None:
+        topGroupIndex = max(groupIndexes) # this is a bad assumption. See RH-49189
+        topGroupName = scriptcontext.doc.Groups.FindIndex(topGroupIndex).Name
+    return topGroupName
+
