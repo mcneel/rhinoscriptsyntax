@@ -697,6 +697,33 @@ def DimStylePrefix(dimstyle, prefix=None):
         scriptcontext.doc.Views.Redraw()
     return rc
 
+def DimStyleScale(dimstyle, scale=None):
+    """Returns or modifies the scale of a dimension style.
+    Parameters:
+      dimstyle (str): the name of an existing dimstyle
+      scale (number, optional): the new scale value
+    Returns:
+      number: if scale is not specified, the current scale
+      number: if scale is specified, the previous scale
+      None: on error
+    Example:
+      import rhinoscriptsyntax as rs
+      from scriptcontext import doc
+      dimstyle = doc.DimStyles.Current
+      scale = rs.DimStyleScale(dimstyle)
+      rs.DimStyleScale(dimstyle, scale*2.0)
+    See Also:
+      DimStyleTextHeight
+      DimStyleOffset
+    """
+    ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
+    if ds is None: return scriptcontext.errorhandler()
+    rc = ds.DimensionScale
+    if scale is not None:
+        ds.DimensionScale = scale
+        scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False)
+        scriptcontext.doc.Views.Redraw()
+    return rc
 
 def DimStyleSuffix(dimstyle, suffix=None):
     """Returns or changes the suffix of a dimension style - the text to
