@@ -607,9 +607,10 @@ def LayerLocked(layer, locked=None):
       LayerVisible
     """
     layer = __getlayer(layer, True)
-    rc = layer.IsLocked
+    rc = layer.GetPersistentLocking()
     if locked!=None and locked!=rc:
         layer.IsLocked = locked
+        layer.SetPersistentLocking(locked)
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -895,4 +896,3 @@ def RenameLayer(oldname, newname):
         layer = __getlayer(oldname, True)
         layer.Name = newname
         return newname
-        
