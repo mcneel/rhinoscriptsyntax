@@ -500,7 +500,7 @@ def IsViewTitleVisible(view=None):
       ShowViewTitle
     """
     view = __viewhelper(view)
-    return view.MainViewport.TitleVisible
+    return view.TitleVisible
 
 
 def IsWallpaper(view):
