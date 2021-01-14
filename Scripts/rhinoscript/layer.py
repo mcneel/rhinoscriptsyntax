@@ -607,8 +607,8 @@ def LayerLocked(layer, locked=None):
       LayerVisible
     """
     layer = __getlayer(layer, True)
-    rc = layer.GetPersistentLocking()
-    if locked!=None and locked!=rc:
+    rc = layer.IsLocked 
+    if locked!=None and locked!=layer.GetPersistentLocking():
         layer.IsLocked = locked
         layer.SetPersistentLocking(locked)
         scriptcontext.doc.Views.Redraw()
