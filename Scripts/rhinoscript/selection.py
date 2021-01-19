@@ -23,6 +23,7 @@ class filter:
     detail = 32768
     hatch = 65536
     morph = 131072
+    subd = 262144
     cage = 134217728
     phantom = 268435456
     clippingplane = 536870912
@@ -122,6 +123,8 @@ def __FilterHelper(filter):
         geometry_filter |= Rhino.DocObjects.ObjectType.Hatch
     if filter & 131072:
         geometry_filter |= Rhino.DocObjects.ObjectType.MorphControl
+    if filter & 262144:
+        geometry_filter |= Rhino.DocObjects.ObjectType.SubD
     if filter & 2097152:
         geometry_filter |= Rhino.DocObjects.ObjectType.PolysrfFilter
     if filter & 268435456:
@@ -371,6 +374,7 @@ def GetObjects(message=None, filter=0, group=True, preselect=False, select=False
               32768         Detail
               65536         Hatch
               131072        Morph control
+              262144        SubD
               134217728     Cage
               268435456     Phantom
               536870912     Clipping plane
@@ -949,6 +953,7 @@ def ObjectsByType(geometry_type, select=False, state=0):
                32768       Detail
                65536       Hatch
                131072      Morph control
+               262144      SubD
                134217728   Cage
                268435456   Phantom
                536870912   Clipping plane
