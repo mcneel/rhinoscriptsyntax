@@ -1558,7 +1558,7 @@ def ZoomSelected(view=None, all=False):
     Returns:
       None
     Example:
-      import rhinocriptsyntax as rs
+      import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object", select=True)
       if obj: rs.ZoomSelected()
     See Also:
