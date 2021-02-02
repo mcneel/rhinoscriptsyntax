@@ -582,7 +582,7 @@ def MeshClosestPoint(object_id, point, maximum_distance=None):
                             [1] = the index of the mesh face on which the 3-D point lies
       None: on error
     Example:
-      import rhinocriptsyntax as rs
+      import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh)
       point = rs.GetPoint("Pick test point")
       intersect = rs.MeshClosestPoint(obj, point)
