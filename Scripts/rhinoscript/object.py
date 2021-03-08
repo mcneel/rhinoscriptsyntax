@@ -495,16 +495,7 @@ def IsObjectSolid(object_id):
       IsObjectSelected
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
-    geom = rhobj.Geometry
-    geometry_type = geom.ObjectType
-    
-    if geometry_type == Rhino.DocObjects.ObjectType.Mesh:
-        return geom.IsClosed
-    if (geometry_type == Rhino.DocObjects.ObjectType.Surface or
-        geometry_type == Rhino.DocObjects.ObjectType.Brep or
-        geometry_type == Rhino.DocObjects.ObjectType.Extrusion):
-        return geom.IsSolid
-    return False
+    return rhobj.IsSolid
 
 
 def IsObjectValid(object_id):
