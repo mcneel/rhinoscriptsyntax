@@ -904,7 +904,7 @@ def UnitSystem(unit_system=None, scale=False, in_model_units=True):
          6 - Microinches (2.54e-8 meters, 1.0e-6 inches)
          7 - Mils (2.54e-5 meters, 0.001 inches)
          8 - Inches (0.0254 meters)
-         9 - Feet (0.3408 meters, 12 inches)
+         9 - Feet (0.3048 meters, 12 inches)
         10 - Miles (1609.344 meters, 5280 feet)
         11 - *Reserved for custom Unit System*
         12 - Angstroms (1.0e-10 meters)
