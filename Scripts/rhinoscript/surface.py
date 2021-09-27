@@ -99,17 +99,36 @@ def AddCutPlane(object_ids, start_point, end_point, normal=None):
       AddPlaneSurface
     """
     objects = []
-    bbox = Rhino.Geometry.BoundingBox.Unset
     for id in object_ids:
         rhobj = rhutil.coercerhinoobject(id, True, True)
-        geometry = rhobj.Geometry
-        bbox.Union( geometry.GetBoundingBox(True) )
+        objects.append(rhobj)
+
+    rc, bbox = Rhino.DocObjects.RhinoObject.GetTightBoundingBox(objects)
+    if not bbox.IsValid:
+        return scriptcontext.errorhandler()
+
+    bbox_min = bbox.Min
+    bbox_max = bbox.Max
+    for i in range(0, 3):
+        if (System.Math.Abs(bbox_min[i] - bbox_max[i]) < Rhino.RhinoMath.SqrtEpsilon):
+            bbox_min[i] = bbox_min[i] - 1.0
+            bbox_max[i] = bbox_max[i] + 1.0
+
+    v = bbox_max - bbox_min
+    v = v * 1.1
+    p = bbox_min + v
+    bbox_min = bbox_max - v
+    bbox_max = p
+    bbox = Rhino.Geometry.BoundingBox(bbox_min, bbox_max)
+
     start_point = rhutil.coerce3dpoint(start_point, True)
     end_point = rhutil.coerce3dpoint(end_point, True)
-    if not bbox.IsValid: return scriptcontext.errorhandler()
     line = Rhino.Geometry.Line(start_point, end_point)
-    if normal: normal = rhutil.coerce3dvector(normal, True)
-    else: normal = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane().Normal
+    if normal:
+        normal = rhutil.coerce3dvector(normal, True)
+    else:
+        normal = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane().Normal
+
     surface = Rhino.Geometry.PlaneSurface.CreateThroughBox(line, normal, bbox)
     if surface is None: return scriptcontext.errorhandler()
     id = scriptcontext.doc.Objects.AddSurface(surface)
