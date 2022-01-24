@@ -91,7 +91,14 @@ def apply_dest_fixes(dest):
 def scriptcontext_fixes(item):
     """Fix misc items in scriptcontext.py"""
     with SourceFile(item) as sf:
+        sf.replace(
+            "import RhinoPython.Host as __host", "# import RhinoPython.Host as __host"
+        )
         sf.replace("doc = None", "doc = __rhinodoc__")
+        sf.replace(
+            "rc = __host.EscapePressed(reset)",
+            "rc = None # __host.EscapePressed(reset)",
+        )
 
 
 def application_fixes(item):
