@@ -94,10 +94,73 @@ def scriptcontext_fixes(item):
         sf.replace("doc = None", "doc = __rhinodoc__")
 
 
+def application_fixes(item):
+    """Fix misc items in rhinoscript/application.py"""
+    with SourceFile(item) as sf:
+        sf.replace(
+            "Rhino.PlugIns.PlugInType.None", "getattr(Rhino.PlugIns.PlugInType, 'None')"
+        )
+        sf.replace("filter =", "search_filter =")
+        sf.replace("filter |=", "search_filter |=")
+        sf.replace(
+            "GetInstalledPlugInNames(filter,", "GetInstalledPlugInNames(search_filter,"
+        )
+
+
+def curve_fixes(item):
+    """Fix misc items in rhinoscript/curve.py"""
+    with SourceFile(item) as sf:
+        sf.replace(
+            "Rhino.DocObjects.ObjectDecoration.None",
+            "getattr(Rhino.DocObjects.ObjectDecoration, 'None')",
+        )
+        sf.replace("ValueException(", "ValueError(")
+
+
 def layer_fixes(item):
     """Fix misc items in rhinoscript/layer.py"""
     with SourceFile(item) as sf:
         sf.replace("if idx is 0:", "if idx == 0:")
+
+
+def light_fixes(item):
+    """Fix misc items in rhinoscript/light.py"""
+    with SourceFile(item) as sf:
+        sf.replace("Rhino.UnitSystem.None", "getattr(Rhino.UnitSystem, 'None')")
+
+
+def line_fixes(item):
+    """Fix misc items in rhinoscript/line.py"""
+    with SourceFile(item) as sf:
+        sf.replace(
+            "Rhino.Geometry.Intersect.LineCylinderIntersection.None",
+            "getattr(Rhino.Geometry.Intersect.LineCylinderIntersection, 'None')",
+        )
+        sf.replace(
+            "Rhino.Geometry.Intersect.LineSphereIntersection.None",
+            "getattr(Rhino.Geometry.Intersect.LineSphereIntersection, 'None')",
+        )
+        sf.replace("Execption(", "Exception(")
+
+
+def selection_fixes(item):
+    """Fix misc items in rhinoscript/selection.py"""
+    with SourceFile(item) as sf:
+        sf.replace(
+            "Rhino.DocObjects.ObjectType.None",
+            "getattr(Rhino.DocObjects.ObjectType, 'None')",
+        )
+        sf.replace("def __FilterHelper(filter):", "def __FilterHelper(input_filter):")
+        sf.replace("if filter &", "if input_filter &")
+
+
+def userinterface_fixes(item):
+    """Fix misc items in rhinoscript/userinterface.py"""
+    with SourceFile(item) as sf:
+        sf.replace(
+            "Rhino.UI.ShowMessageIcon.None",
+            "getattr(Rhino.UI.ShowMessageIcon, 'None')",
+        )
 
 
 # =============================================================================

@@ -56,7 +56,7 @@ def LineCylinderIntersection(line, cylinder_plane, cylinder_height, cylinder_rad
     cyl = Rhino.Geometry.Cylinder( circle, cylinder_height )
     if not cyl.IsValid: raise ValueError("unable to create valid cylinder with given circle and height")
     rc, pt1, pt2 = Rhino.Geometry.Intersect.Intersection.LineCylinder(line, cyl)
-    if rc==Rhino.Geometry.Intersect.LineCylinderIntersection.None:
+    if rc==getattr(Rhino.Geometry.Intersect.LineCylinderIntersection, 'None'):
         return []
     if rc==Rhino.Geometry.Intersect.LineCylinderIntersection.Single:
         return [pt1]
@@ -251,7 +251,7 @@ def LineSphereIntersection(line, sphere_center, sphere_radius):
     sphere_center = rhutil.coerce3dpoint(sphere_center, True)
     sphere = Rhino.Geometry.Sphere(sphere_center, sphere_radius)
     rc, pt1, pt2 = Rhino.Geometry.Intersect.Intersection.LineSphere(line, sphere)
-    if rc==Rhino.Geometry.Intersect.LineSphereIntersection.None: return []
+    if rc==getattr(Rhino.Geometry.Intersect.LineSphereIntersection, 'None'): return []
     if rc==Rhino.Geometry.Intersect.LineSphereIntersection.Single: return [pt1]
     return [pt1, pt2]
 
@@ -281,5 +281,5 @@ def LineTransform(line, xform):
     line = rhutil.coerceline(line, True)
     xform = rhutil.coercexform(xform, True)
     success = line.Transform(xform)
-    if not success: raise Execption("unable to transform line")
+    if not success: raise Exception("unable to transform line")
     return line
