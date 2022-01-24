@@ -1,8 +1,8 @@
 import scriptcontext
-import rhinoscript.utility as rhutil
+from . import utility as rhutil
 import Rhino
-from System import Guid
-from rhinoscript.view import __viewhelper
+import System.Guid
+from .view import __viewhelper, ViewCPlane
 
 
 def AddAlignedDimension(start_point, end_point, point_on_dimension_line, style=None):
@@ -29,24 +29,24 @@ def AddAlignedDimension(start_point, end_point, point_on_dimension_line, style=N
     end = rhutil.coerce3dpoint(end_point, True)
     onpoint = rhutil.coerce3dpoint(point_on_dimension_line, True)
     plane = Rhino.Geometry.Plane(start, end, onpoint)
+    if not plane.IsValid:
+      # usually when points passed to ctor are colinear
+      plane = ViewCPlane()
     success, s, t = plane.ClosestParameter(start)
-    start = Rhino.Geometry.Point2d(s, t)
+    start = Rhino.Geometry.Point2d(s,t)
     success, s, t = plane.ClosestParameter(end)
-    end = Rhino.Geometry.Point2d(s, t)
+    end = Rhino.Geometry.Point2d(s,t)
     success, s, t = plane.ClosestParameter(onpoint)
-    onpoint = Rhino.Geometry.Point2d(s, t)
+    onpoint = Rhino.Geometry.Point2d(s,t)
     ldim = Rhino.Geometry.LinearDimension(plane, start, end, onpoint)
-    if not ldim:
-        return scriptcontext.errorhandler()
+    if not ldim: return scriptcontext.errorhandler()
     ldim.Aligned = True
     if style:
         ds = scriptcontext.doc.DimStyles.FindName(style)
-        if ds is None:
-            return scriptcontext.errorhandler()
+        if ds is None: return scriptcontext.errorhandler()
         ldim.DimensionStyleId = ds.Id
     rc = scriptcontext.doc.Objects.AddLinearDimension(ldim)
-    if rc == System.Guid.Empty:
-        raise Exception("unable to add dimension to document")
+    if rc==System.Guid.Empty: raise Exception("unable to add dimension to document")
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -70,8 +70,7 @@ def AddDimStyle(dimstyle_name=None):
       RenameDimStyle
     """
     index = scriptcontext.doc.DimStyles.Add(dimstyle_name)
-    if index < 0:
-        return scriptcontext.errorhandler()
+    if index<0: return scriptcontext.errorhandler()
     ds = scriptcontext.doc.DimStyles[index]
     return ds.Name
 
@@ -97,21 +96,16 @@ def AddLeader(points, view_or_plane=None, text=None):
       LeaderText
     """
     points = rhutil.coerce3dpointlist(points)
-    if points is None or len(points) < 2:
-        raise ValueError("points must have at least two items")
+    if points is None or len(points)<2: raise ValueError("points must have at least two items")
     rc = System.Guid.Empty
     view = None
-    if text and not isinstance(text, str):
+    if text and not isinstance(text, str): 
         text = str(text)
 
     if not view_or_plane:
         if len(points) == 2:
-            plane = (
-                scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
-            )
-            rc = scriptcontext.doc.Objects.AddLeader(
-                text, plane, [Rhino.Geometry.Point2d(p.X, p.Y) for p in points]
-            )
+            plane = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
+            rc = scriptcontext.doc.Objects.AddLeader(text, plane, [Rhino.Geometry.Point2d(p.X, p.Y) for p in points])
         else:
             rc = scriptcontext.doc.Objects.AddLeader(text, points)
     else:
@@ -121,18 +115,15 @@ def AddLeader(points, view_or_plane=None, text=None):
             plane = view.ActiveViewport.ConstructionPlane()
         points2d = []
         for point in points:
-            cprc, s, t = plane.ClosestParameter(point)
-            if not cprc:
-                return scriptcontext.errorhandler()
-            points2d.append(Rhino.Geometry.Point2d(s, t))
+            cprc, s, t = plane.ClosestParameter( point )
+            if not cprc: return scriptcontext.errorhandler()
+            points2d.append( Rhino.Geometry.Point2d(s,t) )
         if text is None:
             rc = scriptcontext.doc.Objects.AddLeader(plane, points2d)
         else:
-            if not isinstance(text, str):
-                text = str(text)
+            if not isinstance(text, str): text = str(text)
             rc = scriptcontext.doc.Objects.AddLeader(text, plane, points2d)
-    if rc == System.Guid.Empty:
-        return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -156,28 +147,26 @@ def AddLinearDimension(plane, start_point, end_point, point_on_dimension_line):
       IsLeader
       LeaderText
     """
-    if not plane:
-        plane = ViewCPlane()
+    if not plane: 
+      plane = ViewCPlane()
     else:
-        plane = rhutil.coerceplane(plane, True)
+      plane = rhutil.coerceplane(plane, True)
     start = rhutil.coerce3dpoint(start_point, True)
     plane.Origin = start
     end = rhutil.coerce3dpoint(end_point, True)
     onpoint = rhutil.coerce3dpoint(point_on_dimension_line, True)
     # Calculate 2d dimension points
     success, s, t = plane.ClosestParameter(start)
-    start = Rhino.Geometry.Point2d(s, t)
+    start = Rhino.Geometry.Point2d(s,t)
     success, s, t = plane.ClosestParameter(end)
-    end = Rhino.Geometry.Point2d(s, t)
+    end = Rhino.Geometry.Point2d(s,t)
     success, s, t = plane.ClosestParameter(onpoint)
-    onpoint = Rhino.Geometry.Point2d(s, t)
+    onpoint = Rhino.Geometry.Point2d(s,t)    
     # Add the dimension
     ldim = Rhino.Geometry.LinearDimension(plane, start, end, onpoint)
-    if not ldim:
-        return scriptcontext.errorhandler()
+    if not ldim: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddLinearDimension(ldim)
-    if rc == System.Guid.Empty:
-        raise Exception("unable to add dimension to document")
+    if rc==System.Guid.Empty: raise Exception("unable to add dimension to document")
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -203,8 +192,7 @@ def CurrentDimStyle(dimstyle_name=None):
     rc = scriptcontext.doc.DimStyles.Current.Name
     if dimstyle_name:
         ds = scriptcontext.doc.DimStyles.FindName(dimstyle_name)
-        if ds is None:
-            return scriptcontext.errorhandler()
+        if ds is None: return scriptcontext.errorhandler()
         scriptcontext.doc.DimStyles.SetCurrent(ds.Index, False)
     return rc
 
@@ -262,8 +250,7 @@ def DimensionStyle(object_id, dimstyle_name=None):
     rc = ds.Name
     if dimstyle_name:
         ds = scriptcontext.doc.DimStyles.FindName(dimstyle_name)
-        if not ds:
-            return scriptcontext.errorhandler()
+        if not ds: return scriptcontext.errorhandler()
         annotation = annotation_object.Geometry
         annotation.DimensionStyleId = ds.Id
         annotation_object.CommitChanges()
@@ -365,8 +352,7 @@ def DimStyleAnglePrecision(dimstyle, precision=None):
       DimStyleTextHeight
     """
     ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
-    if ds is None:
-        return scriptcontext.errorhandler()
+    if ds is None: return scriptcontext.errorhandler()
     rc = ds.AngleResolution
     if precision is not None:
         ds.AngleResolution = precision
@@ -400,8 +386,7 @@ def DimStyleArrowSize(dimstyle, size=None):
       DimStyleTextHeight
     """
     ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
-    if ds is None:
-        return scriptcontext.errorhandler()
+    if ds is None: return scriptcontext.errorhandler()
     rc = ds.ArrowLength
     if size is not None:
         ds.ArrowLength = size
@@ -450,8 +435,7 @@ def DimStyleExtension(dimstyle, extension=None):
       DimStyleTextHeight
     """
     ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
-    if ds is None:
-        return scriptcontext.errorhandler()
+    if ds is None: return scriptcontext.errorhandler()
     rc = ds.ExtensionLineExtension
     if extension is not None:
         ds.ExtensionLineExtension = extension
@@ -485,8 +469,7 @@ def DimStyleFont(dimstyle, font=None):
       DimStyleTextHeight
     """
     ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
-    if ds is None:
-        return scriptcontext.errorhandler()
+    if ds is None: return scriptcontext.errorhandler()
     rc = ds.Font.FaceName
     if font:
         newindex = scriptcontext.doc.Fonts.FindOrCreate(font, False, False)
@@ -522,8 +505,7 @@ def DimStyleLeaderArrowSize(dimstyle, size=None):
       DimStyleTextHeight
     """
     ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
-    if ds is None:
-        return scriptcontext.errorhandler()
+    if ds is None: return scriptcontext.errorhandler()
     rc = ds.LeaderArrowLength
     if size is not None:
         ds.LeaderArrowLength = size
@@ -552,8 +534,7 @@ def DimStyleLengthFactor(dimstyle, factor=None):
       DimStyleSuffix
     """
     ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
-    if ds is None:
-        return scriptcontext.errorhandler()
+    if ds is None: return scriptcontext.errorhandler()
     rc = ds.LengthFactor
     if factor is not None:
         ds.LengthFactor = factor
@@ -587,8 +568,7 @@ def DimStyleLinearPrecision(dimstyle, precision=None):
       DimStyleTextHeight
     """
     ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
-    if ds is None:
-        return scriptcontext.errorhandler()
+    if ds is None: return scriptcontext.errorhandler()
     rc = ds.LengthResolution
     if precision is not None:
         ds.LengthResolution = precision
@@ -613,8 +593,7 @@ def DimStyleNames(sort=False):
       IsDimStyle
     """
     rc = [ds.Name for ds in scriptcontext.doc.DimStyles]
-    if sort:
-        rc.sort()
+    if sort: rc.sort()
     return rc
 
 
@@ -646,16 +625,12 @@ def DimStyleNumberFormat(dimstyle, format=None):
       DimStyleTextHeight
     """
     ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
-    if ds is None:
-        return scriptcontext.errorhandler()
+    if ds is None: return scriptcontext.errorhandler()
     rc = int(ds.LengthFormat)
     if format is not None:
-        if format == 0:
-            ds.LengthFormat = Rhino.DocObjects.DistanceDisplayMode.Decimal
-        if format == 1:
-            ds.LengthFormat = Rhino.DocObjects.DistanceDisplayMode.Feet
-        if format == 2:
-            ds.LengthFormat = Rhino.DocObjects.DistanceDisplayMode.FeetAndInches
+        if format==0: ds.LengthFormat = Rhino.DocObjects.DistanceDisplayMode.Decimal
+        if format==1: ds.LengthFormat = Rhino.DocObjects.DistanceDisplayMode.Feet
+        if format==2: ds.LengthFormat = Rhino.DocObjects.DistanceDisplayMode.FeetAndInches
         scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False)
         scriptcontext.doc.Views.Redraw()
     return rc
@@ -686,8 +661,7 @@ def DimStyleOffset(dimstyle, offset=None):
       DimStyleTextHeight
     """
     ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
-    if ds is None:
-        return scriptcontext.errorhandler()
+    if ds is None: return scriptcontext.errorhandler()
     rc = ds.ExtensionLineOffset
     if offset is not None:
         ds.ExtensionLineOffset = offset
@@ -715,8 +689,7 @@ def DimStylePrefix(dimstyle, prefix=None):
       DimStyleSuffix
     """
     ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
-    if ds is None:
-        return scriptcontext.errorhandler()
+    if ds is None: return scriptcontext.errorhandler()
     rc = ds.Prefix
     if prefix is not None:
         ds.Prefix = prefix
@@ -724,6 +697,33 @@ def DimStylePrefix(dimstyle, prefix=None):
         scriptcontext.doc.Views.Redraw()
     return rc
 
+def DimStyleScale(dimstyle, scale=None):
+    """Returns or modifies the scale of a dimension style.
+    Parameters:
+      dimstyle (str): the name of an existing dimstyle
+      scale (number, optional): the new scale value
+    Returns:
+      number: if scale is not specified, the current scale
+      number: if scale is specified, the previous scale
+      None: on error
+    Example:
+      import rhinoscriptsyntax as rs
+      from scriptcontext import doc
+      dimstyle = doc.DimStyles.Current
+      scale = rs.DimStyleScale(dimstyle)
+      rs.DimStyleScale(dimstyle, scale*2.0)
+    See Also:
+      DimStyleTextHeight
+      DimStyleOffset
+    """
+    ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
+    if ds is None: return scriptcontext.errorhandler()
+    rc = ds.DimensionScale
+    if scale is not None:
+        ds.DimensionScale = scale
+        scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False)
+        scriptcontext.doc.Views.Redraw()
+    return rc
 
 def DimStyleSuffix(dimstyle, suffix=None):
     """Returns or changes the suffix of a dimension style - the text to
@@ -744,8 +744,7 @@ def DimStyleSuffix(dimstyle, suffix=None):
       DimStylePrefix
     """
     ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
-    if ds is None:
-        return scriptcontext.errorhandler()
+    if ds is None: return scriptcontext.errorhandler()
     rc = ds.Suffix
     if suffix is not None:
         ds.Suffix = suffix
@@ -783,18 +782,13 @@ def DimStyleTextAlignment(dimstyle, alignment=None):
       DimStyleTextHeight
     """
     ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
-    if ds is None:
-        return scriptcontext.errorhandler()
+    if ds is None: return scriptcontext.errorhandler()
     rc = int(ds.TextAlignment)
     if alignment is not None:
-        if alignment == 0:
-            ds.TextAlignment = Rhino.DocObjects.TextDisplayAlignment.Normal
-        if alignment == 1:
-            ds.TextAlignment = Rhino.DocObjects.TextDisplayAlignment.Horizontal
-        if alignment == 2:
-            ds.TextAlignment = Rhino.DocObjects.TextDisplayAlignment.AboveLine
-        if alignment == 3:
-            ds.TextAlignment = Rhino.DocObjects.TextDisplayAlignment.InLine
+        if alignment==0: ds.TextAlignment = Rhino.DocObjects.TextDisplayAlignment.Normal
+        if alignment==1: ds.TextAlignment = Rhino.DocObjects.TextDisplayAlignment.Horizontal
+        if alignment==2: ds.TextAlignment = Rhino.DocObjects.TextDisplayAlignment.AboveLine
+        if alignment==3: ds.TextAlignment = Rhino.DocObjects.TextDisplayAlignment.InLine
         scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False)
         scriptcontext.doc.Views.Redraw()
     return rc
@@ -826,8 +820,7 @@ def DimStyleTextGap(dimstyle, gap=None):
       DimStyleTextHeight
     """
     ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
-    if ds is None:
-        return scriptcontext.errorhandler()
+    if ds is None: return scriptcontext.errorhandler()
     rc = ds.TextGap
     if gap is not None:
         ds.TextGap = gap
@@ -861,8 +854,7 @@ def DimStyleTextHeight(dimstyle, height=None):
       DimStyleTextAlignment
     """
     ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
-    if ds is None:
-        return scriptcontext.errorhandler()
+    if ds is None: return scriptcontext.errorhandler()
     rc = ds.TextHeight
     if height:
         ds.TextHeight = height
@@ -896,8 +888,7 @@ def IsAlignedDimension(object_id):
     id = rhutil.coerceguid(object_id, True)
     annotation_object = scriptcontext.doc.Objects.Find(id)
     geom = annotation_object.Geometry
-    if isinstance(geom, Rhino.Geometry.LinearDimension):
-        return geom.Aligned
+    if isinstance(geom, Rhino.Geometry.LinearDimension): return geom.Aligned
     return False
 
 
@@ -1032,8 +1023,7 @@ def IsDimStyleReference(dimstyle):
       IsDimStyle
     """
     ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
-    if ds is None:
-        return scriptcontext.errorhandler()
+    if ds is None: return scriptcontext.errorhandler()
     return ds.IsReference
 
 
@@ -1196,9 +1186,7 @@ def RenameDimStyle(oldstyle, newstyle):
       IsDimStyle
     """
     ds = scriptcontext.doc.DimStyles.FindName(oldstyle)
-    if not ds:
-        return scriptcontext.errorhandler()
+    if not ds: return scriptcontext.errorhandler()
     ds.Name = newstyle
-    if scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False):
-        return newstyle
+    if scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False): return newstyle
     return None

@@ -1,11 +1,9 @@
 import scriptcontext
 import Rhino
-from System import Enum
-from System.Drawing import Size
+import System.Enum, System.Drawing.Size
 import System.IO
-import rhinoscript.utility as rhutil
+from . import utility as rhutil
 import math
-
 
 def CreatePreviewImage(filename, view=None, size=None, flags=0, wireframe=False):
     """Create a bitmap preview image of the current model
@@ -34,22 +32,16 @@ def CreatePreviewImage(filename, view=None, size=None, flags=0, wireframe=False)
     rhview = scriptcontext.doc.Views.ActiveView
     if view is not None:
         rhview = scriptcontext.doc.Views.Find(view, False)
-        if rhview is None:
-            return False
+        if rhview is None: return False
     rhsize = rhview.ClientRectangle.Size
-    if size:
-        rhsize = System.Drawing.Size(size[0], size[1])
-    ignore_highlights = (flags & 1) != 1
-    drawcplane = (flags & 2) == 2
-    useghostedshading = (flags & 4) == 4
+    if size: rhsize = System.Drawing.Size(size[0], size[1])
+    ignore_highlights = (flags&1)!=1
+    drawcplane = (flags&2)==2
+    useghostedshading = (flags&4)==4
     if wireframe:
-        return rhview.CreateWireframePreviewImage(
-            filename, rhsize, ignore_highlights, drawcplane
-        )
+        return rhview.CreateWireframePreviewImage(filename, rhsize, ignore_highlights, drawcplane)
     else:
-        return rhview.CreateShadedPreviewImage(
-            filename, rhsize, ignore_highlights, drawcplane, useghostedshading
-        )
+        return rhview.CreateShadedPreviewImage(filename, rhsize, ignore_highlights, drawcplane, useghostedshading)
 
 
 def DocumentModified(modified=None):
@@ -70,7 +62,7 @@ def DocumentModified(modified=None):
       IsDocumentModified
     """
     oldstate = scriptcontext.doc.Modified
-    if modified is not None and modified != oldstate:
+    if modified is not None and modified!=oldstate:
         scriptcontext.doc.Modified = modified
     return oldstate
 
@@ -104,7 +96,7 @@ def DocumentPath():
     path = System.IO.Path.GetDirectoryName(scriptcontext.doc.Path or None)
     # add \ or / at the end to be consistent with RhinoScript
     if path and not path.endswith(str(System.IO.Path.DirectorySeparatorChar)):
-        path += System.IO.Path.DirectorySeparatorChar
+      path += System.IO.Path.DirectorySeparatorChar
     return path
 
 
@@ -121,8 +113,7 @@ def EnableRedraw(enable=True):
       Redraw
     """
     old = scriptcontext.doc.Views.RedrawEnabled
-    if old != enable:
-        scriptcontext.doc.Views.RedrawEnabled = enable
+    if old!=enable: scriptcontext.doc.Views.RedrawEnabled = enable
     return old
 
 
@@ -179,8 +170,7 @@ def Notes(newnotes=None):
       
     """
     old = scriptcontext.doc.Notes
-    if newnotes is not None:
-        scriptcontext.doc.Notes = newnotes
+    if newnotes is not None: scriptcontext.doc.Notes = newnotes
     return old
 
 
@@ -233,7 +223,7 @@ def RenderAntialias(style=None):
       RenderSettings
     """
     rc = scriptcontext.doc.RenderSettings.AntialiasLevel
-    if style == 0 or style == 1 or style == 2:
+    if style==0 or style==1 or style==2:
         settings = scriptcontext.doc.RenderSettings
         settings.AntialiasLevel = style
         scriptcontext.doc.RenderSettings = settings
@@ -257,19 +247,14 @@ def RenderColor(item, color=None):
       RenderResolution
       RenderSettings
     """
-    if item != 0 and item != 1:
-        raise ValueError("item must be 0 or 1")
-    if item == 0:
-        rc = scriptcontext.doc.RenderSettings.AmbientLight
-    else:
-        rc = scriptcontext.doc.RenderSettings.BackgroundColorTop
+    if item!=0 and item!=1: raise ValueError("item must be 0 or 1")
+    if item==0: rc = scriptcontext.doc.RenderSettings.AmbientLight
+    else: rc = scriptcontext.doc.RenderSettings.BackgroundColorTop
     if color is not None:
         color = rhutil.coercecolor(color, True)
         settings = scriptcontext.doc.RenderSettings
-        if item == 0:
-            settings.AmbientLight = color
-        else:
-            settings.BackgroundColorTop = color
+        if item==0: settings.AmbientLight = color
+        else: settings.BackgroundColorTop = color
         scriptcontext.doc.RenderSettings = settings
         scriptcontext.doc.Views.Redraw()
     return rc
@@ -302,9 +287,7 @@ def RenderResolution(resolution=None):
 
 def _SetRenderMeshAndUpdateStyle(current):
     scriptcontext.doc.SetCustomMeshingParameters(current)
-    scriptcontext.doc.MeshingParameterStyle = (
-        Rhino.Geometry.MeshingParameterStyle.Custom
-    )
+    scriptcontext.doc.MeshingParameterStyle = Rhino.Geometry.MeshingParameterStyle.Custom
 
 
 def RenderMeshDensity(density=None):
@@ -340,8 +323,7 @@ print("Other settings: %s" % rs.RenderMeshSettings())
     current = scriptcontext.doc.GetCurrentMeshingParameters()
     rc = current.RelativeTolerance
     if density is not None:
-        if Rhino.RhinoMath.Clamp(density, 0.0, 1.0) != density:
-            return None
+        if Rhino.RhinoMath.Clamp(density, 0.0, 1.0) != density: return None
         current.RelativeTolerance = density
         _SetRenderMeshAndUpdateStyle(current)
     return rc
@@ -381,8 +363,7 @@ print("Other settings: %s" % rs.RenderMeshSettings())
     current = scriptcontext.doc.GetCurrentMeshingParameters()
     rc = math.degrees(current.RefineAngle)
     if angle_degrees is not None:
-        if angle_degrees < 0:
-            return None
+        if angle_degrees < 0: return None
         current.RefineAngle = math.radians(angle_degrees)
         _SetRenderMeshAndUpdateStyle(current)
     return rc
@@ -678,26 +659,15 @@ print("Other settings: %s" % rs.RenderMeshSettings())
     """
     current = scriptcontext.doc.GetCurrentMeshingParameters()
     rc = 0
-    if current.RefineGrid:
-        rc += 1
-    if current.JaggedSeams:
-        rc += 2
-    if current.SimplePlanes:
-        rc += 4
-    if (
-        current.TextureRange
-        == Rhino.Geometry.MeshingParameterTextureRange.PackedScaledNormalized
-    ):
-        rc += 8
+    if current.RefineGrid: rc += 1
+    if current.JaggedSeams: rc += 2
+    if current.SimplePlanes: rc += 4
+    if current.TextureRange == Rhino.Geometry.MeshingParameterTextureRange.PackedScaledNormalized: rc += 8
     if settings is not None:
-        current.RefineGrid = settings & 1
-        current.JaggedSeams = settings & 2
-        current.SimplePlanes = settings & 4
-        current.TextureRange = (
-            Rhino.Geometry.MeshingParameterTextureRange.PackedScaledNormalized
-            if (settings & 8)
-            else Rhino.Geometry.MeshingParameterTextureRange.UnpackedUnscaledNormalized
-        )
+        current.RefineGrid = (settings & 1)
+        current.JaggedSeams = (settings & 2)
+        current.SimplePlanes = (settings & 4)
+        current.TextureRange = Rhino.Geometry.MeshingParameterTextureRange.PackedScaledNormalized if (settings & 8) else Rhino.Geometry.MeshingParameterTextureRange.UnpackedUnscaledNormalized
         _SetRenderMeshAndUpdateStyle(current)
     return rc
 
@@ -728,19 +698,15 @@ def RenderSettings(settings=None):
     """
     rc = 0
     rendersettings = scriptcontext.doc.RenderSettings
-    if rendersettings.ShadowmapLevel:
-        rc += 1
-    if rendersettings.UseHiddenLights:
-        rc += 2
-    if rendersettings.RenderCurves:
-        rc += 4
-    if rendersettings.RenderAnnotations:
-        rc += 8
+    if rendersettings.ShadowmapLevel: rc+=1
+    if rendersettings.UseHiddenLights: rc+=2
+    if rendersettings.RenderCurves: rc+=4
+    if rendersettings.RenderAnnotations: rc+=8
     if settings is not None:
-        rendersettings.ShadowmapLevel = settings & 1
-        rendersettings.UseHiddenLights = (settings & 2) == 2
-        rendersettings.RenderCurves = (settings & 4) == 4
-        rendersettings.RenderAnnotations = (settings & 8) == 8
+        rendersettings.ShadowmapLevel = (settings & 1)
+        rendersettings.UseHiddenLights = (settings & 2)==2
+        rendersettings.RenderCurves = (settings & 4)==4
+        rendersettings.RenderAnnotations = (settings & 8)==8
         scriptcontext.doc.RenderSettings = rendersettings
     return rc
 
@@ -832,12 +798,10 @@ def UnitDistanceDisplayPrecision(precision=None, model_units=True):
     """
     if model_units:
         rc = scriptcontext.doc.ModelDistanceDisplayPrecision
-        if precision:
-            scriptcontext.doc.ModelDistanceDisplayPrecision = precision
+        if precision: scriptcontext.doc.ModelDistanceDisplayPrecision = precision
         return rc
     rc = scriptcontext.doc.PageDistanceDisplayPrecision
-    if precision:
-        scriptcontext.doc.PageDistanceDisplayPrecision = precision
+    if precision: scriptcontext.doc.PageDistanceDisplayPrecision = precision
     return rc
 
 
@@ -875,7 +839,7 @@ def UnitRelativeTolerance(relative_tolerance=None, in_model_units=True):
 
 
 def UnitScale(to_system, from_system=None):
-    """Return the scale factor for changing between unit systems.
+  """Return the scale factor for changing between unit systems.
   Parameters:
     to_system (number): The unit system to convert to. The unit systems are are:
        0 - No unit system
@@ -917,13 +881,13 @@ def UnitScale(to_system, from_system=None):
     UnitSystem
     UnitSystemName
   """
-    if from_system is None:
-        from_system = scriptcontext.doc.ModelUnitSystem
-    if type(from_system) is int:
-        from_system = System.Enum.ToObject(Rhino.UnitSystem, from_system)
-    if type(to_system) is int:
-        to_system = System.Enum.ToObject(Rhino.UnitSystem, to_system)
-    return Rhino.RhinoMath.UnitScale(from_system, to_system)
+  if from_system is None:
+      from_system = scriptcontext.doc.ModelUnitSystem
+  if type(from_system) is int:
+      from_system = System.Enum.ToObject(Rhino.UnitSystem, from_system)
+  if type(to_system) is int:
+      to_system = System.Enum.ToObject(Rhino.UnitSystem, to_system)
+  return Rhino.RhinoMath.UnitScale(from_system, to_system)
 
 
 def UnitSystem(unit_system=None, scale=False, in_model_units=True):
@@ -940,7 +904,7 @@ def UnitSystem(unit_system=None, scale=False, in_model_units=True):
          6 - Microinches (2.54e-8 meters, 1.0e-6 inches)
          7 - Mils (2.54e-5 meters, 0.001 inches)
          8 - Inches (0.0254 meters)
-         9 - Feet (0.3408 meters, 12 inches)
+         9 - Feet (0.3048 meters, 12 inches)
         10 - Miles (1609.344 meters, 5280 feet)
         11 - *Reserved for custom Unit System*
         12 - Angstroms (1.0e-10 meters)
@@ -978,8 +942,8 @@ def UnitSystem(unit_system=None, scale=False, in_model_units=True):
       UnitDistanceDisplayPrecision
       UnitRelativeTolerance
     """
-    if unit_system is not None and (unit_system < 1 or unit_system > 25):
-        raise ValueError("unit_system value of %s is not valid" % unit_system)
+    if (unit_system is not None and (unit_system<1 or unit_system>25)):
+        raise ValueError("unit_system value of %s is not valid"%unit_system)
     if in_model_units:
         rc = int(scriptcontext.doc.ModelUnitSystem)
         if unit_system is not None:
@@ -1009,7 +973,4 @@ def UnitSystemName(capitalize=False, singular=True, abbreviate=False, model_unit
     See Also:
       UnitSystem
     """
-    return scriptcontext.doc.GetUnitSystemName(
-        model_units, capitalize, singular, abbreviate
-    )
-
+    return scriptcontext.doc.GetUnitSystemName(model_units, capitalize, singular, abbreviate)

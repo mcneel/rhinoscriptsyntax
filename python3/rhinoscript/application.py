@@ -1,15 +1,11 @@
-import datetime
-
-import System
-from System import TimeSpan, Enum, Environment
-from System.Windows.Forms import Screen
-
-import Rhino
-from Rhino.Commands import Command as rhcommand
-from Rhino.ApplicationSettings import ModelAidSettings as modelaid
-
 import scriptcontext
-import rhinoscript.utility as rhutil
+import Rhino
+import Rhino.ApplicationSettings.ModelAidSettings as modelaid
+import Rhino.Commands.Command as rhcommand
+import System.TimeSpan, System.Enum, System.Environment
+import System.Windows.Forms.Screen
+import datetime
+from . import utility as rhutil
 
 
 def AddAlias(alias, macro):
@@ -97,8 +93,7 @@ def AliasMacro(alias, macro=None):
     rc = Rhino.ApplicationSettings.CommandAliasList.GetMacro(alias)
     if macro:
         Rhino.ApplicationSettings.CommandAliasList.SetMacro(alias, macro)
-    if rc is None:
-        return scriptcontext.errorhandler()
+    if rc is None: return scriptcontext.errorhandler()
     return rc
 
 
@@ -155,64 +150,49 @@ def AppearanceColor(item, color=None):
     rc = None
     color = rhutil.coercecolor(color)
     appearance = Rhino.ApplicationSettings.AppearanceSettings
-    if item == 0:
+    if item==0:
         rc = appearance.ViewportBackgroundColor
-        if color:
-            appearance.ViewportBackgroundColor = color
-    elif item == 1:
+        if color: appearance.ViewportBackgroundColor = color
+    elif item==1:
         rc = appearance.GridThickLineColor
-        if color:
-            appearance.GridThickLineColor = color
-    elif item == 2:
+        if color: appearance.GridThickLineColor = color
+    elif item==2:
         rc = appearance.GridThinLineColor
-        if color:
-            appearance.GridThinLineColor = color
-    elif item == 3:
+        if color: appearance.GridThinLineColor = color
+    elif item==3:
         rc = appearance.GridXAxisLineColor
-        if color:
-            appearance.GridXAxisLineColor = color
-    elif item == 4:
+        if color: appearance.GridXAxisLineColor = color
+    elif item==4:
         rc = appearance.GridYAxisLineColor
-        if color:
-            appearance.GridYAxisLineColor = color
-    elif item == 5:
+        if color: appearance.GridYAxisLineColor = color
+    elif item==5:
         rc = appearance.SelectedObjectColor
-        if color:
-            appearance.SelectedObjectColor = color
-    elif item == 6:
+        if color: appearance.SelectedObjectColor = color
+    elif item==6:
         rc = appearance.LockedObjectColor
-        if color:
-            appearance.LockedObjectColor = color
-    elif item == 7:
+        if color: appearance.LockedObjectColor = color
+    elif item==7:
         rc = appearance.DefaultLayerColor
-        if color:
-            appearance.DefaultLayerColor = color
-    elif item == 8:
+        if color: appearance.DefaultLayerColor = color
+    elif item==8:
         rc = appearance.FeedbackColor
-        if color:
-            appearance.FeedbackColor = color
-    elif item == 9:
+        if color: appearance.FeedbackColor = color
+    elif item==9:
         rc = appearance.TrackingColor
-        if color:
-            appearance.TrackingColor = color
-    elif item == 10:
+        if color: appearance.TrackingColor = color
+    elif item==10:
         rc = appearance.CrosshairColor
-        if color:
-            appearance.CrosshairColor = color
-    elif item == 11:
+        if color: appearance.CrosshairColor = color
+    elif item==11:
         rc = appearance.CommandPromptTextColor
-        if color:
-            appearance.CommandPromptTextColor = color
-    elif item == 12:
+        if color: appearance.CommandPromptTextColor = color
+    elif item==12:
         rc = appearance.CommandPromptBackgroundColor
-        if color:
-            appearance.CommandPromptBackgroundColor = color
-    elif item == 13:
+        if color: appearance.CommandPromptBackgroundColor = color
+    elif item==13:
         rc = appearance.CommandPromptHypertextColor
-        if color:
-            appearance.CommandPromptHypertextColor = color
-    if rc is None:
-        raise ValueError("item is out of range")
+        if color: appearance.CommandPromptHypertextColor = color
+    if rc is None: raise ValueError("item is out of range")
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -233,8 +213,7 @@ def AutosaveFile(filename=None):
       EnableAutosave
     """
     rc = Rhino.ApplicationSettings.FileSettings.AutoSaveFile
-    if filename:
-        Rhino.ApplicationSettings.FileSettings.AutoSaveFile = filename
+    if filename: Rhino.ApplicationSettings.FileSettings.AutoSaveFile = filename
     return rc
 
 
@@ -292,7 +271,6 @@ def ClearCommandHistory():
 
 __command_serial_numbers = None
 
-
 def Command(commandString, echo=True):
     """Runs a Rhino command script. All Rhino commands can be used in command
     scripts. The command can be a built-in Rhino command or one provided by a
@@ -341,8 +319,7 @@ def Command(commandString, echo=True):
     end = Rhino.DocObjects.RhinoObject.NextRuntimeSerialNumber
     global __command_serial_numbers
     __command_serial_numbers = None
-    if start != end:
-        __command_serial_numbers = (start, end)
+    if start!=end: __command_serial_numbers = (start,end)
     return rc
 
 
@@ -434,7 +411,7 @@ def DisplayOleAlerts(enable):
     See Also:
 
     """
-    Rhino.Runtime.HostUtils.DisplayOleAlerts(enable)
+    Rhino.Runtime.HostUtils.DisplayOleAlerts( enable )
 
 
 def EdgeAnalysisColor(color=None):
@@ -476,7 +453,7 @@ def EdgeAnalysisMode(mode=None):
       EdgeAnalysisColor
     """
     rc = Rhino.ApplicationSettings.EdgeAnalysisSettings.ShowEdges
-    if mode == 1 or mode == 2:
+    if mode==1 or mode==2:
         Rhino.ApplicationSettings.EdgeAnalysisSettings.ShowEdges = mode
     return rc
 
@@ -495,8 +472,7 @@ def EnableAutosave(enable=True):
       AutosaveInterval
     """
     rc = Rhino.ApplicationSettings.FileSettings.AutoSaveEnabled
-    if rc != enable:
-        Rhino.ApplicationSettings.FileSettings.AutoSaveEnabled = enable
+    if rc!=enable: Rhino.ApplicationSettings.FileSettings.AutoSaveEnabled = enable
     return rc
 
 
@@ -516,8 +492,7 @@ def EnablePlugIn(plugin, enable=None):
         PlugIns
     """
     id = rhutil.coerceguid(plugin)
-    if not id:
-        id = Rhino.PlugIns.PlugIn.IdFromName(plugin)
+    if not id: id = Rhino.PlugIns.PlugIn.IdFromName(plugin)
     rc, loadSilent = Rhino.PlugIns.PlugIn.GetLoadProtection(id)
     if enable is not None:
         Rhino.PlugIns.PlugIn.SetLoadProtection(id, enable)
@@ -553,8 +528,7 @@ def ExePlatform():
       ExeVersion
       SdkVersion
     """
-    if System.Environment.Is64BitProcess:
-        return 1
+    if System.Environment.Is64BitProcess: return 1
     return 0
 
 
@@ -753,8 +727,7 @@ def IsPlugIn(plugin):
       PlugIns
     """
     id = rhutil.coerceguid(plugin)
-    if not id:
-        id = Rhino.PlugIns.PlugIn.IdFromName(plugin)
+    if not id: id = Rhino.PlugIns.PlugIn.IdFromName(plugin)
     if id:
         rc, loaded, loadprot = Rhino.PlugIns.PlugIn.PlugInExists(id)
         return rc
@@ -873,8 +846,7 @@ def Ortho(enable=None):
       Snap
     """
     rc = modelaid.Ortho
-    if enable != None:
-        modelaid.Ortho = enable
+    if enable!=None: modelaid.Ortho = enable
     return rc
 
 
@@ -896,8 +868,7 @@ def Osnap(enable=None):
       Snap
     """
     rc = modelaid.Osnap
-    if enable != None:
-        modelaid.Osnap = enable
+    if enable!=None: modelaid.Osnap = enable
     return rc
 
 
@@ -917,8 +888,7 @@ def OsnapDialog(visible=None):
       ProjectOsnaps
     """
     rc = modelaid.UseHorizontalDialog
-    if visible is not None:
-        modelaid.UseHorizontalDialog = visible
+    if visible is not None: modelaid.UseHorizontalDialog = visible
     return rc
 
 
@@ -959,16 +929,13 @@ def OsnapMode(mode=None):
     """
     rc = int(modelaid.OsnapModes)
     # RH-39062 reverts RH-31758
-    # m = [(0,0), (1,2), (2,8), (4,0x20), (8,0x80), (16,0x200), (32,0x800), (64,0x2000),
+    #m = [(0,0), (1,2), (2,8), (4,0x20), (8,0x80), (16,0x200), (32,0x800), (64,0x2000),
     #      (128,0x20000), (256,0x80000), (512,0x200000), (1024,0x8000000), (2048, 0x40)]
-    # rc = sum([x[0] for x in m if x[1] & rc])
+    #rc = sum([x[0] for x in m if x[1] & rc])
     if mode is not None:
-        # mode = sum([x[1] for x in m if x[0] & int(mode)])
-        modelaid.OsnapModes = System.Enum.ToObject(
-            Rhino.ApplicationSettings.OsnapModes, mode
-        )
+        #mode = sum([x[1] for x in m if x[0] & int(mode)])
+        modelaid.OsnapModes = System.Enum.ToObject(Rhino.ApplicationSettings.OsnapModes, mode)
     return rc
-
 
 def Planar(enable=None):
     """Enables or disables Rhino's planar modeling aid
@@ -986,8 +953,7 @@ def Planar(enable=None):
       Snap
     """
     rc = modelaid.Planar
-    if enable is not None:
-        modelaid.Planar = enable
+    if enable is not None: modelaid.Planar = enable
     return rc
 
 
@@ -1009,8 +975,7 @@ def PlugInId(plugin):
       PlugIns
     """
     id = Rhino.PlugIns.PlugIn.IdFromName(plugin)
-    if id != System.Guid.Empty:
-        return id
+    if id!=System.Guid.Empty: return id
 
 
 def PlugIns(types=0, status=0):
@@ -1034,21 +999,15 @@ def PlugIns(types=0, status=0):
     See Also:
 
     """
-    filter = getattr(Rhino.PlugIns.PlugInType, "None")
-    if types & 1:
-        filter |= Rhino.PlugIns.PlugInType.Render
-    if types & 2:
-        filter |= Rhino.PlugIns.PlugInType.FileExport
-    if types & 4:
-        filter |= Rhino.PlugIns.PlugInType.FileImport
-    if types & 8:
-        filter |= Rhino.PlugIns.PlugInType.Digitiger
-    if types & 16:
-        filter |= Rhino.PlugIns.PlugInType.Utility
-    if types == 0:
-        filter = Rhino.PlugIns.PlugInType.Any
-    loaded = status == 0 or status == 1
-    unloaded = status == 0 or status == 2
+    filter = Rhino.PlugIns.PlugInType.None
+    if types&1: filter |= Rhino.PlugIns.PlugInType.Render
+    if types&2: filter |= Rhino.PlugIns.PlugInType.FileExport
+    if types&4: filter |= Rhino.PlugIns.PlugInType.FileImport
+    if types&8: filter |= Rhino.PlugIns.PlugInType.Digitiger
+    if types&16: filter |= Rhino.PlugIns.PlugInType.Utility
+    if types==0: filter = Rhino.PlugIns.PlugInType.Any
+    loaded = (status==0 or status==1)
+    unloaded = (status==0 or status==2)
     names = Rhino.PlugIns.PlugIn.GetInstalledPlugInNames(filter, loaded, unloaded)
     return list(names)
 
@@ -1068,8 +1027,7 @@ def ProjectOsnaps(enable=None):
       OsnapMode
     """
     rc = modelaid.ProjectSnapToCPlane
-    if enable is not None:
-        modelaid.ProjectSnapToCPlane = enable
+    if enable is not None: modelaid.ProjectSnapToCPlane = enable
     return rc
 
 
@@ -1242,14 +1200,11 @@ def StatusBarPoint(point=None):
       StatusBarMessage
     """
     point = rhutil.coerce3dpoint(point)
-    if not point:
-        point = Rhino.Geometry.Point3d(0, 0, 0)
+    if not point: point = Rhino.Geometry.Point3d(0,0,0)
     Rhino.UI.StatusBar.SetPointPane(point)
 
 
-def StatusBarProgressMeterShow(
-    label, lower, upper, embed_label=True, show_percent=True
-):
+def StatusBarProgressMeterShow(label, lower, upper, embed_label=True, show_percent=True):
     """Start the Rhino status bar progress meter
     Parameters:
       label (str): Short description of the progesss
@@ -1264,10 +1219,8 @@ def StatusBarProgressMeterShow(
     Example:
     See Also:
     """
-    rc = Rhino.UI.StatusBar.ShowProgressMeter(
-        lower, upper, label, embed_label, show_percent
-    )
-    return rc == 1
+    rc = Rhino.UI.StatusBar.ShowProgressMeter(lower, upper, label, embed_label, show_percent)
+    return rc==1
 
 
 def StatusBarProgressMeterUpdate(position, absolute=True):
@@ -1310,8 +1263,7 @@ def TemplateFile(filename=None):
       TemplateFolder
     """
     rc = Rhino.ApplicationSettings.FileSettings.TemplateFile
-    if filename:
-        Rhino.ApplicationSettings.FileSettings.TemplateFile = filename
+    if filename: Rhino.ApplicationSettings.FileSettings.TemplateFile = filename
     return rc
 
 
@@ -1331,8 +1283,7 @@ def TemplateFolder(folder=None):
       TemplateFile
     """
     rc = Rhino.ApplicationSettings.FileSettings.TemplateFolder
-    if folder is not None:
-        Rhino.ApplicationSettings.FileSettings.TemplateFolder = folder
+    if folder is not None: Rhino.ApplicationSettings.FileSettings.TemplateFolder = folder
     return rc
 
 
@@ -1368,7 +1319,5 @@ def WorkingFolder(folder=None):
       BrowseForFolder
     """
     rc = Rhino.ApplicationSettings.FileSettings.WorkingFolder
-    if folder is not None:
-        Rhino.ApplicationSettings.FileSettings.WorkingFolder = folder
+    if folder is not None: Rhino.ApplicationSettings.FileSettings.WorkingFolder = folder
     return rc
-

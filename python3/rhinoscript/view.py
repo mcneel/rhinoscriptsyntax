@@ -1,22 +1,19 @@
 import scriptcontext
-import rhinoscript.utility as rhutil
+from . import utility as rhutil
 import Rhino
-from System import Enum
+import System.Enum
 import math
 
-
 def __viewhelper(view):
-    if view is None:
-        return scriptcontext.doc.Views.ActiveView
+    if view is None: return scriptcontext.doc.Views.ActiveView
     allviews = scriptcontext.doc.Views.GetViewList(True, True)
     view_id = rhutil.coerceguid(view, False)
     for item in allviews:
         if view_id:
-            if item.MainViewport.Id == view_id:
-                return item
+            if item.MainViewport.Id == view_id: return item
         elif item.MainViewport.Name == view:
             return item
-    raise ValueError("unable to coerce %s into a view" % view)
+    raise ValueError("unable to coerce %s into a view"%view)
 
 
 def AddDetail(layout_id, corner1, corner2, title=None, projection=1):
@@ -49,17 +46,12 @@ def AddDetail(layout_id, corner1, corner2, title=None, projection=1):
     layout_id = rhutil.coerceguid(layout_id, True)
     corner1 = rhutil.coerce2dpoint(corner1, True)
     corner2 = rhutil.coerce2dpoint(corner2, True)
-    if projection < 1 or projection > 7:
-        raise ValueError("projection must be a value between 1-7")
+    if projection<1 or projection>7: raise ValueError("projection must be a value between 1-7")
     layout = scriptcontext.doc.Views.Find(layout_id)
-    if not layout:
-        raise ValueError("no layout found for given layout_id")
-    projection = System.Enum.ToObject(
-        Rhino.Display.DefinedViewportProjection, projection
-    )
+    if not layout: raise ValueError("no layout found for given layout_id")
+    projection = System.Enum.ToObject(Rhino.Display.DefinedViewportProjection, projection)
     detail = layout.AddDetailView(title, corner1, corner2, projection)
-    if not detail:
-        return scriptcontext.errorhandler()
+    if not detail: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return detail.Id
 
@@ -80,12 +72,9 @@ def AddLayout(title=None, size=None):
       RestoreNamedView
     """
     page = None
-    if size is None:
-        page = scriptcontext.doc.Views.AddPageView(title)
-    else:
-        page = scriptcontext.doc.Views.AddPageView(title, size[0], size[1])
-    if page:
-        return page.MainViewport.Id
+    if size is None: page = scriptcontext.doc.Views.AddPageView(title)
+    else: page = scriptcontext.doc.Views.AddPageView(title, size[0], size[1])
+    if page: return page.MainViewport.Id
 
 
 def AddNamedCPlane(cplane_name, view=None):
@@ -111,12 +100,10 @@ def AddNamedCPlane(cplane_name, view=None):
       RestoreNamedCPlane
     """
     view = __viewhelper(view)
-    if not cplane_name:
-        raise ValueError("cplane_name is empty")
+    if not cplane_name: raise ValueError("cplane_name is empty")
     plane = view.MainViewport.ConstructionPlane()
     index = scriptcontext.doc.NamedConstructionPlanes.Add(cplane_name, plane)
-    if index < 0:
-        return scriptcontext.errorhandler()
+    if index<0: return scriptcontext.errorhandler()
     return cplane_name
 
 
@@ -142,12 +129,10 @@ def AddNamedView(name, view=None):
       RestoreNamedView
     """
     view = __viewhelper(view)
-    if not name:
-        raise ValueError("name is empty")
+    if not name: raise ValueError("name is empty")
     viewportId = view.MainViewport.Id
     index = scriptcontext.doc.NamedViews.Add(name, viewportId)
-    if index < 0:
-        return scriptcontext.errorhandler()
+    if index<0: return scriptcontext.errorhandler()
     return name
 
 
@@ -172,29 +157,20 @@ def CurrentDetail(layout, detail=None, return_name=True):
     """
     layout_id = rhutil.coerceguid(layout)
     page = None
-    if layout_id is None:
-        page = scriptcontext.doc.Views.Find(layout, False)
-    else:
-        page = scriptcontext.doc.Views.Find(layout_id)
-    if page is None:
-        return scriptcontext.errorhandler()
+    if layout_id is None: page = scriptcontext.doc.Views.Find(layout, False)
+    else: page = scriptcontext.doc.Views.Find(layout_id)
+    if page is None: return scriptcontext.errorhandler()
     rc = None
     active_viewport = page.ActiveViewport
-    if return_name:
-        rc = active_viewport.Name
-    else:
-        rc = active_viewport.Id
+    if return_name: rc = active_viewport.Name
+    else: rc = active_viewport.Id
     if detail:
         id = rhutil.coerceguid(detail)
-        if (id and id == page.MainViewport.Id) or (
-            id is None and detail == page.MainViewport.Name
-        ):
+        if( (id and id==page.MainViewport.Id) or (id is None and detail==page.MainViewport.Name) ):
             page.SetPageAsActive()
         else:
-            if id:
-                page.SetActiveDetail(id)
-            else:
-                page.SetActiveDetail(detail, False)
+            if id: page.SetActiveDetail(id)
+            else: page.SetActiveDetail(detail, False)
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -221,19 +197,14 @@ def CurrentView(view=None, return_name=True):
       ViewNames
     """
     rc = None
-    if return_name:
-        rc = scriptcontext.doc.Views.ActiveView.MainViewport.Name
-    else:
-        rc = scriptcontext.doc.Views.ActiveView.MainViewport.Id
+    if return_name: rc = scriptcontext.doc.Views.ActiveView.MainViewport.Name
+    else: rc = scriptcontext.doc.Views.ActiveView.MainViewport.Id
     if view:
         id = rhutil.coerceguid(view)
         rhview = None
-        if id:
-            rhview = scriptcontext.doc.Views.Find(id)
-        else:
-            rhview = scriptcontext.doc.Views.Find(view, False)
-        if rhview is None:
-            return scriptcontext.errorhandler()
+        if id: rhview = scriptcontext.doc.Views.Find(id)
+        else: rhview = scriptcontext.doc.Views.Find(view, False)
+        if rhview is None: return scriptcontext.errorhandler()
         scriptcontext.doc.Views.ActiveView = rhview
     return rc
 
@@ -296,10 +267,9 @@ def DetailLock(detail_id, lock=None):
     """
     detail_id = rhutil.coerceguid(detail_id, True)
     detail = scriptcontext.doc.Objects.Find(detail_id)
-    if not detail:
-        return scriptcontext.errorhandler()
+    if not detail: return scriptcontext.errorhandler()
     rc = detail.DetailGeometry.IsProjectionLocked
-    if lock is not None and lock != rc:
+    if lock is not None and lock!=rc:
         detail.DetailGeometry.IsProjectionLocked = lock
         detail.CommitChanges()
     return rc
@@ -325,17 +295,14 @@ def DetailScale(detail_id, model_length=None, page_length=None):
     """
     detail_id = rhutil.coerceguid(detail_id, True)
     detail = scriptcontext.doc.Objects.Find(detail_id)
-    if detail is None:
-        return scriptcontext.errorhandler()
+    if detail is None: return scriptcontext.errorhandler()
     rc = detail.DetailGeometry.PageToModelRatio
     if model_length or page_length:
         if model_length is None or page_length is None:
             return scriptcontext.errorhandler()
         model_units = scriptcontext.doc.ModelUnitSystem
         page_units = scriptcontext.doc.PageUnitSystem
-        if detail.DetailGeometry.SetScale(
-            model_length, model_units, page_length, page_units
-        ):
+        if detail.DetailGeometry.SetScale(model_length, model_units, page_length, page_units):
             detail.CommitChanges()
             scriptcontext.doc.Views.Redraw()
     return rc
@@ -368,26 +335,22 @@ def IsDetail(layout, detail):
     found_layout = None
     for view in views:
         if layout_id:
-            if view.MainViewport.Id == layout_id:
+            if view.MainViewport.Id==layout_id:
                 found_layout = view
                 break
-        elif view.MainViewport.Name == layout:
+        elif view.MainViewport.Name==layout:
             found_layout = view
             break
     # if we couldn't find a layout, this is an error
-    if found_layout is None:
-        return scriptcontext.errorhandler()
+    if found_layout is None: return scriptcontext.errorhandler()
     detail_id = rhutil.coerceguid(detail)
     details = view.GetDetailViews()
-    if not details:
-        return False
+    if not details: return False
     for detail_view in details:
         if detail_id:
-            if detail_view.Id == detail_id:
-                return True
+            if detail_view.Id==detail_id: return True
         else:
-            if detail_view.Name == detail:
-                return True
+            if detail_view.Name==detail: return True
     return False
 
 
@@ -414,17 +377,13 @@ def IsLayout(layout):
     alllayouts = scriptcontext.doc.Views.GetViewList(False, True)
     for layoutview in alllayouts:
         if layout_id:
-            if layoutview.MainViewport.Id == layout_id:
-                return True
-        elif layoutview.MainViewport.Name == layout:
-            return True
+            if layoutview.MainViewport.Id==layout_id: return True
+        elif layoutview.MainViewport.Name==layout: return True
     allmodelviews = scriptcontext.doc.Views.GetViewList(True, False)
     for modelview in allmodelviews:
         if layout_id:
-            if modelview.MainViewport.Id == layout_id:
-                return False
-        elif modelview.MainViewport.Name == layout:
-            return False
+          if modelview.MainViewport.Id==layout_id: return False
+        elif modelview.MainViewport.Name==layout: return False
     return scriptcontext.errorhandler()
 
 
@@ -446,15 +405,12 @@ def IsView(view):
       ViewNames
     """
     view_id = rhutil.coerceguid(view)
-    if view_id is None and view is None:
-        return False
+    if view_id is None and view is None: return False
     allviews = scriptcontext.doc.Views.GetViewList(True, True)
     for item in allviews:
         if view_id:
-            if item.MainViewport.Id == view_id:
-                return True
-        elif item.MainViewport.Name == view:
-            return True
+            if item.MainViewport.Id==view_id: return True
+        elif item.MainViewport.Name==view: return True
     return False
 
 
@@ -477,9 +433,8 @@ def IsViewCurrent(view):
     """
     activeview = scriptcontext.doc.Views.ActiveView
     view_id = rhutil.coerceguid(view)
-    if view_id:
-        return view_id == activeview.MainViewport.Id
-    return view == activeview.MainViewport.Name
+    if view_id: return view_id==activeview.MainViewport.Id
+    return view==activeview.MainViewport.Name
 
 
 def IsViewMaximized(view=None):
@@ -564,7 +519,7 @@ def IsWallpaper(view):
       Wallpaper
     """
     view = __viewhelper(view)
-    return len(view.MainViewport.WallpaperFilename) > 0
+    return len(view.MainViewport.WallpaperFilename)>0
 
 
 def MaximizeRestoreView(view=None):
@@ -611,8 +566,7 @@ def NamedCPlane(name):
       RestoreNamedCPlane
     """
     index = scriptcontext.doc.NamedConstructionPlanes.Find(name)
-    if index < 0:
-        return scriptcontext.errorhandler()
+    if index<0: return scriptcontext.errorhandler()
     return scriptcontext.doc.NamedConstructionPlanes[index].Plane
 
 
@@ -669,21 +623,19 @@ def RenameView(old_title, new_title):
     See Also:
       ViewNames
     """
-    if not old_title or not new_title:
-        return scriptcontext.errorhandler()
+    if not old_title or not new_title: return scriptcontext.errorhandler()
     old_id = rhutil.coerceguid(old_title)
     foundview = None
     allviews = scriptcontext.doc.Views.GetViewList(True, True)
     for view in allviews:
         if old_id:
-            if view.MainViewport.Id == old_id:
+            if view.MainViewport.Id==old_id:
                 foundview = view
                 break
-        elif view.MainViewport.Name == old_title:
+        elif view.MainViewport.Name==old_title:
             foundview = view
             break
-    if foundview is None:
-        return scriptcontext.errorhandler()
+    if foundview is None: return scriptcontext.errorhandler()
     old_title = foundview.MainViewport.Name
     foundview.MainViewport.Name = new_title
     return old_title
@@ -710,8 +662,7 @@ def RestoreNamedCPlane(cplane_name, view=None):
     """
     view = __viewhelper(view)
     index = scriptcontext.doc.NamedConstructionPlanes.Find(cplane_name)
-    if index < 0:
-        return scriptcontext.errorhandler()
+    if index<0: return scriptcontext.errorhandler()
     cplane = scriptcontext.doc.NamedConstructionPlanes[index]
     view.MainViewport.PushConstructionPlane(cplane)
     view.Redraw()
@@ -739,8 +690,7 @@ def RestoreNamedView(named_view, view=None, restore_bitmap=False):
     """
     view = __viewhelper(view)
     index = scriptcontext.doc.NamedViews.FindByName(named_view)
-    if index < 0:
-        return scriptcontext.errorhandler()
+    if index<0: return scriptcontext.errorhandler()
     viewinfo = scriptcontext.doc.NamedViews[index]
     if view.MainViewport.PushViewInfo(viewinfo, restore_bitmap):
         view.Redraw()
@@ -773,32 +723,26 @@ def RotateCamera(view=None, direction=0, angle=None):
     view = __viewhelper(view)
     viewport = view.ActiveViewport
     if angle is None:
-        angle = (
-            2.0 * math.pi / Rhino.ApplicationSettings.ViewSettings.RotateCircleIncrement
-        )
+        angle = 2.0*math.pi/Rhino.ApplicationSettings.ViewSettings.RotateCircleIncrement
     else:
-        angle = Rhino.RhinoMath.ToRadians(abs(angle))
-    target_distance = (
-        viewport.CameraLocation - viewport.CameraTarget
-    ) * viewport.CameraZ
+        angle = Rhino.RhinoMath.ToRadians( abs(angle) )
+    target_distance = (viewport.CameraLocation-viewport.CameraTarget)*viewport.CameraZ
     axis = viewport.CameraY
-    if direction == 0 or direction == 2:
-        angle = -angle
-    if direction == 0 or direction == 1:
+    if direction==0 or direction==2: angle=-angle
+    if direction==0 or direction==1:
         if Rhino.ApplicationSettings.ViewSettings.RotateToView:
             axis = viewport.CameraY
         else:
             axis = Rhino.Geometry.Vector3d.ZAxis
-    elif direction == 2 or direction == 3:
+    elif direction==2 or direction==3:
         axis = viewport.CameraX
     else:
         return False
-    if Rhino.ApplicationSettings.ViewSettings.RotateReverseKeyboard:
-        angle = -angle
+    if Rhino.ApplicationSettings.ViewSettings.RotateReverseKeyboard: angle=-angle
     rot = Rhino.Geometry.Transform.Rotation(angle, axis, Rhino.Geometry.Point3d.Origin)
     camUp = rot * viewport.CameraY
     camDir = -(rot * viewport.CameraZ)
-    target = viewport.CameraLocation + target_distance * camDir
+    target = viewport.CameraLocation + target_distance*camDir
     viewport.SetCameraLocations(target, viewport.CameraLocation)
     viewport.CameraUp = camUp
     view.Redraw()
@@ -829,23 +773,15 @@ def RotateView(view=None, direction=0, angle=None):
     view = __viewhelper(view)
     viewport = view.ActiveViewport
     if angle is None:
-        angle = (
-            2.0 * math.pi / Rhino.ApplicationSettings.ViewSettings.RotateCircleIncrement
-        )
+        angle = 2.0*math.pi/Rhino.ApplicationSettings.ViewSettings.RotateCircleIncrement
     else:
-        angle = Rhino.RhinoMath.ToRadians(abs(angle))
-    if Rhino.ApplicationSettings.ViewSettings.RotateReverseKeyboard:
-        angle = -angle
-    if direction == 0:
-        viewport.KeyboardRotate(True, angle)
-    elif direction == 1:
-        viewport.KeyboardRotate(True, -angle)
-    elif direction == 2:
-        viewport.KeyboardRotate(False, -angle)
-    elif direction == 3:
-        viewport.KeyboardRotate(False, angle)
-    else:
-        return False
+        angle = Rhino.RhinoMath.ToRadians( abs(angle) )
+    if Rhino.ApplicationSettings.ViewSettings.RotateReverseKeyboard: angle = -angle
+    if direction==0: viewport.KeyboardRotate(True, angle)
+    elif direction==1: viewport.KeyboardRotate(True, -angle)
+    elif direction==2: viewport.KeyboardRotate(False, -angle)
+    elif direction==3: viewport.KeyboardRotate(False, angle)
+    else: return False
     view.Redraw()
     return True
 
@@ -870,7 +806,7 @@ def ShowGrid(view=None, show=None):
     view = __viewhelper(view)
     viewport = view.ActiveViewport
     rc = viewport.ConstructionGridVisible
-    if show is not None and rc != show:
+    if show is not None and rc!=show:
         viewport.ConstructionGridVisible = show
         view.Redraw()
     return rc
@@ -896,7 +832,7 @@ def ShowGridAxes(view=None, show=None):
     view = __viewhelper(view)
     viewport = view.ActiveViewport
     rc = viewport.ConstructionAxesVisible
-    if show is not None and rc != show:
+    if show is not None and rc!=show:
         viewport.ConstructionAxesVisible = show
         view.Redraw()
     return rc
@@ -918,8 +854,7 @@ def ShowViewTitle(view=None, show=True):
       IsViewTitleVisible
     """
     view = __viewhelper(view)
-    if view is None:
-        return scriptcontext.errorhandler()
+    if view is None: return scriptcontext.errorhandler()
     view.TitleVisible = show
 
 
@@ -943,7 +878,7 @@ def ShowWorldAxes(view=None, show=None):
     view = __viewhelper(view)
     viewport = view.ActiveViewport
     rc = viewport.WorldAxesVisible
-    if show is not None and rc != show:
+    if show is not None and rc!=show:
         viewport.WorldAxesVisible = show
         view.Redraw()
     return rc
@@ -971,21 +906,15 @@ def TiltView(view=None, direction=0, angle=None):
     view = __viewhelper(view)
     viewport = view.ActiveViewport
     if angle is None:
-        angle = (
-            2.0 * math.pi / Rhino.ApplicationSettings.ViewSettings.RotateCircleIncrement
-        )
+        angle = 2.0*math.pi/Rhino.ApplicationSettings.ViewSettings.RotateCircleIncrement
     else:
-        angle = Rhino.RhinoMath.ToRadians(abs(angle))
-
-    if Rhino.ApplicationSettings.ViewSettings.RotateReverseKeyboard:
-        angle = -angle
+        angle = Rhino.RhinoMath.ToRadians( abs(angle) )
+    
+    if Rhino.ApplicationSettings.ViewSettings.RotateReverseKeyboard: angle = -angle
     axis = viewport.CameraLocation - viewport.CameraTarget
-    if direction == 0:
-        viewport.Rotate(angle, axis, viewport.CameraLocation)
-    elif direction == 1:
-        viewport.Rotate(-angle, axis, viewport.CameraLocation)
-    else:
-        return False
+    if direction==0: viewport.Rotate(angle, axis, viewport.CameraLocation)
+    elif direction==1: viewport.Rotate(-angle, axis, viewport.CameraLocation)
+    else: return False
     view.Redraw()
     return True
 
@@ -1011,11 +940,9 @@ def ViewCamera(view=None, camera_location=None):
     """
     view = __viewhelper(view)
     rc = view.ActiveViewport.CameraLocation
-    if camera_location is None:
-        return rc
+    if camera_location is None: return rc
     camera_location = rhutil.coerce3dpoint(camera_location)
-    if camera_location is None:
-        return scriptcontext.errorhandler()
+    if camera_location is None: return scriptcontext.errorhandler()
     view.ActiveViewport.SetCameraLocation(camera_location, True)
     view.Redraw()
     return rc
@@ -1045,8 +972,7 @@ def ViewCameraLens(view=None, length=None):
     """
     view = __viewhelper(view)
     rc = view.ActiveViewport.Camera35mmLensLength
-    if not length:
-        return rc
+    if not length: return rc
     view.ActiveViewport.Camera35mmLensLength = length
     view.Redraw()
     return rc
@@ -1060,7 +986,7 @@ def ViewCameraPlane(view=None):
       plane: the view's camera plane if successful
       None: on error
     Example:
-      import rhinocsriptsyntax as rs
+      import rhinoscriptsyntax as rs
       view = rs.CurrentView()
       target = rs.ViewTarget(view)
       camplane = rs.ViewCameraPlane(view)
@@ -1072,8 +998,7 @@ def ViewCameraPlane(view=None):
     """
     view = __viewhelper(view)
     rc, frame = view.ActiveViewport.GetCameraFrame()
-    if not rc:
-        return scriptcontext.errorhandler()
+    if not rc: return scriptcontext.errorhandler()
     return frame
 
 
@@ -1103,18 +1028,12 @@ def ViewCameraTarget(view=None, camera=None, target=None):
     """
     view = __viewhelper(view)
     rc = view.ActiveViewport.CameraLocation, view.ActiveViewport.CameraTarget
-    if not camera and not target:
-        return rc
-    if camera:
-        camera = rhutil.coerce3dpoint(camera, True)
-    if target:
-        target = rhutil.coerce3dpoint(target, True)
-    if camera and target:
-        view.ActiveViewport.SetCameraLocations(target, camera)
-    elif camera is None:
-        view.ActiveViewport.SetCameraTarget(target, True)
-    else:
-        view.ActiveViewport.SetCameraLocation(camera, True)
+    if not camera and not target: return rc
+    if camera: camera = rhutil.coerce3dpoint(camera, True)
+    if target: target = rhutil.coerce3dpoint(target, True)
+    if camera and target: view.ActiveViewport.SetCameraLocations(target, camera)
+    elif camera is None: view.ActiveViewport.SetCameraTarget(target, True)
+    else: view.ActiveViewport.SetCameraLocation(camera, True)
     view.Redraw()
     return rc
 
@@ -1174,7 +1093,6 @@ def ViewCPlane(view=None, plane=None):
         view.Redraw()
     return cplane
 
-
 def ViewDisplayMode(view=None, mode=None, return_name=True):
     """Return or set a view display mode
     Parameters:
@@ -1195,18 +1113,15 @@ def ViewDisplayMode(view=None, mode=None, return_name=True):
     """
     view = __viewhelper(view)
     current = view.ActiveViewport.DisplayMode
-    if return_name:
-        rc = current.EnglishName
-    else:
-        rc = current.Id
+    if return_name: rc = current.EnglishName
+    else: rc = current.Id
     if mode:
         mode_id = rhutil.coerceguid(mode)
         if mode_id:
             desc = Rhino.Display.DisplayModeDescription.GetDisplayMode(mode_id)
         else:
             desc = Rhino.Display.DisplayModeDescription.FindByName(mode)
-        if desc:
-            view.ActiveViewport.DisplayMode = desc
+        if desc: view.ActiveViewport.DisplayMode = desc
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -1226,8 +1141,7 @@ def ViewDisplayModeId(name):
       ViewDisplayModes
     """
     desc = Rhino.Display.DisplayModeDescription.FindByName(name)
-    if desc:
-        return desc.Id
+    if desc: return desc.Id
 
 
 def ViewDisplayModeName(mode_id):
@@ -1246,8 +1160,7 @@ def ViewDisplayModeName(mode_id):
     """
     mode_id = rhutil.coerceguid(mode_id, True)
     desc = Rhino.Display.DisplayModeDescription.GetDisplayMode(mode_id)
-    if desc:
-        return desc.EnglishName
+    if desc: return desc.EnglishName
 
 
 def ViewDisplayModes(return_names=True):
@@ -1297,11 +1210,9 @@ def ViewNames(return_names=True, view_type=0):
       IsView
       ViewTitle
     """
-    views = scriptcontext.doc.Views.GetViewList(view_type != 1, view_type > 0)
-    if views is None:
-        return scriptcontext.errorhandler()
-    if return_names:
-        return [view.MainViewport.Name for view in views]
+    views = scriptcontext.doc.Views.GetViewList(view_type!=1, view_type>0)
+    if views is None: return scriptcontext.errorhandler()
+    if return_names: return [view.MainViewport.Name for view in views]
     return [view.MainViewport.Id for view in views]
 
 
@@ -1347,23 +1258,15 @@ def ViewProjection(view=None, mode=None):
     view = __viewhelper(view)
     viewport = view.ActiveViewport
     rc = 2
-    if viewport.IsParallelProjection:
-        rc = 1
-    elif viewport.IsTwoPointPerspectiveProjection:
-        rc = 3
-    if mode is None or mode == rc:
-        return rc
-    if mode == 1:
-        viewport.ChangeToParallelProjection(True)
-    elif mode == 2:
-        viewport.ChangeToPerspectiveProjection(True, 50)
-    elif mode == 3:
-        viewport.ChangeToTwoPointPerspectiveProjection(50)
-    else:
-        return
+    if viewport.IsParallelProjection: rc = 1
+    elif viewport.IsTwoPointPerspectiveProjection: rc = 3
+    if mode is None or mode==rc: return rc
+    if mode==1: viewport.ChangeToParallelProjection(True)
+    elif mode==2: viewport.ChangeToPerspectiveProjection(True, 50)
+    elif mode==3: viewport.ChangeToTwoPointPerspectiveProjection(50)
+    else: return
     view.Redraw()
     return rc
-
 
 def ViewRadius(view=None, radius=None, mode=False):
     """Returns or sets the radius of a parallel-projected view. Useful
@@ -1392,14 +1295,12 @@ def ViewRadius(view=None, radius=None, mode=False):
     """
     view = __viewhelper(view)
     viewport = view.ActiveViewport
-    if not viewport.IsParallelProjection:
-        return scriptcontext.errorhandler()
+    if not viewport.IsParallelProjection: return scriptcontext.errorhandler()
     fr = viewport.GetFrustum()
     frus_right = fr[2]
     frus_top = fr[4]
     old_radius = min(frus_top, frus_right)
-    if radius is None:
-        return old_radius
+    if radius is None: return old_radius
     magnification_factor = radius / old_radius
     d = 1.0 / magnification_factor
     viewport.Magnify(d, mode)
@@ -1482,11 +1383,9 @@ def ViewTarget(view=None, target=None):
     view = __viewhelper(view)
     viewport = view.ActiveViewport
     old_target = viewport.CameraTarget
-    if target is None:
-        return old_target
+    if target is None: return old_target
     target = rhutil.coerce3dpoint(target)
-    if target is None:
-        return scriptcontext.errorhandler()
+    if target is None: return scriptcontext.errorhandler()
     viewport.SetCameraTarget(target, True)
     view.Redraw()
     return old_target
@@ -1509,11 +1408,9 @@ def ViewTitle(view_id):
       ViewNames
     """
     view_id = rhutil.coerceguid(view_id)
-    if view_id is None:
-        return scriptcontext.errorhandler()
+    if view_id is None: return scriptcontext.errorhandler()
     view = scriptcontext.doc.Views.Find(view_id)
-    if view is None:
-        return scriptcontext.errorhandler()
+    if view is None: return scriptcontext.errorhandler()
     return view.MainViewport.Name
 
 
@@ -1540,7 +1437,7 @@ def Wallpaper(view=None, filename=None):
     """
     view = __viewhelper(view)
     rc = view.ActiveViewport.WallpaperFilename
-    if filename is not None and filename != rc:
+    if filename is not None and filename!=rc:
         view.ActiveViewport.SetWallpaper(filename, False)
         view.Redraw()
     return rc
@@ -1566,7 +1463,7 @@ def WallpaperGrayScale(view=None, grayscale=None):
     """
     view = __viewhelper(view)
     rc = view.ActiveViewport.WallpaperGrayscale
-    if grayscale is not None and grayscale != rc:
+    if grayscale is not None and grayscale!=rc:
         filename = view.ActiveViewport.WallpaperFilename
         view.ActiveViewport.SetWallpaper(filename, grayscale)
         view.Redraw()
@@ -1592,7 +1489,7 @@ def WallpaperHidden(view=None, hidden=None):
     """
     view = __viewhelper(view)
     rc = not view.ActiveViewport.WallpaperVisible
-    if hidden is not None and hidden != rc:
+    if hidden is not None and hidden!=rc:
         filename = view.ActiveViewport.WallpaperFilename
         gray = view.ActiveViewport.WallpaperGrayscale
         view.ActiveViewport.SetWallpaper(filename, gray, not hidden)
@@ -1621,14 +1518,13 @@ def ZoomBoundingBox(bounding_box, view=None, all=False):
     """
     bbox = rhutil.coerceboundingbox(bounding_box)
     if bbox:
-        if all:
-            views = scriptcontext.doc.Views.GetViewList(True, True)
-            for view in views:
-                view.ActiveViewport.ZoomBoundingBox(bbox)
-        else:
-            view = __viewhelper(view)
-            view.ActiveViewport.ZoomBoundingBox(bbox)
-        scriptcontext.doc.Views.Redraw()
+      if all:
+          views = scriptcontext.doc.Views.GetViewList(True, True)
+          for view in views: view.ActiveViewport.ZoomBoundingBox(bbox)
+      else:
+          view = __viewhelper(view)
+          view.ActiveViewport.ZoomBoundingBox(bbox)
+      scriptcontext.doc.Views.Redraw()
 
 
 def ZoomExtents(view=None, all=False):
@@ -1647,8 +1543,7 @@ def ZoomExtents(view=None, all=False):
     """
     if all:
         views = scriptcontext.doc.Views.GetViewList(True, True)
-        for view in views:
-            view.ActiveViewport.ZoomExtents()
+        for view in views: view.ActiveViewport.ZoomExtents()
     else:
         view = __viewhelper(view)
         view.ActiveViewport.ZoomExtents()
@@ -1672,8 +1567,7 @@ def ZoomSelected(view=None, all=False):
     """
     if all:
         views = scriptcontext.doc.Views.GetViewList(True, True)
-        for view in views:
-            view.ActiveViewport.ZoomExtentsSelected()
+        for view in views: view.ActiveViewport.ZoomExtentsSelected()
     else:
         view = __viewhelper(view)
         view.ActiveViewport.ZoomExtentsSelected()

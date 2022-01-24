@@ -1,15 +1,13 @@
 import scriptcontext
-import rhinoscript.utility as rhutil
+from . import utility as rhutil
 import Rhino.Geometry
 import math
 
 
 def __coercelight(id, raise_if_missing=False):
     light = rhutil.coercegeometry(id)
-    if isinstance(light, Rhino.Geometry.Light):
-        return light
-    if raise_if_missing:
-        raise ValueError("unable to retrieve light from %s" % id)
+    if isinstance(light, Rhino.Geometry.Light): return light
+    if raise_if_missing: raise ValueError("unable to retrieve light from %s"%id)
 
 
 def AddDirectionalLight(start_point, end_point):
@@ -33,10 +31,9 @@ def AddDirectionalLight(start_point, end_point):
     light = Rhino.Geometry.Light()
     light.LightStyle = Rhino.Geometry.LightStyle.WorldDirectional
     light.Location = start
-    light.Direction = end - start
+    light.Direction = end-start
     index = scriptcontext.doc.Lights.Add(light)
-    if index < 0:
-        raise Exception("unable to add light to LightTable")
+    if index<0: raise Exception("unable to add light to LightTable")
     rc = scriptcontext.doc.Lights[index].Id
     scriptcontext.doc.Views.Redraw()
     return rc
@@ -63,16 +60,16 @@ def AddLinearLight(start_point, end_point, width=None):
     start = rhutil.coerce3dpoint(start_point, True)
     end = rhutil.coerce3dpoint(end_point, True)
     if width is None:
-        radius = 0.5
+        radius=0.5
         units = scriptcontext.doc.ModelUnitSystem
-        if units != getattr(Rhino.UnitSystem, "None"):
+        if units!=Rhino.UnitSystem.None:
             scale = Rhino.RhinoMath.UnitScale(Rhino.UnitSystem.Inches, units)
             radius *= scale
         width = radius
     light = Rhino.Geometry.Light()
     light.LightStyle = Rhino.Geometry.LightStyle.WorldLinear
     light.Location = start
-    v = end - start
+    v = end-start
     light.Direction = v
     light.Length = light.Direction
     light.Width = -light.Width
@@ -80,11 +77,10 @@ def AddLinearLight(start_point, end_point, width=None):
     xaxis = plane.XAxis
     xaxis.Unitize()
     plane.XAxis = xaxis
-    light.Width = xaxis * min(width, v.Length / 20)
-    # light.Location = start - light.Direction
+    light.Width = xaxis * min(width, v.Length/20)
+    #light.Location = start - light.Direction
     index = scriptcontext.doc.Lights.Add(light)
-    if index < 0:
-        raise Exception("unable to add light to LightTable")
+    if index<0: raise Exception("unable to add light to LightTable")
     rc = scriptcontext.doc.Lights[index].Id
     scriptcontext.doc.Views.Redraw()
     return rc
@@ -108,8 +104,7 @@ def AddPointLight(point):
     light.LightStyle = Rhino.Geometry.LightStyle.WorldPoint
     light.Location = point
     index = scriptcontext.doc.Lights.Add(light)
-    if index < 0:
-        raise Exception("unable to add light to LightTable")
+    if index<0: raise Exception("unable to add light to LightTable")
     rc = scriptcontext.doc.Lights[index].Id
     scriptcontext.doc.Views.Redraw()
     return rc
@@ -133,8 +128,8 @@ def AddRectangularLight(origin, width_point, height_point):
     origin = rhutil.coerce3dpoint(origin, True)
     ptx = rhutil.coerce3dpoint(width_point, True)
     pty = rhutil.coerce3dpoint(height_point, True)
-    length = pty - origin
-    width = ptx - origin
+    length = pty-origin
+    width = ptx-origin
     normal = Rhino.Geometry.Vector3d.CrossProduct(width, length)
     normal.Unitize()
     light = Rhino.Geometry.Light()
@@ -144,8 +139,7 @@ def AddRectangularLight(origin, width_point, height_point):
     light.Length = length
     light.Direction = normal
     index = scriptcontext.doc.Lights.Add(light)
-    if index < 0:
-        raise Exception("unable to add light to LightTable")
+    if index<0: raise Exception("unable to add light to LightTable")
     rc = scriptcontext.doc.Lights[index].Id
     scriptcontext.doc.Views.Redraw()
     return rc
@@ -173,17 +167,15 @@ def AddSpotLight(origin, radius, apex_point):
     """
     origin = rhutil.coerce3dpoint(origin, True)
     apex_point = rhutil.coerce3dpoint(apex_point, True)
-    if radius < 0:
-        radius = 1.0
+    if radius<0: radius=1.0
     light = Rhino.Geometry.Light()
     light.LightStyle = Rhino.Geometry.LightStyle.WorldSpot
     light.Location = apex_point
-    light.Direction = origin - apex_point
+    light.Direction = origin-apex_point
     light.SpotAngleRadians = math.atan(radius / (light.Direction.Length))
     light.HotSpot = 0.50
     index = scriptcontext.doc.Lights.Add(light)
-    if index < 0:
-        raise Exception("unable to add light to LightTable")
+    if index<0: raise Exception("unable to add light to LightTable")
     rc = scriptcontext.doc.Lights[index].Id
     scriptcontext.doc.Views.Redraw()
     return rc
@@ -212,14 +204,13 @@ def EnableLight(object_id, enable=None):
     """
     light = __coercelight(object_id, True)
     rc = light.IsEnabled
-    if enable is not None and enable != rc:
+    if enable is not None and enable!=rc:
         light.IsEnabled = enable
         id = rhutil.coerceguid(object_id)
         if not scriptcontext.doc.Lights.Modify(id, light):
             return scriptcontext.errorhandler()
         scriptcontext.doc.Views.Redraw()
     return rc
-
 
 def IsDirectionalLight(object_id):
     """Verifies a light object is a directional light
@@ -417,7 +408,7 @@ def LightColor(object_id, color=None):
     rc = light.Diffuse
     if color:
         color = rhutil.coercecolor(color, True)
-        if color != rc:
+        if color!=rc:
             light.Diffuse = color
             id = rhutil.coerceguid(object_id, True)
             if not scriptcontext.doc.Lights.Modify(id, light):
@@ -464,7 +455,7 @@ def LightDirection(object_id, direction=None):
     rc = light.Direction
     if direction:
         direction = rhutil.coerce3dvector(direction, True)
-        if direction != rc:
+        if direction!=rc:
             light.Direction = direction
             id = rhutil.coerceguid(object_id, True)
             if not scriptcontext.doc.Lights.Modify(id, light):
@@ -493,7 +484,7 @@ def LightLocation(object_id, location=None):
     rc = light.Location
     if location:
         location = rhutil.coerce3dpoint(location, True)
-        if location != rc:
+        if location!=rc:
             light.Location = location
             id = rhutil.coerceguid(object_id, True)
             if not scriptcontext.doc.Lights.Modify(id, light):
@@ -526,7 +517,7 @@ def LightName(object_id, name=None):
     """
     light = __coercelight(object_id, True)
     rc = light.Name
-    if name and name != rc:
+    if name and name!=rc:
         light.Name = name
         id = rhutil.coerceguid(object_id, True)
         if not scriptcontext.doc.Lights.Modify(id, light):
@@ -557,8 +548,7 @@ def LightObjects():
     rc = []
     for i in range(count):
         rhlight = scriptcontext.doc.Lights[i]
-        if not rhlight.IsDeleted:
-            rc.append(rhlight.Id)
+        if not rhlight.IsDeleted: rc.append(rhlight.Id)
     return rc
 
 
@@ -581,7 +571,7 @@ def RectangularLightPlane(object_id):
       IsRectangularLight
     """
     light = __coercelight(object_id, True)
-    if light.LightStyle != Rhino.Geometry.LightStyle.WorldRectangular:
+    if light.LightStyle!=Rhino.Geometry.LightStyle.WorldRectangular:
         return scriptcontext.errorhandler()
     location = light.Location
     length = light.Length
@@ -611,10 +601,10 @@ def SpotLightHardness(object_id, hardness=None):
       SpotLightShadowIntensity
     """
     light = __coercelight(object_id, True)
-    if light.LightStyle != Rhino.Geometry.LightStyle.WorldSpot:
+    if light.LightStyle!=Rhino.Geometry.LightStyle.WorldSpot:
         return scriptcontext.errorhandler()
     rc = light.HotSpot
-    if hardness and hardness != rc:
+    if hardness and hardness!=rc:
         light.HotSpot = hardness
         id = rhutil.coerceguid(object_id, True)
         if not scriptcontext.doc.Lights.Modify(id, light):
@@ -642,12 +632,12 @@ def SpotLightRadius(object_id, radius=None):
       SpotLightShadowIntensity
     """
     light = __coercelight(object_id, True)
-    if light.LightStyle != Rhino.Geometry.LightStyle.WorldSpot:
+    if light.LightStyle!=Rhino.Geometry.LightStyle.WorldSpot:
         return scriptcontext.errorhandler()
     radians = light.SpotAngleRadians
     rc = light.Direction.Length * math.tan(radians)
-    if radius and radius != rc:
-        radians = math.atan(radius / light.Direction.Length)
+    if radius and radius!=rc:
+        radians = math.atan(radius/light.Direction.Length)
         light.SpotAngleRadians = radians
         id = rhutil.coerceguid(object_id, True)
         if not scriptcontext.doc.Lights.Modify(id, light):
@@ -675,10 +665,10 @@ def SpotLightShadowIntensity(object_id, intensity=None):
       SpotLightRadius
     """
     light = __coercelight(object_id, True)
-    if light.LightStyle != Rhino.Geometry.LightStyle.WorldSpot:
+    if light.LightStyle!=Rhino.Geometry.LightStyle.WorldSpot:
         return scriptcontext.errorhandler()
     rc = light.SpotLightShadowIntensity
-    if intensity and intensity != rc:
+    if intensity and intensity!=rc:
         light.SpotLightShadowIntensity = intensity
         id = rhutil.coerceguid(object_id, True)
         if not scriptcontext.doc.Lights.Modify(id, light):

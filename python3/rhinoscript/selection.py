@@ -1,9 +1,9 @@
 import scriptcontext
 import Rhino
-import rhinoscript.utility as rhutil
-import rhinoscript.application as rhapp
-from rhinoscript.layer import __getlayer
-from rhinoscript.view import __viewhelper
+from . import utility as rhutil
+from . import application as rhapp
+from .layer import __getlayer
+from .view import __viewhelper
 import System.Drawing as sd
 
 
@@ -23,15 +23,14 @@ class filter:
     detail = 32768
     hatch = 65536
     morph = 131072
+    subd = 262144
     cage = 134217728
     phantom = 268435456
     clippingplane = 536870912
     extrusion = 1073741824
 
 
-def AllObjects(
-    select=False, include_lights=False, include_grips=False, include_references=False
-):
+def AllObjects(select=False, include_lights=False, include_grips=False, include_references=False):
     """Returns identifiers of all objects in the document.
     Parameters:
       select(bool, optional): Select the objects
@@ -58,11 +57,9 @@ def AllObjects(
     e = scriptcontext.doc.Objects.GetObjectList(it)
     object_ids = []
     for object in e:
-        if select:
-            object.Select(True)
+        if select: object.Select(True)
         object_ids.append(object.Id)
-    if object_ids and select:
-        scriptcontext.doc.Views.Redraw()
+    if object_ids and select: scriptcontext.doc.Views.Redraw()
     return object_ids
 
 
@@ -91,17 +88,15 @@ def FirstObject(select=False, include_lights=False, include_grips=False):
     it.IncludeLights = include_lights
     it.IncludeGrips = include_grips
     e = scriptcontext.doc.Objects.GetObjectList(it).GetEnumerator()
-    if not e.MoveNext():
-        return None
+    if not e.MoveNext(): return None
     object = e.Current
     if object:
-        if select:
-            object.Select(True)
+        if select: object.Select(True)
         return object.Id
 
 
 def __FilterHelper(filter):
-    geometry_filter = getattr(Rhino.DocObjects.ObjectType, "None")
+    geometry_filter = Rhino.DocObjects.ObjectType.None
     if filter & 1:
         geometry_filter |= Rhino.DocObjects.ObjectType.Point
     if filter & 16384:
@@ -128,6 +123,8 @@ def __FilterHelper(filter):
         geometry_filter |= Rhino.DocObjects.ObjectType.Hatch
     if filter & 131072:
         geometry_filter |= Rhino.DocObjects.ObjectType.MorphControl
+    if filter & 262144:
+        geometry_filter |= Rhino.DocObjects.ObjectType.SubD
     if filter & 2097152:
         geometry_filter |= Rhino.DocObjects.ObjectType.PolysrfFilter
     if filter & 268435456:
@@ -177,26 +174,21 @@ def GetCurveObject(message=None, preselect=False, select=False):
         scriptcontext.doc.Objects.UnselectAll()
         scriptcontext.doc.Views.Redraw()
     go = Rhino.Input.Custom.GetObject()
-    if message:
-        go.SetCommandPrompt(message)
+    if message: go.SetCommandPrompt(message)
     go.GeometryFilter = Rhino.DocObjects.ObjectType.Curve
     go.SubObjectSelect = False
     go.GroupSelect = False
     go.AcceptNothing(True)
-    if go.Get() != Rhino.Input.GetResult.Object:
-        return None
-
+    if go.Get()!=Rhino.Input.GetResult.Object: return None
+ 
     objref = go.Object(0)
     id = objref.ObjectId
     presel = go.ObjectsWerePreselected
     selmethod = 0
     sm = objref.SelectionMethod()
-    if Rhino.DocObjects.SelectionMethod.MousePick == sm:
-        selmethod = 1
-    elif Rhino.DocObjects.SelectionMethod.WindowBox == sm:
-        selmethod = 2
-    elif Rhino.DocObjects.SelectionMethod.CrossingBox == sm:
-        selmethod = 3
+    if Rhino.DocObjects.SelectionMethod.MousePick==sm: selmethod = 1
+    elif Rhino.DocObjects.SelectionMethod.WindowBox==sm: selmethod = 2
+    elif Rhino.DocObjects.SelectionMethod.CrossingBox==sm: selmethod = 3
     point = objref.SelectionPoint()
     crv, curve_parameter = objref.CurveParameter()
     viewname = go.View().ActiveViewport.Name
@@ -209,14 +201,7 @@ def GetCurveObject(message=None, preselect=False, select=False):
     return id, presel, selmethod, point, curve_parameter, viewname
 
 
-def GetObject(
-    message=None,
-    filter=0,
-    preselect=False,
-    select=False,
-    custom_filter=None,
-    subobjects=False,
-):
+def GetObject(message=None, filter=0, preselect=False, select=False, custom_filter=None, subobjects=False):
     """Prompts user to pick, or select, a single object.
     Parameters:
       message(str, optional): a prompt or message.
@@ -249,12 +234,11 @@ def GetObject(
     if not preselect:
         scriptcontext.doc.Objects.UnselectAll()
         scriptcontext.doc.Views.Redraw()
-
+    
     class CustomGetObject(Rhino.Input.Custom.GetObject):
         def __init__(self, filter_function):
             self.m_filter_function = filter_function
-
-        def CustomGeometryFilter(self, rhino_object, geometry, component_index):
+        def CustomGeometryFilter( self, rhino_object, geometry, component_index ):
             rc = True
             if self.m_filter_function is not None:
                 try:
@@ -262,18 +246,14 @@ def GetObject(
                 except:
                     rc = True
             return rc
-
     go = CustomGetObject(custom_filter)
-    if message:
-        go.SetCommandPrompt(message)
+    if message: go.SetCommandPrompt(message)
     geometry_filter = __FilterHelper(filter)
-    if filter > 0:
-        go.GeometryFilter = geometry_filter
+    if filter>0: go.GeometryFilter = geometry_filter
     go.SubObjectSelect = subobjects
     go.GroupSelect = False
-    go.AcceptNothing(True)
-    if go.Get() != Rhino.Input.GetResult.Object:
-        return None
+    go.AcceptNothing(True)      
+    if go.Get()!=Rhino.Input.GetResult.Object: return None
     objref = go.Object(0)
     obj = objref.Object()
     presel = go.ObjectsWerePreselected
@@ -281,8 +261,7 @@ def GetObject(
     if not select and not presel:
         scriptcontext.doc.Objects.UnselectAll()
         scriptcontext.doc.Views.Redraw()
-    if subobjects:
-        return objref
+    if subobjects: return objref
     obj.Select(select)
     return obj.Id
 
@@ -290,13 +269,10 @@ def GetObject(
 class __CustomGetObjectEx(Rhino.Input.Custom.GetObject):
     def __init__(self, allowable_geometry):
         self.m_allowable = allowable_geometry
-
     def CustomGeometryFilter(self, rhino_object, geometry, component_index):
         for id in self.m_allowable:
-            if id == rhino_object.Id:
-                return True
+            if id==rhino_object.Id: return True
         return False
-
 
 def GetObjectEx(message=None, filter=0, preselect=False, select=False, objects=None):
     """Prompts user to pick, or select a single object
@@ -347,31 +323,23 @@ def GetObjectEx(message=None, filter=0, preselect=False, select=False, objects=N
     go = None
     if objects:
         ids = [rhutil.coerceguid(id, True) for id in objects]
-        if ids:
-            go = __CustomGetObjectEx(ids)
-    if not go:
-        go = Rhino.Input.Custom.GetObject()
-    if message:
-        go.SetCommandPrompt(message)
+        if ids: go = __CustomGetObjectEx(ids)
+    if not go: go = Rhino.Input.Custom.GetObject()
+    if message: go.SetCommandPrompt(message)
     geometry_filter = __FilterHelper(filter)
-    if filter > 0:
-        go.GeometryFilter = geometry_filter
+    if filter>0: go.GeometryFilter = geometry_filter
     go.SubObjectSelect = False
     go.GroupSelect = False
-    go.AcceptNothing(True)
-    if go.Get() != Rhino.Input.GetResult.Object:
-        return None
+    go.AcceptNothing(True)      
+    if go.Get()!=Rhino.Input.GetResult.Object: return None
     objref = go.Object(0)
     id = objref.ObjectId
     presel = go.ObjectsWerePreselected
     selmethod = 0
     sm = objref.SelectionMethod()
-    if Rhino.DocObjects.SelectionMethod.MousePick == sm:
-        selmethod = 1
-    elif Rhino.DocObjects.SelectionMethod.WindowBox == sm:
-        selmethod = 2
-    elif Rhino.DocObjects.SelectionMethod.CrossingBox == sm:
-        selmethod = 3
+    if Rhino.DocObjects.SelectionMethod.MousePick==sm: selmethod = 1
+    elif Rhino.DocObjects.SelectionMethod.WindowBox==sm: selmethod = 2
+    elif Rhino.DocObjects.SelectionMethod.CrossingBox==sm: selmethod = 3
     point = objref.SelectionPoint()
     viewname = go.View().ActiveViewport.Name
     obj = go.Object(0).Object()
@@ -383,17 +351,7 @@ def GetObjectEx(message=None, filter=0, preselect=False, select=False, objects=N
     return id, presel, selmethod, point, viewname
 
 
-def GetObjects(
-    message=None,
-    filter=0,
-    group=True,
-    preselect=False,
-    select=False,
-    objects=None,
-    minimum_count=1,
-    maximum_count=0,
-    custom_filter=None,
-):
+def GetObjects(message=None, filter=0, group=True, preselect=False, select=False, objects=None, minimum_count=1, maximum_count=0, custom_filter=None):
     """Prompts user to pick or select one or more objects.
     Parameters:
       message (str, optional): a prompt or message.
@@ -416,6 +374,7 @@ def GetObjects(
               32768         Detail
               65536         Hatch
               131072        Morph control
+              262144        SubD
               134217728     Cage
               268435456     Phantom
               536870912     Clipping plane
@@ -445,14 +404,11 @@ def GetObjects(
         scriptcontext.doc.Views.Redraw()
 
     objects = rhutil.coerceguidlist(objects)
-
     class CustomGetObject(Rhino.Input.Custom.GetObject):
         def __init__(self, filter_function):
             self.m_filter_function = filter_function
-
-        def CustomGeometryFilter(self, rhino_object, geometry, component_index):
-            if objects and not rhino_object.Id in objects:
-                return False
+        def CustomGeometryFilter( self, rhino_object, geometry, component_index ):
+            if objects and not rhino_object.Id in objects: return False
             rc = True
             if self.m_filter_function is not None:
                 try:
@@ -460,35 +416,29 @@ def GetObjects(
                 except:
                     rc = True
             return rc
-
     go = CustomGetObject(custom_filter)
     go.SetCommandPrompt(message or "Select objects")
     geometry_filter = __FilterHelper(filter)
-    if filter > 0:
-        go.GeometryFilter = geometry_filter
+    if filter>0: go.GeometryFilter = geometry_filter
     go.SubObjectSelect = False
     go.GroupSelect = group
     go.AcceptNothing(True)
-    if go.GetMultiple(minimum_count, maximum_count) != Rhino.Input.GetResult.Object:
-        return None
+    if go.GetMultiple(minimum_count,maximum_count)!=Rhino.Input.GetResult.Object: return None
     if not select and not go.ObjectsWerePreselected:
         scriptcontext.doc.Objects.UnselectAll()
         scriptcontext.doc.Views.Redraw()
     rc = []
     count = go.ObjectCount
-    for i in xrange(count):
+    for i in range(count):
         objref = go.Object(i)
         rc.append(objref.ObjectId)
         obj = objref.Object()
-        if select and obj is not None:
-            obj.Select(select)
+        if select and obj is not None: obj.Select(select)
     go.Dispose()
     return rc
 
 
-def GetObjectsEx(
-    message=None, filter=0, group=True, preselect=False, select=False, objects=None
-):
+def GetObjectsEx(message=None, filter=0, group=True, preselect=False, select=False, objects=None):
     """Prompts user to pick, or select one or more objects
     Parameters:
       message (str, optional):  a prompt or message.
@@ -539,42 +489,34 @@ def GetObjectsEx(
     go = None
     if objects:
         ids = [rhutil.coerceguid(id) for id in objects]
-        if ids:
-            go = __CustomGetObjectEx(ids)
-    if not go:
-        go = Rhino.Input.Custom.GetObject()
+        if ids: go = __CustomGetObjectEx(ids)
+    if not go: go = Rhino.Input.Custom.GetObject()
     go.SetCommandPrompt(message or "Select objects")
     geometry_filter = __FilterHelper(filter)
-    if filter > 0:
-        go.GeometryFilter = geometry_filter
+    if filter>0: go.GeometryFilter = geometry_filter
     go.SubObjectSelect = False
     go.GroupSelect = group
-    go.AcceptNothing(True)
-    if go.GetMultiple(1, 0) != Rhino.Input.GetResult.Object:
-        return []
+    go.AcceptNothing(True)      
+    if go.GetMultiple(1,0)!=Rhino.Input.GetResult.Object: return []
     if not select and not go.ObjectsWerePreselected:
         scriptcontext.doc.Objects.UnselectAll()
         scriptcontext.doc.Views.Redraw()
     rc = []
     count = go.ObjectCount
-    for i in xrange(count):
+    for i in range(count):
         objref = go.Object(i)
         id = objref.ObjectId
         presel = go.ObjectsWerePreselected
         selmethod = 0
         sm = objref.SelectionMethod()
-        if Rhino.DocObjects.SelectionMethod.MousePick == sm:
-            selmethod = 1
-        elif Rhino.DocObjects.SelectionMethod.WindowBox == sm:
-            selmethod = 2
-        elif Rhino.DocObjects.SelectionMethod.CrossingBox == sm:
-            selmethod = 3
+        if Rhino.DocObjects.SelectionMethod.MousePick==sm: selmethod = 1
+        elif Rhino.DocObjects.SelectionMethod.WindowBox==sm: selmethod = 2
+        elif Rhino.DocObjects.SelectionMethod.CrossingBox==sm: selmethod = 3
         point = objref.SelectionPoint()
         viewname = go.View().ActiveViewport.Name
-        rc.append((id, presel, selmethod, point, viewname))
+        rc.append( (id, presel, selmethod, point, viewname) )
         obj = objref.Object()
-        if select and obj is not None:
-            obj.Select(select)
+        if select and obj is not None: obj.Select(select)
     go.Dispose()
     return rc
 
@@ -639,7 +581,7 @@ def GetSurfaceObject(message="Select surface", preselect=False, select=False):
     go.SubObjectSelect = False
     go.GroupSelect = False
     go.AcceptNothing(True)
-    if go.Get() != Rhino.Input.GetResult.Object:
+    if go.Get()!=Rhino.Input.GetResult.Object:
         return scriptcontext.errorhandler()
     objref = go.Object(0)
     rhobj = objref.Object()
@@ -651,7 +593,7 @@ def GetSurfaceObject(message="Select surface", preselect=False, select=False):
     selmethod = objref.SelectionMethod()
     point = objref.SelectionPoint()
     surf, u, v = objref.SurfaceParameter()
-    uv = (u, v)
+    uv = (u,v)
     if not point.IsValid:
         point = None
         uv = None
@@ -659,8 +601,8 @@ def GetSurfaceObject(message="Select surface", preselect=False, select=False):
     name = view.ActiveViewport.Name
     go.Dispose()
     if not select and not prepicked:
-        scriptcontext.doc.Objects.UnselectAll()
-        scriptcontext.doc.Views.Redraw()
+      scriptcontext.doc.Objects.UnselectAll()
+      scriptcontext.doc.Views.Redraw()
     return id, prepicked, selmethod, point, uv, name
 
 
@@ -689,12 +631,8 @@ def LockedObjects(include_lights=False, include_grips=False, include_references=
     settings.IncludeLights = include_lights
     settings.IncludeGrips = include_grips
     settings.ReferenceObjects = include_references
-    return [
-        i.Id
-        for i in scriptcontext.doc.Objects.GetObjectList(settings)
-        if i.IsLocked or (scriptcontext.doc.Layers[i.Attributes.LayerIndex]).IsLocked
-    ]
-
+    return [i.Id for i in scriptcontext.doc.Objects.GetObjectList(settings)
+        if i.IsLocked or (scriptcontext.doc.Layers[i.Attributes.LayerIndex]).IsLocked]
 
 def HiddenObjects(include_lights=False, include_grips=False, include_references=False):
     """Returns identifiers of all hidden objects in the document. Hidden objects
@@ -721,17 +659,11 @@ def HiddenObjects(include_lights=False, include_grips=False, include_references=
     settings.IncludeLights = include_lights
     settings.IncludeGrips = include_grips
     settings.ReferenceObjects = include_references
-    return [
-        i.Id
-        for i in scriptcontext.doc.Objects.GetObjectList(settings)
-        if i.IsHidden
-        or not (scriptcontext.doc.Layers[i.Attributes.LayerIndex]).IsVisible
-    ]
+    return [i.Id for i in scriptcontext.doc.Objects.GetObjectList(settings)
+        if i.IsHidden or not (scriptcontext.doc.Layers[i.Attributes.LayerIndex]).IsVisible]
 
 
-def InvertSelectedObjects(
-    include_lights=False, include_grips=False, include_references=False
-):
+def InvertSelectedObjects(include_lights=False, include_grips=False, include_references=False):
     """Inverts the current object selection. The identifiers of the newly
     selected objects are returned
     Parameters:
@@ -788,20 +720,17 @@ def LastCreatedObjects(select=False):
       Command
     """
     serial_numbers = rhapp.__command_serial_numbers
-    if serial_numbers is None:
-        return scriptcontext.errorhandler()
+    if serial_numbers is None: return scriptcontext.errorhandler()
     serial_number = serial_numbers[0]
     end = serial_numbers[1]
     rc = []
-    while serial_number < end:
+    while serial_number<end:
         obj = scriptcontext.doc.Objects.Find(serial_number)
         if obj and not obj.IsDeleted:
             rc.append(obj.Id)
-            if select:
-                obj.Select(True)
+            if select: obj.Select(True)
         serial_number += 1
-    if select == True and rc:
-        scriptcontext.doc.Views.Redraw()
+    if select==True and rc: scriptcontext.doc.Views.Redraw()
     return rc
 
 
@@ -829,10 +758,8 @@ def LastObject(select=False, include_lights=False, include_grips=False):
     settings.DeletedObjects = False
     rhobjs = scriptcontext.doc.Objects.GetObjectList(settings)
     firstobj = None
-    for obj in rhobjs:
-        firstobj = obj
-    if firstobj is None:
-        return scriptcontext.errorhandler()
+    for obj in rhobjs: firstobj = obj
+    if firstobj is None: return scriptcontext.errorhandler()
     rc = firstobj.Id
     if select:
         firstobj.Select(True)
@@ -867,12 +794,10 @@ def NextObject(object_id, select=False, include_lights=False, include_grips=Fals
     rhobjs = scriptcontext.doc.Objects.GetObjectList(settings)
     found = False
     for obj in rhobjs:
-        if found and obj:
-            if select:
-                obj.Select(True)
+        if found and obj: 
+            if select: obj.Select(True)
             return obj.Id
-        if obj.Id == current_obj.Id:
-            found = True
+        if obj.Id == current_obj.Id: found = True
 
 
 def NormalObjects(include_lights=False, include_grips=False):
@@ -920,8 +845,7 @@ def ObjectsByColor(color, select=False, include_lights=False):
     color = rhutil.coercecolor(color, True)
     rhino_objects = scriptcontext.doc.Objects.FindByDrawColor(color, include_lights)
     if select:
-        for obj in rhino_objects:
-            obj.Select(True)
+        for obj in rhino_objects: obj.Select(True)
         scriptcontext.doc.Views.Redraw()
     return [obj.Id for obj in rhino_objects]
 
@@ -941,14 +865,11 @@ def ObjectsByGroup(group_name, select=False):
       
     """
     group_instance = scriptcontext.doc.Groups.FindName(group_name)
-    if group_instance is None:
-        raise ValueError("%s does not exist in GroupTable" % group_name)
+    if group_instance is None: raise ValueError("%s does not exist in GroupTable"%group_name)
     rhino_objects = scriptcontext.doc.Groups.GroupMembers(group_instance.Index)
-    if not rhino_objects:
-        return []
+    if not rhino_objects: return []
     if select:
-        for obj in rhino_objects:
-            obj.Select(True)
+        for obj in rhino_objects: obj.Select(True)
         scriptcontext.doc.Views.Redraw()
     return [obj.Id for obj in rhino_objects]
 
@@ -971,11 +892,9 @@ def ObjectsByLayer(layer_name, select=False):
     """
     layer = __getlayer(layer_name, True)
     rhino_objects = scriptcontext.doc.Objects.FindByLayer(layer)
-    if not rhino_objects:
-        return []
+    if not rhino_objects: return []
     if select:
-        for rhobj in rhino_objects:
-            rhobj.Select(True)
+        for rhobj in rhino_objects: rhobj.Select(True)
         scriptcontext.doc.Views.Redraw()
     return [rhobj.Id for rhobj in rhino_objects]
 
@@ -1007,11 +926,10 @@ def ObjectsByName(name, select=False, include_lights=False, include_references=F
     ids = [rhobj.Id for rhobj in objects]
     if ids and select:
         objects = scriptcontext.doc.Objects.GetObjectList(settings)
-        for rhobj in objects:
-            rhobj.Select(True)
+        for rhobj in objects: rhobj.Select(True)
         scriptcontext.doc.Views.Redraw()
     return ids
-
+   
 
 def ObjectsByType(geometry_type, select=False, state=0):
     """Returns identifiers of all objects based on the objects' geometry type.
@@ -1035,6 +953,7 @@ def ObjectsByType(geometry_type, select=False, state=0):
                32768       Detail
                65536       Hatch
                131072      Morph control
+               262144      SubD
                134217728   Cage
                268435456   Phantom
                536870912   Clipping plane
@@ -1055,26 +974,20 @@ def ObjectsByType(geometry_type, select=False, state=0):
     See Also:
       
     """
-    if not state:
-        state = 7
+    if not state: state = 7
     bSurface = False
     bPolySurface = False
     bLights = False
     bGrips = False
     bPhantoms = False
     geometry_filter = __FilterHelper(geometry_type)
-    if type(geometry_type) is int and geometry_type == 0:
+    if type(geometry_type) is int and geometry_type==0:
         geometry_filter = Rhino.DocObjects.ObjectType.AnyObject
-    if geometry_filter & Rhino.DocObjects.ObjectType.Surface:
-        bSurface = True
-    if geometry_filter & Rhino.DocObjects.ObjectType.Brep:
-        bPolySurface = True
-    if geometry_filter & Rhino.DocObjects.ObjectType.Light:
-        bLights = True
-    if geometry_filter & Rhino.DocObjects.ObjectType.Grip:
-        bGrips = True
-    if geometry_filter & Rhino.DocObjects.ObjectType.Phantom:
-        bPhantoms = True
+    if geometry_filter & Rhino.DocObjects.ObjectType.Surface: bSurface = True
+    if geometry_filter & Rhino.DocObjects.ObjectType.Brep: bPolySurface = True
+    if geometry_filter & Rhino.DocObjects.ObjectType.Light: bLights = True
+    if geometry_filter & Rhino.DocObjects.ObjectType.Grip: bGrips = True
+    if geometry_filter & Rhino.DocObjects.ObjectType.Phantom: bPhantoms = True
 
     it = Rhino.DocObjects.ObjectEnumeratorSettings()
     it.DeletedObjects = False
@@ -1087,51 +1000,40 @@ def ObjectsByType(geometry_type, select=False, state=0):
     if state:
         it.NormalObjects = False
         it.LockedObjects = False
-    if state & 1:
-        it.NormalObjects = True
-    if state & 2:
-        it.LockedObjects = True
-    if state & 4:
-        it.HiddenObjects = True
+    if state & 1: it.NormalObjects = True
+    if state & 2: it.LockedObjects = True
+    if state & 4: it.HiddenObjects = True
 
     object_ids = []
     e = scriptcontext.doc.Objects.GetObjectList(it)
     for object in e:
         bFound = False
         object_type = object.ObjectType
-        if object_type == Rhino.DocObjects.ObjectType.Brep and (
-            bSurface or bPolySurface
-        ):
+        if object_type==Rhino.DocObjects.ObjectType.Brep and (bSurface or bPolySurface):
             brep = rhutil.coercebrep(object.Id)
             if brep:
-                if brep.Faces.Count == 1:
-                    if bSurface:
-                        bFound = True
+                if brep.Faces.Count==1:
+                    if bSurface: bFound = True
                 else:
-                    if bPolySurface:
-                        bFound = True
-        elif object_type == Rhino.DocObjects.ObjectType.Extrusion and (
-            bSurface or bPolySurface
-        ):
+                    if bPolySurface: bFound = True
+        elif object_type==Rhino.DocObjects.ObjectType.Extrusion and (bSurface or bPolySurface):
             extrusion = object.Geometry
             profile_count = extrusion.ProfileCount
             cap_count = extrusion.CapCount
-            if profile_count == 1 and cap_count == 0 and bSurface:
+            if profile_count==1 and cap_count==0 and bSurface:
                 bFound = True
-            elif profile_count > 0 and cap_count > 0 and bPolySurface:
+            elif profile_count>0 and cap_count>0 and bPolySurface:
                 bFound = True
         elif object_type & geometry_filter:
             bFound = True
 
         if bFound:
-            if select:
-                object.Select(True)
+            if select: object.Select(True)
             object_ids.append(object.Id)
 
-    if object_ids and select:
-        scriptcontext.doc.Views.Redraw()
+    if object_ids and select: scriptcontext.doc.Views.Redraw()
     return object_ids
-
+  
 
 def SelectedObjects(include_lights=False, include_grips=False):
     """Returns the identifiers of all objects that are currently selected
@@ -1148,9 +1050,7 @@ def SelectedObjects(include_lights=False, include_grips=False):
       InvertSelectedObjects
       UnselectAllObjects
     """
-    selobjects = scriptcontext.doc.Objects.GetSelectedObjects(
-        include_lights, include_grips
-    )
+    selobjects = scriptcontext.doc.Objects.GetSelectedObjects(include_lights, include_grips)
     return [obj.Id for obj in selobjects]
 
 
@@ -1167,8 +1067,7 @@ def UnselectAllObjects():
       SelectedObjects
     """
     rc = scriptcontext.doc.Objects.UnselectAll()
-    if rc > 0:
-        scriptcontext.doc.Views.Redraw()
+    if rc>0: scriptcontext.doc.Views.Redraw()
     return rc
 
 
@@ -1205,12 +1104,10 @@ def VisibleObjects(view=None, select=False, include_lights=False, include_grips=
     for object in e:
         bbox = object.Geometry.GetBoundingBox(True)
         if viewport.IsVisible(bbox):
-            if select:
-                object.Select(True)
+            if select: object.Select(True)
             object_ids.append(object.Id)
 
-    if object_ids and select:
-        scriptcontext.doc.Views.Redraw()
+    if object_ids and select: scriptcontext.doc.Views.Redraw()
     return object_ids
 
 
@@ -1234,35 +1131,26 @@ def WindowPick(corner1, corner2, view=None, select=False, in_window=True):
 
     screen1 = rhutil.coerce3dpoint(corner1, True)
     screen2 = rhutil.coerce3dpoint(corner2, True)
-    xf = viewport.GetTransform(
-        Rhino.DocObjects.CoordinateSystem.World,
-        Rhino.DocObjects.CoordinateSystem.Screen,
-    )
+    xf = viewport.GetTransform(Rhino.DocObjects.CoordinateSystem.World, Rhino.DocObjects.CoordinateSystem.Screen)
     screen1.Transform(xf)
     screen2.Transform(xf)
 
     pc = Rhino.Input.Custom.PickContext()
     pc.View = view
-    pc.PickStyle = (
-        Rhino.Input.Custom.PickStyle.WindowPick
-        if in_window
-        else Rhino.Input.Custom.PickStyle.CrossingPick
-    )
+    pc.PickStyle = Rhino.Input.Custom.PickStyle.WindowPick if in_window else Rhino.Input.Custom.PickStyle.CrossingPick
     pc.PickGroupsEnabled = True if in_window else False
-    _, frustumLine = viewport.GetFrustumLine(
-        (screen1.X + screen2.X) / 2.0, (screen1.Y + screen2.Y) / 2.0
-    )
+    _, frustumLine = viewport.GetFrustumLine((screen1.X + screen2.X) / 2.0, (screen1.Y + screen2.Y) / 2.0)
     pc.PickLine = frustumLine
-
+    
     leftX = min(screen1.X, screen2.X)
     topY = min(screen1.Y, screen2.Y)
     w = abs(screen1.X - screen2.X)
     h = abs(screen1.Y - screen2.Y)
     rec = sd.Rectangle(leftX, topY, w, h)
-
+ 
     pc.SetPickTransform(viewport.GetPickTransform(rec))
     pc.UpdateClippingPlanes()
-
+    
     objects = scriptcontext.doc.Objects.PickObjects(pc)
 
     if objects:
@@ -1270,8 +1158,6 @@ def WindowPick(corner1, corner2, view=None, select=False, in_window=True):
         for rhobj in objects:
             o = rhobj.Object()
             rc.append(o.Id)
-            if select:
-                o.Select(True)
-        if select:
-            scriptcontext.doc.Views.Redraw()
+            if select: o.Select(True)
+        if select: scriptcontext.doc.Views.Redraw()
         return rc

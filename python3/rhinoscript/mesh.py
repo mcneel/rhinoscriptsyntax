@@ -1,18 +1,10 @@
 import scriptcontext
-import rhinoscript.utility as rhutil
+from . import utility as rhutil
 import Rhino
-from System import Guid, Array
-from System.Drawing import Color
-from rhinoscript.view import __viewhelper
+import System.Guid, System.Array, System.Drawing.Color
+from .view import __viewhelper
 
-
-def AddMesh(
-    vertices,
-    face_vertices,
-    vertex_normals=None,
-    texture_coordinates=None,
-    vertex_colors=None,
-):
+def AddMesh(vertices, face_vertices, vertex_normals=None, texture_coordinates=None, vertex_colors=None):
     """Add a mesh object to the document
     Parameters:
       vertices ([point, ...]) list of 3D points defining the vertices of the mesh
@@ -58,10 +50,9 @@ def AddMesh(
       MeshVertices
     """
     mesh = Rhino.Geometry.Mesh()
-    for a, b, c in vertices:
-        mesh.Vertices.Add(a, b, c)
+    for a, b, c in vertices: mesh.Vertices.Add(a, b, c)
     for face in face_vertices:
-        if len(face) < 4:
+        if len(face)<4:
             mesh.Faces.AddFace(face[0], face[1], face[2])
         else:
             mesh.Faces.AddFace(face[0], face[1], face[2], face[3])
@@ -84,8 +75,7 @@ def AddMesh(
             colors[i] = rhutil.coercecolor(color)
         mesh.VertexColors.SetColors(colors)
     rc = scriptcontext.doc.Objects.AddMesh(mesh)
-    if rc == System.Guid.Empty:
-        raise Exception("unable to add mesh to document")
+    if rc==System.Guid.Empty: raise Exception("unable to add mesh to document")
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -108,18 +98,14 @@ def AddPlanarMesh(object_id, delete_input=False):
     """
     curve = rhutil.coercecurve(object_id, -1, True)
     tolerance = scriptcontext.doc.ModelAbsoluteTolerance
-    mesh = Rhino.Geometry.Mesh.CreateFromPlanarBoundary(
-        curve, Rhino.Geometry.MeshingParameters.Default, tolerance
-    )
-    if not mesh:
-        return scriptcontext.errorhandler()
+    mesh = Rhino.Geometry.Mesh.CreateFromPlanarBoundary(curve, Rhino.Geometry.MeshingParameters.Default, tolerance)
+    if not mesh: return scriptcontext.errorhandler()
     if delete_input:
         id = rhutil.coerceguid(object_id, True)
         rc = scriptcontext.doc.Objects.Replace(id, mesh)
     else:
         rc = scriptcontext.doc.Objects.AddMesh(mesh)
-    if rc == System.Guid.Empty:
-        raise Exception("unable to add mesh to document")
+    if rc==System.Guid.Empty: raise Exception("unable to add mesh to document")
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -156,16 +142,13 @@ def CurveMeshIntersection(curve_id, mesh_id, return_faces=False):
     curve = rhutil.coercecurve(curve_id, -1, True)
     mesh = rhutil.coercemesh(mesh_id, True)
     tolerance = scriptcontext.doc.ModelAbsoluteTolerance
-    polylinecurve = curve.ToPolyline(0, 0, 0, 0, 0.0, tolerance, 0.0, 0.0, True)
-    pts, faceids = Rhino.Geometry.Intersect.Intersection.MeshPolyline(
-        mesh, polylinecurve
-    )
-    if not pts:
-        return scriptcontext.errorhandler()
+    polylinecurve = curve.ToPolyline(0,0,0,0,0.0,tolerance,0.0,0.0,True)
+    pts, faceids = Rhino.Geometry.Intersect.Intersection.MeshPolyline(mesh, polylinecurve)
+    if not pts: return scriptcontext.errorhandler()
     pts = list(pts)
     if return_faces:
         faceids = list(faceids)
-        return zip(pts, faceids)
+        return list(zip(pts, faceids))
     return pts
 
 
@@ -208,10 +191,8 @@ def DuplicateMeshBorder(mesh_id):
     if polylines:
         for polyline in polylines:
             id = scriptcontext.doc.Objects.AddPolyline(polyline)
-            if id != System.Guid.Empty:
-                rc.append(id)
-    if rc:
-        scriptcontext.doc.Views.Redraw()
+            if id!=System.Guid.Empty: rc.append(id)
+    if rc: scriptcontext.doc.Views.Redraw()
     return rc
 
 
@@ -234,8 +215,7 @@ def ExplodeMeshes(mesh_ids, delete=False):
       IsMesh
     """
     id = rhutil.coerceguid(mesh_ids)
-    if id:
-        mesh_ids = [mesh_ids]
+    if id: mesh_ids = [mesh_ids]
     rc = []
     for mesh_id in mesh_ids:
         mesh = rhutil.coercemesh(mesh_id, True)
@@ -244,13 +224,11 @@ def ExplodeMeshes(mesh_ids, delete=False):
             if submeshes:
                 for submesh in submeshes:
                     id = scriptcontext.doc.Objects.AddMesh(submesh)
-                    if id != System.Guid.Empty:
-                        rc.append(id)
+                    if id!=System.Guid.Empty: rc.append(id)
             if delete:
                 scriptcontext.doc.Objects.Delete(mesh_id, True)
-
-    if rc:
-        scriptcontext.doc.Views.Redraw()
+                
+    if rc: scriptcontext.doc.Views.Redraw()
     return rc
 
 
@@ -348,7 +326,7 @@ def IsPointOnMesh(object_id, point):
     point = rhutil.coerce3dpoint(point, True)
     max_distance = Rhino.RhinoMath.SqrtEpsilon
     face, pt = mesh.ClosestPoint(point, max_distance)
-    return face >= 0
+    return face>=0
 
 
 def JoinMeshes(object_ids, delete_input=False):
@@ -366,14 +344,14 @@ def JoinMeshes(object_ids, delete_input=False):
       JoinCurves
       JoinSurfaces
     """
-    meshes = [rhutil.coercemesh(id, True) for id in object_ids]
+    meshes = [rhutil.coercemesh(id,True) for id in object_ids]
     joined_mesh = Rhino.Geometry.Mesh()
     joined_mesh.Append(meshes)
     rc = scriptcontext.doc.Objects.AddMesh(joined_mesh)
     if delete_input:
         for id in object_ids:
             guid = rhutil.coerceguid(id)
-            scriptcontext.doc.Objects.Delete(guid, True)
+            scriptcontext.doc.Objects.Delete(guid,True)
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -398,8 +376,7 @@ def MeshArea(object_ids):
       MeshVolume
     """
     id = rhutil.coerceguid(object_ids)
-    if id:
-        object_ids = [object_ids]
+    if id: object_ids = [object_ids]
     meshes_used = 0
     total_area = 0.0
     error_estimate = 0.0
@@ -411,8 +388,7 @@ def MeshArea(object_ids):
                 meshes_used += 1
                 total_area += mp.Area
                 error_estimate += mp.AreaError
-    if meshes_used == 0:
-        return scriptcontext.errorhandler()
+    if meshes_used==0: return scriptcontext.errorhandler()
     return meshes_used, total_area, error_estimate
 
 
@@ -435,8 +411,7 @@ def MeshAreaCentroid(object_id):
     """
     mesh = rhutil.coercemesh(object_id, True)
     mp = Rhino.Geometry.AreaMassProperties.Compute(mesh)
-    if mp is None:
-        return scriptcontext.errorhandler()
+    if mp is None: return scriptcontext.errorhandler()
     return mp.Centroid
 
 
@@ -462,21 +437,17 @@ def MeshBooleanDifference(input0, input1, delete_input=True, tolerance=None):
       MeshBooleanUnion
     """
     id = rhutil.coerceguid(input0)
-    if id:
-        input0 = [id]
+    if id: input0 = [id]
     id = rhutil.coerceguid(input1)
-    if id:
-        input1 = [id]
+    if id: input1 = [id]
     meshes0 = [rhutil.coercemesh(id, True) for id in input0]
     meshes1 = [rhutil.coercemesh(id, True) for id in input1]
-    if not meshes0 or not meshes1:
-        raise ValueError("no meshes to work with")
+    if not meshes0 or not meshes1: raise ValueError("no meshes to work with")
     newmeshes = Rhino.Geometry.Mesh.CreateBooleanDifference(meshes0, meshes1)
     rc = []
     for mesh in newmeshes:
         id = scriptcontext.doc.Objects.AddMesh(mesh)
-        if id != System.Guid.Empty:
-            rc.append(id)
+        if id!=System.Guid.Empty: rc.append(id)
     if rc and delete_input:
         input = input0 + input1
         for id in input:
@@ -505,21 +476,17 @@ def MeshBooleanIntersection(input0, input1, delete_input=True):
       MeshBooleanUnion
     """
     id = rhutil.coerceguid(input0)
-    if id:
-        input0 = [id]
+    if id: input0 = [id]
     id = rhutil.coerceguid(input1)
-    if id:
-        input1 = [id]
+    if id: input1 = [id]
     meshes0 = [rhutil.coercemesh(id, True) for id in input0]
     meshes1 = [rhutil.coercemesh(id, True) for id in input1]
-    if not meshes0 or not meshes1:
-        raise ValueError("no meshes to work with")
+    if not meshes0 or not meshes1: raise ValueError("no meshes to work with")
     newmeshes = Rhino.Geometry.Mesh.CreateBooleanIntersection(meshes0, meshes1)
     rc = []
     for mesh in newmeshes:
         id = scriptcontext.doc.Objects.AddMesh(mesh)
-        if id != System.Guid.Empty:
-            rc.append(id)
+        if id!=System.Guid.Empty: rc.append(id)
     if rc and delete_input:
         input = input0 + input1
         for id in input:
@@ -549,21 +516,17 @@ def MeshBooleanSplit(input0, input1, delete_input=True):
       MeshBooleanUnion
     """
     id = rhutil.coerceguid(input0)
-    if id:
-        input0 = [id]
+    if id: input0 = [id]
     id = rhutil.coerceguid(input1)
-    if id:
-        input1 = [id]
+    if id: input1 = [id]
     meshes0 = [rhutil.coercemesh(id, True) for id in input0]
     meshes1 = [rhutil.coercemesh(id, True) for id in input1]
-    if not meshes0 or not meshes1:
-        raise ValueError("no meshes to work with")
+    if not meshes0 or not meshes1: raise ValueError("no meshes to work with")
     newmeshes = Rhino.Geometry.Mesh.CreateBooleanSplit(meshes0, meshes1)
     rc = []
     for mesh in newmeshes:
         id = scriptcontext.doc.Objects.AddMesh(mesh)
-        if id != System.Guid.Empty:
-            rc.append(id)
+        if id!=System.Guid.Empty: rc.append(id)
     if rc and delete_input:
         input = input0 + input1
         for id in input:
@@ -589,15 +552,13 @@ def MeshBooleanUnion(mesh_ids, delete_input=True):
       MeshBooleanIntersection
       MeshBooleanSplit
     """
-    if len(mesh_ids) < 2:
-        raise ValueError("mesh_ids must contain at least 2 meshes")
+    if len(mesh_ids)<2: raise ValueError("mesh_ids must contain at least 2 meshes")
     meshes = [rhutil.coercemesh(id, True) for id in mesh_ids]
     newmeshes = Rhino.Geometry.Mesh.CreateBooleanUnion(meshes)
     rc = []
     for mesh in newmeshes:
         id = scriptcontext.doc.Objects.AddMesh(mesh)
-        if id != System.Guid.Empty:
-            rc.append(id)
+        if id!=System.Guid.Empty: rc.append(id)
     if rc and delete_input:
         for id in mesh_ids:
             id = rhutil.coerceguid(id, True)
@@ -632,10 +593,9 @@ def MeshClosestPoint(object_id, point, maximum_distance=None):
     """
     mesh = rhutil.coercemesh(object_id, True)
     point = rhutil.coerce3dpoint(point, True)
-    tolerance = maximum_distance if maximum_distance else 0.0
+    tolerance=maximum_distance if maximum_distance else 0.0
     face, closest_point = mesh.ClosestPoint(point, tolerance)
-    if face < 0:
-        return scriptcontext.errorhandler()
+    if face<0: return scriptcontext.errorhandler()
     return closest_point, face
 
 
@@ -667,7 +627,7 @@ def MeshFaceCount(object_id):
     Returns:
       number: the number of mesh faces if successful
     Example:
-      import rhinocsriptsyntax as rs
+      import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh )
       print "Quad faces:", rs.MeshQuadCount(obj)
       print "Triangle faces:", rs.MeshTriangleCount(obj)
@@ -704,7 +664,7 @@ def MeshFaceNormals(mesh_id):
     if mesh.FaceNormals.Count != mesh.Faces.Count:
         mesh.FaceNormals.ComputeFaceNormals()
     rc = []
-    for i in xrange(mesh.FaceNormals.Count):
+    for i in range(mesh.FaceNormals.Count):
         normal = mesh.FaceNormals[i]
         rc.append(Rhino.Geometry.Vector3d(normal))
     return rc
@@ -742,22 +702,22 @@ def MeshFaces(object_id, face_type=True):
     """
     mesh = rhutil.coercemesh(object_id, True)
     rc = []
-    for i in xrange(mesh.Faces.Count):
+    for i in range(mesh.Faces.Count):
         getrc, p0, p1, p2, p3 = mesh.Faces.GetFaceVertices(i)
         p0 = Rhino.Geometry.Point3d(p0)
         p1 = Rhino.Geometry.Point3d(p1)
         p2 = Rhino.Geometry.Point3d(p2)
         p3 = Rhino.Geometry.Point3d(p3)
-        rc.append(p0)
-        rc.append(p1)
-        rc.append(p2)
+        rc.append( p0 )
+        rc.append( p1 )
+        rc.append( p2 )
         if face_type:
             rc.append(p3)
         else:
-            if p2 != p3:
-                rc.append(p2)
-                rc.append(p3)
-                rc.append(p0)
+            if p2!=p3:
+                rc.append( p2 )
+                rc.append( p3 )
+                rc.append( p0 )
     return rc
 
 
@@ -783,9 +743,9 @@ def MeshFaceVertices(object_id):
     """
     mesh = rhutil.coercemesh(object_id, True)
     rc = []
-    for i in xrange(mesh.Faces.Count):
+    for i in range(mesh.Faces.Count):
         face = mesh.Faces.GetFace(i)
-        rc.append((face.A, face.B, face.C, face.D))
+        rc.append( (face.A, face.B, face.C, face.D) )
     return rc
 
 
@@ -806,7 +766,7 @@ def MeshHasFaceNormals(object_id):
       MeshFaceNormals
     """
     mesh = rhutil.coercemesh(object_id, True)
-    return mesh.FaceNormals.Count > 0
+    return mesh.FaceNormals.Count>0
 
 
 def MeshHasTextureCoordinates(object_id):
@@ -826,7 +786,7 @@ def MeshHasTextureCoordinates(object_id):
       
     """
     mesh = rhutil.coercemesh(object_id, True)
-    return mesh.TextureCoordinates.Count > 0
+    return mesh.TextureCoordinates.Count>0
 
 
 def MeshHasVertexColors(object_id):
@@ -846,7 +806,7 @@ def MeshHasVertexColors(object_id):
       MeshVertexColors
     """
     mesh = rhutil.coercemesh(object_id, True)
-    return mesh.VertexColors.Count > 0
+    return mesh.VertexColors.Count>0
 
 
 def MeshHasVertexNormals(object_id):
@@ -866,7 +826,7 @@ def MeshHasVertexNormals(object_id):
       MeshVertexNormals
     """
     mesh = rhutil.coercemesh(object_id, True)
-    return mesh.Normals.Count > 0
+    return mesh.Normals.Count>0
 
 
 def MeshMeshIntersection(mesh1, mesh2, tolerance=None):
@@ -889,13 +849,9 @@ def MeshMeshIntersection(mesh1, mesh2, tolerance=None):
     """
     mesh1 = rhutil.coercemesh(mesh1, True)
     mesh2 = rhutil.coercemesh(mesh2, True)
-    if tolerance is None:
-        tolerance = Rhino.RhinoMath.ZeroTolerance
-    polylines = Rhino.Geometry.Intersect.Intersection.MeshMeshAccurate(
-        mesh1, mesh2, tolerance
-    )
-    if polylines:
-        return list(polylines)
+    if tolerance is None: tolerance = Rhino.RhinoMath.ZeroTolerance
+    polylines = Rhino.Geometry.Intersect.Intersection.MeshMeshAccurate(mesh1, mesh2, tolerance)
+    if polylines: return list(polylines)
 
 
 def MeshNakedEdgePoints(object_id):
@@ -946,11 +902,9 @@ def MeshOffset(mesh_id, distance):
     """
     mesh = rhutil.coercemesh(mesh_id, True)
     offsetmesh = mesh.Offset(distance)
-    if offsetmesh is None:
-        return scriptcontext.errorhandler()
+    if offsetmesh is None: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddMesh(offsetmesh)
-    if rc == System.Guid.Empty:
-        raise Exception("unable to add mesh to document")
+    if rc==System.Guid.Empty: raise Exception("unable to add mesh to document")
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -972,15 +926,12 @@ def MeshOutline(object_ids, view=None):
     viewport = __viewhelper(view).MainViewport
     meshes = []
     mesh = rhutil.coercemesh(object_ids, False)
-    if mesh:
-        meshes.append(mesh)
-    else:
-        meshes = [rhutil.coercemesh(id, True) for id in object_ids]
+    if mesh: meshes.append(mesh)
+    else: meshes = [rhutil.coercemesh(id,True) for id in object_ids]
     rc = []
     for mesh in meshes:
         polylines = mesh.GetOutlines(viewport)
-        if not polylines:
-            continue
+        if not polylines: continue
         for polyline in polylines:
             id = scriptcontext.doc.Objects.AddPolyline(polyline)
             rc.append(id)
@@ -1023,7 +974,7 @@ def MeshQuadsToTriangles(object_id):
     """
     mesh = rhutil.coercemesh(object_id, True)
     rc = True
-    if mesh.Faces.QuadCount > 0:
+    if mesh.Faces.QuadCount>0:
         rc = mesh.Faces.ConvertQuadsToTriangles()
         if rc:
             id = rhutil.coerceguid(object_id, True)
@@ -1053,14 +1004,11 @@ def MeshToNurb(object_id, trimmed_triangles=True, delete_input=False):
     """
     mesh = rhutil.coercemesh(object_id, True)
     pieces = mesh.SplitDisjointPieces()
-    breps = [
-        Rhino.Geometry.Brep.CreateFromMesh(piece, trimmed_triangles) for piece in pieces
-    ]
+    breps = [Rhino.Geometry.Brep.CreateFromMesh(piece,trimmed_triangles) for piece in pieces]
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     attr = rhobj.Attributes
     ids = [scriptcontext.doc.Objects.AddBrep(brep, attr) for brep in breps]
-    if delete_input:
-        scriptcontext.doc.Objects.Delete(rhobj, True)
+    if delete_input: scriptcontext.doc.Objects.Delete(rhobj, True)
     scriptcontext.doc.Views.Redraw()
     return ids
 
@@ -1116,18 +1064,16 @@ def MeshVertexColors(mesh_id, colors=0):
     """
     mesh = rhutil.coercemesh(mesh_id, True)
     rc = [mesh.VertexColors[i] for i in range(mesh.VertexColors.Count)]
-    if colors == 0:
-        return rc
+    if colors==0: return rc
     if colors is None:
         mesh.VertexColors.Clear()
     else:
         color_count = len(colors)
-        if color_count != mesh.Vertices.Count:
+        if color_count!=mesh.Vertices.Count:
             raise ValueError("length of colors must match vertex count")
         colors = [rhutil.coercecolor(c) for c in colors]
         mesh.VertexColors.Clear()
-        for c in colors:
-            mesh.VertexColors.Add(c)
+        for c in colors: mesh.VertexColors.Add(c)
     id = rhutil.coerceguid(mesh_id, True)
     scriptcontext.doc.Objects.Replace(id, mesh)
     scriptcontext.doc.Views.Redraw()
@@ -1213,9 +1159,8 @@ def MeshVertexNormals(mesh_id):
     """
     mesh = rhutil.coercemesh(mesh_id, True)
     count = mesh.Normals.Count
-    if count < 1:
-        return []
-    return [Rhino.Geometry.Vector3d(mesh.Normals[i]) for i in xrange(count)]
+    if count<1: return []
+    return [Rhino.Geometry.Vector3d(mesh.Normals[i]) for i in range(count)]
 
 
 def MeshVertices(object_id):
@@ -1238,7 +1183,7 @@ def MeshVertices(object_id):
     mesh = rhutil.coercemesh(object_id, True)
     count = mesh.Vertices.Count
     rc = []
-    for i in xrange(count):
+    for i in range(count):
         vertex = mesh.Vertices.Point3dAt(i)
         rc.append(vertex)
     return rc
@@ -1265,8 +1210,7 @@ def MeshVolume(object_ids):
       MeshArea
     """
     id = rhutil.coerceguid(object_ids)
-    if id:
-        object_ids = [id]
+    if id: object_ids = [id]
     meshes_used = 0
     total_volume = 0.0
     error_estimate = 0.0
@@ -1277,8 +1221,7 @@ def MeshVolume(object_ids):
             meshes_used += 1
             total_volume += mp.Volume
             error_estimate += mp.VolumeError
-    if meshes_used == 0:
-        return scriptcontext.errorhandler()
+    if meshes_used==0: return scriptcontext.errorhandler()
     return meshes_used, total_volume, error_estimate
 
 
@@ -1302,8 +1245,7 @@ def MeshVolumeCentroid(object_id):
     """
     mesh = rhutil.coercemesh(object_id, True)
     mp = Rhino.Geometry.VolumeMassProperties.Compute(mesh)
-    if mp:
-        return mp.Centroid
+    if mp: return mp.Centroid
     return scriptcontext.errorhandler()
 
 
@@ -1329,11 +1271,9 @@ def PullCurveToMesh(mesh_id, curve_id):
     curve = rhutil.coercecurve(curve_id, -1, True)
     tol = scriptcontext.doc.ModelAbsoluteTolerance
     polyline = curve.PullToMesh(mesh, tol)
-    if not polyline:
-        return scriptcontext.errorhandler()
+    if not polyline: return scriptcontext.errorhandler()
     rc = scriptcontext.doc.Objects.AddCurve(polyline)
-    if rc == System.Guid.Empty:
-        raise Exception("unable to add polyline to document")
+    if rc==System.Guid.Empty: raise Exception("unable to add polyline to document")
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -1378,7 +1318,7 @@ def UnifyMeshNormals(object_id):
     """
     mesh = rhutil.coercemesh(object_id, True)
     rc = mesh.UnifyNormals()
-    if rc > 0:
+    if rc>0:
         id = rhutil.coerceguid(object_id, True)
         scriptcontext.doc.Objects.Replace(id, mesh)
         scriptcontext.doc.Views.Redraw()

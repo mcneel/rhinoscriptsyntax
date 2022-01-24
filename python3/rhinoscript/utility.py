@@ -1,15 +1,12 @@
 import Rhino
-import System
-from System import Array, Guid
-from System.Drawing import Color
+import System.Drawing.Color, System.Array, System.Guid
 import time
-from System.Windows.Forms import Clipboard
-
-# FIXME: import from outside
+import System.Windows.Forms.Clipboard
 import scriptcontext
 import math
 import string
 import numbers
+import RhinoPython.Host as __host
 
 
 def ContextIsRhino():
@@ -69,39 +66,32 @@ def Angle(point1, point2, plane=True):
     pt1 = coerce3dpoint(point1)
     if pt1 is None:
         pt1 = coercerhinoobject(point1)
-        if isinstance(pt1, Rhino.DocObjects.PointObject):
-            pt1 = pt1.Geometry.Location
-        else:
-            pt1 = None
+        if isinstance(pt1, Rhino.DocObjects.PointObject): pt1 = pt1.Geometry.Location
+        else: pt1=None
     pt2 = coerce3dpoint(point2)
     if pt2 is None:
         pt2 = coercerhinoobject(point2)
-        if isinstance(pt2, Rhino.DocObjects.PointObject):
-            pt2 = pt2.Geometry.Location
-        else:
-            pt2 = None
+        if isinstance(pt2, Rhino.DocObjects.PointObject): pt2 = pt2.Geometry.Location
+        else: pt2=None
     point1 = pt1
     point2 = pt2
-    if point1 is None or point2 is None:
-        return scriptcontext.errorhandler()
+    if point1 is None or point2 is None: return scriptcontext.errorhandler()
     vector = point2 - point1
     x = vector.X
     y = vector.Y
     z = vector.Z
-    if plane != True:
+    if plane!=True:
         plane = coerceplane(plane)
         if plane is None:
-            plane = (
-                scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
-            )
+            plane = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
         vfrom = point1 - plane.Origin
         vto = point2 - plane.Origin
         x = vto * plane.XAxis - vfrom * plane.XAxis
         y = vto * plane.YAxis - vfrom * plane.YAxis
         z = vto * plane.ZAxis - vfrom * plane.ZAxis
-    h = math.sqrt(x * x + y * y)
-    angle_xy = math.degrees(math.atan2(y, x))
-    elevation = math.degrees(math.atan2(z, h))
+    h = math.sqrt( x * x + y * y)
+    angle_xy = math.degrees( math.atan2( y, x ) )
+    elevation = math.degrees( math.atan2( z, h ) )
     return angle_xy, elevation, x, y, z
 
 
@@ -131,12 +121,11 @@ def Angle2(line1, line2):
     line2 = coerceline(line2, True)
     vec0 = line1.To - line1.From
     vec1 = line2.To - line2.From
-    if not vec0.Unitize() or not vec1.Unitize():
-        return scriptcontext.errorhandler()
+    if not vec0.Unitize() or not vec1.Unitize(): return scriptcontext.errorhandler()
     dot = vec0 * vec1
-    dot = clamp(-1, 1, dot)
+    dot = clamp(-1,1,dot)
     angle = math.acos(dot)
-    reflex_angle = 2.0 * math.pi - angle
+    reflex_angle = 2.0*math.pi - angle
     angle = math.degrees(angle)
     reflex_angle = math.degrees(reflex_angle)
     return angle, reflex_angle
@@ -161,8 +150,7 @@ def ClipboardText(text=None):
     if System.Windows.Forms.Clipboard.ContainsText():
         rc = System.Windows.Forms.Clipboard.GetText()
     if text:
-        if not isinstance(text, str):
-            text = str(text)
+        if not isinstance(text, str): text = str(text)
         System.Windows.Forms.Clipboard.SetText(text)
     return rc
 
@@ -191,8 +179,7 @@ def ColorAdjustLuma(rgb, luma, scale=False):
     rgb = coercecolor(rgb, True)
     hsl = Rhino.Display.ColorHSL(rgb)
     luma = luma / 1000.0
-    if scale:
-        luma = hsl.L + luma
+    if scale: luma = hsl.L + luma
     hsl.L = luma
     return hsl.ToArgbColor()
 
@@ -251,12 +238,10 @@ def ColorHLSToRGB(hls):
       ColorAdjustLuma
       ColorRGBToHLS
     """
-    if len(hls) == 3:
-        hls = Rhino.Display.ColorHSL(hls[0] / 240.0, hls[2] / 240.0, hls[1] / 240.0)
-    elif len(hls) == 4:
-        hls = Rhino.Display.ColorHSL(
-            hls[3] / 240.0, hls[0] / 240.0, hls[2] / 240.0, hls[1] / 240.0
-        )
+    if len(hls)==3:
+        hls = Rhino.Display.ColorHSL(hls[0]/240.0, hls[2]/240.0, hls[1]/240.0)
+    elif len(hls)==4:
+        hls = Rhino.Display.ColorHSL(hls[3]/240.0, hls[0]/240.0, hls[2]/240.0, hls[1]/240.0)
     return hls.ToArgbColor()
 
 
@@ -316,16 +301,14 @@ def CullDuplicateNumbers(numbers, tolerance=None):
       CullDuplicatePoints
     """
     count = len(numbers)
-    if count < 2:
-        return numbers
-    if tolerance is None:
-        tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+    if count < 2: return numbers
+    if tolerance is None: tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     numbers = sorted(numbers)
     d = numbers[0]
     index = 1
-    for step in range(1, count):
+    for step in range(1,count):
         test_value = numbers[index]
-        if math.fabs(d - test_value) <= tolerance:
+        if math.fabs(d-test_value)<=tolerance:
             numbers.pop(index)
         else:
             d = test_value
@@ -381,13 +364,11 @@ def Distance(point1, point2):
     """
     from_pt = coerce3dpoint(point1, True)
     to_pt = coerce3dpoint(point2)
-    if to_pt:
-        return (to_pt - from_pt).Length
+    if to_pt: return (to_pt - from_pt).Length
     # check if we have a list of points
     to_pt = coerce3dpointlist(point2, True)
     distances = [(point - from_pt).Length for point in to_pt]
-    if distances:
-        return distances
+    if distances: return distances
 
 
 def GetSettings(filename, section=None, entry=None):
@@ -418,17 +399,14 @@ def GetSettings(filename, section=None, entry=None):
     See Also:
       
     """
-    import ConfigParser
-
+    import configparser
     try:
-        cp = ConfigParser.ConfigParser()
+        cp = configparser.ConfigParser()
         cp.read(filename)
-        if not section:
-            return cp.sections()
-        section = section.lower()
-        if not entry:
-            return cp.options(section)
-        entry = entry.lower()
+        if not section: return cp.sections()
+        section = string.lower(section)
+        if not entry: return cp.options(section)
+        entry = string.lower(entry)
         return cp.get(section, entry)
     except IOError:
         return scriptcontext.errorhander()
@@ -458,14 +436,12 @@ def Polar(point, angle_degrees, distance, plane=None):
     """
     point = coerce3dpoint(point, True)
     angle = math.radians(angle_degrees)
-    if plane:
-        plane = coerceplane(plane)
-    else:
-        plane = Rhino.Geometry.Plane.WorldXY
+    if plane: plane = coerceplane(plane)
+    else: plane = Rhino.Geometry.Plane.WorldXY
     offset = plane.XAxis
     offset.Unitize()
     offset *= distance
-    rc = point + offset
+    rc = point+offset
     xform = Rhino.Geometry.Transform.Rotation(angle, plane.ZAxis, point)
     rc.Transform(xform)
     return rc
@@ -515,9 +491,8 @@ def Sleep(milliseconds):
     See Also:
       
     """
-    time.sleep(milliseconds / 1000.0)
-    Rhino.RhinoApp.Wait()  # keep the message pump alive
-
+    time.sleep( milliseconds / 1000.0 )
+    Rhino.RhinoApp.Wait() #keep the message pump alive
 
 def SortPointList(points, tolerance=None):
     """Sorts list of points so they will be connected in a "reasonable" polyline order
@@ -538,8 +513,7 @@ def SortPointList(points, tolerance=None):
       SortPoints
     """
     points = coerce3dpointlist(points, True)
-    if tolerance is None:
-        tolerance = Rhino.RhinoMath.ZeroTolerance
+    if tolerance is None: tolerance = Rhino.RhinoMath.ZeroTolerance
     return list(Rhino.Geometry.Point3d.SortAndCullPointList(points, tolerance))
 
 
@@ -568,55 +542,36 @@ def SortPoints(points, ascending=True, order=0):
     See Also:
       
     """
-
-    def __cmpXYZ(a, b):
+    def __cmpXYZ( a, b ):
         rc = cmp(a.X, b.X)
-        if rc == 0:
-            rc = cmp(a.Y, b.Y)
-        if rc == 0:
-            rc = cmp(a.Z, b.Z)
+        if rc==0: rc = cmp(a.Y, b.Y)
+        if rc==0: rc = cmp(a.Z, b.Z)
         return rc
-
-    def __cmpXZY(a, b):
+    def __cmpXZY( a, b ):
         rc = cmp(a.X, b.X)
-        if rc == 0:
-            rc = cmp(a.Z, b.Z)
-        if rc == 0:
-            rc = cmp(a.Y, b.Y)
+        if rc==0: rc = cmp(a.Z, b.Z)
+        if rc==0: rc = cmp(a.Y, b.Y)
         return rc
-
-    def __cmpYXZ(a, b):
+    def __cmpYXZ( a, b ):
         rc = cmp(a.Y, b.Y)
-        if rc == 0:
-            rc = cmp(a.X, b.X)
-        if rc == 0:
-            rc = cmp(a.Z, b.Z)
+        if rc==0: rc = cmp(a.X, b.X)
+        if rc==0: rc = cmp(a.Z, b.Z)
         return rc
-
-    def __cmpYZX(a, b):
+    def __cmpYZX( a, b ):
         rc = cmp(a.Y, b.Y)
-        if rc == 0:
-            rc = cmp(a.Z, b.Z)
-        if rc == 0:
-            rc = cmp(a.X, b.X)
+        if rc==0: rc = cmp(a.Z, b.Z)
+        if rc==0: rc = cmp(a.X, b.X)
         return rc
-
-    def __cmpZXY(a, b):
+    def __cmpZXY( a, b ):
         rc = cmp(a.Z, b.Z)
-        if rc == 0:
-            rc = cmp(a.X, b.X)
-        if rc == 0:
-            rc = cmp(a.Y, b.Y)
+        if rc==0: rc = cmp(a.X, b.X)
+        if rc==0: rc = cmp(a.Y, b.Y)
         return rc
-
-    def __cmpZYX(a, b):
+    def __cmpZYX( a, b ):
         rc = cmp(a.Z, b.Z)
-        if rc == 0:
-            rc = cmp(a.Y, b.Y)
-        if rc == 0:
-            rc = cmp(a.X, b.X)
+        if rc==0: rc = cmp(a.Y, b.Y)
+        if rc==0: rc = cmp(a.X, b.X)
         return rc
-
     sortfunc = (__cmpXYZ, __cmpXZY, __cmpYXZ, __cmpYZX, __cmpZXY, __cmpZYX)[order]
     return sorted(points, sortfunc, None, not ascending)
 
@@ -639,32 +594,26 @@ def Str2Pt(point):
 
 
 def clamp(lowvalue, highvalue, value):
-    if lowvalue >= highvalue:
-        raise Exception("lowvalue must be less than highvalue")
-    if value < lowvalue:
-        return lowvalue
-    if value > highvalue:
-        return highvalue
+    if lowvalue>=highvalue: raise Exception("lowvalue must be less than highvalue")
+    if value<lowvalue: return lowvalue
+    if value>highvalue: return highvalue
     return value
 
 
 def fxrange(start, stop, step):
     "float version of the xrange function"
-    if step == 0:
-        raise ValueError("step must not equal 0")
+    if step==0: raise ValueError("step must not equal 0")
     x = start
-    if start < stop:
-        if step < 0:
-            raise ValueError("step must be greater than 0")
-        while x <= stop:
+    if start<stop:
+        if step<0: raise ValueError("step must be greater than 0")
+        while x<=stop:
             yield x
-            x += step
+            x+=step
     else:
-        if step > 0:
-            raise ValueError("step must be less than 0")
-        while x >= stop:
+        if step>0: raise ValueError("step must be less than 0")
+        while x>=stop:
             yield x
-            x += step
+            x+=step
 
 
 def frange(start, stop, step):
@@ -682,37 +631,28 @@ def coerce3dpoint(point, raise_on_error=False):
     Example:
     See Also:
     """
-    if type(point) is Rhino.Geometry.Point3d:
-        return point
+    if type(point) is Rhino.Geometry.Point3d: return point
+    enumerable =  __host.Coerce3dPointFromEnumerables(point)
+    if enumerable is not None: return enumerable
     if type(point) is System.Guid:
         found, pt = scriptcontext.doc.Objects.TryFindPoint(point)
-        if found:
-            return pt
-    if hasattr(point, "__len__") and len(point) == 3 and hasattr(point, "__getitem__"):
+        if found: return pt
+    if hasattr(point, "__len__") and len(point)==3 and hasattr(point, "__getitem__"):
         try:
-            return Rhino.Geometry.Point3d(
-                float(point[0]), float(point[1]), float(point[2])
-            )
+            return Rhino.Geometry.Point3d(float(point[0]), float(point[1]), float(point[2]))
         except:
-            if raise_on_error:
-                raise
-    if (
-        type(point) is Rhino.Geometry.Vector3d
-        or type(point) is Rhino.Geometry.Point3f
-        or type(point) is Rhino.Geometry.Vector3f
-    ):
+            if raise_on_error: raise
+    if type(point) is Rhino.Geometry.Vector3d or type(point) is Rhino.Geometry.Point3f or type(point) is Rhino.Geometry.Vector3f:
         return Rhino.Geometry.Point3d(point.X, point.Y, point.Z)
     if type(point) is str:
-        point = point.split(",")
-        return Rhino.Geometry.Point3d(float(point[0]), float(point[1]), float(point[2]))
-    if hasattr(point, "__len__") and len(point) == 2 and hasattr(point, "__getitem__"):
+        point = point.split(',')
+        return Rhino.Geometry.Point3d( float(point[0]), float(point[1]), float(point[2]) )
+    if hasattr(point, "__len__") and len(point)==2 and hasattr(point, "__getitem__"):
         try:
             return Rhino.Geometry.Point3d(float(point[0]), float(point[1]), 0.0)
         except:
-            if raise_on_error:
-                raise
-    if raise_on_error:
-        raise ValueError("Could not convert %s to a Point3d" % point)
+            if raise_on_error: raise
+    if raise_on_error: raise ValueError("Could not convert %s to a Point3d" % point)
 
 
 def CreatePoint(point, y=None, z=None):
@@ -731,10 +671,8 @@ def CreatePoint(point, y=None, z=None):
     Example:
     See Also:
     """
-    if y is not None:
-        return Rhino.Geometry.Point3d(float(point), float(y), float(z or 0.0))
-    if type(point) is System.Drawing.Color:
-        return Rhino.Geometry.Point3d(point)
+    if y is not None: return Rhino.Geometry.Point3d(float(point), float(y), float(z or 0.0))
+    if type(point) is System.Drawing.Color: return Rhino.Geometry.Point3d(point)
     return coerce3dpoint(point, True)
 
 
@@ -748,23 +686,17 @@ def coerce2dpoint(point, raise_on_error=False):
     Example:
     See Also:
     """
-    if type(point) is Rhino.Geometry.Point2d:
-        return point
+    if type(point) is Rhino.Geometry.Point2d: return point
     if type(point) is list or type(point) is tuple:
         length = len(point)
-        if (
-            length == 2
-            and type(point[0]) is not list
-            and type(point[0]) is not Rhino.Geometry.Point2d
-        ):
+        if length==2 and type(point[0]) is not list and type(point[0]) is not Rhino.Geometry.Point2d:
             return Rhino.Geometry.Point2d(point[0], point[1])
     if type(point) is Rhino.Geometry.Vector3d or type(point) is Rhino.Geometry.Point3d:
         return Rhino.Geometry.Point2d(point.X, point.Y)
     if type(point) is str:
-        point = point.split(",")
-        return Rhino.Geometry.Point2d(float(point[0]), float(point[1]))
-    if raise_on_error:
-        raise ValueError("Could not convert %s to a Point2d" % point)
+        point = point.split(',')
+        return Rhino.Geometry.Point2d( float(point[0]), float(point[1]) )
+    if raise_on_error: raise ValueError("Could not convert %s to a Point2d" % point)
 
 
 def coerce3dvector(vector, raise_on_error=False):
@@ -777,13 +709,10 @@ def coerce3dvector(vector, raise_on_error=False):
     Example:
     See Also:
     """
-    if type(vector) is Rhino.Geometry.Vector3d:
-        return vector
+    if type(vector) is Rhino.Geometry.Vector3d: return vector
     point = coerce3dpoint(vector, False)
-    if point:
-        return Rhino.Geometry.Vector3d(point.X, point.Y, point.Z)
-    if raise_on_error:
-        raise ValueError("Could not convert %s to a Vector3d" % vector)
+    if point: return Rhino.Geometry.Vector3d(point.X, point.Y, point.Z)
+    if raise_on_error: raise ValueError("Could not convert %s to a Vector3d" % vector)
 
 
 def CreateVector(vector, y=None, z=None):
@@ -801,37 +730,30 @@ def CreateVector(vector, y=None, z=None):
     Example:
     See Also:
     """
-    if y is not None:
-        return Rhino.Geometry.Vector3d(float(vector), float(y), float(z or 0.0))
-    if type(vector) is Rhino.Geometry.Vector3d:
-        return Rhino.Geometry.Vector3d(vector)
+    if y is not None: return Rhino.Geometry.Vector3d(float(vector), float(y), float(z or 0.0))
+    if type(vector) is Rhino.Geometry.Vector3d: return Rhino.Geometry.Vector3d(vector)
     return coerce3dvector(vector, True)
 
 
 def coerce3dpointlist(points, raise_on_error=False):
     if isinstance(points, System.Array[Rhino.Geometry.Point3d]):
         return list(points)
-    if isinstance(points, Rhino.Collections.Point3dList):
-        return list(points)
+    if isinstance(points, Rhino.Collections.Point3dList): return list(points)
     if type(points) is list or type(points) is tuple:
         count = len(points)
-        if count > 10 and type(points[0]) is Rhino.Geometry.Point3d:
-            return points
-        if count > 0 and (coerce3dpoint(points[0]) is not None):
+        if count>10 and type(points[0]) is Rhino.Geometry.Point3d: return points
+        if count>0 and (coerce3dpoint(points[0]) is not None):
             return [coerce3dpoint(points[i], raise_on_error) for i in range(count)]
-        elif count > 2 and type(points[0]) is not list:
-            point_count = count / 3
+        elif count>2 and type(points[0]) is not list:
+            point_count = count/3
             rc = []
             for i in range(point_count):
-                pt = Rhino.Geometry.Point3d(
-                    points[i * 3], points[i * 3 + 1], points[i * 3 + 2]
-                )
+                pt = Rhino.Geometry.Point3d(points[i*3], points[i*3+1], points[i*3+2])
                 rc.append(pt)
             return rc
-    if hasattr(points, "__iter__"):
+    if hasattr(points, '__iter__'):
         return [coerce3dpoint(pt, raise_on_error) for pt in points]
-    if raise_on_error:
-        raise ValueError("Could not convert %s to a list of points" % points)
+    if raise_on_error: raise ValueError("Could not convert %s to a list of points" % points)
 
 
 def coerce2dpointlist(points):
@@ -839,23 +761,22 @@ def coerce2dpointlist(points):
         return points
     if type(points) is list or type(points) is tuple:
         count = len(points)
-        if count > 0 and type(points[0]) is Rhino.Geometry.Point2d:
+        if count>0 and type(points[0]) is Rhino.Geometry.Point2d:
             rc = System.Array.CreateInstance(Rhino.Geometry.Point2d, count)
-            for i in range(count):
-                rc[i] = points[i]
+            for i in range(count): rc[i] = points[i]
             return rc
-        elif count > 1 and type(points[0]) is not list:
-            point_count = count / 2
-            rc = System.Array.CreateInstance(Rhino.Geometry.Point2d, point_count)
+        elif count>1 and type(points[0]) is not list:
+            point_count = count/2
+            rc = System.Array.CreateInstance(Rhino.Geometry.Point2d,point_count)
             for i in range(point_count):
-                rc[i] = Rhino.Geometry.Point2d(points[i * 2], points[i * 2 + 1])
+                rc[i] = Rhino.Geometry.Point2d(points[i*2], points[i*2+1])
             return rc
-        elif count > 0 and type(points[0]) is list:
+        elif count>0 and type(points[0]) is list:
             point_count = count
-            rc = System.Array.CreateInstance(Rhino.Geometry.Point2d, point_count)
+            rc = System.Array.CreateInstance(Rhino.Geometry.Point2d,point_count)
             for i in range(point_count):
                 pt = points[i]
-                rc[i] = Rhino.Geometry.Point2d(pt[0], pt[1])
+                rc[i] = Rhino.Geometry.Point2d(pt[0],pt[1])
             return rc
         return None
     return None
@@ -870,37 +791,30 @@ def coerceplane(plane, raise_on_bad_input=False):
     Example:
     See Also:
     """
-    if type(plane) is Rhino.Geometry.Plane:
-        return plane
+    if type(plane) is Rhino.Geometry.Plane: return plane
     if type(plane) is list or type(plane) is tuple:
         length = len(plane)
         if length == 1:
             point = coerce3dpoint(plane, False)
-            if point:
-                plane = point
-                length = 3
-            elif plane[0] is list or plane[0] is tuple:
-                return coerceplane(plane[0])
-        if length == 3 and type(plane[0]) is not list:
+            if point: plane = point; length = 3
+            elif plane[0] is list or plane[0] is tuple: return coerceplane(plane[0])
+        if length==3 and type(plane[0]) is not list:
             rc = Rhino.Geometry.Plane.WorldXY
-            rc.Origin = Rhino.Geometry.Point3d(plane[0], plane[1], plane[2])
+            rc.Origin = Rhino.Geometry.Point3d(plane[0],plane[1],plane[2])
             return rc
-        if length == 9 and type(plane[0]) is not list:
-            origin = Rhino.Geometry.Point3d(plane[0], plane[1], plane[2])
-            xpoint = Rhino.Geometry.Point3d(plane[3], plane[4], plane[5])
-            ypoint = Rhino.Geometry.Point3d(plane[6], plane[7], plane[8])
-            rc = Rhino.Geometry.Plane(origin, xpoint, ypoint)
+        if length==9 and type(plane[0]) is not list:
+            origin = Rhino.Geometry.Point3d(plane[0],plane[1],plane[2])
+            xpoint = Rhino.Geometry.Point3d(plane[3],plane[4],plane[5])
+            ypoint = Rhino.Geometry.Point3d(plane[6],plane[7],plane[8])
+            rc     = Rhino.Geometry.Plane(origin, xpoint, ypoint)
             return rc
-        if (length == 3 or length == 4) and (
-            type(plane[0]) is list or type(plane[0]) is tuple
-        ):
-            origin = Rhino.Geometry.Point3d(plane[0][0], plane[0][1], plane[0][2])
-            xpoint = Rhino.Geometry.Point3d(plane[1][0], plane[1][1], plane[1][2])
-            ypoint = Rhino.Geometry.Point3d(plane[2][0], plane[2][1], plane[2][2])
-            rc = Rhino.Geometry.Plane(origin, xpoint, ypoint)
+        if (length==3 or length==4) and (type(plane[0]) is list or type(plane[0]) is tuple):
+            origin = Rhino.Geometry.Point3d(plane[0][0],plane[0][1],plane[0][2])
+            xpoint = Rhino.Geometry.Point3d(plane[1][0],plane[1][1],plane[1][2])
+            ypoint = Rhino.Geometry.Point3d(plane[2][0],plane[2][1],plane[2][2])
+            rc     = Rhino.Geometry.Plane(origin, xpoint, ypoint)
             return rc
-    if raise_on_bad_input:
-        raise TypeError("%s can not be converted to a Plane" % plane)
+    if raise_on_bad_input: raise TypeError("%s can not be converted to a Plane"%plane)
 
 
 def CreatePlane(plane_or_origin, x_axis=None, y_axis=None, ignored=None):
@@ -916,13 +830,9 @@ def CreatePlane(plane_or_origin, x_axis=None, y_axis=None, ignored=None):
     Example:
     See Also:
     """
-    if type(plane_or_origin) is Rhino.Geometry.Plane:
-        return plane_or_origin.Clone()
+    if type(plane_or_origin) is Rhino.Geometry.Plane: return plane_or_origin.Clone()
     if x_axis != None:
-        if y_axis == None:
-            raise Exception(
-                "A value for the Y axis is expected if the X axis is specified."
-            )
+        if y_axis == None: raise Exception("A value for the Y axis is expected if the X axis is specified.")
         origin = coerce3dpoint(plane_or_origin, True)
         x_axis = coerce3dvector(x_axis, True)
         y_axis = coerce3dvector(y_axis, True)
@@ -939,16 +849,14 @@ def coercexform(xform, raise_on_bad_input=False):
     See Also:
     """
     t = type(xform)
-    if t is Rhino.Geometry.Transform:
-        return xform
-    if (t is list or t is tuple) and len(xform) == 4 and len(xform[0]) == 4:
+    if t is Rhino.Geometry.Transform: return xform
+    if( (t is list or t is tuple) and len(xform)==4 and len(xform[0])==4):
         xf = Rhino.Geometry.Transform()
         for i in range(4):
             for j in range(4):
-                xf[i, j] = xform[i][j]
+                xf[i,j] = xform[i][j]
         return xf
-    if raise_on_bad_input:
-        raise TypeError("%s can not be converted to a Transform" % xform)
+    if raise_on_bad_input: raise TypeError("%s can not be converted to a Transform"%xform)
 
 
 def CreateXform(xform):
@@ -963,68 +871,50 @@ def CreateXform(xform):
     Example:
     See Also:
     """
-    if type(xform) is Rhino.Geometry.Transform:
-        return xform.Clone()
+    if type(xform) is Rhino.Geometry.Transform: return xform.Clone()
     return coercexform(xform, True)
 
 
 def coerceguid(id, raise_exception=False):
-    if type(id) is System.Guid:
-        return id
-    if type(id) is str and len(id) > 30:
+    if type(id) is System.Guid: return id
+    if type(id) is str and len(id)>30:
         try:
             id = System.Guid(id)
             return id
         except:
             pass
-    if (type(id) is list or type(id) is tuple) and len(id) == 1:
+    if (type(id) is list or type(id) is tuple) and len(id)==1:
         return coerceguid(id[0], raise_exception)
-    if type(id) is Rhino.DocObjects.ObjRef:
-        return id.ObjectId
-    if isinstance(id, Rhino.DocObjects.RhinoObject):
-        return id.Id
-    if raise_exception:
-        raise TypeError("Parameter must be a Guid or string representing a Guid")
+    if type(id) is Rhino.DocObjects.ObjRef: return id.ObjectId
+    if isinstance(id,Rhino.DocObjects.RhinoObject): return id.Id
+    if raise_exception: raise TypeError("Parameter must be a Guid or string representing a Guid")
 
 
 def coerceguidlist(ids):
-    if ids is None:
-        return None
+    if ids is None: return None
     rc = []
-    if type(ids) is list or type(ids) is tuple:
-        pass
-    else:
-        ids = [ids]
+    if( type(ids) is list or type(ids) is tuple ): pass
+    else: ids = [ids]
     for id in ids:
         id = coerceguid(id)
-        if id:
-            rc.append(id)
-    if rc:
-        return rc
+        if id: rc.append(id)
+    if rc: return rc
 
 
 def coerceboundingbox(bbox, raise_on_bad_input=False):
-    if type(bbox) is Rhino.Geometry.BoundingBox:
-        return bbox
+    if type(bbox) is Rhino.Geometry.BoundingBox: return bbox
     points = coerce3dpointlist(bbox)
-    if points:
-        return Rhino.Geometry.BoundingBox(points)
-    if raise_on_bad_input:
-        raise TypeError("%s can not be converted to a BoundingBox" % bbox)
+    if points: return Rhino.Geometry.BoundingBox(points)
+    if raise_on_bad_input: raise TypeError("%s can not be converted to a BoundingBox"%bbox)
 
 
 def coercecolor(c, raise_if_bad_input=False):
-    if type(c) is System.Drawing.Color:
-        return c
+    if type(c) is System.Drawing.Color: return c
     if type(c) is list or type(c) is tuple:
-        if len(c) == 3:
-            return System.Drawing.Color.FromArgb(c[0], c[1], c[2])
-        elif len(c) == 4:
-            return System.Drawing.Color.FromArgb(c[3], c[0], c[1], c[2])
-    if type(c) == type(1):
-        return System.Drawing.Color.FromArgb(c)
-    if raise_if_bad_input:
-        raise TypeError("%s can not be converted to a Color" % c)
+        if len(c)==3: return System.Drawing.Color.FromArgb(c[0], c[1], c[2])
+        elif len(c)==4: return System.Drawing.Color.FromArgb(c[3], c[0], c[1], c[2])
+    if type(c)==type(1): return System.Drawing.Color.FromArgb(c)
+    if raise_if_bad_input: raise TypeError("%s can not be converted to a Color"%c)
 
 
 def CreateColor(color, g=None, b=None, a=None):
@@ -1041,26 +931,20 @@ def CreateColor(color, g=None, b=None, a=None):
     Example:
     See Also:
     """
-    if g is not None and b is not None:
-        return System.Drawing.Color.FromArgb(int(a or 255), int(color), int(g), int(b))
-    if type(color) is System.Drawing.Color:
-        return System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B)
+    if g is not None and b is not None: return System.Drawing.Color.FromArgb(int(a or 255), int(color), int(g), int(b))
+    if type(color) is System.Drawing.Color: return System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B)
     return coercecolor(color, True)
 
 
 def coerceline(line, raise_if_bad_input=False):
-    if type(line) is Rhino.Geometry.Line:
-        return line
+    if type(line) is Rhino.Geometry.Line: return line
     guid = coerceguid(line, False)
-    if guid:
-        line = scriptcontext.doc.Objects.Find(guid).Geometry
+    if guid: line = scriptcontext.doc.Objects.Find(guid).Geometry
     if isinstance(line, Rhino.Geometry.Curve) and line.IsLinear:
         return Rhino.Geometry.Line(line.PointAtStart, line.PointAtEnd)
     points = coerce3dpointlist(line, raise_if_bad_input)
-    if points and len(points) > 1:
-        return Rhino.Geometry.Line(points[0], points[1])
-    if raise_if_bad_input:
-        raise TypeError("%s can not be converted to a Line" % line)
+    if points and len(points)>1: return Rhino.Geometry.Line(points[0], points[1])
+    if raise_if_bad_input: raise TypeError("%s can not be converted to a Line"%line)
 
 
 def coercegeometry(id, raise_if_missing=False):
@@ -1071,19 +955,14 @@ def coercegeometry(id, raise_if_missing=False):
     Example:
     See Also:
     """
-    if isinstance(id, Rhino.Geometry.GeometryBase):
-        return id
-    if type(id) is Rhino.DocObjects.ObjRef:
-        return id.Geometry()
-    if isinstance(id, Rhino.DocObjects.RhinoObject):
-        return id.Geometry
+    if isinstance(id, Rhino.Geometry.GeometryBase): return id
+    if type(id) is Rhino.DocObjects.ObjRef: return id.Geometry()
+    if isinstance(id, Rhino.DocObjects.RhinoObject): return id.Geometry
     id = coerceguid(id, raise_if_missing)
     if id:
         rhobj = scriptcontext.doc.Objects.Find(id)
-        if rhobj:
-            return rhobj.Geometry
-    if raise_if_missing:
-        raise ValueError("unable to convert %s into geometry" % id)
+        if rhobj: return rhobj.Geometry
+    if raise_if_missing: raise ValueError("unable to convert %s into geometry"%id)
 
 
 def coercebrep(id, raise_if_missing=False):
@@ -1097,12 +976,9 @@ def coercebrep(id, raise_if_missing=False):
     See Also:
     """
     geom = coercegeometry(id, False)
-    if isinstance(geom, Rhino.Geometry.Brep):
-        return geom
-    if isinstance(geom, Rhino.Geometry.Extrusion):
-        return geom.ToBrep(True)
-    if raise_if_missing:
-        raise ValueError("unable to convert %s into Brep geometry" % id)
+    if isinstance(geom, Rhino.Geometry.Brep): return geom
+    if isinstance(geom, Rhino.Geometry.Extrusion): return geom.ToBrep(True)
+    if raise_if_missing: raise ValueError("unable to convert %s into Brep geometry"%id)
 
 
 def coercecurve(id, segment_index=-1, raise_if_missing=False):
@@ -1114,20 +990,16 @@ def coercecurve(id, segment_index=-1, raise_if_missing=False):
     Example:
     See Also:
     """
-    if isinstance(id, Rhino.Geometry.Curve):
-        return id
-    if type(id) is Rhino.DocObjects.ObjRef:
-        return id.Curve()
+    if isinstance(id, Rhino.Geometry.Curve): return id
+    if type(id) is Rhino.DocObjects.ObjRef: return id.Curve()
     id = coerceguid(id, True)
     crvObj = scriptcontext.doc.Objects.Find(id)
     if crvObj:
         curve = crvObj.Geometry
-        if curve and segment_index >= 0 and type(curve) is Rhino.Geometry.PolyCurve:
+        if curve and segment_index>=0 and type(curve) is Rhino.Geometry.PolyCurve:
             curve = curve.SegmentCurve(segment_index)
-        if isinstance(curve, Rhino.Geometry.Curve):
-            return curve
-    if raise_if_missing:
-        raise ValueError("unable to convert %s into Curve geometry" % id)
+        if isinstance(curve, Rhino.Geometry.Curve): return curve
+    if raise_if_missing: raise ValueError("unable to convert %s into Curve geometry"%id)
 
 
 def coercesurface(object_id, raise_if_missing=False):
@@ -1140,23 +1012,18 @@ def coercesurface(object_id, raise_if_missing=False):
     Example:
     See Also:
     """
-    if isinstance(object_id, Rhino.Geometry.Surface):
-        return object_id
-    if isinstance(object_id, Rhino.Geometry.Brep) and object_id.Faces.Count == 1:
-        return object_id.Faces[0]
-    if type(object_id) is Rhino.DocObjects.ObjRef:
-        return object_id.Face()
+    if isinstance(object_id, Rhino.Geometry.Surface): return object_id
+    if isinstance(object_id, Rhino.Geometry.Brep) and object_id.Faces.Count==1: return object_id.Faces[0]
+    if type(object_id) is Rhino.DocObjects.ObjRef: return object_id.Face()
     object_id = coerceguid(object_id, True)
     srfObj = scriptcontext.doc.Objects.Find(object_id)
     if srfObj:
         srf = srfObj.Geometry
-        if isinstance(srf, Rhino.Geometry.Surface):
-            return srf
-        # single face breps are considered surfaces in the context of scripts
-        if isinstance(srf, Rhino.Geometry.Brep) and srf.Faces.Count == 1:
+        if isinstance(srf, Rhino.Geometry.Surface): return srf
+        #single face breps are considered surfaces in the context of scripts
+        if isinstance(srf, Rhino.Geometry.Brep) and srf.Faces.Count==1:
             return srf.Faces[0]
-    if raise_if_missing:
-        raise ValueError("unable to convert %s into Surface geometry" % object_id)
+    if raise_if_missing: raise ValueError("unable to convert %s into Surface geometry"%object_id)
 
 
 def coercemesh(object_id, raise_if_missing=False):
@@ -1169,19 +1036,15 @@ def coercemesh(object_id, raise_if_missing=False):
     Example:
     See Also:
     """
-    if type(object_id) is Rhino.DocObjects.ObjRef:
-        return object_id.Mesh()
-    if isinstance(object_id, Rhino.Geometry.Mesh):
-        return object_id
+    if type(object_id) is Rhino.DocObjects.ObjRef: return object_id.Mesh()
+    if isinstance(object_id, Rhino.Geometry.Mesh): return object_id
     object_id = coerceguid(object_id, raise_if_missing)
-    if object_id:
+    if object_id: 
         meshObj = scriptcontext.doc.Objects.Find(object_id)
         if meshObj:
             mesh = meshObj.Geometry
-            if isinstance(mesh, Rhino.Geometry.Mesh):
-                return mesh
-    if raise_if_missing:
-        raise ValueError("unable to convert %s into Mesh geometry" % object_id)
+            if isinstance(mesh, Rhino.Geometry.Mesh): return mesh
+    if raise_if_missing: raise ValueError("unable to convert %s into Mesh geometry"%object_id)
 
 
 def coercerhinoobject(object_id, raise_if_bad_input=False, raise_if_missing=False):
@@ -1195,16 +1058,12 @@ def coercerhinoobject(object_id, raise_if_bad_input=False, raise_if_missing=Fals
     Example:
     See Also:
     """
-    if isinstance(object_id, Rhino.DocObjects.RhinoObject):
-        return object_id
+    if isinstance(object_id, Rhino.DocObjects.RhinoObject): return object_id
     object_id = coerceguid(object_id, raise_if_bad_input)
-    if object_id is None:
-        return None
+    if object_id is None: return None
     rc = scriptcontext.doc.Objects.Find(object_id)
-    if not rc and raise_if_missing:
-        raise ValueError("%s does not exist in ObjectTable" % object_id)
+    if not rc and raise_if_missing: raise ValueError("%s does not exist in ObjectTable" % object_id)
     return rc
-
 
 def CreateInterval(interval, y=None):
     """Converts 'interval' into a Rhino.Geometry.Interval.
@@ -1221,16 +1080,10 @@ def CreateInterval(interval, y=None):
     Example:
     See Also:
     """
-    if y is not None:
-        return Rhino.Geometry.Interval(float(interval), float(y))
+    if y is not None: return Rhino.Geometry.Interval(float(interval), float(y))
     if isinstance(interval, numbers.Number):
-        return Rhino.Geometry.Interval(
-            interval if interval < 0 else 0, interval if interval > 0 else 0
-        )
+        return Rhino.Geometry.Interval(interval if interval < 0 else 0, interval if interval > 0 else 0)
     try:
         return Rhino.Geometry.Interval(interval[0], interval[1])
     except:
-        raise ValueError(
-            "unable to convert %s into an Interval: it cannot be indexed." % interval
-        )
-
+        raise ValueError("unable to convert %s into an Interval: it cannot be indexed."%interval)

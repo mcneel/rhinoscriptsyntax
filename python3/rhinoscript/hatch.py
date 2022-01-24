@@ -1,94 +1,35 @@
 import scriptcontext
-import rhinoscript.utility as rhutil
+from . import utility as rhutil
 import Rhino
-from System import Guid
-
+import System.Guid
 
 def __initHatchPatterns():
-    if (
-        scriptcontext.doc.HatchPatterns.FindName(
-            Rhino.DocObjects.HatchPattern.Defaults.Solid.Name
-        )
-        is None
-    ):
-        scriptcontext.doc.HatchPatterns.Add(
-            Rhino.DocObjects.HatchPattern.Defaults.Solid
-        )
+    if scriptcontext.doc.HatchPatterns.FindName(Rhino.DocObjects.HatchPattern.Defaults.Solid.Name) is None:
+        scriptcontext.doc.HatchPatterns.Add(Rhino.DocObjects.HatchPattern.Defaults.Solid)
 
-    if (
-        scriptcontext.doc.HatchPatterns.FindName(
-            Rhino.DocObjects.HatchPattern.Defaults.Hatch1.Name
-        )
-        is None
-    ):
-        scriptcontext.doc.HatchPatterns.Add(
-            Rhino.DocObjects.HatchPattern.Defaults.Hatch1
-        )
+    if scriptcontext.doc.HatchPatterns.FindName(Rhino.DocObjects.HatchPattern.Defaults.Hatch1.Name) is None:
+        scriptcontext.doc.HatchPatterns.Add(Rhino.DocObjects.HatchPattern.Defaults.Hatch1)
 
-    if (
-        scriptcontext.doc.HatchPatterns.FindName(
-            Rhino.DocObjects.HatchPattern.Defaults.Hatch2.Name
-        )
-        is None
-    ):
-        scriptcontext.doc.HatchPatterns.Add(
-            Rhino.DocObjects.HatchPattern.Defaults.Hatch2
-        )
+    if scriptcontext.doc.HatchPatterns.FindName(Rhino.DocObjects.HatchPattern.Defaults.Hatch2.Name) is None:
+        scriptcontext.doc.HatchPatterns.Add(Rhino.DocObjects.HatchPattern.Defaults.Hatch2)
 
-    if (
-        scriptcontext.doc.HatchPatterns.FindName(
-            Rhino.DocObjects.HatchPattern.Defaults.Hatch3.Name
-        )
-        is None
-    ):
-        scriptcontext.doc.HatchPatterns.Add(
-            Rhino.DocObjects.HatchPattern.Defaults.Hatch3
-        )
+    if scriptcontext.doc.HatchPatterns.FindName(Rhino.DocObjects.HatchPattern.Defaults.Hatch3.Name) is None:
+        scriptcontext.doc.HatchPatterns.Add(Rhino.DocObjects.HatchPattern.Defaults.Hatch3)
 
-    if (
-        scriptcontext.doc.HatchPatterns.FindName(
-            Rhino.DocObjects.HatchPattern.Defaults.Dash.Name
-        )
-        is None
-    ):
+    if scriptcontext.doc.HatchPatterns.FindName(Rhino.DocObjects.HatchPattern.Defaults.Dash.Name) is None:
         scriptcontext.doc.HatchPatterns.Add(Rhino.DocObjects.HatchPattern.Defaults.Dash)
 
-    if (
-        scriptcontext.doc.HatchPatterns.FindName(
-            Rhino.DocObjects.HatchPattern.Defaults.Grid.Name
-        )
-        is None
-    ):
+    if scriptcontext.doc.HatchPatterns.FindName(Rhino.DocObjects.HatchPattern.Defaults.Grid.Name) is None:
         scriptcontext.doc.HatchPatterns.Add(Rhino.DocObjects.HatchPattern.Defaults.Grid)
 
-    if (
-        scriptcontext.doc.HatchPatterns.FindName(
-            Rhino.DocObjects.HatchPattern.Defaults.Grid60.Name
-        )
-        is None
-    ):
-        scriptcontext.doc.HatchPatterns.Add(
-            Rhino.DocObjects.HatchPattern.Defaults.Grid60
-        )
+    if scriptcontext.doc.HatchPatterns.FindName(Rhino.DocObjects.HatchPattern.Defaults.Grid60.Name) is None:
+        scriptcontext.doc.HatchPatterns.Add(Rhino.DocObjects.HatchPattern.Defaults.Grid60)
 
-    if (
-        scriptcontext.doc.HatchPatterns.FindName(
-            Rhino.DocObjects.HatchPattern.Defaults.Plus.Name
-        )
-        is None
-    ):
+    if scriptcontext.doc.HatchPatterns.FindName(Rhino.DocObjects.HatchPattern.Defaults.Plus.Name) is None:
         scriptcontext.doc.HatchPatterns.Add(Rhino.DocObjects.HatchPattern.Defaults.Plus)
 
-    if (
-        scriptcontext.doc.HatchPatterns.FindName(
-            Rhino.DocObjects.HatchPattern.Defaults.Squares.Name
-        )
-        is None
-    ):
-        scriptcontext.doc.HatchPatterns.Add(
-            Rhino.DocObjects.HatchPattern.Defaults.Squares
-        )
-
+    if scriptcontext.doc.HatchPatterns.FindName(Rhino.DocObjects.HatchPattern.Defaults.Squares.Name) is None:
+        scriptcontext.doc.HatchPatterns.Add(Rhino.DocObjects.HatchPattern.Defaults.Squares)
 
 def AddHatch(curve_id, hatch_pattern=None, scale=1.0, rotation=0.0):
     """Creates a new hatch object from a closed planar curve object
@@ -115,8 +56,7 @@ def AddHatch(curve_id, hatch_pattern=None, scale=1.0, rotation=0.0):
       HatchPatternNames
     """
     rc = AddHatches(curve_id, hatch_pattern, scale, rotation)
-    if rc:
-        return rc[0]
+    if rc: return rc[0]
     return scriptcontext.errorhandler()
 
 
@@ -148,8 +88,7 @@ def AddHatches(curve_ids, hatch_pattern=None, scale=1.0, rotation=0.0, tolerance
     """
     __initHatchPatterns()
     id = rhutil.coerceguid(curve_ids, False)
-    if id:
-        curve_ids = [id]
+    if id: curve_ids = [id]
     index = scriptcontext.doc.HatchPatterns.CurrentHatchPatternIndex
     if hatch_pattern is None:
         hatch_pattern = CurrentHatchPattern()
@@ -157,28 +96,20 @@ def AddHatches(curve_ids, hatch_pattern=None, scale=1.0, rotation=0.0, tolerance
         index = hatch_pattern
     else:
         pattern_instance = scriptcontext.doc.HatchPatterns.FindName(hatch_pattern)
-        index = (
-            Rhino.RhinoMath.UnsetIntIndex
-            if pattern_instance is None
-            else pattern_instance.Index
-        )
-    if index < 0:
-        return scriptcontext.errorhandler()
+        index = Rhino.RhinoMath.UnsetIntIndex if pattern_instance is None else pattern_instance.Index
+    if index<0: return scriptcontext.errorhandler()
     curves = [rhutil.coercecurve(id, -1, True) for id in curve_ids]
     rotation = Rhino.RhinoMath.ToRadians(rotation)
     if tolerance is None or tolerance < 0:
         tolerance = scriptcontext.doc.ModelAbsoluteTolerance
     hatches = Rhino.Geometry.Hatch.Create(curves, index, rotation, scale, tolerance)
-    if not hatches:
-        return scriptcontext.errorhandler()
+    if not hatches: return scriptcontext.errorhandler()
     ids = []
     for hatch in hatches:
         id = scriptcontext.doc.Objects.AddHatch(hatch)
-        if id == System.Guid.Empty:
-            continue
+        if id==System.Guid.Empty: continue
         ids.append(id)
-    if not ids:
-        return scriptcontext.errorhandler()
+    if not ids: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return ids
 
@@ -206,16 +137,14 @@ def AddHatchPatterns(filename, replace=False):
       HatchPatternNames
     """
     patterns = Rhino.DocObjects.HatchPattern.ReadFromFile(filename, True)
-    if not patterns:
-        return scriptcontext.errorhandler()
+    if not patterns: return scriptcontext.errorhandler()
     rc = []
     for pattern in patterns:
-        index = scriptcontext.doc.HatchPatterns.Add(pattern)
-        if index >= 0:
-            pattern = scriptcontext.doc.HatchPatterns[index]
-            rc.append(pattern.Name)
-    if not rc:
-        return scriptcontext.errorhandler()
+         index = scriptcontext.doc.HatchPatterns.Add(pattern)
+         if index>=0:
+             pattern = scriptcontext.doc.HatchPatterns[index]
+             rc.append(pattern.Name)
+    if not rc: return scriptcontext.errorhandler()
     return rc
 
 
@@ -239,11 +168,8 @@ def CurrentHatchPattern(hatch_pattern=None):
     if hatch_pattern:
         __initHatchPatterns()
         pattern_instance = scriptcontext.doc.HatchPatterns.FindName(hatch_pattern)
-        if pattern_instance is None:
-            return scriptcontext.errorhandler()
-        scriptcontext.doc.HatchPatterns.CurrentHatchPatternIndex = (
-            pattern_instance.Index
-        )
+        if pattern_instance is None: return scriptcontext.errorhandler()
+        scriptcontext.doc.HatchPatterns.CurrentHatchPatternIndex = pattern_instance.Index
     return rc
 
 
@@ -270,8 +196,7 @@ def ExplodeHatch(hatch_id, delete=False):
     """
     rhobj = rhutil.coercerhinoobject(hatch_id, True, True)
     pieces = rhobj.HatchGeometry.Explode()
-    if not pieces:
-        return scriptcontext.errorhandler()
+    if not pieces: return scriptcontext.errorhandler()
     attr = rhobj.Attributes
     rc = []
     for piece in pieces:
@@ -280,10 +205,8 @@ def ExplodeHatch(hatch_id, delete=False):
             id = scriptcontext.doc.Objects.AddCurve(piece, attr)
         elif isinstance(piece, Rhino.Geometry.Brep):
             id = scriptcontext.doc.Objects.AddBrep(piece, attr)
-        if id:
-            rc.append(id)
-    if delete:
-        scriptcontext.doc.Objects.Delete(rhobj)
+        if id: rc.append(id)
+    if delete: scriptcontext.doc.Objects.Delete(rhobj)
     return rc
 
 
@@ -318,8 +241,7 @@ def HatchPattern(hatch_id, hatch_pattern=None):
     if hatch_pattern:
         __initHatchPatterns()
         new_patt = scriptcontext.doc.HatchPatterns.FindName(hatch_pattern)
-        if new_patt is None:
-            return scriptcontext.errorhandler()
+        if new_patt is None: return scriptcontext.errorhandler()
         hatchobj.HatchGeometry.PatternIndex = new_patt.Index
         hatchobj.CommitChanges()
         scriptcontext.doc.Views.Redraw()
@@ -360,8 +282,7 @@ def HatchPatternDescription(hatch_pattern):
     """
     __initHatchPatterns()
     pattern_instance = scriptcontext.doc.HatchPatterns.FindName(hatch_pattern)
-    if pattern_instance is None:
-        return scriptcontext.errorhandler()
+    if pattern_instance is None: return scriptcontext.errorhandler()
     return pattern_instance.Description
 
 
@@ -387,8 +308,7 @@ def HatchPatternFillType(hatch_pattern):
     """
     __initHatchPatterns()
     pattern_instance = scriptcontext.doc.HatchPatterns.FindName(hatch_pattern)
-    if pattern_instance is None:
-        return scriptcontext.errorhandler()
+    if pattern_instance is None: return scriptcontext.errorhandler()
     return int(pattern_instance.FillType)
 
 
@@ -410,11 +330,9 @@ def HatchPatternNames():
     rc = []
     for i in range(scriptcontext.doc.HatchPatterns.Count):
         hatchpattern = scriptcontext.doc.HatchPatterns[i]
-        if hatchpattern.IsDeleted:
-            continue
+        if hatchpattern.IsDeleted: continue
         rc.append(hatchpattern.Name)
     return rc
-
 
 def HatchRotation(hatch_id, rotation=None):
     """Returns or modifies the rotation applied to the hatch pattern when
@@ -445,7 +363,7 @@ def HatchRotation(hatch_id, rotation=None):
         return scriptcontext.errorhandler()
     rc = hatchobj.HatchGeometry.PatternRotation
     rc = Rhino.RhinoMath.ToDegrees(rc)
-    if rotation is not None and rotation != rc:
+    if rotation is not None and rotation!=rc:
         rotation = Rhino.RhinoMath.ToRadians(rotation)
         hatchobj.HatchGeometry.PatternRotation = rotation
         hatchobj.CommitChanges()
@@ -479,7 +397,7 @@ def HatchScale(hatch_id, scale=None):
     if not isinstance(hatchobj, Rhino.DocObjects.HatchObject):
         return scriptcontext.errorhandler()
     rc = hatchobj.HatchGeometry.PatternScale
-    if scale and scale != rc:
+    if scale and scale!=rc:
         hatchobj.HatchGeometry.PatternScale = scale
         hatchobj.CommitChanges()
         scriptcontext.doc.Views.Redraw()
@@ -547,12 +465,8 @@ def IsHatchPatternCurrent(hatch_pattern):
     """
     __initHatchPatterns()
     pattern_instance = scriptcontext.doc.HatchPatterns.FindName(hatch_pattern)
-    if pattern_instance is None:
-        return scriptcontext.errorhandler()
-    return (
-        pattern_instance.Index
-        == scriptcontext.doc.HatchPatterns.CurrentHatchPatternIndex
-    )
+    if pattern_instance is None: return scriptcontext.errorhandler()
+    return pattern_instance.Index==scriptcontext.doc.HatchPatterns.CurrentHatchPatternIndex
 
 
 def IsHatchPatternReference(hatch_pattern):
@@ -578,6 +492,5 @@ def IsHatchPatternReference(hatch_pattern):
     """
     __initHatchPatterns()
     pattern_instance = scriptcontext.doc.HatchPatterns.FindName(hatch_pattern)
-    if pattern_instance is None:
-        return scriptcontext.errorhandler()
+    if pattern_instance is None: return scriptcontext.errorhandler()
     return pattern_instance.IsReference

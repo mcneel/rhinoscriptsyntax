@@ -1,9 +1,9 @@
 import scriptcontext
 import Rhino
-import rhinoscript.utility as rhutil
-from System import Guid, Enum
-from rhinoscript.layer import __getlayer
-from rhinoscript.view import __viewhelper
+from . import utility as rhutil
+import System.Guid, System.Enum
+from .layer import __getlayer
+from .view import __viewhelper
 import math
 
 
@@ -29,8 +29,7 @@ def CopyObject(object_id, translation=None):
       CopyObjects
     """
     rc = CopyObjects(object_id, translation)
-    if rc:
-        return rc[0]
+    if rc: return rc[0]
 
 
 def CopyObjects(object_ids, translation=None):
@@ -77,8 +76,7 @@ def DeleteObject(object_id):
     """
     object_id = rhutil.coerceguid(object_id, True)
     rc = scriptcontext.doc.Objects.Delete(object_id, True)
-    if rc:
-        scriptcontext.doc.Views.Redraw()
+    if rc: scriptcontext.doc.Views.Redraw()
     return rc
 
 
@@ -97,14 +95,11 @@ def DeleteObjects(object_ids):
     """
     rc = 0
     id = rhutil.coerceguid(object_ids, False)
-    if id:
-        object_ids = [id]
+    if id: object_ids = [id]
     for id in object_ids:
         id = rhutil.coerceguid(id, True)
-        if scriptcontext.doc.Objects.Delete(id, True):
-            rc += 1
-    if rc:
-        scriptcontext.doc.Views.Redraw()
+        if scriptcontext.doc.Objects.Delete(id, True): rc+=1
+    if rc: scriptcontext.doc.Views.Redraw()
     return rc
 
 
@@ -128,11 +123,9 @@ def FlashObject(object_ids, style=True):
       UnselectObjects
     """
     id = rhutil.coerceguid(object_ids, False)
-    if id:
-        object_ids = [id]
+    if id: object_ids = [id]
     rhobjs = [rhutil.coercerhinoobject(id, True, True) for id in object_ids]
-    if rhobjs:
-        scriptcontext.doc.Views.FlashObjects(rhobjs, style)
+    if rhobjs: scriptcontext.doc.Views.FlashObjects(rhobjs, style)
 
 
 def HideObject(object_id):
@@ -151,7 +144,7 @@ def HideObject(object_id):
       ShowObject
       ShowObjects
     """
-    return HideObjects(object_id) == 1
+    return HideObjects(object_id)==1
 
 
 def HideObjects(object_ids):
@@ -171,15 +164,12 @@ def HideObjects(object_ids):
       ShowObjects
     """
     id = rhutil.coerceguid(object_ids, False)
-    if id:
-        object_ids = [id]
+    if id: object_ids = [id]
     rc = 0
     for id in object_ids:
         id = rhutil.coerceguid(id, True)
-        if scriptcontext.doc.Objects.Hide(id, False):
-            rc += 1
-    if rc:
-        scriptcontext.doc.Views.Redraw()
+        if scriptcontext.doc.Objects.Hide(id, False): rc += 1
+    if rc: scriptcontext.doc.Views.Redraw()
     return rc
 
 
@@ -289,8 +279,7 @@ def IsObjectInBox(object_id, box, test_mode=True):
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     box = rhutil.coerceboundingbox(box, True)
     objbox = rhobj.Geometry.GetBoundingBox(True)
-    if test_mode:
-        return box.Contains(objbox)
+    if test_mode: return box.Contains(objbox)
     union = Rhino.Geometry.BoundingBox.Intersection(box, objbox)
     return union.IsValid
 
@@ -329,17 +318,13 @@ def IsObjectInGroup(object_id, group_name=None):
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     count = rhobj.GroupCount
-    if count < 1:
-        return False
-    if not group_name:
-        return True
+    if count<1: return False
+    if not group_name: return True
     index = scriptcontext.doc.Groups.Find(group_name)
-    if index < 0:
-        raise ValueError("%s group does not exist" % group_name)
+    if index<0: raise ValueError("%s group does not exist"%group_name)
     group_ids = rhobj.GetGroupList()
     for id in group_ids:
-        if id == index:
-            return True
+        if id==index: return True
     return False
 
 
@@ -452,7 +437,7 @@ def IsObjectSelectable(object_id):
       IsObjectSolid
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
-    return rhobj.IsSelectable(True, False, False, False)
+    return rhobj.IsSelectable(True,False,False,False)
 
 
 def IsObjectSelected(object_id):
@@ -465,7 +450,7 @@ def IsObjectSelected(object_id):
       int: 2, the object is entirely persistently selected
       int: 3, one or more proper sub-objects are selected
     Example:
-      import rhinocsriptsyntax as rs
+      import rhinoscriptsyntax as rs
       object = rs.GetObject()
       if rs.IsObjectSelected(object):
           print "The object is selected."
@@ -510,18 +495,7 @@ def IsObjectSolid(object_id):
       IsObjectSelected
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
-    geom = rhobj.Geometry
-    geometry_type = geom.ObjectType
-
-    if geometry_type == Rhino.DocObjects.ObjectType.Mesh:
-        return geom.IsClosed
-    if (
-        geometry_type == Rhino.DocObjects.ObjectType.Surface
-        or geometry_type == Rhino.DocObjects.ObjectType.Brep
-        or geometry_type == Rhino.DocObjects.ObjectType.Extrusion
-    ):
-        return geom.IsSolid
-    return False
+    return rhobj.IsSolid
 
 
 def IsObjectValid(object_id):
@@ -587,7 +561,7 @@ def LockObject(object_id):
       UnlockObject
       UnlockObjects
     """
-    return LockObjects(object_id) == 1
+    return LockObjects(object_id)==1
 
 
 def LockObjects(object_ids):
@@ -608,15 +582,12 @@ def LockObjects(object_ids):
       UnlockObjects
     """
     id = rhutil.coerceguid(object_ids, False)
-    if id:
-        object_ids = [id]
+    if id: object_ids = [id]
     rc = 0
     for id in object_ids:
         id = rhutil.coerceguid(id, True)
-        if scriptcontext.doc.Objects.Lock(id, False):
-            rc += 1
-    if rc:
-        scriptcontext.doc.Views.Redraw()
+        if scriptcontext.doc.Objects.Lock(id, False): rc += 1
+    if rc: scriptcontext.doc.Views.Redraw()
     return rc
 
 
@@ -639,8 +610,7 @@ def MatchObjectAttributes(target_ids, source_id=None):
       GetObjects
     """
     id = rhutil.coerceguid(target_ids, False)
-    if id:
-        target_ids = [id]
+    if id: target_ids = [id]
     source_attr = Rhino.DocObjects.ObjectAttributes()
     if source_id:
         source = rhutil.coercerhinoobject(source_id, True, True)
@@ -650,8 +620,7 @@ def MatchObjectAttributes(target_ids, source_id=None):
         id = rhutil.coerceguid(id, True)
         if scriptcontext.doc.Objects.ModifyAttributes(id, source_attr, True):
             rc += 1
-    if rc:
-        scriptcontext.doc.Views.Redraw()
+    if rc: scriptcontext.doc.Views.Redraw()
     return rc
 
 
@@ -677,8 +646,7 @@ def MirrorObject(object_id, start_point, end_point, copy=False):
       MirrorObjects
     """
     rc = MirrorObjects(object_id, start_point, end_point, copy)
-    if rc:
-        return rc[0]
+    if rc: return rc[0]
 
 
 def MirrorObjects(object_ids, start_point, end_point, copy=False):
@@ -703,12 +671,9 @@ def MirrorObjects(object_ids, start_point, end_point, copy=False):
     """
     start_point = rhutil.coerce3dpoint(start_point, True)
     end_point = rhutil.coerce3dpoint(end_point, True)
-    vec = end_point - start_point
-    if vec.IsTiny(0):
-        raise Exception("start and end points are too close to each other")
-    normal = (
-        scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane().Normal
-    )
+    vec = end_point-start_point
+    if vec.IsTiny(0): raise Exception("start and end points are too close to each other")
+    normal = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane().Normal
     vec = Rhino.Geometry.Vector3d.CrossProduct(vec, normal)
     vec.Unitize()
     xf = Rhino.Geometry.Transform.Mirror(start_point, vec)
@@ -738,8 +703,7 @@ def MoveObject(object_id, translation):
       MoveObjects
     """
     rc = MoveObjects(object_id, translation)
-    if rc:
-        return rc[0]
+    if rc: return rc[0]
 
 
 def MoveObjects(object_ids, translation):
@@ -798,15 +762,12 @@ def ObjectColor(object_ids, color=None):
         rhino_object = rhutil.coercerhinoobject(id, True, True)
     else:
         rhino_objects = [rhutil.coercerhinoobject(id, True, True) for id in object_ids]
-        if len(rhino_objects) == 1:
+        if len(rhino_objects)==1:
             rhino_object = rhino_objects[0]
             rhino_objects = None
     if color is None:
-        # get the color
-        if rhino_objects:
-            raise ValueError(
-                "color must be specified when a list of rhino objects is provided"
-            )
+        #get the color
+        if rhino_objects: raise ValueError("color must be specified when a list of rhino objects is provided")
         return rhino_object.Attributes.DrawColor(scriptcontext.doc)
     color = rhutil.coercecolor(color, True)
     if rhino_objects is not None:
@@ -814,14 +775,14 @@ def ObjectColor(object_ids, color=None):
             attr = rh_obj.Attributes
             attr.ObjectColor = color
             attr.ColorSource = Rhino.DocObjects.ObjectColorSource.ColorFromObject
-            scriptcontext.doc.Objects.ModifyAttributes(rh_obj, attr, True)
+            scriptcontext.doc.Objects.ModifyAttributes( rh_obj, attr, True)
         scriptcontext.doc.Views.Redraw()
         return len(rhino_objects)
     rc = rhino_object.Attributes.DrawColor(scriptcontext.doc)
     attr = rhino_object.Attributes
     attr.ObjectColor = color
     attr.ColorSource = Rhino.DocObjects.ObjectColorSource.ColorFromObject
-    scriptcontext.doc.Objects.ModifyAttributes(rhino_object, attr, True)
+    scriptcontext.doc.Objects.ModifyAttributes( rhino_object, attr, True )
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -831,7 +792,7 @@ def ObjectColorSource(object_ids, source=None):
     Parameters:
       object_ids ([guid, ...]): single identifier of list of identifiers
       source (number, optional) = new color source
-          0 = color from rhinoscript.layer
+          0 = color from layer
           1 = color from object
           2 = color from material
           3 = color from parent
@@ -852,9 +813,7 @@ def ObjectColorSource(object_ids, source=None):
         rhobj = rhutil.coercerhinoobject(id, True, True)
         rc = int(rhobj.Attributes.ColorSource)
         if source is not None:
-            rhobj.Attributes.ColorSource = System.Enum.ToObject(
-                Rhino.DocObjects.ObjectColorSource, source
-            )
+            rhobj.Attributes.ColorSource = System.Enum.ToObject(Rhino.DocObjects.ObjectColorSource, source)
             rhobj.CommitChanges()
             scriptcontext.doc.Views.Redraw()
         return rc
@@ -866,8 +825,7 @@ def ObjectColorSource(object_ids, source=None):
             rhobj.Attributes.ColorSource = source
             rhobj.CommitChanges()
             rc += 1
-        if rc:
-            scriptcontext.doc.Views.Redraw()
+        if rc: scriptcontext.doc.Views.Redraw()
         return rc
 
 
@@ -909,8 +867,7 @@ def ObjectGroups(object_id):
       ObjectsByGroup
     """
     rhino_object = rhutil.coercerhinoobject(object_id, True, True)
-    if rhino_object.GroupCount < 1:
-        return []
+    if rhino_object.GroupCount<1: return []
     group_indices = rhino_object.GetGroupList()
     rc = [scriptcontext.doc.Groups.GroupName(index) for index in group_indices]
     return rc
@@ -942,8 +899,7 @@ def ObjectLayer(object_id, layer=None):
         scriptcontext.doc.Views.Redraw()
         return len(object_id)
     obj = rhutil.coercerhinoobject(object_id, True, True)
-    if obj is None:
-        return scriptcontext.errorhandler()
+    if obj is None: return scriptcontext.errorhandler()
     index = obj.Attributes.LayerIndex
     rc = scriptcontext.doc.Layers[index].FullPath
     if layer:
@@ -980,14 +936,12 @@ def ObjectLayout(object_id, layout=None, return_name=True):
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     rc = None
-    if rhobj.Attributes.Space == Rhino.DocObjects.ActiveSpace.PageSpace:
+    if rhobj.Attributes.Space==Rhino.DocObjects.ActiveSpace.PageSpace:
         page_id = rhobj.Attributes.ViewportId
         pageview = scriptcontext.doc.Views.Find(page_id)
-        if return_name:
-            rc = pageview.MainViewport.Name
-        else:
-            rc = pageview.MainViewport.Id
-        if layout is None:  # move to model space
+        if return_name: rc = pageview.MainViewport.Name
+        else: rc = pageview.MainViewport.Id
+        if layout is None: #move to model space
             rhobj.Attributes.Space = Rhino.DocObjects.ActiveSpace.ModelSpace
             rhobj.Attributes.ViewportId = System.Guid.Empty
             rhobj.CommitChanges()
@@ -1027,22 +981,17 @@ def ObjectLinetype(object_ids, linetype=None):
         oldindex = scriptcontext.doc.Linetypes.LinetypeIndexForObject(rhino_object)
         if linetype:
             newindex = scriptcontext.doc.Linetypes.Find(linetype)
-            rhino_object.Attributes.LinetypeSource = (
-                Rhino.DocObjects.ObjectLinetypeSource.LinetypeFromObject
-            )
+            rhino_object.Attributes.LinetypeSource = Rhino.DocObjects.ObjectLinetypeSource.LinetypeFromObject
             rhino_object.Attributes.LinetypeIndex = newindex
             rhino_object.CommitChanges()
             scriptcontext.doc.Views.Redraw()
         return scriptcontext.doc.Linetypes[oldindex].Name
 
     newindex = scriptcontext.doc.Linetypes.Find(linetype)
-    if newindex < 0:
-        raise Exception("%s does not exist in LineTypes table" % linetype)
+    if newindex<0: raise Exception("%s does not exist in LineTypes table"%linetype)
     for id in object_ids:
         rhino_object = rhutil.coercerhinoobject(id, True, True)
-        rhino_object.Attributes.LinetypeSource = (
-            Rhino.DocObjects.ObjectLinetypeSource.LinetypeFromObject
-        )
+        rhino_object.Attributes.LinetypeSource = Rhino.DocObjects.ObjectLinetypeSource.LinetypeFromObject
         rhino_object.Attributes.LinetypeIndex = newindex
         rhino_object.CommitChanges()
     scriptcontext.doc.Views.Redraw()
@@ -1119,13 +1068,10 @@ def ObjectMaterialIndex(object_id, material_index=None):
       ObjectMaterialSource
     """
     rhino_object = rhutil.coercerhinoobject(object_id, True, True)
-    if (
-        material_index is not None
-        and material_index < scriptcontext.doc.Materials.Count
-    ):
-        attrs = rhino_object.Attributes
-        attrs.MaterialIndex = material_index
-        scriptcontext.doc.Objects.ModifyAttributes(rhino_object, attrs, True)
+    if material_index is not None and material_index < scriptcontext.doc.Materials.Count:
+      attrs = rhino_object.Attributes
+      attrs.MaterialIndex = material_index
+      scriptcontext.doc.Objects.ModifyAttributes(rhino_object, attrs, True)
     return rhino_object.Attributes.MaterialIndex
 
 
@@ -1137,7 +1083,7 @@ def ObjectMaterialSource(object_ids, source=None):
         object is provided in object_ids, then the current material source is
         returned. This parameter is required if multiple objects are passed in
         object_ids
-        0 = Material from rhinoscript.layer
+        0 = Material from layer
         1 = Material from object
         3 = Material from parent
     Returns:
@@ -1153,20 +1099,15 @@ def ObjectMaterialSource(object_ids, source=None):
       ObjectMaterialIndex
     """
     id = rhutil.coerceguid(object_ids, False)
-    if id:  # working with single object
+    if id: # working with single object
         rhino_object = rhutil.coercerhinoobject(id, True, True)
         rc = int(rhino_object.Attributes.MaterialSource)
         if source is not None:
-            rhino_object.Attributes.MaterialSource = System.Enum.ToObject(
-                Rhino.DocObjects.ObjectMaterialSource, source
-            )
+            rhino_object.Attributes.MaterialSource = System.Enum.ToObject(Rhino.DocObjects.ObjectMaterialSource, source)
             rhino_object.CommitChanges()
         return rc
     # else working with multiple objects
-    if source is None:
-        raise Exception(
-            "source is required when object_ids represents multiple objects"
-        )
+    if source is None: raise Exception("source is required when object_ids represents multiple objects")
     source = System.Enum.ToObject(Rhino.DocObjects.ObjectMaterialSource, source)
     for id in object_ids:
         rhino_object = rhutil.coercerhinoobject(id, True, True)
@@ -1204,14 +1145,12 @@ def ObjectName(object_id, name=None):
         rhino_object = rhutil.coercerhinoobject(id, True, True)
     else:
         rhino_objects = [rhutil.coercerhinoobject(id, True, True) for id in object_id]
-        if not rhino_objects:
-            return 0
-        if len(rhino_objects) == 1:
+        if not rhino_objects: return 0
+        if len(rhino_objects)==1:
             rhino_object = rhino_objects[0]
             rhino_objects = None
-    if name is None:  # get the name
-        if rhino_objects:
-            raise Exception("name required when object_id represents multiple objects")
+    if name is None: #get the name
+        if rhino_objects: raise Exception("name required when object_id represents multiple objects")
         return rhino_object.Name
     if rhino_objects:
         for rh_obj in rhino_objects:
@@ -1220,8 +1159,7 @@ def ObjectName(object_id, name=None):
             scriptcontext.doc.Objects.ModifyAttributes(rh_obj, attr, True)
         return len(rhino_objects)
     rc = rhino_object.Name
-    if not type(name) is str:
-        name = str(name)
+    if not type(name) is str: name = str(name)
     rhino_object.Attributes.Name = name
     rhino_object.CommitChanges()
     return rc
@@ -1251,9 +1189,7 @@ def ObjectPrintColor(object_ids, color=None):
         rhino_object = rhutil.coercerhinoobject(id, True, True)
         rc = rhino_object.Attributes.PlotColor
         if color:
-            rhino_object.Attributes.PlotColorSource = (
-                Rhino.DocObjects.ObjectPlotColorSource.PlotColorFromObject
-            )
+            rhino_object.Attributes.PlotColorSource = Rhino.DocObjects.ObjectPlotColorSource.PlotColorFromObject
             rhino_object.Attributes.PlotColor = rhutil.coercecolor(color, True)
             rhino_object.CommitChanges()
             scriptcontext.doc.Views.Redraw()
@@ -1261,9 +1197,7 @@ def ObjectPrintColor(object_ids, color=None):
     for id in object_ids:
         color = rhutil.coercecolor(color, True)
         rhino_object = rhutil.coercerhinoobject(id, True, True)
-        rhino_object.Attributes.PlotColorSource = (
-            Rhino.DocObjects.ObjectPlotColorSource.PlotColorFromObject
-        )
+        rhino_object.Attributes.PlotColorSource = Rhino.DocObjects.ObjectPlotColorSource.PlotColorFromObject
         rhino_object.Attributes.PlotColor = color
         rhino_object.CommitChanges()
     scriptcontext.doc.Views.Redraw()
@@ -1295,17 +1229,13 @@ def ObjectPrintColorSource(object_ids, source=None):
         rhino_object = rhutil.coercerhinoobject(id, True, True)
         rc = int(rhino_object.Attributes.PlotColorSource)
         if source is not None:
-            rhino_object.Attributes.PlotColorSource = System.Enum.ToObject(
-                Rhino.DocObjects.ObjectPlotColorSource, source
-            )
+            rhino_object.Attributes.PlotColorSource = System.Enum.ToObject(Rhino.DocObjects.ObjectPlotColorSource, source)
             rhino_object.CommitChanges()
             scriptcontext.doc.Views.Redraw()
         return rc
     for id in object_ids:
         rhino_object = rhutil.coercerhinoobject(id, True, True)
-        rhino_object.Attributes.PlotColorSource = System.Enum.ToObject(
-            Rhino.DocObjects.ObjectPlotColorSource, source
-        )
+        rhino_object.Attributes.PlotColorSource = System.Enum.ToObject(Rhino.DocObjects.ObjectPlotColorSource, source)
         rhino_object.CommitChanges()
     scriptcontext.doc.Views.Redraw()
     return len(object_ids)
@@ -1335,18 +1265,14 @@ def ObjectPrintWidth(object_ids, width=None):
         rhino_object = rhutil.coercerhinoobject(id, True, True)
         rc = rhino_object.Attributes.PlotWeight
         if width is not None:
-            rhino_object.Attributes.PlotWeightSource = (
-                Rhino.DocObjects.ObjectPlotWeightSource.PlotWeightFromObject
-            )
+            rhino_object.Attributes.PlotWeightSource = Rhino.DocObjects.ObjectPlotWeightSource.PlotWeightFromObject
             rhino_object.Attributes.PlotWeight = width
             rhino_object.CommitChanges()
             scriptcontext.doc.Views.Redraw()
         return rc
     for id in object_ids:
         rhino_object = rhutil.coercerhinoobject(id, True, True)
-        rhino_object.Attributes.PlotWeightSource = (
-            Rhino.DocObjects.ObjectPlotWeightSource.PlotWeightFromObject
-        )
+        rhino_object.Attributes.PlotWeightSource = Rhino.DocObjects.ObjectPlotWeightSource.PlotWeightFromObject
         rhino_object.Attributes.PlotWeight = width
         rhino_object.CommitChanges()
     scriptcontext.doc.Views.Redraw()
@@ -1378,17 +1304,13 @@ def ObjectPrintWidthSource(object_ids, source=None):
         rhino_object = rhutil.coercerhinoobject(id, True, True)
         rc = int(rhino_object.Attributes.PlotWeightSource)
         if source is not None:
-            rhino_object.Attributes.PlotWeightSource = System.Enum.ToObject(
-                Rhino.DocObjects.ObjectPlotWeightSource, source
-            )
+            rhino_object.Attributes.PlotWeightSource = System.Enum.ToObject(Rhino.DocObjects.ObjectPlotWeightSource, source)
             rhino_object.CommitChanges()
             scriptcontext.doc.Views.Redraw()
         return rc
     for id in object_ids:
         rhino_object = rhutil.coercerhinoobject(id, True, True)
-        rhino_object.Attributes.PlotWeightSource = System.Enum.ToObject(
-            Rhino.DocObjects.ObjectPlotWeightSource, source
-        )
+        rhino_object.Attributes.PlotWeightSource = System.Enum.ToObject(Rhino.DocObjects.ObjectPlotWeightSource, source)
         rhino_object.CommitChanges()
     scriptcontext.doc.Views.Redraw()
     return len(object_ids)
@@ -1432,8 +1354,8 @@ def ObjectType(object_id):
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     geom = rhobj.Geometry
-    if isinstance(geom, Rhino.Geometry.Brep) and geom.Faces.Count == 1:
-        return 8  # surface
+    if isinstance(geom, Rhino.Geometry.Brep) and geom.Faces.Count==1:
+        return 8 #surface
     return int(geom.ObjectType)
 
 
@@ -1475,32 +1397,30 @@ def OrientObject(object_id, reference, target, flags=0):
         raise ValueError("Could not convert reference or target to point list")
     from_count = len(from_array)
     to_count = len(to_array)
-    if from_count < 2 or to_count < 2:
-        raise Exception("point lists must have at least 2 values")
+    if from_count<2 or to_count<2: raise Exception("point lists must have at least 2 values")
 
-    copy = (flags & 1) == 1
-    scale = (flags & 2) == 2
+    copy = ((flags & 1) == 1)
+    scale = ((flags & 2) == 2)
     xform_final = None
-    if from_count > 2 and to_count > 2:
-        # Orient3Pt
+    if from_count>2 and to_count>2:
+        #Orient3Pt
         from_plane = Rhino.Geometry.Plane(from_array[0], from_array[1], from_array[2])
         to_plane = Rhino.Geometry.Plane(to_array[0], to_array[1], to_array[2])
         if not from_plane.IsValid or not to_plane.IsValid:
             raise Exception("unable to create valid planes from point lists")
         xform_final = Rhino.Geometry.Transform.PlaneToPlane(from_plane, to_plane)
     else:
-        # Orient2Pt
-        xform_move = Rhino.Geometry.Transform.Translation(to_array[0] - from_array[0])
+        #Orient2Pt
+        xform_move = Rhino.Geometry.Transform.Translation( to_array[0]-from_array[0] )
         xform_scale = Rhino.Geometry.Transform.Identity
         v0 = from_array[1] - from_array[0]
         v1 = to_array[1] - to_array[0]
         if scale:
             len0 = v0.Length
             len1 = v1.Length
-            if len0 < 0.000001 or len1 < 0.000001:
-                raise Exception("vector lengths too short")
+            if len0<0.000001 or len1<0.000001: raise Exception("vector lengths too short")
             scale = len1 / len0
-            if abs(1.0 - scale) >= 0.000001:
+            if abs(1.0-scale)>=0.000001:
                 plane = Rhino.Geometry.Plane(from_array[0], v0)
                 xform_scale = Rhino.Geometry.Transform.Scale(plane, scale, scale, scale)
         v0.Unitize()
@@ -1508,8 +1428,7 @@ def OrientObject(object_id, reference, target, flags=0):
         xform_rotate = Rhino.Geometry.Transform.Rotation(v0, v1, from_array[0])
         xform_final = xform_move * xform_scale * xform_rotate
     rc = scriptcontext.doc.Objects.Transform(object_id, xform_final, not copy)
-    if rc == System.Guid.Empty:
-        return scriptcontext.errorhandler()
+    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -1536,12 +1455,11 @@ def RotateObject(object_id, center_point, rotation_angle, axis=None, copy=False)
       RotateObjects
     """
     rc = RotateObjects(object_id, center_point, rotation_angle, axis, copy)
-    if rc:
-        return rc[0]
+    if rc: return rc[0]
     return scriptcontext.errorhandler()
 
 
-def RotateObjects(object_ids, center_point, rotation_angle, axis=None, copy=False):
+def RotateObjects( object_ids, center_point, rotation_angle, axis=None, copy=False):
     """Rotates multiple objects
     Parameters:
       object_ids ([guid, ...]): Identifiers of objects to rotate
@@ -1564,9 +1482,7 @@ def RotateObjects(object_ids, center_point, rotation_angle, axis=None, copy=Fals
     """
     center_point = rhutil.coerce3dpoint(center_point, True)
     if not axis:
-        axis = (
-            scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane().Normal
-        )
+        axis = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane().Normal
     axis = rhutil.coerce3dvector(axis, True)
     rotation_angle = Rhino.RhinoMath.ToRadians(rotation_angle)
     xf = Rhino.Geometry.Transform.Rotation(rotation_angle, axis, center_point)
@@ -1595,9 +1511,8 @@ def ScaleObject(object_id, origin, scale, copy=False):
     See Also:
       ScaleObjects
     """
-    rc = ScaleObjects(object_id, origin, scale, copy)
-    if rc:
-        return rc[0]
+    rc = ScaleObjects(object_id, origin, scale, copy )
+    if rc: return rc[0]
     return scriptcontext.errorhandler()
 
 
@@ -1653,12 +1568,11 @@ def SelectObject(object_id, redraw=True):
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     rhobj.Select(True)
-    if redraw:
-        scriptcontext.doc.Views.Redraw()
+    if redraw: scriptcontext.doc.Views.Redraw()
     return True
 
 
-def SelectObjects(object_ids):
+def SelectObjects( object_ids):
     """Selects one or more objects
     Parameters:
       object_ids ([guid, ...]): identifiers of the objects to select
@@ -1679,14 +1593,11 @@ def SelectObjects(object_ids):
       UnselectObjects
     """
     id = rhutil.coerceguid(object_ids, False)
-    if id:
-        object_ids = [id]
+    if id: object_ids = [id]
     rc = 0
     for id in object_ids:
-        if SelectObject(id, False) == True:
-            rc += 1
-    if rc > 0:
-        scriptcontext.doc.Views.Redraw()
+        if SelectObject(id, False)==True: rc += 1
+    if rc > 0: scriptcontext.doc.Views.Redraw()
     return rc
 
 
@@ -1711,8 +1622,7 @@ def ShearObject(object_id, origin, reference_point, angle_degrees, copy=False):
       ShearObjects
     """
     rc = ShearObjects(object_id, origin, reference_point, angle_degrees, copy)
-    if rc:
-        return rc[0]
+    if rc: return rc[0]
 
 
 def ShearObjects(object_ids, origin, reference_point, angle_degrees, copy=False):
@@ -1736,13 +1646,12 @@ def ShearObjects(object_ids, origin, reference_point, angle_degrees, copy=False)
     """
     origin = rhutil.coerce3dpoint(origin, True)
     reference_point = rhutil.coerce3dpoint(reference_point, True)
-    if (origin - reference_point).IsTiny():
-        return None
+    if (origin-reference_point).IsTiny(): return None
     plane = scriptcontext.doc.Views.ActiveView.MainViewport.ConstructionPlane()
     frame = Rhino.Geometry.Plane(plane)
     frame.Origin = origin
     frame.ZAxis = plane.Normal
-    yaxis = reference_point - origin
+    yaxis = reference_point-origin
     yaxis.Unitize()
     frame.YAxis = yaxis
     xaxis = Rhino.Geometry.Vector3d.CrossProduct(frame.ZAxis, frame.YAxis)
@@ -1752,7 +1661,7 @@ def ShearObjects(object_ids, origin, reference_point, angle_degrees, copy=False)
     world_plane = Rhino.Geometry.Plane.WorldXY
     cob = Rhino.Geometry.Transform.ChangeBasis(world_plane, frame)
     shear2d = Rhino.Geometry.Transform.Identity
-    shear2d[0, 1] = math.tan(math.radians(angle_degrees))
+    shear2d[0,1] = math.tan(math.radians(angle_degrees))
     cobinv = Rhino.Geometry.Transform.ChangeBasis(frame, world_plane)
     xf = cobinv * shear2d * cob
     rc = TransformObjects(object_ids, xf, copy)
@@ -1778,7 +1687,7 @@ def ShowObject(object_id):
       IsObjectHidden
       ShowObjects
     """
-    return ShowObjects(object_id) == 1
+    return ShowObjects(object_id)==1
 
 
 def ShowObjects(object_ids):
@@ -1801,15 +1710,12 @@ def ShowObjects(object_ids):
       ShowObject
     """
     id = rhutil.coerceguid(object_ids, False)
-    if id:
-        object_ids = [id]
+    if id: object_ids = [id]
     rc = 0
     for id in object_ids:
         id = rhutil.coerceguid(id, True)
-        if scriptcontext.doc.Objects.Show(id, False):
-            rc += 1
-    if rc:
-        scriptcontext.doc.Views.Redraw()
+        if scriptcontext.doc.Objects.Show(id, False): rc += 1
+    if rc: scriptcontext.doc.Views.Redraw()
     return rc
 
 
@@ -1842,22 +1748,14 @@ def TransformObject(object_id, matrix, copy=False):
       TransformObjects
     """
     rc = TransformObjects(object_id, matrix, copy)
-    if rc:
-        return rc[0]
+    if rc: return rc[0]
     return scriptcontext.errorhandler()
 
 
 __allowed_transform_types = [
-    Rhino.Geometry.Point3d,
-    Rhino.Geometry.Line,
-    Rhino.Geometry.Rectangle3d,
-    Rhino.Geometry.Circle,
-    Rhino.Geometry.Ellipse,
-    Rhino.Geometry.Arc,
-    Rhino.Geometry.Polyline,
-    Rhino.Geometry.Box,
-    Rhino.Geometry.Sphere,
-]
+    Rhino.Geometry.Point3d, Rhino.Geometry.Line, Rhino.Geometry.Rectangle3d,
+    Rhino.Geometry.Circle, Rhino.Geometry.Ellipse, Rhino.Geometry.Arc,
+    Rhino.Geometry.Polyline, Rhino.Geometry.Box, Rhino.Geometry.Sphere]
 
 
 # this is also called by Copy, Scale, Mirror, Move, and Rotate functions defined above
@@ -1881,12 +1779,9 @@ def TransformObjects(object_ids, matrix, copy=False):
     """
     xform = rhutil.coercexform(matrix, True)
     id = rhutil.coerceguid(object_ids, False)
-    if id:
-        object_ids = [id]
-    elif isinstance(object_ids, Rhino.Geometry.GeometryBase):
-        object_ids = [object_ids]
-    elif type(object_ids) in __allowed_transform_types:
-        object_ids = [object_ids]
+    if id: object_ids = [id]
+    elif isinstance(object_ids, Rhino.Geometry.GeometryBase): object_ids = [object_ids]
+    elif type(object_ids) in __allowed_transform_types: object_ids = [object_ids]
     rc = []
     for object_id in object_ids:
         id = System.Guid.Empty
@@ -1894,44 +1789,23 @@ def TransformObjects(object_ids, matrix, copy=False):
         if old_id:
             id = scriptcontext.doc.Objects.Transform(old_id, xform, not copy)
         elif isinstance(object_id, Rhino.Geometry.GeometryBase):
-            if copy:
-                object_id = object_id.Duplicate()
-            if not object_id.Transform(xform):
-                raise Exception("Cannot apply transform to geometry.")
+            if copy: object_id = object_id.Duplicate()
+            if not object_id.Transform(xform): raise Exception("Cannot apply transform to geometry.")
             id = scriptcontext.doc.Objects.Add(object_id)
         else:
             type_of_id = type(object_id)
             if type_of_id in __allowed_transform_types:
-                if copy:
-                    object_id = System.ICloneable.Clone(object_id)
-                if (
-                    object_id.Transform(xform) == False
-                ):  # some of the Transform methods return bools, others have no return
+                if copy: object_id = System.ICloneable.Clone(object_id)
+                if object_id.Transform(xform) == False: #some of the Transform methods return bools, others have no return
                     raise Exception("Cannot apply transform to geometry.")
                 ot = scriptcontext.doc.Objects
-                fs = [
-                    ot.AddPoint,
-                    ot.AddLine,
-                    ot.AddRectangle,
-                    ot.AddCircle,
-                    ot.AddEllipse,
-                    ot.AddArc,
-                    ot.AddPolyline,
-                    ot.AddBox,
-                    ot.AddSphere,
-                ]
+                fs = [ot.AddPoint,ot.AddLine,ot.AddRectangle,ot.AddCircle,ot.AddEllipse,ot.AddArc,ot.AddPolyline,ot.AddBox,ot.AddSphere]
                 t_index = __allowed_transform_types.index(type_of_id)
                 id = fs[t_index](object_id)
             else:
-                raise Exception(
-                    "The {0} cannot be tranformed. A Guid or geometry types are expected.".format(
-                        type_of_id
-                    )
-                )
-        if id != System.Guid.Empty:
-            rc.append(id)
-    if rc:
-        scriptcontext.doc.Views.Redraw()
+                raise Exception("The {0} cannot be tranformed. A Guid or geometry types are expected.".format(type_of_id))
+        if id!=System.Guid.Empty: rc.append(id)
+    if rc: scriptcontext.doc.Views.Redraw()
     return rc
 
 
@@ -1954,7 +1828,7 @@ def UnlockObject(object_id):
       LockObjects
       UnlockObjects
     """
-    return UnlockObjects(object_id) == 1
+    return UnlockObjects(object_id)==1
 
 
 def UnlockObjects(object_ids):
@@ -1977,15 +1851,12 @@ def UnlockObjects(object_ids):
       UnlockObject
     """
     id = rhutil.coerceguid(object_ids, False)
-    if id:
-        object_ids = [id]
+    if id: object_ids = [id]
     rc = 0
     for id in object_ids:
         id = rhutil.coerceguid(id, True)
-        if scriptcontext.doc.Objects.Unlock(id, False):
-            rc += 1
-    if rc:
-        scriptcontext.doc.Views.Redraw()
+        if scriptcontext.doc.Objects.Unlock(id, False): rc += 1
+    if rc: scriptcontext.doc.Views.Redraw()
     return rc
 
 
@@ -2008,7 +1879,7 @@ def UnselectObject(object_id):
       SelectObjects
       UnselectObjects
     """
-    return UnselectObjects(object_id) == 1
+    return UnselectObjects(object_id)==1
 
 
 def UnselectObjects(object_ids):
@@ -2031,12 +1902,10 @@ def UnselectObjects(object_ids):
       UnselectObject
     """
     id = rhutil.coerceguid(object_ids, False)
-    if id:
-        object_ids = [id]
+    if id: object_ids = [id]
     count = len(object_ids)
     for id in object_ids:
         obj = rhutil.coercerhinoobject(id, True, True)
         obj.Select(False)
-    if count:
-        scriptcontext.doc.Views.Redraw()
+    if count: scriptcontext.doc.Views.Redraw()
     return count

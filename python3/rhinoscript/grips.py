@@ -1,4 +1,4 @@
-import rhinoscript.utility as rhutil
+from . import utility as rhutil
 import scriptcontext
 import Rhino
 
@@ -24,7 +24,7 @@ def EnableObjectGrips(object_id, enable=True):
       UnselectObjectGrips
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
-    if enable != rhobj.GripsOn:
+    if enable!=rhobj.GripsOn:
         rhobj.GripsOn = enable
         scriptcontext.doc.Views.Redraw()
 
@@ -55,8 +55,7 @@ def GetObjectGrip(message=None, preselect=False, select=False):
         scriptcontext.doc.Objects.UnselectAll()
         scriptcontext.doc.Views.Redraw()
     rc, grip = Rhino.Input.RhinoGet.GetGrip(message)
-    if rc != Rhino.Commands.Result.Success:
-        return scriptcontext.errorhandler()
+    if rc!=Rhino.Commands.Result.Success: return scriptcontext.errorhandler()
     if select:
         grip.Select(True, True)
         scriptcontext.doc.Views.Redraw()
@@ -89,7 +88,7 @@ def GetObjectGrips(message=None, preselect=False, select=False):
         scriptcontext.doc.Objects.UnselectAll()
         scriptcontext.doc.Views.Redraw()
     getrc, grips = Rhino.Input.RhinoGet.GetGrips(message)
-    if getrc != Rhino.Commands.Result.Success or not grips:
+    if getrc!=Rhino.Commands.Result.Success or not grips:
         return scriptcontext.errorhandler()
     rc = []
     for grip in grips:
@@ -97,24 +96,21 @@ def GetObjectGrips(message=None, preselect=False, select=False):
         index = grip.Index
         location = grip.CurrentLocation
         rc.append((id, index, location))
-        if select:
-            grip.Select(True, True)
-    if select:
-        scriptcontext.doc.Views.Redraw()
+        if select: grip.Select(True, True)
+    if select: scriptcontext.doc.Views.Redraw()
     return rc
 
 
 def __neighborgrip(i, object_id, index, direction, enable):
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     grips = rhobj.GetGrips()
-    if not grips or len(grips) <= index:
-        return scriptcontext.errorhandler()
+    if not grips or len(grips)<=index: return scriptcontext.errorhandler()
     grip = grips[index]
-    next_grip = None
-    if direction == 0:
-        next_grip = grip.NeighborGrip(i, 0, 0, False)
+    next_grip=None
+    if direction==0:
+        next_grip = grip.NeighborGrip(i,0,0,False)
     else:
-        next_grip = grip.NeighborGrip(0, i, 0, False)
+        next_grip = grip.NeighborGrip(0,i,0,False)
     if next_grip and enable:
         next_grip.Select(True)
         scriptcontext.doc.Views.Redraw()
@@ -167,8 +163,7 @@ def ObjectGripCount(object_id):
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     grips = rhobj.GetGrips()
-    if not grips:
-        return scriptcontext.errorhandler()
+    if not grips: return scriptcontext.errorhandler()
     return grips.Length
 
 
@@ -198,10 +193,9 @@ def ObjectGripLocation(object_id, index, point=None):
       ObjectGripLocations
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
-    if not rhobj.GripsOn:
-        return scriptcontext.errorhandler()
+    if not rhobj.GripsOn: return scriptcontext.errorhandler()
     grips = rhobj.GetGrips()
-    if not grips or index < 0 or index >= grips.Length:
+    if not grips or index<0 or index>=grips.Length:
         return scriptcontext.errorhandler()
     grip = grips[index]
     rc = grip.CurrentLocation
@@ -238,13 +232,11 @@ def ObjectGripLocations(object_id, points=None):
       ObjectGripLocation
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
-    if not rhobj.GripsOn:
-        return scriptcontext.errorhandler()
+    if not rhobj.GripsOn: return scriptcontext.errorhandler()
     grips = rhobj.GetGrips()
-    if grips is None:
-        return scriptcontext.errorhandler()
+    if grips is None: return scriptcontext.errorhandler()
     rc = [grip.CurrentLocation for grip in grips]
-    if points and len(points) == len(grips):
+    if points and len(points)==len(grips):
         points = rhutil.coerce3dpointlist(points, True)
         for i, grip in enumerate(grips):
             point = points[i]
@@ -297,14 +289,11 @@ def ObjectGripsSelected(object_id):
       UnselectObjectGrips
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
-    if not rhobj.GripsOn:
-        return False
+    if not rhobj.GripsOn: return False
     grips = rhobj.GetGrips()
-    if grips is None:
-        return False
+    if grips is None: return False
     for grip in grips:
-        if grip.IsSelected(False):
-            return True
+        if grip.IsSelected(False): return True
     return False
 
 
@@ -356,14 +345,12 @@ def SelectedObjectGrips(object_id):
       SelectObjectGrips
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
-    if not rhobj.GripsOn:
-        return None
+    if not rhobj.GripsOn: return None
     grips = rhobj.GetGrips()
     rc = []
     if grips:
-        for i in xrange(grips.Length):
-            if grips[i].IsSelected(False):
-                rc.append(i)
+        for i in range(grips.Length):
+            if grips[i].IsSelected(False): rc.append(i)
     return rc
 
 
@@ -388,15 +375,12 @@ def SelectObjectGrip(object_id, index):
       SelectObjectGrips
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
-    if not rhobj.GripsOn:
-        return False
+    if not rhobj.GripsOn: return False
     grips = rhobj.GetGrips()
-    if grips is None:
-        return False
-    if index < 0 or index >= grips.Length:
-        return False
+    if grips is None: return False
+    if index<0 or index>=grips.Length: return False
     grip = grips[index]
-    if grip.Select(True, True) > 0:
+    if grip.Select(True,True)>0:
         scriptcontext.doc.Views.Redraw()
         return True
     return False
@@ -421,16 +405,13 @@ def SelectObjectGrips(object_id):
       SelectObjectGrip
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
-    if not rhobj.GripsOn:
-        return scriptcontext.errorhandler()
+    if not rhobj.GripsOn: return scriptcontext.errorhandler()
     grips = rhobj.GetGrips()
-    if grips is None:
-        return scriptcontext.errorhandler()
+    if grips is None: return scriptcontext.errorhandler()
     count = 0
     for grip in grips:
-        if grip.Select(True, True) > 0:
-            count += 1
-    if count > 0:
+        if grip.Select(True,True)>0: count+=1
+    if count>0:
         scriptcontext.doc.Views.Redraw()
         return count
     return scriptcontext.errorhandler()
@@ -458,15 +439,12 @@ def UnselectObjectGrip(object_id, index):
       UnselectObjectGrips
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
-    if not rhobj.GripsOn:
-        return False
+    if not rhobj.GripsOn: return False
     grips = rhobj.GetGrips()
-    if grips is None:
-        return False
-    if index < 0 or index >= grips.Length:
-        return False
+    if grips is None: return False
+    if index<0 or index>=grips.Length: return False
     grip = grips[index]
-    if grip.Select(False) == 0:
+    if grip.Select(False)==0:
         scriptcontext.doc.Views.Redraw()
         return True
     return False
@@ -489,16 +467,13 @@ def UnselectObjectGrips(object_id):
       UnselectObjectGrip
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
-    if not rhobj.GripsOn:
-        return scriptcontext.errorhandler()
+    if not rhobj.GripsOn: return scriptcontext.errorhandler()
     grips = rhobj.GetGrips()
-    if grips is None:
-        return scriptcontext.errorhandler()
+    if grips is None: return scriptcontext.errorhandler()
     count = 0
     for grip in grips:
-        if grip.Select(False) == 0:
-            count += 1
-    if count > 0:
+        if grip.Select(False)==0: count += 1
+    if count>0:
         scriptcontext.doc.Views.Redraw()
         return count
     return scriptcontext.errorhandler()

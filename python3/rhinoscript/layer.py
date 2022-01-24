@@ -1,28 +1,22 @@
+import Rhino.DocObjects.Layer
 import scriptcontext
-import rhinoscript.utility as rhutil
-from System import Guid
-import Rhino
-
-UnsetIntIndex = Rhino.RhinoMath.UnsetIntIndex
-Layer = Rhino.DocObjects.Layer
+from . import utility as rhutil
+import System.Guid
+from Rhino.RhinoMath import UnsetIntIndex
 
 
 def __getlayer(name_or_id, raise_if_missing):
-    if not name_or_id:
-        raise TypeError("Parameter must be a string or Guid")
+    if not name_or_id: raise TypeError("Parameter must be a string or Guid")
     id = rhutil.coerceguid(name_or_id)
     if id:
         layer = scriptcontext.doc.Layers.FindId(id)
     else:
         name = name_or_id
         layer_index = scriptcontext.doc.Layers.FindByFullPath(name, UnsetIntIndex)
-        if layer_index != UnsetIntIndex:
-            return scriptcontext.doc.Layers[layer_index]
+        if layer_index != UnsetIntIndex: return scriptcontext.doc.Layers[layer_index]
         layer = scriptcontext.doc.Layers.FindName(name)
-    if layer:
-        return layer
-    if raise_if_missing:
-        raise ValueError("%s does not exist in LayerTable" % name_or_id)
+    if layer: return layer
+    if raise_if_missing: raise ValueError("%s does not exist in LayerTable" % name_or_id)
 
 
 def AddLayer(name=None, color=None, visible=True, locked=False, parent=None):
@@ -50,45 +44,40 @@ def AddLayer(name=None, color=None, visible=True, locked=False, parent=None):
       DeleteLayer
       RenameLayer
     """
-    names = [""]
+    names = ['']
     if name:
-        if not isinstance(name, str):
-            name = str(name)
-        names = [n for n in name.split("::") if name]
-
+      if not isinstance(name, str): name = str(name)
+      names = [n for n in name.split("::") if name]
+      
     last_parent_index = -1
     last_parent = None
     for idx, name in enumerate(names):
-        layer = Rhino.DocObjects.Layer.GetDefaultLayerProperties()
+      layer = Rhino.DocObjects.Layer.GetDefaultLayerProperties()
 
-        if idx is 0:
-            if parent:
-                last_parent = __getlayer(parent, True)
-        else:
-            if last_parent_index != -1:
-                last_parent = scriptcontext.doc.Layers[last_parent_index]
+      if idx is 0:
+        if parent:
+          last_parent = __getlayer(parent, True)
+      else:
+        if last_parent_index != -1:
+          last_parent = scriptcontext.doc.Layers[last_parent_index]
 
+      if last_parent:
+        layer.ParentLayerId = last_parent.Id
+      if name:
+        layer.Name = name
+        
+      color = rhutil.coercecolor(color)
+      if color: layer.Color = color
+      layer.IsVisible = visible
+      layer.IsLocked = locked
+    
+      last_parent_index = scriptcontext.doc.Layers.Add(layer)
+      if last_parent_index == -1:
+        full_path = layer.Name
         if last_parent:
-            layer.ParentLayerId = last_parent.Id
-        if name:
-            layer.Name = name
-
-        color = rhutil.coercecolor(color)
-        if color:
-            layer.Color = color
-        layer.IsVisible = visible
-        layer.IsLocked = locked
-
-        last_parent_index = scriptcontext.doc.Layers.Add(layer)
-        if last_parent_index == -1:
-            full_path = layer.Name
-            if last_parent:
-                full_path = last_parent.FullPath + "::" + full_path
-            last_parent_index = scriptcontext.doc.Layers.FindByFullPath(
-                full_path, UnsetIntIndex
-            )
+            full_path = last_parent.FullPath + "::" + full_path
+        last_parent_index = scriptcontext.doc.Layers.FindByFullPath(full_path, UnsetIntIndex)
     return scriptcontext.doc.Layers[last_parent_index].FullPath
-
 
 def CurrentLayer(layer=None):
     """Returns or changes the current layer
@@ -134,10 +123,10 @@ def DeleteLayer(layer):
       RenameLayer
     """
     layer = __getlayer(layer, True)
-    return scriptcontext.doc.Layers.Delete(layer.LayerIndex, True)
+    return scriptcontext.doc.Layers.Delete( layer.LayerIndex, True)
 
 
-def ExpandLayer(layer, expand):
+def ExpandLayer( layer, expand ):
     """Expands a layer. Expanded layers can be viewed in Rhino's layer dialog
     Parameters:
       layer (str): name of the layer to expand
@@ -152,8 +141,7 @@ def ExpandLayer(layer, expand):
       IsLayerExpanded
     """
     layer = __getlayer(layer, True)
-    if layer.IsExpanded == expand:
-        return False
+    if layer.IsExpanded==expand: return False
     layer.IsExpanded = expand
     return True
 
@@ -284,8 +272,7 @@ def IsLayerEmpty(layer):
     """
     layer = __getlayer(layer, True)
     rhobjs = scriptcontext.doc.Objects.FindByLayer(layer)
-    if not rhobjs:
-        return True
+    if not rhobjs: return True
     return False
 
 
@@ -304,7 +291,7 @@ def IsLayerExpanded(layer):
       ExpandLayer
     """
     layer = __getlayer(layer, True)
-    return layer.IsExpanded
+    return layer.IsExpanded   
 
 
 def IsLayerLocked(layer):
@@ -478,8 +465,7 @@ def LayerChildCount(layer):
     """
     layer = __getlayer(layer, True)
     children = layer.GetChildren()
-    if children:
-        return len(children)
+    if children: return len(children)
     return 0
 
 
@@ -500,9 +486,8 @@ def LayerChildren(layer):
     """
     layer = __getlayer(layer, True)
     children = layer.GetChildren()
-    if children:
-        return [child.FullPath for child in children]
-    return []  # empty list
+    if children: return [child.FullPath for child in children]
+    return [] #empty list
 
 
 def LayerColor(layer, color=None):
@@ -535,8 +520,8 @@ def LayerColor(layer, color=None):
     if color:
         color = rhutil.coercecolor(color)
         if color is not None:
-            layer.Color = color
-            scriptcontext.doc.Views.Redraw()
+          layer.Color = color
+          scriptcontext.doc.Views.Redraw()
     return rc
 
 
@@ -592,15 +577,13 @@ def LayerLinetype(layer, linetype=None):
     index = layer.LinetypeIndex
     rc = scriptcontext.doc.Linetypes[index].Name
     if linetype:
-        if not isinstance(linetype, str):
-            linetype = str(linetype)
+        if not isinstance(linetype, str): linetype = str(linetype)
         if linetype == scriptcontext.doc.Linetypes.ContinuousLinetypeName:
-            index = -1
+          index = -1
         else:
-            lt = scriptcontext.doc.Linetypes.FindName(linetype)
-            if lt == None:
-                return scriptcontext.errorhandler()
-            index = lt.LinetypeIndex
+          lt = scriptcontext.doc.Linetypes.FindName(linetype)
+          if lt == None: return scriptcontext.errorhandler()
+          index = lt.LinetypeIndex
         layer.LinetypeIndex = index
         scriptcontext.doc.Views.Redraw()
     return rc
@@ -624,14 +607,15 @@ def LayerLocked(layer, locked=None):
       LayerVisible
     """
     layer = __getlayer(layer, True)
-    rc = layer.IsLocked
-    if locked != None and locked != rc:
+    rc = layer.IsLocked 
+    if locked!=None and locked!=layer.GetPersistentLocking():
         layer.IsLocked = locked
+        layer.SetPersistentLocking(locked)
         scriptcontext.doc.Views.Redraw()
     return rc
 
 
-def LayerMaterialIndex(layer, index=None):
+def LayerMaterialIndex(layer,index=None):
     """Returns or changes the material index of a layer. A material index of -1
     indicates that no material has been assigned to the layer. Thus, the layer
     will use Rhino's default layer material
@@ -653,7 +637,7 @@ def LayerMaterialIndex(layer, index=None):
     """
     layer = __getlayer(layer, True)
     rc = layer.RenderMaterialIndex
-    if index is not None and index >= -1:
+    if index is not None and index>=-1:
         layer.RenderMaterialIndex = index
         scriptcontext.doc.Views.Redraw()
     return rc
@@ -693,8 +677,7 @@ def LayerName(layer_id, fullpath=True):
       LayerId
     """
     layer = __getlayer(layer_id, True)
-    if fullpath:
-        return layer.FullPath
+    if fullpath: return layer.FullPath
     return layer.Name
 
 
@@ -714,10 +697,8 @@ def LayerNames(sort=False):
     """
     rc = []
     for layer in scriptcontext.doc.Layers:
-        if not layer.IsDeleted:
-            rc.append(layer.FullPath)
-    if sort:
-        rc.sort()
+        if not layer.IsDeleted: rc.append(layer.FullPath)
+    if sort: rc.sort()
     return rc
 
 
@@ -795,7 +776,7 @@ def LayerPrintWidth(layer, width=None):
     """
     layer = __getlayer(layer, True)
     rc = layer.PlotWeight
-    if width is not None and width != rc:
+    if width is not None and width!=rc:
         layer.PlotWeight = width
         scriptcontext.doc.Views.Redraw()
     return rc
@@ -827,8 +808,8 @@ def LayerVisible(layer, visible=None, forcevisible_or_donotpersist=False):
         if visible and forcevisible_or_donotpersist:
             scriptcontext.doc.Layers.ForceLayerVisible(layer.Id)
         if not visible and not forcevisible_or_donotpersist:
-            if layer.ParentLayerId != System.Guid.Empty:
-                layer.SetPersistentVisibility(visible)
+          if layer.ParentLayerId != System.Guid.Empty:
+            layer.SetPersistentVisibility(visible)
         scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -855,14 +836,13 @@ def ParentLayer(layer, parent=None):
     layer = __getlayer(layer, True)
     parent_id = layer.ParentLayerId
     oldparent = None
-    if parent_id != System.Guid.Empty:
+    if parent_id!=System.Guid.Empty:
         oldparentlayer = scriptcontext.doc.Layers.Find(parent_id, -1)
         if oldparentlayer is not None:
             oldparentlayer = scriptcontext.doc.Layers[oldparentlayer]
             oldparent = oldparentlayer.FullPath
-    if parent is None:
-        return oldparent
-    if parent == "":
+    if parent is None: return oldparent
+    if parent=="":
         layer.ParentLayerId = System.Guid.Empty
     else:
         parent = __getlayer(parent, True)
@@ -890,10 +870,9 @@ def PurgeLayer(layer):
       RenameLayer
     """
     layer = __getlayer(layer, True)
-    rc = scriptcontext.doc.Layers.Purge(layer.LayerIndex, True)
+    rc = scriptcontext.doc.Layers.Purge( layer.LayerIndex, True)
     scriptcontext.doc.Views.Redraw()
     return rc
-
 
 def RenameLayer(oldname, newname):
     """Renames an existing layer
@@ -917,4 +896,3 @@ def RenameLayer(oldname, newname):
         layer = __getlayer(oldname, True)
         layer.Name = newname
         return newname
-

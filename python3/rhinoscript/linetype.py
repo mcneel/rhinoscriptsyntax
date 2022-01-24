@@ -1,12 +1,11 @@
 import scriptcontext
-import rhinoscript.utility as rhutil
+from . import utility as rhutil
 import Rhino
 
 
 def __getlinetype(name_or_id):
     id = rhutil.coerceguid(name_or_id)
-    if id:
-        return scriptcontext.doc.Linetypes.FindId(id)
+    if id: return scriptcontext.doc.Linetypes.FindId(id)
     return scriptcontext.doc.Linetypes.FindName(name_or_id)
 
 
@@ -48,8 +47,7 @@ def IsLinetypeReference(name_or_id):
       IsLinetype
     """
     lt = __getlinetype(name_or_id)
-    if lt is None:
-        raise ValueError("unable to coerce %s into linetype" % name_or_id)
+    if lt is None: raise ValueError("unable to coerce %s into linetype"%name_or_id)
     return lt.IsReference
 
 
@@ -83,10 +81,8 @@ def LinetypeNames(sort=False):
     """
     count = scriptcontext.doc.Linetypes.Count
     rc = []
-    for i in xrange(count):
+    for i in range(count):
         linetype = scriptcontext.doc.Linetypes[i]
-        if not linetype.IsDeleted:
-            rc.append(linetype.Name)
-    if sort:
-        rc.sort()
+        if not linetype.IsDeleted: rc.append(linetype.Name)
+    if sort: rc.sort()
     return rc

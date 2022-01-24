@@ -1,8 +1,7 @@
-import rhinoscript.utility as rhutil
+from . import utility as rhutil
 import Rhino.Geometry
 import scriptcontext
 import math
-
 
 def DistanceToPlane(plane, point):
     """Returns the distance from a 3D point to a plane
@@ -73,11 +72,8 @@ def IntersectPlanes(plane1, plane2, plane3):
     plane1 = rhutil.coerceplane(plane1, True)
     plane2 = rhutil.coerceplane(plane2, True)
     plane3 = rhutil.coerceplane(plane3, True)
-    rc, point = Rhino.Geometry.Intersect.Intersection.PlanePlanePlane(
-        plane1, plane2, plane3
-    )
-    if rc:
-        return point
+    rc, point = Rhino.Geometry.Intersect.Intersection.PlanePlanePlane(plane1, plane2, plane3)
+    if rc: return point
 
 
 def MovePlane(plane, origin):
@@ -137,8 +133,7 @@ def PlaneClosestPoint(plane, point, return_point=True):
         return plane.ClosestPoint(point)
     else:
         rc, s, t = plane.ClosestParameter(point)
-        if rc:
-            return s, t
+        if rc: return s, t
 
 
 def PlaneCurveIntersection(plane, curve, tolerance=None):
@@ -202,17 +197,13 @@ def PlaneCurveIntersection(plane, curve, tolerance=None):
     """
     plane = rhutil.coerceplane(plane, True)
     curve = rhutil.coercecurve(curve, -1, True)
-    if tolerance is None:
-        tolerance = scriptcontext.doc.ModelAbsoluteTolerance
-    intersections = Rhino.Geometry.Intersect.Intersection.CurvePlane(
-        curve, plane, tolerance
-    )
+    if tolerance is None: tolerance = scriptcontext.doc.ModelAbsoluteTolerance
+    intersections = Rhino.Geometry.Intersect.Intersection.CurvePlane(curve, plane, tolerance)
     if intersections:
         rc = []
         for intersection in intersections:
             a = 1
-            if intersection.IsOverlap:
-                a = 2
+            if intersection.IsOverlap: a = 2
             b = intersection.PointA
             c = intersection.PointA2
             d = intersection.PointB
@@ -223,7 +214,7 @@ def PlaneCurveIntersection(plane, curve, tolerance=None):
             i = intersection.OverlapA[1]
             j = intersection.OverlapB[0]
             k = intersection.OverlapB[1]
-            rc.append((a, b, c, d, e, f, g, h, i, j, k))
+            rc.append( (a,b,c,d,e,f,g,h,i,j,k) )
         return rc
 
 
@@ -276,8 +267,7 @@ def PlaneFitFromPoints(points):
     """
     points = rhutil.coerce3dpointlist(points, True)
     rc, plane = Rhino.Geometry.Plane.FitPlaneToPoints(points)
-    if rc == Rhino.Geometry.PlaneFitResult.Success:
-        return plane
+    if rc==Rhino.Geometry.PlaneFitResult.Success: return plane
 
 
 def PlaneFromFrame(origin, x_axis, y_axis):
@@ -339,9 +329,7 @@ def PlaneFromNormal(origin, normal, xaxis=None):
     rc = Rhino.Geometry.Plane(origin, normal)
     if xaxis:
         xaxis = rhutil.coerce3dvector(xaxis, True)
-        xaxis = Rhino.Geometry.Vector3d(
-            xaxis
-        )  # prevent original xaxis parameter from being unitized too
+        xaxis = Rhino.Geometry.Vector3d(xaxis)#prevent original xaxis parameter from being unitized too
         xaxis.Unitize()
         yaxis = Rhino.Geometry.Vector3d.CrossProduct(rc.Normal, xaxis)
         rc = Rhino.Geometry.Plane(origin, xaxis, yaxis)
@@ -368,8 +356,7 @@ def PlaneFromPoints(origin, x, y):
     x = rhutil.coerce3dpoint(x, True)
     y = rhutil.coerce3dpoint(y, True)
     plane = Rhino.Geometry.Plane(origin, x, y)
-    if plane.IsValid:
-        return plane
+    if plane.IsValid: return plane
 
 
 def PlanePlaneIntersection(plane1, plane2):
@@ -394,8 +381,7 @@ def PlanePlaneIntersection(plane1, plane2):
     plane1 = rhutil.coerceplane(plane1, True)
     plane2 = rhutil.coerceplane(plane2, True)
     rc, line = Rhino.Geometry.Intersect.Intersection.PlanePlane(plane1, plane2)
-    if rc:
-        return line.From, line.To
+    if rc: return line.From, line.To
 
 
 def PlaneSphereIntersection(plane, sphere_plane, sphere_radius):
@@ -432,9 +418,9 @@ def PlaneSphereIntersection(plane, sphere_plane, sphere_radius):
     sphere_plane = rhutil.coerceplane(sphere_plane, True)
     sphere = Rhino.Geometry.Sphere(sphere_plane, sphere_radius)
     rc, circle = Rhino.Geometry.Intersect.Intersection.PlaneSphere(plane, sphere)
-    if rc == Rhino.Geometry.Intersect.PlaneSphereIntersection.Point:
+    if rc==Rhino.Geometry.Intersect.PlaneSphereIntersection.Point:
         return 0, circle.Center
-    if rc == Rhino.Geometry.Intersect.PlaneSphereIntersection.Circle:
+    if rc==Rhino.Geometry.Intersect.PlaneSphereIntersection.Circle:
         return 1, circle.Plane, circle.Radius
 
 
@@ -460,8 +446,7 @@ def PlaneTransform(plane, xform):
     plane = rhutil.coerceplane(plane, True)
     xform = rhutil.coercexform(xform, True)
     rc = Rhino.Geometry.Plane(plane)
-    if rc.Transform(xform):
-        return rc
+    if rc.Transform(xform): return rc
 
 
 def RotatePlane(plane, angle_degrees, axis):
@@ -486,8 +471,7 @@ def RotatePlane(plane, angle_degrees, axis):
     axis = rhutil.coerce3dvector(axis, True)
     angle_radians = math.radians(angle_degrees)
     rc = Rhino.Geometry.Plane(plane)
-    if rc.Rotate(angle_radians, axis):
-        return rc
+    if rc.Rotate(angle_radians, axis): return rc
 
 
 def WorldXYPlane():

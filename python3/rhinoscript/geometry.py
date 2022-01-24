@@ -1,7 +1,7 @@
 import scriptcontext
-import rhinoscript.utility as rhutil
+from . import utility as rhutil
 import Rhino
-from System import Guid, Array
+import System.Guid, System.Array
 
 
 def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
@@ -37,37 +37,23 @@ def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
         else:
             if type(views[0]) is System.Guid:
                 viewlist = views
-            elif type(views[0]) is str:
-                modelviews = scriptcontext.doc.Views.GetViewList(True, False)
+            elif( type(views[0]) is str ):
+                modelviews = scriptcontext.doc.Views.GetViewList(True,False)
                 for viewname in views:
                     for item in modelviews:
-                        if item.ActiveViewport.Name == viewname:
+                        if item.ActiveViewport.Name==viewname:
                             viewlist.append(item.ActiveViewportID)
                             break
     else:
         viewlist.append(scriptcontext.doc.Views.ActiveView.ActiveViewportID)
-    if not viewlist:
-        return scriptcontext.errorhandler()
-    rc = scriptcontext.doc.Objects.AddClippingPlane(
-        plane, u_magnitude, v_magnitude, viewlist
-    )
-    if rc == System.Guid.Empty:
-        raise Exception("unable to add clipping plane to document")
+    if not viewlist: return scriptcontext.errorhandler()
+    rc = scriptcontext.doc.Objects.AddClippingPlane(plane, u_magnitude, v_magnitude, viewlist)
+    if rc==System.Guid.Empty: raise Exception("unable to add clipping plane to document")
     scriptcontext.doc.Views.Redraw()
     return rc
 
-
-def AddPictureFrame(
-    plane,
-    filename,
-    width=0.0,
-    height=0.0,
-    self_illumination=True,
-    embed=False,
-    use_alpha=False,
-    make_mesh=False,
-):
-    """Creates a picture frame and adds it to the document.
+def AddPictureFrame(plane, filename, width=0.0, height=0.0, self_illumination=True, embed=False, use_alpha=False, make_mesh=False):
+  """Creates a picture frame and adds it to the document.
   Parameters:
     plane (plane): The plane in which the PictureFrame will be created.  The bottom-left corner of picture will be at plane's origin. The width will be in the plane's X axis direction, and the height will be in the plane's Y axis direction.
     filename (str): The path to a bitmap or image file.
@@ -85,17 +71,12 @@ def AddPictureFrame(
   See Also:
     
   """
-    plane = rhutil.coerceplane(plane, True)
-    if type(filename) is not System.String or not System.IO.File.Exists(filename):
-        raise Exception('"{0}" does not exist or is not a file name'.format(filename))
-    rc = scriptcontext.doc.Objects.AddPictureFrame(
-        plane, filename, make_mesh, width, height, self_illumination, embed
-    )
-    if rc == System.Guid.Empty:
-        raise Exception("unable to add picture frame to document")
-    scriptcontext.doc.Views.Redraw()
-    return rc
-
+  plane = rhutil.coerceplane(plane, True)
+  if type(filename) is not System.String or not System.IO.File.Exists(filename): raise Exception('\"{0}\" does not exist or is not a file name'.format(filename))
+  rc = scriptcontext.doc.Objects.AddPictureFrame(plane, filename, make_mesh, width, height, self_illumination, embed) 
+  if rc==System.Guid.Empty: raise Exception("unable to add picture frame to document")
+  scriptcontext.doc.Views.Redraw()
+  return rc
 
 def AddPoint(point, y=None, z=None):
     """Adds point object to the document.
@@ -110,12 +91,10 @@ def AddPoint(point, y=None, z=None):
       IsPoint
       PointCoordinates
     """
-    if y is not None:
-        point = Rhino.Geometry.Point3d(point, y, z or 0.0)
+    if y is not None: point = Rhino.Geometry.Point3d(point, y, z or 0.0)
     point = rhutil.coerce3dpoint(point, True)
     rc = scriptcontext.doc.Objects.AddPoint(point)
-    if rc == System.Guid.Empty:
-        raise Exception("unable to add point to document")
+    if rc==System.Guid.Empty: raise Exception("unable to add point to document")
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -137,15 +116,14 @@ def AddPointCloud(points, colors=None):
       PointCloudPoints
     """
     points = rhutil.coerce3dpointlist(points, True)
-    if colors and len(colors) == len(points):
+    if colors and len(colors)==len(points):
         pc = Rhino.Geometry.PointCloud()
         for i in range(len(points)):
-            color = rhutil.coercecolor(colors[i], True)
-            pc.Add(points[i], color)
+            color = rhutil.coercecolor(colors[i],True)
+            pc.Add(points[i],color)
         points = pc
     rc = scriptcontext.doc.Objects.AddPointCloud(points)
-    if rc == System.Guid.Empty:
-        raise Exception("unable to add point cloud to document")
+    if rc==System.Guid.Empty: raise Exception("unable to add point cloud to document")
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -170,9 +148,7 @@ def AddPoints(points):
     return rc
 
 
-def AddText(
-    text, point_or_plane, height=1.0, font=None, font_style=0, justification=None
-):
+def AddText(text, point_or_plane, height=1.0, font=None, font_style=0, justification=None):
     """Adds a text string to the document
     Parameters:
       text (str): the text to display
@@ -202,69 +178,54 @@ def AddText(
     See Also:
       IsText
     """
-    if not text:
-        raise ValueError("text invalid")
-    if not isinstance(text, str):
-        text = str(text)
+    if not text: raise ValueError("text invalid")
+    if not isinstance(text, str): text = str(text)
     point = rhutil.coerce3dpoint(point_or_plane)
     plane = None
-    if not point:
-        plane = rhutil.coerceplane(point_or_plane, True)
+    if not point: plane = rhutil.coerceplane(point_or_plane, True)
     if not plane:
         plane = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
         plane.Origin = point
     if font != None and type(font) != str:
-        raise ValueError("font needs to be a quartet name")
-    bold = 1 == font_style or 3 == font_style
-    italic = 2 == font_style or 3 == font_style
+      raise ValueError("font needs to be a quartet name")
+    bold = (1==font_style or 3==font_style)
+    italic = (2==font_style or 3==font_style)
 
     ds = scriptcontext.doc.DimStyles.Current
     if font == None:
-        qn = ds.Font.QuartetName
-        quartetBoldProp = ds.Font.Bold
-        quartetItalicProp = ds.Font.Italic
+      qn = ds.Font.QuartetName
+      quartetBoldProp = ds.Font.Bold
+      quartetItalicProp = ds.Font.Italic
     else:
-        qn = font
-        quartetBoldProp = False
-        quartetItalicProp = False
+      qn = font
+      quartetBoldProp = False
+      quartetItalicProp = False
 
-    f = Rhino.DocObjects.Font.FromQuartetProperties(
-        qn, quartetBoldProp, quartetItalicProp
-    )
+    f = Rhino.DocObjects.Font.FromQuartetProperties(qn, quartetBoldProp, quartetItalicProp)
     if f == None:
-        print(
-            "font error: there is a problem with the font {} and cannot be used to create a text entity".format(
-                font
-            )
-        )
+        print(("font error: there is a problem with the font {} and cannot be used to create a text entity".format(font)))
         return scriptcontext.errorhandler()
 
     te = Rhino.Geometry.TextEntity.Create(text, plane, ds, False, 0, 0)
     te.TextHeight = height
 
     if font != None:
-        te.Font = f
+      te.Font = f
 
     if bold != quartetBoldProp:
         if Rhino.DocObjects.Font.FromQuartetProperties(qn, bold, False) == None:
-            print(
-                "'{}' does not have a 'bold' property so it will not be set.".format(qn)
-            )
+          print(("'{}' does not have a 'bold' property so it will not be set.".format(qn)))
         else:
-            te.SetBold(bold)
+          te.SetBold(bold)
     if italic != quartetItalicProp:
         if Rhino.DocObjects.Font.FromQuartetProperties(qn, False, italic) == None:
-            print(
-                "'{}' does not have an 'italic' property so it will not be set.".format(
-                    qn
-                )
-            )
+          print(("'{}' does not have an 'italic' property so it will not be set.".format(qn)))
         else:
-            te.SetItalic(italic)
+          te.SetItalic(italic)
 
     if justification is not None:
-        h_map = [(1, 0), (2, 1), (4, 2)]
-        v_map = [(65536, 5), (131072, 3), (262144, 0)]
+        h_map = [(1,0), (2,1), (4,2)]
+        v_map = [(65536,5), (131072,3), (262144,0)]
 
         def getOneAlignFromMap(j, m, e):
             lst = []
@@ -273,20 +234,15 @@ def AddText(
                     lst.append(v)
             return System.Enum.ToObject(e, lst[0]) if lst else None
 
-        h = getOneAlignFromMap(
-            justification, h_map, Rhino.DocObjects.TextHorizontalAlignment
-        )
+        h = getOneAlignFromMap(justification, h_map, Rhino.DocObjects.TextHorizontalAlignment)
         if h != None:
             te.TextHorizontalAlignment = h
-        v = getOneAlignFromMap(
-            justification, v_map, Rhino.DocObjects.TextVerticalAlignment
-        )
+        v = getOneAlignFromMap(justification, v_map, Rhino.DocObjects.TextVerticalAlignment)
         if v != None:
             te.TextVerticalAlignment = v
 
-    id = scriptcontext.doc.Objects.Add(te)
-    if id == System.Guid.Empty:
-        raise ValueError("unable to add text to document")
+    id = scriptcontext.doc.Objects.Add(te);
+    if id==System.Guid.Empty: raise ValueError("unable to add text to document")
     scriptcontext.doc.Views.Redraw()
     return id
 
@@ -305,11 +261,9 @@ def AddTextDot(text, point):
       IsTextDot
     """
     point = rhutil.coerce3dpoint(point, True)
-    if not isinstance(text, str):
-        text = str(text)
+    if not isinstance(text, str): text = str(text)
     rc = scriptcontext.doc.Objects.AddTextDot(text, point)
-    if rc == System.Guid.Empty:
-        raise ValueError("unable to add text dot to document")
+    if rc==System.Guid.Empty: raise ValueError("unable to add text dot to document")
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -330,8 +284,7 @@ def Area(object_id):
     """
     rhobj = rhutil.coercerhinoobject(object_id, True, True)
     mp = Rhino.Geometry.AreaMassProperties.Compute(rhobj.Geometry)
-    if mp is None:
-        raise Exception("unable to compute area mass properties")
+    if mp is None: raise Exception("unable to compute area mass properties")
     return mp.Area
 
 
@@ -362,16 +315,13 @@ def BoundingBox(objects, view_or_plane=None, in_world_coords=True):
     See Also:
       
     """
-
     def __objectbbox(object, xform):
         geom = rhutil.coercegeometry(object, False)
         if not geom:
             pt = rhutil.coerce3dpoint(object, True)
-            if xform:
-                pt = xform * pt
-            return Rhino.Geometry.BoundingBox(pt, pt)
-        if xform:
-            return geom.GetBoundingBox(xform)
+            if xform: pt = xform * pt
+            return Rhino.Geometry.BoundingBox(pt,pt)
+        if xform: return geom.GetBoundingBox(xform)
         return geom.GetBoundingBox(True)
 
     xform = None
@@ -381,36 +331,29 @@ def BoundingBox(objects, view_or_plane=None, in_world_coords=True):
         modelviews = scriptcontext.doc.Views.GetStandardRhinoViews()
         for item in modelviews:
             viewport = item.MainViewport
-            if type(view) is str and viewport.Name == view:
+            if type(view) is str and viewport.Name==view:
                 plane = viewport.ConstructionPlane()
                 break
-            elif type(view) is System.Guid and viewport.Id == view:
+            elif type(view) is System.Guid and viewport.Id==view:
                 plane = viewport.ConstructionPlane()
                 break
-        if plane is None:
-            return scriptcontext.errorhandler()
+        if plane is None: return scriptcontext.errorhandler()
     if plane:
-        xform = Rhino.Geometry.Transform.ChangeBasis(
-            Rhino.Geometry.Plane.WorldXY, plane
-        )
+        xform = Rhino.Geometry.Transform.ChangeBasis(Rhino.Geometry.Plane.WorldXY, plane)
     bbox = Rhino.Geometry.BoundingBox.Empty
     if type(objects) is list or type(objects) is tuple:
         for object in objects:
             objectbbox = __objectbbox(object, xform)
-            bbox = Rhino.Geometry.BoundingBox.Union(bbox, objectbbox)
+            bbox = Rhino.Geometry.BoundingBox.Union(bbox,objectbbox)
     else:
         objectbbox = __objectbbox(objects, xform)
-        bbox = Rhino.Geometry.BoundingBox.Union(bbox, objectbbox)
-    if not bbox.IsValid:
-        return scriptcontext.errorhandler()
+        bbox = Rhino.Geometry.BoundingBox.Union(bbox,objectbbox)
+    if not bbox.IsValid: return scriptcontext.errorhandler()
 
     corners = list(bbox.GetCorners())
     if in_world_coords and plane is not None:
-        plane_to_world = Rhino.Geometry.Transform.ChangeBasis(
-            plane, Rhino.Geometry.Plane.WorldXY
-        )
-        for pt in corners:
-            pt.Transform(plane_to_world)
+        plane_to_world = Rhino.Geometry.Transform.ChangeBasis(plane, Rhino.Geometry.Plane.WorldXY)
+        for pt in corners: pt.Transform(plane_to_world)
     return corners
 
 
@@ -456,9 +399,8 @@ def ExplodeText(text_id, delete=False):
     rhobj = rhutil.coercerhinoobject(text_id, True, True)
     curves = rhobj.Geometry.Explode()
     attr = rhobj.Attributes
-    rc = [scriptcontext.doc.Objects.AddCurve(curve, attr) for curve in curves]
-    if delete:
-        scriptcontext.doc.Objects.Delete(rhobj, True)
+    rc = [scriptcontext.doc.Objects.AddCurve(curve,attr) for curve in curves]
+    if delete: scriptcontext.doc.Objects.Delete(rhobj,True)
     scriptcontext.doc.Views.Redraw()
     return rc
 
@@ -582,8 +524,7 @@ def PointCloudCount(object_id):
       PointCloudPoints
     """
     pc = rhutil.coercegeometry(object_id, True)
-    if isinstance(pc, Rhino.Geometry.PointCloud):
-        return pc.Count
+    if isinstance(pc, Rhino.Geometry.PointCloud): return pc.Count
 
 
 def PointCloudHasHiddenPoints(object_id):
@@ -605,8 +546,7 @@ def PointCloudHasHiddenPoints(object_id):
       PointCloudPointColors
     """
     pc = rhutil.coercegeometry(object_id, True)
-    if isinstance(pc, Rhino.Geometry.PointCloud):
-        return pc.HiddenPointCount > 0
+    if isinstance(pc, Rhino.Geometry.PointCloud): return pc.HiddenPointCount>0
 
 
 def PointCloudHasPointColors(object_id):
@@ -628,8 +568,7 @@ def PointCloudHasPointColors(object_id):
       PointCloudPointColors
     """
     pc = rhutil.coercegeometry(object_id, True)
-    if isinstance(pc, Rhino.Geometry.PointCloud):
-        return pc.ContainsColors
+    if isinstance(pc, Rhino.Geometry.PointCloud): return pc.ContainsColors
 
 
 def PointCloudHidePoints(object_id, hidden=[]):
@@ -652,19 +591,15 @@ def PointCloudHidePoints(object_id, hidden=[]):
       PointCloudPointColors
     """
     rhobj = rhutil.coercerhinoobject(object_id)
-    if rhobj:
-        pc = rhobj.Geometry
-    else:
-        pc = rhutil.coercegeometry(object_id, True)
+    if rhobj: pc = rhobj.Geometry
+    else: pc = rhutil.coercegeometry(object_id, True)
     if isinstance(pc, Rhino.Geometry.PointCloud):
         rc = None
-        if pc.ContainsHiddenFlags:
-            rc = [item.Hidden for item in pc]
+        if pc.ContainsHiddenFlags: rc = [item.Hidden for item in pc]
         if hidden is None:
             pc.ClearHiddenFlags()
-        elif len(hidden) == pc.Count:
-            for i in range(pc.Count):
-                pc[i].Hidden = hidden[i]
+        elif len(hidden)==pc.Count:
+            for i in range(pc.Count): pc[i].Hidden = hidden[i]
         if rhobj:
             rhobj.CommitChanges()
             scriptcontext.doc.Views.Redraw()
@@ -698,19 +633,15 @@ def PointCloudPointColors(object_id, colors=[]):
       PointCloudHidePoints
     """
     rhobj = rhutil.coercerhinoobject(object_id)
-    if rhobj:
-        pc = rhobj.Geometry
-    else:
-        pc = rhutil.coercegeometry(object_id, True)
+    if rhobj: pc = rhobj.Geometry
+    else: pc = rhutil.coercegeometry(object_id, True)
     if isinstance(pc, Rhino.Geometry.PointCloud):
         rc = None
-        if pc.ContainsColors:
-            rc = [item.Color for item in pc]
+        if pc.ContainsColors: rc = [item.Color for item in pc]
         if colors is None:
             pc.ClearColors()
-        elif len(colors) == pc.Count:
-            for i in range(pc.Count):
-                pc[i].Color = rhutil.coercecolor(colors[i])
+        elif len(colors)==pc.Count:
+            for i in range(pc.Count): pc[i].Color = rhutil.coercecolor(colors[i])
         if rhobj:
             rhobj.CommitChanges()
             scriptcontext.doc.Views.Redraw()
@@ -734,8 +665,7 @@ def PointCloudPoints(object_id):
       PointCloudCount
     """
     pc = rhutil.coercegeometry(object_id, True)
-    if isinstance(pc, Rhino.Geometry.PointCloud):
-        return pc.GetPoints()
+    if isinstance(pc, Rhino.Geometry.PointCloud): return pc.GetPoints()
 
 
 def __simplify_PointCloudKNeighbors(result, amount):
@@ -767,10 +697,8 @@ if id:
       PointCloudPoints
     """
     needles = rhutil.coercegeometry(needle_points, False)
-    if isinstance(needles, Rhino.Geometry.PointCloud):
-        needles = needles.AsReadOnlyListOfPoints()
-    else:
-        needles = rhutil.coerce3dpointlist(needle_points, True)
+    if isinstance(needles, Rhino.Geometry.PointCloud): needles = needles.AsReadOnlyListOfPoints()
+    else: needles = rhutil.coerce3dpointlist(needle_points, True)
 
     pc_geom = rhutil.coercegeometry(pt_cloud, False)
     if isinstance(pc_geom, Rhino.Geometry.PointCloud):
@@ -786,19 +714,14 @@ if id:
     else:
         search = Rhino.Collections.RhinoList.Point3dKNeighbors
 
-    if isinstance(
-        pt_cloud, System.Collections.Generic.IEnumerable[Rhino.Geometry.Point3d]
-    ):
-        return __simplify_PointCloudKNeighbors(
-            search(pt_cloud, needles, amount), amount
-        )
+    if isinstance(pt_cloud, System.Collections.Generic.IEnumerable[Rhino.Geometry.Point3d]):
+        return __simplify_PointCloudKNeighbors(search(pt_cloud, needles, amount), amount)
     pts = rhutil.coerce3dpointlist(pt_cloud, True)
     return __simplify_PointCloudKNeighbors(search(pts, needles, amount), amount)
 
 
 def __simplify_PointCloudClosestPoints(result):
     return [list(item) for item in result]
-
 
 def PointCloudClosestPoints(pt_cloud, needle_points, distance):
     """Returns a list of lists of point indices in a point cloud that are
@@ -824,25 +747,15 @@ if id:
       PointCloudPoints
     """
     needles = rhutil.coercegeometry(needle_points, False)
-    if isinstance(needles, Rhino.Geometry.PointCloud):
-        needles = needles.AsReadOnlyListOfPoints()
-    else:
-        needles = rhutil.coerce3dpointlist(needle_points, True)
+    if isinstance(needles, Rhino.Geometry.PointCloud): needles = needles.AsReadOnlyListOfPoints()
+    else: needles = rhutil.coerce3dpointlist(needle_points, True)
     pc_geom = rhutil.coercegeometry(pt_cloud, False)
     if isinstance(pc_geom, Rhino.Geometry.PointCloud):
-        return __simplify_PointCloudClosestPoints(
-            Rhino.Geometry.RTree.PointCloudClosestPoints(pc_geom, needles, distance)
-        )
-    if isinstance(
-        pt_cloud, System.Collections.Generic.IEnumerable[Rhino.Geometry.Point3d]
-    ):
-        return __simplify_PointCloudClosestPoints(
-            Rhino.Geometry.RTree.Point3dClosestPoints(pt_cloud, needles, distance)
-        )
+        return __simplify_PointCloudClosestPoints(Rhino.Geometry.RTree.PointCloudClosestPoints(pc_geom, needles, distance))
+    if isinstance(pt_cloud, System.Collections.Generic.IEnumerable[Rhino.Geometry.Point3d]):
+        return __simplify_PointCloudClosestPoints(Rhino.Geometry.RTree.Point3dClosestPoints(pt_cloud, needles, distance))
     pts = rhutil.coerce3dpointlist(pt_cloud, True)
-    return __simplify_PointCloudClosestPoints(
-        Rhino.Geometry.RTree.Point3dClosestPoints(pts, needles, distance)
-    )
+    return __simplify_PointCloudClosestPoints(Rhino.Geometry.RTree.Point3dClosestPoints(pts, needles, distance))
 
 
 def PointCoordinates(object_id, point=None):
@@ -927,7 +840,7 @@ def TextDotHeight(object_id, height=None):
     textdot = rhutil.coercegeometry(object_id, True)
     if isinstance(textdot, Rhino.Geometry.TextDot):
         rc = textdot.FontHeight
-        if height and height > 0:
+        if height and height>0:
             textdot.FontHeight = height
             id = rhutil.coerceguid(object_id, True)
             scriptcontext.doc.Objects.Replace(id, textdot)
@@ -990,8 +903,7 @@ def TextDotText(object_id, text=None):
     if isinstance(textdot, Rhino.Geometry.TextDot):
         rc = textdot.Text
         if text is not None:
-            if not isinstance(text, str):
-                text = str(text)
+            if not isinstance(text, str): text = str(text)
             textdot.Text = text
             id = rhutil.coerceguid(object_id, True)
             scriptcontext.doc.Objects.Replace(id, textdot)
@@ -1027,21 +939,17 @@ def TextObjectFont(object_id, font=None):
     fontdata = annotation.Font
     rc = fontdata.QuartetName
     if font:
-
         def q2f(qn, b, i):
             return Rhino.DocObjects.Font.FromQuartetProperties(qn, b, i)
-
         # normally calls will not go further than q2f(font, False, False)
         # but there are a few rare fonts that don't have a regular font
-        f = (
-            q2f(font, fontdata.Bold, fontdata.Italic)
-            or q2f(font, False, False)
-            or q2f(font, True, False)
-            or q2f(font, False, True)
+        f = q2f(font, fontdata.Bold, fontdata.Italic)\
+            or q2f(font, False, False)\
+            or q2f(font, True, False)\
+            or q2f(font, False, True)\
             or q2f(font, True, True)
-        )
         if f is None:
-            return scriptcontext.errorhandler()
+              return scriptcontext.errorhandler()
         annotation.Font = f
         id = rhutil.coerceguid(object_id, True)
         scriptcontext.doc.Objects.Replace(id, annotation)
@@ -1187,17 +1095,12 @@ def TextObjectStyle(object_id, style=None):
     if not isinstance(annotation, Rhino.Geometry.TextEntity):
         return scriptcontext.errorhandler()
     fontdata = annotation.Font
-    if fontdata is None:
-        return scriptcontext.errorhandler()
+    if fontdata is None: return scriptcontext.errorhandler()
     rc = 0
-    if fontdata.Bold:
-        rc += 1
-    if fontdata.Italic:
-        rc += 2
-    if style is not None and style != rc:
-        index = scriptcontext.doc.Fonts.FindOrCreate(
-            fontdata.FaceName, (style & 1) == 1, (style & 2) == 2
-        )
+    if fontdata.Bold: rc += 1
+    if fontdata.Italic: rc += 2
+    if style is not None and style!=rc:
+        index = scriptcontext.doc.Fonts.FindOrCreate( fontdata.FaceName, (style&1)==1, (style&2)==2 )
         annotation.Font = scriptcontext.doc.Fonts[index]
         id = rhutil.coerceguid(object_id, True)
         scriptcontext.doc.Objects.Replace(id, annotation)
@@ -1232,18 +1135,14 @@ def TextObjectText(object_id, text=None):
         return scriptcontext.errorhandler()
     rc = annotation.Text
     if text:
-        if not isinstance(text, str):
-            text = str(text)
+        if not isinstance(text, str): text = str(text)
         isBold = annotation.IsAllBold()
         isItalic = annotation.IsAllItalic()
         isUnderlined = annotation.IsAllUnderlined()
         annotation.Text = text
-        if isBold:
-            annotation.SetBold(True)
-        if isItalic:
-            annotation.SetItalic(True)
-        if isUnderlined:
-            annotation.SetUnderline(True)
+        if isBold: annotation.SetBold(True)
+        if isItalic: annotation.SetItalic(True)
+        if isUnderlined: annotation.SetUnderline(True)
         id = rhutil.coerceguid(object_id, True)
         scriptcontext.doc.Objects.Replace(id, annotation)
         scriptcontext.doc.Views.Redraw()

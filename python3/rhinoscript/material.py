@@ -1,7 +1,7 @@
-from Rhino import DocObjects
+import Rhino.DocObjects
 import scriptcontext
-import rhinoscript.utility as rhutil
-from rhinoscript.layer import __getlayer
+from . import utility as rhutil
+from .layer import __getlayer
 
 
 def AddMaterialToLayer(layer):
@@ -23,13 +23,12 @@ def AddMaterialToLayer(layer):
       IsMaterialDefault
     """
     layer = __getlayer(layer, True)
-    if layer.RenderMaterialIndex > -1:
-        return layer.RenderMaterialIndex
+    if layer.RenderMaterialIndex>-1: return layer.RenderMaterialIndex
     material_index = scriptcontext.doc.Materials.Add()
     layer.RenderMaterialIndex = material_index
     scriptcontext.doc.Views.Redraw()
     return material_index
-    # return scriptcontext.errorhandler()
+    #return scriptcontext.errorhandler()
 
 
 def AddMaterialToObject(object_id):
@@ -53,19 +52,18 @@ def AddMaterialToObject(object_id):
     """
     rhino_object = rhutil.coercerhinoobject(object_id, True, True)
     attr = rhino_object.Attributes
-    if attr.MaterialSource != Rhino.DocObjects.ObjectMaterialSource.MaterialFromObject:
+    if attr.MaterialSource!=Rhino.DocObjects.ObjectMaterialSource.MaterialFromObject:
         attr.MaterialSource = Rhino.DocObjects.ObjectMaterialSource.MaterialFromObject
         scriptcontext.doc.Objects.ModifyAttributes(rhino_object, attr, True)
         attr = rhino_object.Attributes
     material_index = attr.MaterialIndex
-    if material_index > -1:
-        return material_index
+    if material_index>-1: return material_index
     material_index = scriptcontext.doc.Materials.Add()
     attr.MaterialIndex = material_index
     scriptcontext.doc.Objects.ModifyAttributes(rhino_object, attr, True)
     return material_index
 
-
+    
 def CopyMaterial(source_index, destination_index):
     """Copies definition of a source material to a destination material
     Parameters:
@@ -82,14 +80,11 @@ def CopyMaterial(source_index, destination_index):
       LayerMaterialIndex
       ObjectMaterialIndex
     """
-    if source_index == destination_index:
-        return False
+    if source_index==destination_index: return False
     source = scriptcontext.doc.Materials[source_index]
-    if source is None:
-        return False
+    if source is None: return False
     rc = scriptcontext.doc.Materials.Modify(source, destination_index, True)
-    if rc:
-        scriptcontext.doc.Views.Redraw()
+    if rc: scriptcontext.doc.Views.Redraw()
     return rc
 
 
@@ -168,24 +163,19 @@ def MatchMaterial(source, destination):
         rhobj = rhutil.coercerhinoobject(source_id, True, True)
         source = rhobj.Attributes.MaterialIndex
     mat = scriptcontext.doc.Materials[source]
-    if not mat:
-        return scriptcontext.errorhandler()
+    if not mat: return scriptcontext.errorhandler()
     destination_id = rhutil.coerceguid(destination)
-    if destination_id:
-        destination = [destination]
+    if destination_id: destination = [destination]
     ids = [rhutil.coerceguid(d) for d in destination]
     rc = 0
     for id in ids:
         rhobj = scriptcontext.doc.Objects.Find(id)
         if rhobj:
             rhobj.Attributes.MaterialIndex = source
-            rhobj.Attributes.MaterialSource = (
-                Rhino.DocObjects.ObjectMaterialSource.MaterialFromObject
-            )
+            rhobj.Attributes.MaterialSource = Rhino.DocObjects.ObjectMaterialSource.MaterialFromObject
             rhobj.CommitChanges()
             rc += 1
-    if rc > 0:
-        scriptcontext.doc.Views.Redraw()
+    if rc>0: scriptcontext.doc.Views.Redraw()
     return rc
 
 
@@ -214,8 +204,7 @@ def MaterialBump(material_index, filename=None):
       MaterialTransparency
     """
     mat = scriptcontext.doc.Materials[material_index]
-    if mat is None:
-        return scriptcontext.errorhandler()
+    if mat is None: return scriptcontext.errorhandler()
     texture = mat.GetBumpTexture()
     rc = texture.FileName if texture else ""
     if filename:
@@ -250,8 +239,7 @@ def MaterialColor(material_index, color=None):
       MaterialTransparency
     """
     mat = scriptcontext.doc.Materials[material_index]
-    if mat is None:
-        return scriptcontext.errorhandler()
+    if mat is None: return scriptcontext.errorhandler()
     rc = mat.DiffuseColor
     color = rhutil.coercecolor(color)
     if color:
@@ -283,8 +271,7 @@ def MaterialEnvironmentMap(material_index, filename=None):
       MaterialTransparencyMap
     """
     mat = scriptcontext.doc.Materials[material_index]
-    if mat is None:
-        return scriptcontext.errorhandler()
+    if mat is None: return scriptcontext.errorhandler()
     texture = mat.GetEnvironmentTexture()
     rc = texture.FileName if texture else ""
     if filename:
@@ -319,8 +306,7 @@ def MaterialName(material_index, name=None):
       MaterialTransparency
     """
     mat = scriptcontext.doc.Materials[material_index]
-    if mat is None:
-        return scriptcontext.errorhandler()
+    if mat is None: return scriptcontext.errorhandler()
     rc = mat.Name
     if name:
         mat.Name = name
@@ -353,8 +339,7 @@ def MaterialReflectiveColor(material_index, color=None):
       MaterialTransparency
     """
     mat = scriptcontext.doc.Materials[material_index]
-    if mat is None:
-        return scriptcontext.errorhandler()
+    if mat is None: return scriptcontext.errorhandler()
     rc = mat.ReflectionColor
     color = rhutil.coercecolor(color)
     if color:
@@ -391,8 +376,7 @@ def MaterialShine(material_index, shine=None):
       MaterialTransparency
     """
     mat = scriptcontext.doc.Materials[material_index]
-    if mat is None:
-        return scriptcontext.errorhandler()
+    if mat is None: return scriptcontext.errorhandler()
     rc = mat.Shine
     if shine:
         mat.Shine = shine
@@ -426,8 +410,7 @@ def MaterialTexture(material_index, filename=None):
       MaterialTransparency
     """
     mat = scriptcontext.doc.Materials[material_index]
-    if mat is None:
-        return scriptcontext.errorhandler()
+    if mat is None: return scriptcontext.errorhandler()
     texture = mat.GetBitmapTexture()
     rc = texture.FileName if texture else ""
     if filename:
@@ -463,8 +446,7 @@ def MaterialTransparency(material_index, transparency=None):
       MaterialTexture
     """
     mat = scriptcontext.doc.Materials[material_index]
-    if mat is None:
-        return scriptcontext.errorhandler()
+    if mat is None: return scriptcontext.errorhandler()
     rc = mat.Transparency
     if transparency:
         mat.Transparency = transparency
@@ -495,8 +477,7 @@ def MaterialTransparencyMap(material_index, filename=None):
       MaterialTexture
     """
     mat = scriptcontext.doc.Materials[material_index]
-    if mat is None:
-        return scriptcontext.errorhandler()
+    if mat is None: return scriptcontext.errorhandler()
     texture = mat.GetTransparencyTexture()
     rc = texture.FileName if texture else ""
     if filename:
@@ -523,8 +504,7 @@ def ResetMaterial(material_index):
       ObjectMaterialIndex
     """
     mat = scriptcontext.doc.Materials[material_index]
-    if mat is None:
-        return False
+    if mat is None: return False
     rc = scriptcontext.doc.Materials.ResetMaterial(material_index)
     scriptcontext.doc.Views.Redraw()
     return rc

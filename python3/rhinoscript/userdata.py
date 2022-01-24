@@ -1,6 +1,5 @@
 import scriptcontext
-import rhinoscript.utility as rhutil
-
+from . import utility as rhutil
 
 def DeleteDocumentData(section=None, entry=None):
     """Removes user data strings from the current document
@@ -104,15 +103,11 @@ def GetDocumentUserText(key=None):
     See Also:
       SetDocumentUserText
     """
-    if key:
-        val = scriptcontext.doc.Strings.GetValue(key)
-        return val if val else None
-    # todo: leaky abstraction: "\\" logic should be inside doc.Strings implementation
-    keys = [
-        scriptcontext.doc.Strings.GetKey(i)
-        for i in range(scriptcontext.doc.Strings.Count)
-        if not "\\" in scriptcontext.doc.Strings.GetKey(i)
-    ]
+    if key: 
+      val =  scriptcontext.doc.Strings.GetValue(key)
+      return val if val else None
+    #todo: leaky abstraction: "\\" logic should be inside doc.Strings implementation
+    keys = [scriptcontext.doc.Strings.GetKey(i) for i in range(scriptcontext.doc.Strings.Count) if not "\\" in scriptcontext.doc.Strings.GetKey(i)]
     return keys if keys else None
 
 
@@ -137,13 +132,10 @@ def GetUserText(object_id, key=None, attached_to_geometry=False):
     """
     obj = rhutil.coercerhinoobject(object_id, True, True)
     source = None
-    if attached_to_geometry:
-        source = obj.Geometry
-    else:
-        source = obj.Attributes
+    if attached_to_geometry: source = obj.Geometry
+    else: source = obj.Attributes
     rc = None
-    if key:
-        return source.GetUserString(key)
+    if key: return source.GetUserString(key)
     userstrings = source.GetUserStrings()
     return [userstrings.GetKey(i) for i in range(userstrings.Count)]
 
@@ -207,10 +199,8 @@ def IsUserText(object_id):
     """
     obj = rhutil.coercerhinoobject(object_id, True, True)
     rc = 0
-    if obj.Attributes.UserStringCount:
-        rc = rc | 1
-    if obj.Geometry.UserStringCount:
-        rc = rc | 2
+    if obj.Attributes.UserStringCount: rc = rc|1
+    if obj.Geometry.UserStringCount: rc = rc|2
     return rc
 
 
@@ -252,10 +242,8 @@ def SetDocumentUserText(key, value=None):
     See Also:
       GetDocumentUserText
     """
-    if value:
-        scriptcontext.doc.Strings.SetString(key, value)
-    else:
-        scriptcontext.doc.Strings.Delete(key)
+    if value: scriptcontext.doc.Strings.SetString(key,value)
+    else: scriptcontext.doc.Strings.Delete(key)
     return True
 
 
@@ -280,10 +268,7 @@ def SetUserText(object_id, key, value=None, attach_to_geometry=False):
       IsUserText
     """
     obj = rhutil.coercerhinoobject(object_id, True, True)
-    if type(key) is not str:
-        key = str(key)
-    if value and type(value) is not str:
-        value = str(value)
-    if attach_to_geometry:
-        return obj.Geometry.SetUserString(key, value)
+    if type(key) is not str: key = str(key)
+    if value and type(value) is not str: value = str(value)
+    if attach_to_geometry: return obj.Geometry.SetUserString(key, value)
     return obj.Attributes.SetUserString(key, value)

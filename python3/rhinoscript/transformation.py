@@ -1,9 +1,9 @@
 import scriptcontext
-import rhinoscript.utility as rhutil
+from . import utility as rhutil
 import Rhino
-from System import Guid, Array
+import System.Guid, System.Array
 import math
-import rhinoscript.view as rhview
+from . import view as rhview
 
 
 def IsXformIdentity(xform):
@@ -22,7 +22,7 @@ def IsXformIdentity(xform):
       XformIdentity
     """
     xform = rhutil.coercexform(xform, True)
-    return xform == Rhino.Geometry.Transform.Identity
+    return xform==Rhino.Geometry.Transform.Identity
 
 
 def IsXformSimilarity(xform):
@@ -42,7 +42,7 @@ def IsXformSimilarity(xform):
       IsXformZero
     """
     xform = rhutil.coercexform(xform, True)
-    return xform.SimilarityType != Rhino.Geometry.TransformSimilarityType.NotSimilarity
+    return xform.SimilarityType!=Rhino.Geometry.TransformSimilarityType.NotSimilarity
 
 
 def IsXformZero(xform):
@@ -63,8 +63,7 @@ def IsXformZero(xform):
     xform = rhutil.coercexform(xform, True)
     for i in range(4):
         for j in range(4):
-            if xform[i, j] != 0:
-                return False
+            if xform[i,j]!=0: return False
     return True
 
 
@@ -96,12 +95,11 @@ def XformChangeBasis(initial_plane, final_plane):
     initial_plane = rhutil.coerceplane(initial_plane, True)
     final_plane = rhutil.coerceplane(final_plane, True)
     xform = Rhino.Geometry.Transform.ChangeBasis(initial_plane, final_plane)
-    if not xform.IsValid:
-        return scriptcontext.errorhandler()
+    if not xform.IsValid: return scriptcontext.errorhandler()
     return xform
 
 
-def XformChangeBasis2(x0, y0, z0, x1, y1, z1):
+def XformChangeBasis2(x0,y0,z0,x1,y1,z1):
     """Returns a change of basis transformation matrix of None on error
     Parameters:
       x0,y0,z0 (vector): initial basis
@@ -118,9 +116,8 @@ def XformChangeBasis2(x0, y0, z0, x1, y1, z1):
     x1 = rhutil.coerce3dvector(x1, True)
     y1 = rhutil.coerce3dvector(y1, True)
     z1 = rhutil.coerce3dvector(z1, True)
-    xform = Rhino.Geometry.Transform.ChangeBasis(x0, y0, z0, x1, y1, z1)
-    if not xform.IsValid:
-        return scriptcontext.errorhandler()
+    xform = Rhino.Geometry.Transform.ChangeBasis(x0,y0,z0,x1,y1,z1)
+    if not xform.IsValid: return scriptcontext.errorhandler()
     return xform
 
 
@@ -165,12 +162,7 @@ def XformCPlaneToWorld(point, plane):
     """
     point = rhutil.coerce3dpoint(point, True)
     plane = rhutil.coerceplane(plane, True)
-    return (
-        plane.Origin
-        + point.X * plane.XAxis
-        + point.Y * plane.YAxis
-        + point.Z * plane.ZAxis
-    )
+    return plane.Origin + point.X*plane.XAxis + point.Y*plane.YAxis + point.Z*plane.ZAxis
 
 
 def XformDeterminant(xform):
@@ -248,8 +240,7 @@ def XformInverse(xform):
     """
     xform = rhutil.coercexform(xform, True)
     rc, inverse = xform.TryGetInverse()
-    if not rc:
-        return scriptcontext.errorhandler()
+    if not rc: return scriptcontext.errorhandler()
     return inverse
 
 
@@ -314,7 +305,7 @@ def XformMultiply(xform1, xform2):
     """
     xform1 = rhutil.coercexform(xform1, True)
     xform2 = rhutil.coercexform(xform2, True)
-    return xform1 * xform2
+    return xform1*xform2
 
 
 def XformPlanarProjection(plane):
@@ -359,8 +350,7 @@ def XformRotation1(initial_plane, final_plane):
     initial_plane = rhutil.coerceplane(initial_plane, True)
     final_plane = rhutil.coerceplane(final_plane, True)
     xform = Rhino.Geometry.Transform.PlaneToPlane(initial_plane, final_plane)
-    if not xform.IsValid:
-        return scriptcontext.errorhandler()
+    if not xform.IsValid: return scriptcontext.errorhandler()
     return xform
 
 
@@ -380,12 +370,11 @@ def XformRotation2(angle_degrees, rotation_axis, center_point):
     center = rhutil.coerce3dpoint(center_point, True)
     angle_rad = math.radians(angle_degrees)
     xform = Rhino.Geometry.Transform.Rotation(angle_rad, axis, center)
-    if not xform.IsValid:
-        return scriptcontext.errorhandler()
+    if not xform.IsValid: return scriptcontext.errorhandler()
     return xform
 
 
-def XformRotation3(start_direction, end_direction, center_point):
+def XformRotation3( start_direction, end_direction, center_point ):
     """Calculate the minimal transformation that rotates start_direction to
     end_direction while fixing center_point
     Parameters:
@@ -401,8 +390,7 @@ def XformRotation3(start_direction, end_direction, center_point):
     end = rhutil.coerce3dvector(end_direction, True)
     center = rhutil.coerce3dpoint(center_point, True)
     xform = Rhino.Geometry.Transform.Rotation(start, end, center)
-    if not xform.IsValid:
-        return scriptcontext.errorhandler()
+    if not xform.IsValid: return scriptcontext.errorhandler()
     return xform
 
 
@@ -423,9 +411,8 @@ def XformRotation4(x0, y0, z0, x1, y1, z1):
     x1 = rhutil.coerce3dvector(x1, True)
     y1 = rhutil.coerce3dvector(y1, True)
     z1 = rhutil.coerce3dvector(z1, True)
-    xform = Rhino.Geometry.Transform.Rotation(x0, y0, z0, x1, y1, z1)
-    if not xform.IsValid:
-        return scriptcontext.errorhandler()
+    xform = Rhino.Geometry.Transform.Rotation(x0,y0,z0,x1,y1,z1)
+    if not xform.IsValid: return scriptcontext.errorhandler()
     return xform
 
 
@@ -456,14 +443,11 @@ def XformScale(scale, point=None):
     factor = rhutil.coerce3dpoint(scale)
     if factor is None:
         if type(scale) is int or type(scale) is float:
-            factor = (scale, scale, scale)
-        if factor is None:
-            return scriptcontext.errorhandler()
-    if point:
-        point = rhutil.coerce3dpoint(point, True)
-    else:
-        point = Rhino.Geometry.Point3d.Origin
-    plane = Rhino.Geometry.Plane(point, Rhino.Geometry.Vector3d.ZAxis)
+            factor = (scale,scale,scale)
+        if factor is None: return scriptcontext.errorhandler()
+    if point: point = rhutil.coerce3dpoint(point, True)
+    else: point = Rhino.Geometry.Point3d.Origin
+    plane = Rhino.Geometry.Plane(point, Rhino.Geometry.Vector3d.ZAxis);
     xf = Rhino.Geometry.Transform.Scale(plane, factor[0], factor[1], factor[2])
     return xf
 
@@ -492,10 +476,7 @@ def XformScreenToWorld(point, view=None, screen_coordinates=False):
     point = rhutil.coerce2dpoint(point, True)
     view = rhview.__viewhelper(view)
     viewport = view.MainViewport
-    xform = viewport.GetTransform(
-        Rhino.DocObjects.CoordinateSystem.Screen,
-        Rhino.DocObjects.CoordinateSystem.World,
-    )
+    xform = viewport.GetTransform(Rhino.DocObjects.CoordinateSystem.Screen, Rhino.DocObjects.CoordinateSystem.World)
     point3d = Rhino.Geometry.Point3d(point.X, point.Y, 0)
     if screen_coordinates:
         screen = view.ScreenRectangle
@@ -533,7 +514,7 @@ def XformShear(plane, x, y, z):
     x = rhutil.coerce3dvector(x, True)
     y = rhutil.coerce3dvector(y, True)
     z = rhutil.coerce3dvector(z, True)
-    return Rhino.Geometry.Transform.Shear(plane, x, y, z)
+    return Rhino.Geometry.Transform.Shear(plane,x,y,z)
 
 
 def XformTranslation(vector):
@@ -579,8 +560,8 @@ def XformWorldToCPlane(point, plane):
     """
     point = rhutil.coerce3dpoint(point, True)
     plane = rhutil.coerceplane(plane, True)
-    v = point - plane.Origin
-    return Rhino.Geometry.Point3d(v * plane.XAxis, v * plane.YAxis, v * plane.ZAxis)
+    v = point - plane.Origin;
+    return Rhino.Geometry.Point3d(v*plane.XAxis, v*plane.YAxis, v*plane.ZAxis)
 
 
 def XformWorldToScreen(point, view=None, screen_coordinates=False):
@@ -607,10 +588,7 @@ def XformWorldToScreen(point, view=None, screen_coordinates=False):
     point = rhutil.coerce3dpoint(point, True)
     view = rhview.__viewhelper(view)
     viewport = view.MainViewport
-    xform = viewport.GetTransform(
-        Rhino.DocObjects.CoordinateSystem.World,
-        Rhino.DocObjects.CoordinateSystem.Screen,
-    )
+    xform = viewport.GetTransform(Rhino.DocObjects.CoordinateSystem.World, Rhino.DocObjects.CoordinateSystem.Screen)
     point = xform * point
     point = Rhino.Geometry.Point2d(point.X, point.Y)
     if screen_coordinates:

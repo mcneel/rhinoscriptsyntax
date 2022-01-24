@@ -1,14 +1,14 @@
 import Rhino
 import Rhino.UI
-import rhinoscript.utility as rhutil
+from . import utility as rhutil
 import scriptcontext
-from System.Drawing import Color
-from System import Enum
-from System import Array
+import System.Drawing.Color
+import System.Enum
+import System.Array
 import Eto.Forms
 import System.Windows.Forms
 import math
-from rhinoscript.view import __viewhelper
+from .view import __viewhelper
 
 
 def BrowseForFolder(folder=None, message=None, title=None):
@@ -30,24 +30,19 @@ def BrowseForFolder(folder=None, message=None, title=None):
     """
     dlg = Eto.Forms.SelectFolderDialog()
     if folder:
-        if not isinstance(folder, str):
-            folder = str(folder)
+        if not isinstance(folder, str): folder = str(folder)
         dlg.Directory = folder
     if message:
-        if not isinstance(message, str):
-            message = str(message)
+        if not isinstance(message, str): message = str(message)
         dlg.Title = message
     if title:
-        if not isinstance(title, str):
-            title = str(title)
+        if not isinstance(title, str): title = str(title)
         dlg.Title = title
     if message and title:
-        if not isinstance(message, str):
-            message = str(message)
-        if not isinstance(title, str):
-            title = str(title)
+        if not isinstance(message, str): message = str(message)
+        if not isinstance(title, str): title = str(title)
         dlg.Title = title + ": " + message
-    if dlg.ShowDialog(None) == Eto.Forms.DialogResult.Ok:
+    if dlg.ShowDialog(None)==Eto.Forms.DialogResult.Ok:
         return dlg.Directory
 
 
@@ -76,11 +71,9 @@ def CheckListBox(items, message=None, title=None):
     """
     checkstates = [item[1] for item in items]
     itemstrs = [str(item[0]) for item in items]
-    newcheckstates = Rhino.UI.Dialogs.ShowCheckListBox(
-        title, message, itemstrs, checkstates
-    )
+    newcheckstates = Rhino.UI.Dialogs.ShowCheckListBox(title, message, itemstrs, checkstates)
     if newcheckstates:
-        rc = zip(itemstrs, newcheckstates)
+        rc = list(zip(itemstrs, newcheckstates))
         return rc
     return scriptcontext.errorhandler()
 
@@ -130,7 +123,6 @@ def EditBox(default_string=None, message=None, title=None):
     rc, text = Rhino.UI.Dialogs.ShowEditBox(title, message, default_string, True)
     return text
 
-
 def GetAngle(point=None, reference_point=None, default_angle_degrees=0, message=None):
     """Pause for user input of an angle
     Parameters:
@@ -154,17 +146,12 @@ def GetAngle(point=None, reference_point=None, default_angle_degrees=0, message=
       GetDistance
     """
     point = rhutil.coerce3dpoint(point)
-    if not point:
-        point = Rhino.Geometry.Point3d.Unset
+    if not point: point = Rhino.Geometry.Point3d.Unset
     reference_point = rhutil.coerce3dpoint(reference_point)
-    if not reference_point:
-        reference_point = Rhino.Geometry.Point3d.Unset
+    if not reference_point: reference_point = Rhino.Geometry.Point3d.Unset
     default_angle = math.radians(default_angle_degrees)
-    rc, angle = Rhino.Input.RhinoGet.GetAngle(
-        message, point, reference_point, default_angle
-    )
-    if rc == Rhino.Commands.Result.Success:
-        return math.degrees(angle)
+    rc, angle = Rhino.Input.RhinoGet.GetAngle(message, point, reference_point, default_angle)
+    if rc==Rhino.Commands.Result.Success: return math.degrees(angle)
 
 
 def GetBoolean(message, items, defaults):
@@ -192,31 +179,25 @@ def GetBoolean(message, items, defaults):
     """
     go = Rhino.Input.Custom.GetOption()
     go.AcceptNothing(True)
-    go.SetCommandPrompt(message)
-    if type(defaults) is list or type(defaults) is tuple:
-        pass
-    else:
-        defaults = [defaults]
+    go.SetCommandPrompt( message )
+    if type(defaults) is list or type(defaults) is tuple: pass
+    else: defaults = [defaults]
     # special case for single list. Wrap items into a list
-    if len(items) == 3 and len(defaults) == 1:
-        items = [items]
+    if len(items)==3 and len(defaults)==1: items = [items]
     count = len(items)
-    if count < 1 or count != len(defaults):
-        return scriptcontext.errorhandler()
+    if count<1 or count!=len(defaults): return scriptcontext.errorhandler()
     toggles = []
     for i in range(count):
         initial = defaults[i]
         item = items[i]
         offVal = item[1]
-        t = Rhino.Input.Custom.OptionToggle(initial, item[1], item[2])
+        t = Rhino.Input.Custom.OptionToggle( initial, item[1], item[2] )
         toggles.append(t)
         go.AddOptionToggle(item[0], t)
     while True:
         getrc = go.Get()
-        if getrc == Rhino.Input.GetResult.Option:
-            continue
-        if getrc != Rhino.Input.GetResult.Nothing:
-            return None
+        if getrc==Rhino.Input.GetResult.Option: continue
+        if getrc!=Rhino.Input.GetResult.Nothing: return None
         break
     return [t.CurrentValue for t in toggles]
 
@@ -244,28 +225,22 @@ def GetBox(mode=0, base_point=None, prompt1=None, prompt2=None, prompt3=None):
       GetRectangle
     """
     base_point = rhutil.coerce3dpoint(base_point)
-    if base_point is None:
-        base_point = Rhino.Geometry.Point3d.Unset
-
+    if base_point is None: base_point = Rhino.Geometry.Point3d.Unset
     def intToEnum(m):
-        if m not in range(1, 5):
-            m = 0
-        return {
-            0: Rhino.Input.GetBoxMode.All,
-            1: Rhino.Input.GetBoxMode.Corner,
-            2: Rhino.Input.GetBoxMode.ThreePoint,
-            3: Rhino.Input.GetBoxMode.Vertical,
-            4: Rhino.Input.GetBoxMode.Center,
-        }[m]
-
-    rc, box = Rhino.Input.RhinoGet.GetBox(
-        intToEnum(mode), base_point, prompt1, prompt2, prompt3
-    )
-    if rc == Rhino.Commands.Result.Success:
-        return tuple(box.GetCorners())
+      if m not in list(range(1,5)):
+        m = 0
+      return {
+        0 : Rhino.Input.GetBoxMode.All,
+        1 : Rhino.Input.GetBoxMode.Corner,
+        2 : Rhino.Input.GetBoxMode.ThreePoint,
+        3 : Rhino.Input.GetBoxMode.Vertical,
+        4 : Rhino.Input.GetBoxMode.Center
+      }[m]
+    rc, box = Rhino.Input.RhinoGet.GetBox(intToEnum(mode), base_point, prompt1, prompt2, prompt3)
+    if rc==Rhino.Commands.Result.Success: return tuple(box.GetCorners())
 
 
-def GetColor(color=[0, 0, 0]):
+def GetColor(color=[0,0,0]):
     """Display the Rhino color picker dialog allowing the user to select an RGB color
     Parameters:
       color (color, optional): default RGB value. If omitted, the default color is black
@@ -281,11 +256,9 @@ def GetColor(color=[0, 0, 0]):
       
     """
     color = rhutil.coercecolor(color)
-    if color is None:
-        color = System.Drawing.Color.Black
+    if color is None: color = System.Drawing.Color.Black
     rc, color = Rhino.UI.Dialogs.ShowColorDialog(color)
-    if rc:
-        return color.R, color.G, color.B
+    if rc: return color.R, color.G, color.B
     return scriptcontext.errorhandler()
 
 
@@ -308,21 +281,13 @@ def GetCursorPos():
     screen_pt = Rhino.UI.MouseCursor.Location
     client_pt = view.ScreenToClient(screen_pt)
     viewport = view.ActiveViewport
-    xf = viewport.GetTransform(
-        Rhino.DocObjects.CoordinateSystem.Screen,
-        Rhino.DocObjects.CoordinateSystem.World,
-    )
+    xf = viewport.GetTransform(Rhino.DocObjects.CoordinateSystem.Screen, Rhino.DocObjects.CoordinateSystem.World)
     world_pt = Rhino.Geometry.Point3d(client_pt.X, client_pt.Y, 0)
     world_pt.Transform(xf)
     return world_pt, screen_pt, viewport.Id, client_pt
 
 
-def GetDistance(
-    first_pt=None,
-    distance=None,
-    first_pt_msg="First distance point",
-    second_pt_msg="Second distance point",
-):
+def GetDistance(first_pt=None, distance=None, first_pt_msg='First distance point', second_pt_msg='Second distance point'):
     """Pauses for user input of a distance.
     Parameters:
       first_pt (point, optional): First distance point
@@ -340,52 +305,37 @@ def GetDistance(
     See Also:
       GetAngle
     """
-    if distance is not None and first_pt is None:
-        raise Exception(
-            "The 'first_pt' parameter needs a value if 'distance' is not None."
-        )
-    if distance is not None and not (
-        isinstance(distance, int) or isinstance(distance, float)
-    ):
-        return None
-    if first_pt_msg is None or not isinstance(first_pt_msg, str):
-        return None
-    if second_pt_msg is None or not isinstance(second_pt_msg, str):
-        return None
+    if distance is not None and first_pt is None: 
+        raise Exception("The 'first_pt' parameter needs a value if 'distance' is not None.")
+    if distance is not None and not (isinstance(distance, int) or isinstance(distance, float)): return None
+    if first_pt_msg is None or not isinstance(first_pt_msg, str): return None
+    if second_pt_msg is None or not isinstance(second_pt_msg, str): return None
 
     if first_pt is not None:
-        if first_pt == 0:
-            first_pt = (0, 0, 0)
-        first_pt = rhutil.coerce3dpoint(first_pt)
-        if first_pt is None:
-            return None
+      if first_pt == 0: first_pt = (0,0,0)
+      first_pt = rhutil.coerce3dpoint(first_pt)
+      if first_pt is None: return None
 
     if first_pt is None:
-        first_pt = GetPoint(first_pt_msg)
-        if first_pt is None:
-            return None
+      first_pt = GetPoint(first_pt_msg)
+      if first_pt is None: return None
 
-    # cannot use GetPoint for 2nd point because of the need do differentiate
+    # cannot use GetPoint for 2nd point because of the need do differentiate 
     # between the user accepting none vs cancelling to exactly mimic RhinoScript
     gp = Rhino.Input.Custom.GetPoint()
     if distance is not None:
-        gp.AcceptNothing(True)
-        second_pt_msg = "{0}<{1}>".format(second_pt_msg, distance)
+      gp.AcceptNothing(True)
+      second_pt_msg = "{0}<{1}>".format(second_pt_msg, distance)
     gp.SetCommandPrompt(second_pt_msg)
-    gp.DrawLineFromPoint(first_pt, True)
+    gp.DrawLineFromPoint(first_pt,True)
     gp.EnableDrawLineFromPoint(True)
     r = gp.Get()
-    if r not in [
-        Rhino.Input.GetResult.Cancel,
-        Rhino.Input.GetResult.Point,
-        Rhino.Input.GetResult.Nothing,
-    ]:
-        return scriptcontext.errorHandler()
-    if r == Rhino.Input.GetResult.Cancel:
-        return None
+    if r not in [Rhino.Input.GetResult.Cancel, Rhino.Input.GetResult.Point,
+      Rhino.Input.GetResult.Nothing]: return scriptcontext.errorHandler()
+    if r == Rhino.Input.GetResult.Cancel: return None
     if r == Rhino.Input.GetResult.Point:
-        second_pt = gp.Point()
-        distance = second_pt.DistanceTo(first_pt)
+      second_pt = gp.Point()
+      distance = second_pt.DistanceTo(first_pt)
     gp.Dispose()
 
     return distance
@@ -412,34 +362,30 @@ def GetEdgeCurves(message=None, min_count=1, max_count=0, select=False):
     See Also:
       DuplicateEdgeCurves
     """
-    if min_count < 0 or (max_count > 0 and min_count > max_count):
-        return
-    if not message:
-        message = "Select Edges"
+    if min_count<0 or (max_count>0 and min_count>max_count): return
+    if not message: message = "Select Edges"
     go = Rhino.Input.Custom.GetObject()
     go.SetCommandPrompt(message)
     go.GeometryFilter = Rhino.DocObjects.ObjectType.Curve
     go.GeometryAttributeFilter = Rhino.Input.Custom.GeometryAttributeFilter.EdgeCurve
     go.EnablePreSelect(False, True)
     rc = go.GetMultiple(min_count, max_count)
-    if rc != Rhino.Input.GetResult.Object:
-        return
+    if rc!=Rhino.Input.GetResult.Object: return
     rc = []
     for i in range(go.ObjectCount):
         edge = go.Object(i).Edge()
-        if not edge:
-            continue
+        if not edge: continue
         edge = edge.Duplicate()
         curve_id = scriptcontext.doc.Objects.AddCurve(edge)
         parent_id = go.Object(i).ObjectId
         pt = go.Object(i).SelectionPoint()
-        rc.append((curve_id, parent_id, pt))
+        rc.append( (curve_id, parent_id, pt) )
     if select:
         for item in rc:
             rhobj = scriptcontext.doc.Objects.Find(item[0])
             rhobj.Select(True)
         scriptcontext.doc.Views.Redraw()
-    return rc
+    return rc        
 
 
 def GetInteger(message=None, number=None, minimum=None, maximum=None):
@@ -461,24 +407,17 @@ def GetInteger(message=None, number=None, minimum=None, maximum=None):
       
     """
     gi = Rhino.Input.Custom.GetInteger()
-    if message:
-        gi.SetCommandPrompt(message)
-    if number is not None:
-        gi.SetDefaultInteger(number)
-    if minimum is not None:
-        gi.SetLowerLimit(minimum, False)
-    if maximum is not None:
-        gi.SetUpperLimit(maximum, False)
-    if gi.Get() != Rhino.Input.GetResult.Number:
-        return scriptcontext.errorhandler()
+    if message: gi.SetCommandPrompt(message)
+    if number is not None: gi.SetDefaultInteger(number)
+    if minimum is not None: gi.SetLowerLimit(minimum, False)
+    if maximum is not None: gi.SetUpperLimit(maximum, False)
+    if gi.Get()!=Rhino.Input.GetResult.Number: return scriptcontext.errorhandler()
     rc = gi.Number()
     gi.Dispose()
     return rc
 
 
-def GetLayer(
-    title="Select Layer", layer=None, show_new_button=False, show_set_current=False
-):
+def GetLayer(title="Select Layer", layer=None, show_new_button=False, show_set_current=False):
     """Displays dialog box prompting the user to select a layer
     Parameters:
       title (str, optional): dialog box title
@@ -499,23 +438,18 @@ def GetLayer(
     layer_index = scriptcontext.doc.Layers.CurrentLayerIndex
     if layer:
         if "::" in layer:
-            idx = scriptcontext.doc.Layers.FindByFullPath(layer, -1)
-            if idx != -1:
+            idx = scriptcontext.doc.Layers.FindByFullPath(layer,-1)
+            if idx != -1: 
                 layer_index = idx
             else:
                 # layer name could have embedded '::'
                 layer_instance = scriptcontext.doc.Layers.FindName(layer)
-                if layer_instance is not None:
-                    layer_index = layer_instance.Index
+                if layer_instance is not None: layer_index = layer_instance.Index
         else:
             layer_instance = scriptcontext.doc.Layers.FindName(layer)
-            if layer_instance is not None:
-                layer_index = layer_instance.Index
-    rc = Rhino.UI.Dialogs.ShowSelectLayerDialog(
-        layer_index, title, show_new_button, show_set_current, True
-    )
-    if rc[0] != True:
-        return None
+            if layer_instance is not None: layer_index = layer_instance.Index
+    rc = Rhino.UI.Dialogs.ShowSelectLayerDialog(layer_index, title, show_new_button, show_set_current, True)
+    if rc[0]!=True: return None
     layer = scriptcontext.doc.Layers[rc[1]]
     return layer.FullPath
 
@@ -535,9 +469,7 @@ def GetLayers(title="Select Layers", show_new_button=False):
     See Also:
       GetLayer
     """
-    rc, layer_indices = Rhino.UI.Dialogs.ShowSelectMultipleLayersDialog(
-        None, title, show_new_button
-    )
+    rc, layer_indices = Rhino.UI.Dialogs.ShowSelectMultipleLayersDialog(None, title, show_new_button)
     if rc:
         return [scriptcontext.doc.Layers[index].FullPath for index in layer_indices]
 
@@ -572,22 +504,16 @@ def GetLine(mode=0, point=None, message1=None, message2=None, message3=None):
       GetRectangle
     """
     gl = Rhino.Input.Custom.GetLine()
-    if mode == 0:
-        gl.EnableAllVariations(True)
-    else:
-        gl.GetLineMode = System.Enum.ToObject(Rhino.Input.Custom.GetLineMode, mode - 1)
+    if mode==0: gl.EnableAllVariations(True)
+    else: gl.GetLineMode = System.Enum.ToObject( Rhino.Input.Custom.GetLineMode, mode-1 )
     if point:
         point = rhutil.coerce3dpoint(point)
         gl.SetFirstPoint(point)
-    if message1:
-        gl.FirstPointPrompt = message1
-    if message2:
-        gl.MidPointPrompt = message2
-    if message3:
-        gl.SecondPointPrompt = message3
+    if message1: gl.FirstPointPrompt = message1
+    if message2: gl.MidPointPrompt = message2
+    if message3: gl.SecondPointPrompt = message3
     rc, line = gl.Get()
-    if rc == Rhino.Commands.Result.Success:
-        return line.From, line.To
+    if rc==Rhino.Commands.Result.Success: return line.From, line.To
 
 
 def GetLinetype(default_linetype=None, show_by_layer=False):
@@ -607,14 +533,11 @@ def GetLinetype(default_linetype=None, show_by_layer=False):
     lt_instance = scriptcontext.doc.Linetypes.CurrentLinetype
     if default_linetype:
         lt_new = scriptcontext.doc.Linetypes.FindName(default_linetype)
-        if lt_new is not None:
-            lt_instance = lt_new
+        if lt_new is not None: lt_instance = lt_new
     id = Rhino.UI.Dialogs.ShowLineTypes("Select Linetype", "", scriptcontext.doc)
-    if id == "":
-        return None
+    if id == "": return None
     linetype = scriptcontext.doc.Linetypes.FindId(id)
     return linetype.Name
-
 
 def GetMeshFaces(object_id, message="", min_count=1, max_count=0):
     """Prompts the user to pick one or more mesh faces
@@ -644,18 +567,14 @@ def GetMeshFaces(object_id, message="", min_count=1, max_count=0):
     scriptcontext.doc.Objects.UnselectAll()
     scriptcontext.doc.Views.Redraw()
     object_id = rhutil.coerceguid(object_id, True)
-
-    def FilterById(rhino_object, geometry, component_index):
+    def FilterById( rhino_object, geometry, component_index ):
         return object_id == rhino_object.Id
-
     go = Rhino.Input.Custom.GetObject()
     go.SetCustomGeometryFilter(FilterById)
-    if message:
-        go.SetCommandPrompt(message)
+    if message: go.SetCommandPrompt(message)
     go.GeometryFilter = Rhino.DocObjects.ObjectType.MeshFace
     go.AcceptNothing(True)
-    if go.GetMultiple(min_count, max_count) != Rhino.Input.GetResult.Object:
-        return None
+    if go.GetMultiple(min_count,max_count)!=Rhino.Input.GetResult.Object: return None
     objrefs = go.Objects()
     rc = [item.GeometryComponentIndex.Index for item in objrefs]
     go.Dispose()
@@ -690,18 +609,14 @@ def GetMeshVertices(object_id, message="", min_count=1, max_count=0):
     scriptcontext.doc.Objects.UnselectAll()
     scriptcontext.doc.Views.Redraw()
     object_id = rhutil.coerceguid(object_id, True)
-
     class CustomGetObject(Rhino.Input.Custom.GetObject):
-        def CustomGeometryFilter(self, rhino_object, geometry, component_index):
+        def CustomGeometryFilter( self, rhino_object, geometry, component_index ):
             return object_id == rhino_object.Id
-
     go = CustomGetObject()
-    if message:
-        go.SetCommandPrompt(message)
+    if message: go.SetCommandPrompt(message)
     go.GeometryFilter = Rhino.DocObjects.ObjectType.MeshVertex
     go.AcceptNothing(True)
-    if go.GetMultiple(min_count, max_count) != Rhino.Input.GetResult.Object:
-        return None
+    if go.GetMultiple(min_count,max_count)!=Rhino.Input.GetResult.Object: return None
     objrefs = go.Objects()
     rc = [item.GeometryComponentIndex.Index for item in objrefs]
     go.Dispose()
@@ -736,18 +651,15 @@ def GetPoint(message=None, base_point=None, distance=None, in_plane=False):
       GetRectangle
     """
     gp = Rhino.Input.Custom.GetPoint()
-    if message:
-        gp.SetCommandPrompt(message)
+    if message: gp.SetCommandPrompt(message)
     base_point = rhutil.coerce3dpoint(base_point)
     if base_point:
-        gp.DrawLineFromPoint(base_point, True)
+        gp.DrawLineFromPoint(base_point,True)
         gp.EnableDrawLineFromPoint(True)
-        if distance:
-            gp.ConstrainDistanceFromBasePoint(distance)
-    if in_plane:
-        gp.ConstrainToConstructionPlane(True)
+        if distance: gp.ConstrainDistanceFromBasePoint(distance)
+    if in_plane: gp.ConstrainToConstructionPlane(True)
     gp.Get()
-    if gp.CommandResult() != Rhino.Commands.Result.Success:
+    if gp.CommandResult()!=Rhino.Commands.Result.Success:
         return scriptcontext.errorhandler()
     pt = gp.Point()
     gp.Dispose()
@@ -776,11 +688,10 @@ def GetPointOnCurve(curve_id, message=None):
     """
     curve = rhutil.coercecurve(curve_id, -1, True)
     gp = Rhino.Input.Custom.GetPoint()
-    if message:
-        gp.SetCommandPrompt(message)
+    if message: gp.SetCommandPrompt(message)
     gp.Constrain(curve, False)
     gp.Get()
-    if gp.CommandResult() != Rhino.Commands.Result.Success:
+    if gp.CommandResult()!=Rhino.Commands.Result.Success:
         return scriptcontext.errorhandler()
     pt = gp.Point()
     gp.Dispose()
@@ -808,11 +719,9 @@ def GetPointOnMesh(mesh_id, message=None):
       GetPoints
     """
     mesh_id = rhutil.coerceguid(mesh_id, True)
-    if not message:
-        message = "Point"
+    if not message: message = "Point"
     cmdrc, point = Rhino.Input.RhinoGet.GetPointOnMesh(mesh_id, message, False)
-    if cmdrc == Rhino.Commands.Result.Success:
-        return point
+    if cmdrc==Rhino.Commands.Result.Success: return point
 
 
 def GetPointOnSurface(surface_id, message=None):
@@ -840,28 +749,20 @@ def GetPointOnSurface(surface_id, message=None):
     if not surfOrBrep:
         surfOrBrep = rhutil.coercebrep(surface_id, True)
     gp = Rhino.Input.Custom.GetPoint()
-    if message:
-        gp.SetCommandPrompt(message)
-    if isinstance(surfOrBrep, Rhino.Geometry.Surface):
-        gp.Constrain(surfOrBrep, False)
+    if message: gp.SetCommandPrompt(message)
+    if isinstance(surfOrBrep,Rhino.Geometry.Surface):
+        gp.Constrain(surfOrBrep,False)
     else:
         gp.Constrain(surfOrBrep, -1, -1, False)
     gp.Get()
-    if gp.CommandResult() != Rhino.Commands.Result.Success:
+    if gp.CommandResult()!=Rhino.Commands.Result.Success:
         return scriptcontext.errorhandler()
     pt = gp.Point()
     gp.Dispose()
     return pt
 
 
-def GetPoints(
-    draw_lines=False,
-    in_plane=False,
-    message1=None,
-    message2=None,
-    max_points=None,
-    base_point=None,
-):
+def GetPoints(draw_lines=False, in_plane=False, message1=None, message2=None, max_points=None, base_point=None):
     """Pauses for user input of one or more points
     Parameters:
       draw_lines (bool, optional): Draw lines between points
@@ -885,51 +786,38 @@ def GetPoints(
       GetRectangle
     """
     gp = Rhino.Input.Custom.GetPoint()
-    if message1:
-        gp.SetCommandPrompt(message1)
-    gp.EnableDrawLineFromPoint(draw_lines)
+    if message1: gp.SetCommandPrompt(message1)
+    gp.EnableDrawLineFromPoint( draw_lines )
     if in_plane:
         gp.ConstrainToConstructionPlane(True)
         plane = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane()
         gp.Constrain(plane, False)
     getres = gp.Get()
-    if gp.CommandResult() != Rhino.Commands.Result.Success:
-        return None
+    if gp.CommandResult()!=Rhino.Commands.Result.Success: return None
     prevPoint = gp.Point()
     rc = [prevPoint]
-    if max_points is None or max_points > 1:
+    if max_points is None or max_points>1:
         current_point = 1
-        if message2:
-            gp.SetCommandPrompt(message2)
-
-        def GetPointDynamicDrawFunc(sender, args):
-            if len(rc) > 1:
+        if message2: gp.SetCommandPrompt(message2)
+        def GetPointDynamicDrawFunc( sender, args ):
+            if len(rc)>1:
                 c = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
                 args.Display.DrawPolyline(rc, c)
-
-        if draw_lines:
-            gp.DynamicDraw += GetPointDynamicDrawFunc
+        if draw_lines: gp.DynamicDraw += GetPointDynamicDrawFunc
         while True:
-            if max_points and current_point >= max_points:
-                break
-            if draw_lines:
-                gp.DrawLineFromPoint(prevPoint, True)
+            if max_points and current_point>=max_points: break
+            if draw_lines: gp.DrawLineFromPoint(prevPoint, True)
             gp.SetBasePoint(prevPoint, True)
             current_point += 1
             getres = gp.Get()
-            if getres == Rhino.Input.GetResult.Cancel:
-                break
-            if gp.CommandResult() != Rhino.Commands.Result.Success:
-                return None
+            if getres==Rhino.Input.GetResult.Cancel: break
+            if gp.CommandResult()!=Rhino.Commands.Result.Success: return None
             prevPoint = gp.Point()
             rc.append(prevPoint)
     return rc
 
-
-def GetPolyline(
-    flags=3, message1=None, message2=None, message3=None, message4=None, min=2, max=0
-):
-    """Prompts the user to pick points that define a polyline.
+def GetPolyline(flags=3, message1=None, message2=None, message3=None, message4=None, min=2, max=0):
+  """Prompts the user to pick points that define a polyline.
   Parameters:
     flags (number, optional) The options are bit coded flags. Values can be added together to specify more than one option. The default is 3.
       value description
@@ -957,25 +845,17 @@ def GetPolyline(
     GetLine
     GetRectangle
   """
-    gpl = Rhino.Input.Custom.GetPolyline()
-    if message1:
-        gpl.FirstPointPrompt = message1
-    if message2:
-        gpl.SecondPointPrompt = message2
-    if message3:
-        gpl.ThirdPointPrompt = message3
-    if message4:
-        gpl.FourthPointPrompt = message4
-    if min:
-        gpl.MinPointCount = min
-    if max:
-        gpl.MaxPointCount = max
-    rc, polyline = gpl.Get()
-    scriptcontext.doc.Views.Redraw()
-    if rc == Rhino.Commands.Result.Success:
-        return polyline
-    return None
-
+  gpl = Rhino.Input.Custom.GetPolyline()
+  if message1: gpl.FirstPointPrompt = message1
+  if message2: gpl.SecondPointPrompt = message2
+  if message3: gpl.ThirdPointPrompt = message3
+  if message4: gpl.FourthPointPrompt = message4
+  if min: gpl.MinPointCount = min
+  if max: gpl.MaxPointCount = max
+  rc, polyline = gpl.Get()
+  scriptcontext.doc.Views.Redraw()
+  if rc==Rhino.Commands.Result.Success: return polyline
+  return None
 
 def GetReal(message="Number", number=None, minimum=None, maximum=None):
     """Pauses for user input of a number.
@@ -995,16 +875,11 @@ def GetReal(message="Number", number=None, minimum=None, maximum=None):
       RealBox
     """
     gn = Rhino.Input.Custom.GetNumber()
-    if message:
-        gn.SetCommandPrompt(message)
-    if number is not None:
-        gn.SetDefaultNumber(number)
-    if minimum is not None:
-        gn.SetLowerLimit(minimum, False)
-    if maximum is not None:
-        gn.SetUpperLimit(maximum, False)
-    if gn.Get() != Rhino.Input.GetResult.Number:
-        return None
+    if message: gn.SetCommandPrompt(message)
+    if number is not None: gn.SetDefaultNumber(number)
+    if minimum is not None: gn.SetLowerLimit(minimum, False)
+    if maximum is not None: gn.SetUpperLimit(maximum, False)
+    if gn.Get()!=Rhino.Input.GetResult.Number: return None
     rc = gn.Number()
     gn.Dispose()
     return rc
@@ -1034,20 +909,15 @@ def GetRectangle(mode=0, base_point=None, prompt1=None, prompt2=None, prompt3=No
       GetPoint
       GetPoints
     """
-    mode = System.Enum.ToObject(Rhino.Input.GetBoxMode, mode)
+    mode = System.Enum.ToObject( Rhino.Input.GetBoxMode, mode )
     base_point = rhutil.coerce3dpoint(base_point)
-    if base_point == None:
-        base_point = Rhino.Geometry.Point3d.Unset
+    if( base_point==None ): base_point = Rhino.Geometry.Point3d.Unset
     prompts = ["", "", ""]
-    if prompt1:
-        prompts[0] = prompt1
-    if prompt2:
-        prompts[1] = prompt2
-    if prompt3:
-        prompts[2] = prompt3
+    if prompt1: prompts[0] = prompt1
+    if prompt2: prompts[1] = prompt2
+    if prompt3: prompts[2] = prompt3
     rc, corners = Rhino.Input.RhinoGet.GetRectangle(mode, base_point, prompts)
-    if rc == Rhino.Commands.Result.Success:
-        return corners
+    if rc==Rhino.Commands.Result.Success: return corners
     return None
 
 
@@ -1073,17 +943,13 @@ def GetString(message=None, defaultString=None, strings=None):
     """
     gs = Rhino.Input.Custom.GetString()
     gs.AcceptNothing(True)
-    if message:
-        gs.SetCommandPrompt(message)
-    if defaultString:
-        gs.SetDefaultString(defaultString)
+    if message: gs.SetCommandPrompt(message)
+    if defaultString: gs.SetDefaultString(defaultString)
     if strings:
-        for s in strings:
-            gs.AddOption(s)
+        for s in strings: gs.AddOption(s)
     result = gs.Get()
-    if result == Rhino.Input.GetResult.Cancel:
-        return None
-    if result == Rhino.Input.GetResult.Option:
+    if result==Rhino.Input.GetResult.Cancel: return None
+    if( result == Rhino.Input.GetResult.Option ):
         return gs.Option().EnglishName
     return gs.StringResult()
 
@@ -1156,57 +1022,40 @@ def MessageBox(message, buttons=0, title=""):
     See Also:
       
     """
-    buttontype = buttons & 0x00000007  # 111 in binary
+    buttontype = buttons & 0x00000007 #111 in binary
     btn = Rhino.UI.ShowMessageButton.OK
-    if buttontype == 1:
-        btn = Rhino.UI.ShowMessageButton.OKCancel
-    elif buttontype == 2:
-        btn = Rhino.UI.ShowMessageButton.AbortRetryIgnore
-    elif buttontype == 3:
-        btn = Rhino.UI.ShowMessageButton.YesNoCancel
-    elif buttontype == 4:
-        btn = Rhino.UI.ShowMessageButton.YesNo
-    elif buttontype == 5:
-        btn = Rhino.UI.ShowMessageButton.RetryCancel
-
+    if buttontype==1: btn = Rhino.UI.ShowMessageButton.OKCancel
+    elif buttontype==2: btn = Rhino.UI.ShowMessageButton.AbortRetryIgnore
+    elif buttontype==3: btn = Rhino.UI.ShowMessageButton.YesNoCancel
+    elif buttontype==4: btn = Rhino.UI.ShowMessageButton.YesNo
+    elif buttontype==5: btn = Rhino.UI.ShowMessageButton.RetryCancel
+    
     icontype = buttons & 0x00000070
-    icon = getattr(Rhino.UI.ShowMessageIcon, "None")
-    if icontype == 16:
-        icon = Rhino.UI.ShowMessageIcon.Error
-    elif icontype == 32:
-        icon = Rhino.UI.ShowMessageIcon.Question
-    elif icontype == 48:
-        icon = Rhino.UI.ShowMessageIcon.Warning
-    elif icontype == 64:
-        icon = Rhino.UI.ShowMessageIcon.Information
-
-    ### 15 Sep 2014 Alain - default button not supported in new version of RC
-    ### that isn't tied to Windows.Forms but it probably will so I'm commenting
+    icon = Rhino.UI.ShowMessageIcon.None
+    if icontype==16: icon = Rhino.UI.ShowMessageIcon.Error
+    elif icontype==32: icon = Rhino.UI.ShowMessageIcon.Question
+    elif icontype==48: icon = Rhino.UI.ShowMessageIcon.Warning
+    elif icontype==64: icon = Rhino.UI.ShowMessageIcon.Information
+    
+    ### 15 Sep 2014 Alain - default button not supported in new version of RC 
+    ### that isn't tied to Windows.Forms but it probably will so I'm commenting 
     ### the old code instead of deleting it.
-    # defbtntype = buttons & 0x00000300
-    # defbtn = System.Windows.Forms.MessageDefaultButton.Button1
-    # if defbtntype==256:
+    #defbtntype = buttons & 0x00000300
+    #defbtn = System.Windows.Forms.MessageDefaultButton.Button1
+    #if defbtntype==256:
     #    defbtn = System.Windows.Forms.MessageDefaultButton.Button2
-    # elif defbtntype==512:
+    #elif defbtntype==512:
     #    defbtn = System.Windows.Forms.MessageDefaultButton.Button3
 
-    if not isinstance(message, str):
-        message = str(message)
+    if not isinstance(message, str): message = str(message)
     dlg_result = Rhino.UI.Dialogs.ShowMessage(message, title, btn, icon)
-    if dlg_result == Rhino.UI.ShowMessageResult.OK:
-        return 1
-    if dlg_result == Rhino.UI.ShowMessageResult.Cancel:
-        return 2
-    if dlg_result == Rhino.UI.ShowMessageResult.Abort:
-        return 3
-    if dlg_result == Rhino.UI.ShowMessageResult.Retry:
-        return 4
-    if dlg_result == Rhino.UI.ShowMessageResult.Ignore:
-        return 5
-    if dlg_result == Rhino.UI.ShowMessageResult.Yes:
-        return 6
-    if dlg_result == Rhino.UI.ShowMessageResult.No:
-        return 7
+    if dlg_result==Rhino.UI.ShowMessageResult.OK:     return 1
+    if dlg_result==Rhino.UI.ShowMessageResult.Cancel: return 2
+    if dlg_result==Rhino.UI.ShowMessageResult.Abort:  return 3
+    if dlg_result==Rhino.UI.ShowMessageResult.Retry:  return 4
+    if dlg_result==Rhino.UI.ShowMessageResult.Ignore: return 5
+    if dlg_result==Rhino.UI.ShowMessageResult.Yes:    return 6
+    if dlg_result==Rhino.UI.ShowMessageResult.No:     return 7
 
 
 def PropertyListBox(items, values, message=None, title=None):
@@ -1267,7 +1116,7 @@ def MultiListBox(items, message=None, title=None, defaults=None):
       PropertyListBox
     """
     if isinstance(defaults, str):
-        defaults = [defaults]
+      defaults = [defaults]  
     return Rhino.UI.Dialogs.ShowMultiListBox(title, message, items, defaults)
 
 
@@ -1299,18 +1148,12 @@ def OpenFileName(title=None, filter=None, folder=None, filename=None, extension=
       SaveFileName
     """
     fd = Rhino.UI.OpenFileDialog()
-    if title:
-        fd.Title = title
-    if filter:
-        fd.Filter = filter
-    if folder:
-        fd.InitialDirectory = folder
-    if filename:
-        fd.FileName = filename
-    if extension:
-        fd.DefaultExt = extension
-    if fd.ShowOpenDialog():
-        return fd.FileName
+    if title: fd.Title = title
+    if filter: fd.Filter = filter
+    if folder: fd.InitialDirectory = folder
+    if filename: fd.FileName = filename
+    if extension: fd.DefaultExt = extension
+    if fd.ShowOpenDialog(): return fd.FileName
 
 
 def OpenFileNames(title=None, filter=None, folder=None, filename=None, extension=None):
@@ -1336,19 +1179,13 @@ def OpenFileNames(title=None, filter=None, folder=None, filename=None, extension
       SaveFileName
     """
     fd = Rhino.UI.OpenFileDialog()
-    if title:
-        fd.Title = title
-    if filter:
-        fd.Filter = filter
-    if folder:
-        fd.InitialDirectory = folder
-    if filename:
-        fd.FileName = filename
-    if extension:
-        fd.DefaultExt = extension
+    if title: fd.Title = title
+    if filter: fd.Filter = filter
+    if folder: fd.InitialDirectory = folder
+    if filename: fd.FileName = filename
+    if extension: fd.DefaultExt = extension
     fd.MultiSelect = True
-    if fd.ShowOpenDialog():
-        return fd.FileNames
+    if fd.ShowOpenDialog(): return fd.FileNames
     return []
 
 
@@ -1386,7 +1223,7 @@ def PopupMenu(items, modes=None, point=None, view=None):
         viewport = view.ActiveViewport
         point2d = viewport.WorldToClient(point)
         screen_point = viewport.ClientToScreen(point2d)
-    return Rhino.UI.Dialogs.ShowContextMenu(items, screen_point, modes)
+    return Rhino.UI.Dialogs.ShowContextMenu(items, screen_point, modes);
 
 
 def RealBox(message="", default_number=None, title="", minimum=None, maximum=None):
@@ -1409,17 +1246,11 @@ def RealBox(message="", default_number=None, title="", minimum=None, maximum=Non
     See Also:
       GetReal
     """
-    if default_number is None:
-        default_number = Rhino.RhinoMath.UnsetValue
-    if minimum is None:
-        minimum = Rhino.RhinoMath.UnsetValue
-    if maximum is None:
-        maximum = Rhino.RhinoMath.UnsetValue
-    rc, number = Rhino.UI.Dialogs.ShowNumberBox(
-        title, message, default_number, minimum, maximum
-    )
-    if rc:
-        return number
+    if default_number is None: default_number = Rhino.RhinoMath.UnsetValue
+    if minimum is None: minimum = Rhino.RhinoMath.UnsetValue
+    if maximum is None: maximum = Rhino.RhinoMath.UnsetValue
+    rc, number = Rhino.UI.Dialogs.ShowNumberBox(title, message, default_number, minimum, maximum)
+    if rc: return number
 
 
 def SaveFileName(title=None, filter=None, folder=None, filename=None, extension=None):
@@ -1449,18 +1280,12 @@ def SaveFileName(title=None, filter=None, folder=None, filename=None, extension=
       OpenFileName
     """
     fd = Rhino.UI.SaveFileDialog()
-    if title:
-        fd.Title = title
-    if filter:
-        fd.Filter = filter
-    if folder:
-        fd.InitialDirectory = folder
-    if filename:
-        fd.FileName = filename
-    if extension:
-        fd.DefaultExt = extension
-    if fd.ShowSaveDialog():
-        return fd.FileName
+    if title: fd.Title = title
+    if filter: fd.Filter = filter
+    if folder: fd.InitialDirectory = folder
+    if filename: fd.FileName = filename
+    if extension: fd.DefaultExt = extension
+    if fd.ShowSaveDialog(): return fd.FileName
 
 
 def StringBox(message=None, default_value=None, title=None):
@@ -1480,8 +1305,7 @@ def StringBox(message=None, default_value=None, title=None):
       GetString
     """
     rc, text = Rhino.UI.Dialogs.ShowEditBox(title, message, default_value, False)
-    if rc:
-        return text
+    if rc: return text
 
 
 def TextOut(message=None, title=None):

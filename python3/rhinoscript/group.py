@@ -1,6 +1,5 @@
 import scriptcontext
-import rhinoscript.utility as rhutil
-
+from . import utility as rhutil
 
 def AddGroup(group_name=None):
     """Adds a new empty group to the document
@@ -24,12 +23,10 @@ def AddGroup(group_name=None):
     if group_name is None:
         index = scriptcontext.doc.Groups.Add()
     else:
-        if not isinstance(group_name, str):
-            group_name = str(group_name)
-        index = scriptcontext.doc.Groups.Add(group_name)
+        if not isinstance(group_name, str): group_name = str(group_name)
+        index = scriptcontext.doc.Groups.Add( group_name )
     rc = scriptcontext.doc.Groups.GroupName(index)
-    if rc is None:
-        return scriptcontext.errorhandler()
+    if rc is None: return scriptcontext.errorhandler()
     return rc
 
 
@@ -51,14 +48,11 @@ def AddObjectsToGroup(object_ids, group_name):
       ObjectGroups
       ObjectsByGroup
     """
-    if not isinstance(group_name, str):
-        group_name = str(group_name)
+    if not isinstance(group_name, str): group_name = str(group_name)
     index = scriptcontext.doc.Groups.Find(group_name)
     object_ids = rhutil.coerceguidlist(object_ids)
-    if index < 0 or not object_ids:
-        return 0
-    if not scriptcontext.doc.Groups.AddToGroup(index, object_ids):
-        return 0
+    if index<0 or not object_ids: return 0
+    if not scriptcontext.doc.Groups.AddToGroup(index, object_ids): return 0
     return len(object_ids)
 
 
@@ -81,11 +75,9 @@ def AddObjectToGroup(object_id, group_name):
       ObjectsByGroup
     """
     object_id = rhutil.coerceguid(object_id)
-    if not isinstance(group_name, str):
-        group_name = str(group_name)
+    if not isinstance(group_name, str): group_name = str(group_name)
     index = scriptcontext.doc.Groups.Find(group_name)
-    if object_id is None or index < 0:
-        return False
+    if object_id is None or index<0: return False
     return scriptcontext.doc.Groups.AddToGroup(index, object_id)
 
 
@@ -108,8 +100,7 @@ def DeleteGroup(group_name):
       IsGroup
       RenameGroup
     """
-    if not isinstance(group_name, str):
-        group_name = str(group_name)
+    if not isinstance(group_name, str): group_name = str(group_name)
     index = scriptcontext.doc.Groups.Find(group_name)
     return scriptcontext.doc.Groups.Delete(index)
 
@@ -150,8 +141,7 @@ def GroupNames():
       RenameGroup
     """
     names = scriptcontext.doc.Groups.GroupNames(True)
-    if names is None:
-        return None
+    if names is None: return None
     return list(names)
 
 
@@ -173,9 +163,8 @@ def HideGroup(group_name):
       UnlockGroup
     """
     index = scriptcontext.doc.Groups.Find(group_name)
-    if index < 0:
-        return 0
-    return scriptcontext.doc.Groups.Hide(index)
+    if index<0: return 0
+    return scriptcontext.doc.Groups.Hide(index);
 
 
 def IsGroup(group_name):
@@ -198,9 +187,8 @@ def IsGroup(group_name):
       GroupNames
       RenameGroup
     """
-    if not isinstance(group_name, str):
-        group_name = str(group_name)
-    return scriptcontext.doc.Groups.Find(group_name) >= 0
+    if not isinstance(group_name, str): group_name = str(group_name)
+    return scriptcontext.doc.Groups.Find(group_name)>=0
 
 
 def IsGroupEmpty(group_name):
@@ -223,12 +211,10 @@ def IsGroupEmpty(group_name):
       RemoveObjectFromGroup
       RemoveObjectsFromGroup
     """
-    if not isinstance(group_name, str):
-        group_name = str(group_name)
+    if not isinstance(group_name, str): group_name = str(group_name)
     index = scriptcontext.doc.Groups.Find(group_name)
-    if index < 0:
-        return scriptcontext.errorhandler()
-    return scriptcontext.doc.Groups.GroupObjectCount(index) > 0
+    if index<0: return scriptcontext.errorhandler()
+    return scriptcontext.doc.Groups.GroupObjectCount(index)>0
 
 
 def LockGroup(group_name):
@@ -249,12 +235,10 @@ def LockGroup(group_name):
       ShowGroup
       UnlockGroup
     """
-    if not isinstance(group_name, str):
-        group_name = str(group_name)
+    if not isinstance(group_name, str): group_name = str(group_name)
     index = scriptcontext.doc.Groups.Find(group_name)
-    if index < 0:
-        return scriptcontext.errorhandler()
-    return scriptcontext.doc.Groups.Lock(index)
+    if index<0: return scriptcontext.errorhandler()
+    return scriptcontext.doc.Groups.Lock(index);
 
 
 def RemoveObjectFromAllGroups(object_id):
@@ -276,8 +260,7 @@ def RemoveObjectFromAllGroups(object_id):
       RemoveObjectsFromGroup
     """
     rhinoobject = rhutil.coercerhinoobject(object_id, True, True)
-    if rhinoobject.GroupCount < 1:
-        return False
+    if rhinoobject.GroupCount<1: return False
     attrs = rhinoobject.Attributes
     attrs.RemoveFromAllGroups()
     return scriptcontext.doc.Objects.ModifyAttributes(rhinoobject, attrs, True)
@@ -303,7 +286,7 @@ def RemoveObjectFromGroup(object_id, group_name):
       RemoveObjectsFromGroup
     """
     count = RemoveObjectsFromGroup(object_id, group_name)
-    return not (count is None or count < 1)
+    return not (count is None or count<1)
 
 
 def RemoveObjectsFromGroup(object_ids, group_name):
@@ -326,21 +309,18 @@ def RemoveObjectsFromGroup(object_ids, group_name):
       RemoveObjectFromAllGroups
       RemoveObjectFromGroup
     """
-    if not isinstance(group_name, str):
-        group_name = str(group_name)
+    if not isinstance(group_name, str): group_name = str(group_name)
     index = scriptcontext.doc.Groups.Find(group_name)
-    if index < 0:
-        return scriptcontext.errorhandler()
+    if index<0: return scriptcontext.errorhandler()
     id = rhutil.coerceguid(object_ids, False)
-    if id:
-        object_ids = [id]
+    if id: object_ids = [id]
     objects_removed = 0
     for id in object_ids:
         rhinoobject = rhutil.coercerhinoobject(id, True, True)
         attrs = rhinoobject.Attributes
         attrs.RemoveFromGroup(index)
         if scriptcontext.doc.Objects.ModifyAttributes(rhinoobject, attrs, True):
-            objects_removed += 1
+            objects_removed+=1
     return objects_removed
 
 
@@ -365,13 +345,10 @@ def RenameGroup(old_name, new_name):
       GroupNames
       IsGroup
     """
-    if not isinstance(old_name, str):
-        old_name = str(old_name)
+    if not isinstance(old_name, str): old_name = str(old_name)
     index = scriptcontext.doc.Groups.Find(old_name)
-    if index < 0:
-        return scriptcontext.errorhandler()
-    if not isinstance(new_name, str):
-        new_name = str(new_name)
+    if index<0: return scriptcontext.errorhandler()
+    if not isinstance(new_name, str): new_name = str(new_name)
     if scriptcontext.doc.Groups.ChangeGroupName(index, new_name):
         return new_name
     return scriptcontext.errorhandler()
@@ -395,12 +372,10 @@ def ShowGroup(group_name):
       LockGroup
       UnlockGroup
     """
-    if not isinstance(group_name, str):
-        group_name = str(group_name)
+    if not isinstance(group_name, str): group_name = str(group_name)
     index = scriptcontext.doc.Groups.Find(group_name)
-    if index < 0:
-        return scriptcontext.errorhandler()
-    return scriptcontext.doc.Groups.Show(index)
+    if index<0: return scriptcontext.errorhandler()
+    return scriptcontext.doc.Groups.Show(index);
 
 
 def UnlockGroup(group_name):
@@ -421,10 +396,32 @@ def UnlockGroup(group_name):
       LockGroup
       ShowGroup
     """
-    if not isinstance(group_name, str):
-        group_name = str(group_name)
+    if not isinstance(group_name, str): group_name = str(group_name)
     index = scriptcontext.doc.Groups.Find(group_name)
-    if index < 0:
-        return scriptcontext.errorhandler()
-    return scriptcontext.doc.Groups.Unlock(index)
+    if index<0: return scriptcontext.errorhandler()
+    return scriptcontext.doc.Groups.Unlock(index);
+
+def ObjectTopGroup(object_id):
+    """Returns the top most group name that an object is assigned.  This function primarily applies to objects that are members of nested groups
+    Parameters:
+      object_id (guid): String or Guid representing the object identifier
+    Returns:
+      str: the top group's name if successful
+      None: if not successful
+    Example:
+      import rhinoscriptsyntax as rs
+      id = rs.GetObject("Select object to add to group")
+      groupName = rs.ObjectTopGroup(id)
+    See Also:
+      ObjectGroups
+    """
+    object_id = rhutil.coerceguid(object_id)
+    if object_id is None: return None
+    obj = scriptcontext.doc.Objects.FindId(object_id)
+    topGroupName = None
+    groupIndexes = obj.GetGroupList()
+    if groupIndexes is not None:
+        topGroupIndex = max(groupIndexes) # this is a bad assumption. See RH-49189
+        topGroupName = scriptcontext.doc.Groups.FindIndex(topGroupIndex).Name
+    return topGroupName
 

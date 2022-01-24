@@ -1,8 +1,7 @@
-import rhinoscript.utility as rhutil
+from . import utility as rhutil
 import Rhino
 import scriptcontext
 import math
-
 
 def IsVectorParallelTo(vector1, vector2):
     """Compares two vectors to see if they are parallel
@@ -69,7 +68,7 @@ def IsVectorTiny(vector):
       VectorCreate
     """
     vector = rhutil.coerce3dvector(vector, True)
-    return vector.IsTiny(1.0e-12)
+    return vector.IsTiny( 1.0e-12 )
 
 
 def IsVectorZero(vector):
@@ -116,7 +115,7 @@ def PointAdd(point1, point2):
     """
     point1 = rhutil.coerce3dpoint(point1, True)
     point2 = rhutil.coerce3dpoint(point2, True)
-    return point1 + point2
+    return point1+point2
 
 
 def PointArrayClosestPoint(points, test_point):
@@ -144,8 +143,7 @@ def PointArrayClosestPoint(points, test_point):
     points = rhutil.coerce3dpointlist(points, True)
     test_point = rhutil.coerce3dpoint(test_point, True)
     index = Rhino.Collections.Point3dList.ClosestIndexInList(points, test_point)
-    if index >= 0:
-        return index
+    if index>=0: return index
 
 
 def PointArrayTransform(points, xform):
@@ -167,7 +165,7 @@ def PointArrayTransform(points, xform):
     """
     points = rhutil.coerce3dpointlist(points, True)
     xform = rhutil.coercexform(xform, True)
-    return [xform * point for point in points]
+    return [xform*point for point in points]
 
 
 def PointClosestObject(point, object_ids):
@@ -198,42 +196,41 @@ def PointClosestObject(point, object_ids):
         geom = rhutil.coercegeometry(id, True)
         point_geometry = geom
         if isinstance(point_geometry, Rhino.Geometry.Point):
-            distance = point.DistanceTo(point_geometry.Location)
-            if closest is None or distance < closest[0]:
+            distance = point.DistanceTo( point_geometry.Location )
+            if closest is None or distance<closest[0]:
                 closest = distance, id, point_geometry.Location
             continue
         point_cloud = geom
         if isinstance(point_cloud, Rhino.Geometry.PointCloud):
             index = point_cloud.ClosestPoint(point)
-            if index >= 0:
-                distance = point.DistanceTo(point_cloud[index].Location)
-                if closest is None or distance < closest[0]:
+            if index>=0:
+                distance = point.DistanceTo( point_cloud[index].Location )
+                if closest is None or distance<closest[0]:
                     closest = distance, id, point_cloud[index].Location
             continue
         curve = geom
         if isinstance(curve, Rhino.Geometry.Curve):
             rc, t = curve.ClosestPoint(point)
             if rc:
-                distance = point.DistanceTo(curve.PointAt(t))
-                if closest is None or distance < closest[0]:
+                distance = point.DistanceTo( curve.PointAt(t) )
+                if closest is None or distance<closest[0]:
                     closest = distance, id, curve.PointAt(t)
             continue
         brep = geom
         if isinstance(brep, Rhino.Geometry.Brep):
             brep_closest = brep.ClosestPoint(point)
-            distance = point.DistanceTo(brep_closest)
-            if closest is None or distance < closest[0]:
+            distance = point.DistanceTo( brep_closest )
+            if closest is None or distance<closest[0]:
                 closest = distance, id, brep_closest
             continue
         mesh = geom
         if isinstance(mesh, Rhino.Geometry.Mesh):
             mesh_closest = mesh.ClosestPoint(point)
-            distance = point.DistanceTo(mesh_closest)
-            if closest is None or distance < closest[0]:
+            distance = point.DistanceTo( mesh_closest )
+            if closest is None or distance<closest[0]:
                 closest = distance, id, mesh_closest
             continue
-    if closest:
-        return closest[1], closest[2]
+    if closest: return closest[1], closest[2]
 
 
 def PointCompare(point1, point2, tolerance=None):
@@ -258,9 +255,8 @@ def PointCompare(point1, point2, tolerance=None):
     """
     point1 = rhutil.coerce3dpoint(point1, True)
     point2 = rhutil.coerce3dpoint(point2, True)
-    if tolerance is None:
-        tolerance = Rhino.RhinoMath.ZeroTolerance
-    vector = point2 - point1
+    if tolerance is None: tolerance = Rhino.RhinoMath.ZeroTolerance
+    vector = point2-point1
     return vector.IsTiny(tolerance)
 
 
@@ -283,7 +279,7 @@ def PointDivide(point, divide):
       PointTransform
     """
     point = rhutil.coerce3dpoint(point, True)
-    return point / divide
+    return point/divide
 
 
 def PointsAreCoplanar(points, tolerance=1.0e-12):
@@ -335,7 +331,7 @@ def PointScale(point, scale):
       PointTransform
     """
     point = rhutil.coerce3dpoint(point, True)
-    return point * scale
+    return point*scale
 
 
 def PointSubtract(point1, point2):
@@ -359,10 +355,10 @@ def PointSubtract(point1, point2):
     """
     point1 = rhutil.coerce3dpoint(point1, True)
     point2 = rhutil.coerce3dpoint(point2, True)
-    v = point1 - point2
+    v = point1-point2
     return Rhino.Geometry.Point3d(v)
 
-
+  
 def PointTransform(point, xform):
     """Transforms a 3D point
     Parameters:
@@ -386,7 +382,7 @@ def PointTransform(point, xform):
     """
     point = rhutil.coerce3dpoint(point, True)
     xform = rhutil.coercexform(xform, True)
-    return xform * point
+    return xform*point
 
 
 def ProjectPointToMesh(points, mesh_ids, direction):
@@ -415,13 +411,10 @@ def ProjectPointToMesh(points, mesh_ids, direction):
         pts = [rhutil.coerce3dpoint(points, True)]
     direction = rhutil.coerce3dvector(direction, True)
     id = rhutil.coerceguid(mesh_ids, False)
-    if id:
-        mesh_ids = [id]
+    if id: mesh_ids = [id]
     meshes = [rhutil.coercemesh(id, True) for id in mesh_ids]
     tolerance = scriptcontext.doc.ModelAbsoluteTolerance
-    rc = Rhino.Geometry.Intersect.Intersection.ProjectPointsToMeshes(
-        meshes, pts, direction, tolerance
-    )
+    rc = Rhino.Geometry.Intersect.Intersection.ProjectPointsToMeshes(meshes, pts, direction, tolerance)
     return rc
 
 
@@ -451,13 +444,10 @@ def ProjectPointToSurface(points, surface_ids, direction):
         pts = [rhutil.coerce3dpoint(points, True)]
     direction = rhutil.coerce3dvector(direction, True)
     id = rhutil.coerceguid(surface_ids, False)
-    if id:
-        surface_ids = [id]
+    if id: surface_ids = [id]
     breps = [rhutil.coercebrep(id, True) for id in surface_ids]
     tolerance = scriptcontext.doc.ModelAbsoluteTolerance
-    return Rhino.Geometry.Intersect.Intersection.ProjectPointsToBreps(
-        breps, pts, direction, tolerance
-    )
+    return Rhino.Geometry.Intersect.Intersection.ProjectPointsToBreps(breps, pts, direction, tolerance)
 
 
 def PullPoints(object_id, points):
@@ -485,7 +475,7 @@ def PullPoints(object_id, points):
         points = mesh.PullPointsToMesh(points)
         return list(points)
     brep = rhutil.coercebrep(id, False)
-    if brep and brep.Faces.Count == 1:
+    if brep and brep.Faces.Count==1:
         tolerance = scriptcontext.doc.ModelAbsoluteTolerance
         points = brep.Faces[0].PullPointsToFace(points, tolerance)
         return list(points)
@@ -511,7 +501,7 @@ def VectorAdd(vector1, vector2):
     """
     vector1 = rhutil.coerce3dvector(vector1, True)
     vector2 = rhutil.coerce3dvector(vector2, True)
-    return vector1 + vector2
+    return vector1+vector2
 
 
 def VectorAngle(vector1, vector2):
@@ -545,7 +535,7 @@ def VectorAngle(vector1, vector2):
     if not vector1.Unitize() or not vector2.Unitize():
         raise ValueError("unable to unitize vector")
     dot = vector1 * vector2
-    dot = rhutil.clamp(-1, 1, dot)
+    dot = rhutil.clamp(-1,1,dot)
     radians = math.acos(dot)
     return math.degrees(radians)
 
@@ -595,7 +585,7 @@ def VectorCreate(to_point, from_point):
     """
     to_point = rhutil.coerce3dpoint(to_point, True)
     from_point = rhutil.coerce3dpoint(from_point, True)
-    return to_point - from_point
+    return to_point-from_point
 
 
 def VectorCrossProduct(vector1, vector2):
@@ -616,7 +606,7 @@ def VectorCrossProduct(vector1, vector2):
     """
     vector1 = rhutil.coerce3dvector(vector1, True)
     vector2 = rhutil.coerce3dvector(vector2, True)
-    return Rhino.Geometry.Vector3d.CrossProduct(vector1, vector2)
+    return Rhino.Geometry.Vector3d.CrossProduct( vector1, vector2 )
 
 
 def VectorDivide(vector, divide):
@@ -636,7 +626,7 @@ def VectorDivide(vector, divide):
       VectorSubtract
     """
     vector = rhutil.coerce3dvector(vector, True)
-    return vector / divide
+    return vector/divide
 
 
 def VectorDotProduct(vector1, vector2):
@@ -657,7 +647,7 @@ def VectorDotProduct(vector1, vector2):
     """
     vector1 = rhutil.coerce3dvector(vector1, True)
     vector2 = rhutil.coerce3dvector(vector2, True)
-    return vector1 * vector2
+    return vector1*vector2
 
 
 def VectorLength(vector):
@@ -740,8 +730,7 @@ def VectorRotate(vector, angle_degrees, axis):
     axis = rhutil.coerce3dvector(axis, True)
     angle_radians = Rhino.RhinoMath.ToRadians(angle_degrees)
     rc = Rhino.Geometry.Vector3d(vector.X, vector.Y, vector.Z)
-    if rc.Rotate(angle_radians, axis):
-        return rc
+    if rc.Rotate(angle_radians, axis): return rc
 
 
 def VectorScale(vector, scale):
@@ -761,7 +750,7 @@ def VectorScale(vector, scale):
       VectorSubtract
     """
     vector = rhutil.coerce3dvector(vector, True)
-    return vector * scale
+    return vector*scale
 
 
 def VectorSubtract(vector1, vector2):
@@ -784,7 +773,7 @@ def VectorSubtract(vector1, vector2):
     """
     vector1 = rhutil.coerce3dvector(vector1, True)
     vector2 = rhutil.coerce3dvector(vector2, True)
-    return vector1 - vector2
+    return vector1-vector2
 
 
 def VectorTransform(vector, xform):
@@ -807,7 +796,7 @@ def VectorTransform(vector, xform):
     """
     vector = rhutil.coerce3dvector(vector, True)
     xform = rhutil.coercexform(xform, True)
-    return xform * vector
+    return xform*vector
 
 
 def VectorUnitize(vector):
@@ -827,8 +816,7 @@ def VectorUnitize(vector):
     """
     vector = rhutil.coerce3dvector(vector, True)
     rc = Rhino.Geometry.Vector3d(vector.X, vector.Y, vector.Z)
-    if rc.Unitize():
-        return rc
+    if rc.Unitize(): return rc
 
 
 def PointArrayBoundingBox(points, view_or_plane=None, in_world_coords=True):
@@ -854,7 +842,7 @@ def PointArrayBoundingBox(points, view_or_plane=None, in_world_coords=True):
     """
     points = rhutil.coerce3dpointlist(points)
     if not points:
-        return None
+      return None
     bbox = Rhino.Geometry.BoundingBox(points)
 
     xform = None
@@ -864,27 +852,20 @@ def PointArrayBoundingBox(points, view_or_plane=None, in_world_coords=True):
         modelviews = scriptcontext.doc.Views.GetStandardRhinoViews()
         for item in modelviews:
             viewport = item.MainViewport
-            if type(view) is str and viewport.Name == view:
+            if type(view) is str and viewport.Name==view:
                 plane = viewport.ConstructionPlane()
                 break
-            elif type(view) is System.Guid and viewport.Id == view:
+            elif type(view) is System.Guid and viewport.Id==view:
                 plane = viewport.ConstructionPlane()
                 break
-        if plane is None:
-            return scriptcontext.errorhandler()
+        if plane is None: return scriptcontext.errorhandler()
     if plane:
-        xform = Rhino.Geometry.Transform.ChangeBasis(
-            Rhino.Geometry.Plane.WorldXY, plane
-        )
+        xform = Rhino.Geometry.Transform.ChangeBasis(Rhino.Geometry.Plane.WorldXY, plane)
         bbox = xform.TransformBoundingBox(bbox)
-    if not bbox.IsValid:
-        return scriptcontext.errorhandler()
+    if not bbox.IsValid: return scriptcontext.errorhandler()
 
     corners = list(bbox.GetCorners())
     if in_world_coords and plane is not None:
-        plane_to_world = Rhino.Geometry.Transform.ChangeBasis(
-            plane, Rhino.Geometry.Plane.WorldXY
-        )
-        for pt in corners:
-            pt.Transform(plane_to_world)
+        plane_to_world = Rhino.Geometry.Transform.ChangeBasis(plane, Rhino.Geometry.Plane.WorldXY)
+        for pt in corners: pt.Transform(plane_to_world)
     return corners

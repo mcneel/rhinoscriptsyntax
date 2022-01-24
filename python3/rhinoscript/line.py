@@ -1,6 +1,5 @@
 import scriptcontext
-import rhinoscript.utility as rhutil
-import System
+from . import utility as rhutil
 import Rhino
 
 
@@ -52,16 +51,14 @@ def LineCylinderIntersection(line, cylinder_plane, cylinder_height, cylinder_rad
     """
     line = rhutil.coerceline(line, True)
     cylinder_plane = rhutil.coerceplane(cylinder_plane, True)
-    circle = Rhino.Geometry.Circle(cylinder_plane, cylinder_radius)
-    if not circle.IsValid:
-        raise ValueError("unable to create valid circle with given plane and radius")
-    cyl = Rhino.Geometry.Cylinder(circle, cylinder_height)
-    if not cyl.IsValid:
-        raise ValueError("unable to create valid cylinder with given circle and height")
+    circle = Rhino.Geometry.Circle( cylinder_plane, cylinder_radius )
+    if not circle.IsValid: raise ValueError("unable to create valid circle with given plane and radius")
+    cyl = Rhino.Geometry.Cylinder( circle, cylinder_height )
+    if not cyl.IsValid: raise ValueError("unable to create valid cylinder with given circle and height")
     rc, pt1, pt2 = Rhino.Geometry.Intersect.Intersection.LineCylinder(line, cyl)
-    if rc == getattr(Rhino.Geometry.Intersect.LineCylinderIntersection, "None"):
+    if rc==Rhino.Geometry.Intersect.LineCylinderIntersection.None:
         return []
-    if rc == Rhino.Geometry.Intersect.LineCylinderIntersection.Single:
+    if rc==Rhino.Geometry.Intersect.LineCylinderIntersection.Single:
         return [pt1]
     return [pt1, pt2]
 
@@ -91,10 +88,9 @@ def LineIsFartherThan(line, distance, point_or_line):
     """
     line = rhutil.coerceline(line, True)
     test = rhutil.coerceline(point_or_line)
-    if not test:
-        test = rhutil.coerce3dpoint(point_or_line, True)
+    if not test: test = rhutil.coerce3dpoint(point_or_line, True)
     minDist = line.MinimumDistanceTo(test)
-    return minDist > distance
+    return minDist>distance
 
 
 def LineLineIntersection(lineA, lineB):
@@ -120,10 +116,8 @@ def LineLineIntersection(lineA, lineB):
     """
     lineA = rhutil.coerceline(lineA, True)
     lineB = rhutil.coerceline(lineB, True)
-    a = b = System.Double(0.0)
-    rc, a, b = Rhino.Geometry.Intersect.Intersection.LineLine(lineA, lineB, a, b)
-    if not rc:
-        return None
+    rc, a, b = Rhino.Geometry.Intersect.Intersection.LineLine(lineA, lineB)
+    if not rc: return None
     return lineA.PointAt(a), lineB.PointAt(b)
 
 
@@ -149,8 +143,7 @@ def LineMaxDistanceTo(line, point_or_line):
     """
     line = rhutil.coerceline(line, True)
     test = rhutil.coerceline(point_or_line)
-    if test is None:
-        test = rhutil.coerce3dpoint(point_or_line, True)
+    if test is None: test = rhutil.coerce3dpoint(point_or_line, True)
     return line.MaximumDistanceTo(test)
 
 
@@ -176,8 +169,7 @@ def LineMinDistanceTo(line, point_or_line):
     """
     line = rhutil.coerceline(line, True)
     test = rhutil.coerceline(point_or_line)
-    if test is None:
-        test = rhutil.coerce3dpoint(point_or_line, True)
+    if test is None: test = rhutil.coerce3dpoint(point_or_line, True)
     return line.MinimumDistanceTo(test)
 
 
@@ -205,8 +197,7 @@ def LinePlane(line):
     """
     line = rhutil.coerceline(line, True)
     rc, plane = line.TryGetPlane()
-    if not rc:
-        return scriptcontext.errorhandler()
+    if not rc: return scriptcontext.errorhandler()
     return plane
 
 
@@ -231,9 +222,8 @@ def LinePlaneIntersection(line, plane):
     plane = rhutil.coerceplane(plane, True)
     line_points = rhutil.coerce3dpointlist(line, True)
     line = Rhino.Geometry.Line(line_points[0], line_points[1])
-    rc, t = Rhino.Geometry.Intersect.Intersection.LinePlane(line, plane)
-    if not rc:
-        return scriptcontext.errorhandler()
+    rc, t = Rhino.Geometry.Intersect.Intersection.LinePlane(line, plane) 
+    if  not rc: return scriptcontext.errorhandler()
     return line.PointAt(t)
 
 
@@ -261,10 +251,8 @@ def LineSphereIntersection(line, sphere_center, sphere_radius):
     sphere_center = rhutil.coerce3dpoint(sphere_center, True)
     sphere = Rhino.Geometry.Sphere(sphere_center, sphere_radius)
     rc, pt1, pt2 = Rhino.Geometry.Intersect.Intersection.LineSphere(line, sphere)
-    if rc == getattr(Rhino.Geometry.Intersect.LineSphereIntersection, "None"):
-        return []
-    if rc == Rhino.Geometry.Intersect.LineSphereIntersection.Single:
-        return [pt1]
+    if rc==Rhino.Geometry.Intersect.LineSphereIntersection.None: return []
+    if rc==Rhino.Geometry.Intersect.LineSphereIntersection.Single: return [pt1]
     return [pt1, pt2]
 
 
@@ -293,6 +281,5 @@ def LineTransform(line, xform):
     line = rhutil.coerceline(line, True)
     xform = rhutil.coercexform(xform, True)
     success = line.Transform(xform)
-    if not success:
-        raise Execption("unable to transform line")
+    if not success: raise Execption("unable to transform line")
     return line
