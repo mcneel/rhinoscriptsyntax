@@ -25,6 +25,19 @@ Start Rhino and run EditPythonScript or RunPythonScript. This will cause the pyt
 Here are some instructions on copying the python source code from this site to your local computer.
 http://python.rhino3d.com/threads/430-Wish-rs.PointClosestObject
 
+
+Python 3
+----------------
+Use the `tools/convert_py2to3.py` to convert the python files under `Scripts/` to python 3 compatible files under `python3/`. To do this using `pipenv`:
+
+```shell
+# one time only to setup pipenv environment and packages
+pipenv install
+
+# to convert the files
+pipenv run convert
+```
+
 Authors
 -------
 Steve Baer - https://github.com/sbaer steve@mcneel.com
