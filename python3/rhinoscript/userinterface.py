@@ -1,14 +1,15 @@
+import math
+import scriptcontext
+from . import utility as rhutil
+from .view import __viewhelper
+
+import System
 import Rhino
 import Rhino.UI
-from . import utility as rhutil
-import scriptcontext
-import System.Drawing.Color
-import System.Enum
-import System.Array
 import Eto.Forms
 import System.Windows.Forms
-import math
-from .view import __viewhelper
+from System import Enum, Array
+from System.Drawing import Color
 
 
 def BrowseForFolder(folder=None, message=None, title=None):

@@ -105,6 +105,29 @@ def application_fixes(item):
     """Fix misc items in rhinoscript/application.py"""
     with SourceFile(item) as sf:
         sf.replace(
+            """
+import scriptcontext
+import Rhino
+import Rhino.ApplicationSettings.ModelAidSettings as modelaid
+import Rhino.Commands.Command as rhcommand
+import System.TimeSpan, System.Enum, System.Environment
+import System.Windows.Forms.Screen
+import datetime
+from . import utility as rhutil
+""".strip(),
+            """
+import datetime
+import scriptcontext
+from . import utility as rhutil
+
+import System
+from Rhino.ApplicationSettings import ModelAidSettings as modelaid
+from Rhino.Commands import Command as rhcommand
+from System import TimeSpan, Enum, Environment
+from System.Windows.Forms import Screen
+""".strip(),
+        )
+        sf.replace(
             "Rhino.PlugIns.PlugInType.None", "getattr(Rhino.PlugIns.PlugInType, 'None')"
         )
         sf.replace("filter =", "search_filter =")
@@ -114,9 +137,50 @@ def application_fixes(item):
         )
 
 
+def block_fixes(item):
+    """Fix misc items in rhinoscript/block.py"""
+    with SourceFile(item) as sf:
+        sf.replace(
+            """
+import Rhino
+import scriptcontext
+from . import utility as rhutil
+import math
+import System.Guid
+""".strip(),
+            """
+import math
+import scriptcontext
+from . import utility as rhutil
+
+import System
+import Rhino
+from System import Guid
+""".strip(),
+        )
+
+
 def curve_fixes(item):
     """Fix misc items in rhinoscript/curve.py"""
     with SourceFile(item) as sf:
+        sf.replace(
+            """
+import scriptcontext
+from . import utility as rhutil
+import Rhino
+import math
+import System.Guid, System.Array, System.Enum
+""".strip(),
+            """
+import math
+import scriptcontext
+from . import utility as rhutil
+
+import System
+import Rhino
+from System import Guid, Array, Enum
+""".strip(),
+        )
         sf.replace(
             "Rhino.DocObjects.ObjectDecoration.None",
             "getattr(Rhino.DocObjects.ObjectDecoration, 'None')",
@@ -124,9 +188,120 @@ def curve_fixes(item):
         sf.replace("ValueException(", "ValueError(")
 
 
+def dimension_fixes(item):
+    """Fix misc items in rhinoscript/dimension.py"""
+    with SourceFile(item) as sf:
+        sf.replace(
+            """
+import scriptcontext
+from . import utility as rhutil
+import Rhino
+import System.Guid
+from .view import __viewhelper, ViewCPlane
+""".strip(),
+            """
+import scriptcontext
+from . import utility as rhutil
+from .view import __viewhelper, ViewCPlane
+
+import System
+import Rhino
+from System import Guid
+""".strip(),
+        )
+
+
+def document_fixes(item):
+    """Fix misc items in rhinoscript/document.py"""
+    with SourceFile(item) as sf:
+        sf.replace(
+            """
+import scriptcontext
+import Rhino
+import System.Enum, System.Drawing.Size
+import System.IO
+from . import utility as rhutil
+import math
+""".strip(),
+            """
+import math
+import scriptcontext
+from . import utility as rhutil
+
+import System
+import Rhino
+from System import IO
+from System import Enum
+from System.Drawing import Size
+""".strip(),
+        )
+
+
+def geometry_fixes(item):
+    """Fix misc items in rhinoscript/geometry.py"""
+    with SourceFile(item) as sf:
+        sf.replace(
+            """
+import scriptcontext
+from . import utility as rhutil
+import Rhino
+import System.Guid, System.Array
+""".strip(),
+            """
+import scriptcontext
+from . import utility as rhutil
+
+import System
+import Rhino
+from System import Guid, Array
+""".strip(),
+        )
+
+
+def hatch_fixes(item):
+    """Fix misc items in rhinoscript/hatch.py"""
+    with SourceFile(item) as sf:
+        sf.replace(
+            """
+import scriptcontext
+from . import utility as rhutil
+import Rhino
+import System.Guid
+""".strip(),
+            """
+import scriptcontext
+from . import utility as rhutil
+
+import System
+import Rhino
+from System import Guid
+""".strip(),
+        )
+
+
 def layer_fixes(item):
     """Fix misc items in rhinoscript/layer.py"""
     with SourceFile(item) as sf:
+        sf.replace(
+            """
+import Rhino.DocObjects.Layer
+import scriptcontext
+from . import utility as rhutil
+import System.Guid
+from Rhino.RhinoMath import UnsetIntIndex
+""".strip(),
+            """
+import scriptcontext
+from . import utility as rhutil
+
+import System
+import Rhino
+from System import Guid
+
+UnsetIntIndex = Rhino.RhinoMath.UnsetIntIndex
+Layer = Rhino.DocObjects.Layer
+""".strip(),
+        )
         sf.replace("if idx is 0:", "if idx == 0:")
 
 
@@ -150,6 +325,57 @@ def line_fixes(item):
         sf.replace("Execption(", "Exception(")
 
 
+def mesh_fixes(item):
+    """Fix misc items in rhinoscript/mesh.py"""
+    with SourceFile(item) as sf:
+        sf.replace(
+            """
+import scriptcontext
+from . import utility as rhutil
+import Rhino
+import System.Guid, System.Array, System.Drawing.Color
+from .view import __viewhelper
+""".strip(),
+            """
+import scriptcontext
+from . import utility as rhutil
+from .view import __viewhelper
+
+import System
+import Rhino
+from System import Guid, Array
+from System.Drawing import Color
+""".strip(),
+        )
+
+
+def object_fixes(item):
+    """Fix misc items in rhinoscript/object.py"""
+    with SourceFile(item) as sf:
+        sf.replace(
+            """
+import scriptcontext
+import Rhino
+from . import utility as rhutil
+import System.Guid, System.Enum
+from .layer import __getlayer
+from .view import __viewhelper
+import math
+""".strip(),
+            """
+import math
+import scriptcontext
+from . import utility as rhutil
+from .layer import __getlayer
+from .view import __viewhelper
+
+import System
+import Rhino
+from System import Guid, Enum
+""".strip(),
+        )
+
+
 def selection_fixes(item):
     """Fix misc items in rhinoscript/selection.py"""
     with SourceFile(item) as sf:
@@ -161,12 +387,152 @@ def selection_fixes(item):
         sf.replace("if filter &", "if input_filter &")
 
 
+def surface_fixes(item):
+    """Fix misc items in rhinoscript/surface.py"""
+    with SourceFile(item) as sf:
+        sf.replace(
+            """
+import scriptcontext
+import math
+import Rhino
+import System.Guid
+from . import utility as rhutil
+from . import object as rhobject
+from System.Collections.Generic import List
+""".strip(),
+            """
+import math
+import scriptcontext
+from . import utility as rhutil
+from . import object as rhobject
+
+import System
+import Rhino
+from System import Guid
+from System.Collections.Generic import List
+""".strip(),
+        )
+
+
+def transformation_fixes(item):
+    """Fix misc items in rhinoscript/transformation.py"""
+    with SourceFile(item) as sf:
+        sf.replace(
+            """
+import scriptcontext
+from . import utility as rhutil
+import Rhino
+import System.Guid, System.Array
+import math
+from . import view as rhview
+""".strip(),
+            """
+import math
+import scriptcontext
+from . import utility as rhutil
+from . import view as rhview
+
+import System
+import Rhino
+from System import Guid, Array
+""".strip(),
+        )
+
+
 def userinterface_fixes(item):
     """Fix misc items in rhinoscript/userinterface.py"""
     with SourceFile(item) as sf:
         sf.replace(
+            """
+import Rhino
+import Rhino.UI
+from . import utility as rhutil
+import scriptcontext
+import System.Drawing.Color
+import System.Enum
+import System.Array
+import Eto.Forms
+import System.Windows.Forms
+import math
+from .view import __viewhelper
+""".strip(),
+            """
+import math
+import scriptcontext
+from . import utility as rhutil
+from .view import __viewhelper
+
+import System
+import Rhino
+import Rhino.UI
+import Eto.Forms
+import System.Windows.Forms
+from System import Enum, Array
+from System.Drawing import Color
+""".strip(),
+        )
+        sf.replace(
             "Rhino.UI.ShowMessageIcon.None",
             "getattr(Rhino.UI.ShowMessageIcon, 'None')",
+        )
+
+
+def utility_fixes(item):
+    """Fix misc items in rhinoscript/utility.py"""
+    with SourceFile(item) as sf:
+        sf.replace(
+            """
+import Rhino
+import System.Drawing.Color, System.Array, System.Guid
+import time
+import System.Windows.Forms.Clipboard
+import scriptcontext
+import math
+import string
+import numbers
+import RhinoPython.Host as __host
+""".strip(),
+            """
+import time
+import math
+import string
+import numbers
+import scriptcontext
+
+import System
+import Rhino
+from System import Array, Guid
+from System.Drawing import Color
+from System.Windows.Forms import Clipboard
+# import RhinoPython.Host as __host
+""".strip(),
+        )
+        sf.replace(
+            "=  __host.Coerce3dPointFromEnumerables(point)",
+            "=  None # __host.Coerce3dPointFromEnumerables(point)",
+        )
+
+
+def view_fixes(item):
+    """Fix misc items in rhinoscript/view.py"""
+    with SourceFile(item) as sf:
+        sf.replace(
+            """
+import scriptcontext
+from . import utility as rhutil
+import Rhino
+import System.Enum
+import math
+""".strip(),
+            """
+import math
+import scriptcontext
+from . import utility as rhutil
+
+import System
+import Rhino
+from System import Enum
+""".strip(),
         )
 
 

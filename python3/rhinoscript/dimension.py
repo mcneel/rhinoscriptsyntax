@@ -1,8 +1,10 @@
 import scriptcontext
 from . import utility as rhutil
-import Rhino
-import System.Guid
 from .view import __viewhelper, ViewCPlane
+
+import System
+import Rhino
+from System import Guid
 
 
 def AddAlignedDimension(start_point, end_point, point_on_dimension_line, style=None):

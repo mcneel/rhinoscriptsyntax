@@ -1,9 +1,12 @@
-import scriptcontext
-import Rhino
-import System.Enum, System.Drawing.Size
-import System.IO
-from . import utility as rhutil
 import math
+import scriptcontext
+from . import utility as rhutil
+
+import System
+import Rhino
+from System import IO
+from System import Enum
+from System.Drawing import Size
 
 def CreatePreviewImage(filename, view=None, size=None, flags=0, wireframe=False):
     """Create a bitmap preview image of the current model

@@ -1,8 +1,10 @@
+import math
 import scriptcontext
 from . import utility as rhutil
+
+import System
 import Rhino
-import math
-import System.Guid, System.Array, System.Enum
+from System import Guid, Array, Enum
 
 
 def AddArc(plane, radius, angle_degrees):

@@ -1,8 +1,10 @@
+import math
 import scriptcontext
 from . import utility as rhutil
+
+import System
 import Rhino
-import System.Enum
-import math
+from System import Enum
 
 def __viewhelper(view):
     if view is None: return scriptcontext.doc.Views.ActiveView

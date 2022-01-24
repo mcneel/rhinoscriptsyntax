@@ -1,7 +1,9 @@
 import scriptcontext
 from . import utility as rhutil
+
+import System
 import Rhino
-import System.Guid, System.Array
+from System import Guid, Array
 
 
 def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):

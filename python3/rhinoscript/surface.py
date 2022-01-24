@@ -1,9 +1,11 @@
-import scriptcontext
 import math
-import Rhino
-import System.Guid
+import scriptcontext
 from . import utility as rhutil
 from . import object as rhobject
+
+import System
+import Rhino
+from System import Guid
 from System.Collections.Generic import List
 
 def AddBox(corners):

@@ -1,8 +1,10 @@
-import Rhino
+import math
 import scriptcontext
 from . import utility as rhutil
-import math
-import System.Guid
+
+import System
+import Rhino
+from System import Guid
 
 def __InstanceObjectFromId(id, raise_if_missing):
     rhobj = rhutil.coercerhinoobject(id, True, raise_if_missing)

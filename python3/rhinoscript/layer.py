@@ -1,8 +1,12 @@
-import Rhino.DocObjects.Layer
 import scriptcontext
 from . import utility as rhutil
-import System.Guid
-from Rhino.RhinoMath import UnsetIntIndex
+
+import System
+import Rhino
+from System import Guid
+
+UnsetIntIndex = Rhino.RhinoMath.UnsetIntIndex
+Layer = Rhino.DocObjects.Layer
 
 
 def __getlayer(name_or_id, raise_if_missing):

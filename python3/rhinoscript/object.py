@@ -1,10 +1,12 @@
+import math
 import scriptcontext
-import Rhino
 from . import utility as rhutil
-import System.Guid, System.Enum
 from .layer import __getlayer
 from .view import __viewhelper
-import math
+
+import System
+import Rhino
+from System import Guid, Enum
 
 
 def CopyObject(object_id, translation=None):

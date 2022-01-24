@@ -1,7 +1,9 @@
 import scriptcontext
 from . import utility as rhutil
+
+import System
 import Rhino
-import System.Guid
+from System import Guid
 
 def __initHatchPatterns():
     if scriptcontext.doc.HatchPatterns.FindName(Rhino.DocObjects.HatchPattern.Defaults.Solid.Name) is None:

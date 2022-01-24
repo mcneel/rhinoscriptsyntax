@@ -1,11 +1,12 @@
-import scriptcontext
-import Rhino
-import Rhino.ApplicationSettings.ModelAidSettings as modelaid
-import Rhino.Commands.Command as rhcommand
-import System.TimeSpan, System.Enum, System.Environment
-import System.Windows.Forms.Screen
 import datetime
+import scriptcontext
 from . import utility as rhutil
+
+import System
+from Rhino.ApplicationSettings import ModelAidSettings as modelaid
+from Rhino.Commands import Command as rhcommand
+from System import TimeSpan, Enum, Environment
+from System.Windows.Forms import Screen
 
 
 def AddAlias(alias, macro):

@@ -1,8 +1,11 @@
 import scriptcontext
 from . import utility as rhutil
-import Rhino
-import System.Guid, System.Array, System.Drawing.Color
 from .view import __viewhelper
+
+import System
+import Rhino
+from System import Guid, Array
+from System.Drawing import Color
 
 def AddMesh(vertices, face_vertices, vertex_normals=None, texture_coordinates=None, vertex_colors=None):
     """Add a mesh object to the document

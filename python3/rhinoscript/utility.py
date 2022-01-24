@@ -1,12 +1,15 @@
-import Rhino
-import System.Drawing.Color, System.Array, System.Guid
 import time
-import System.Windows.Forms.Clipboard
-import scriptcontext
 import math
 import string
 import numbers
-import RhinoPython.Host as __host
+import scriptcontext
+
+import System
+import Rhino
+from System import Array, Guid
+from System.Drawing import Color
+from System.Windows.Forms import Clipboard
+# import RhinoPython.Host as __host
 
 
 def ContextIsRhino():
@@ -632,7 +635,7 @@ def coerce3dpoint(point, raise_on_error=False):
     See Also:
     """
     if type(point) is Rhino.Geometry.Point3d: return point
-    enumerable =  __host.Coerce3dPointFromEnumerables(point)
+    enumerable =  None # __host.Coerce3dPointFromEnumerables(point)
     if enumerable is not None: return enumerable
     if type(point) is System.Guid:
         found, pt = scriptcontext.doc.Objects.TryFindPoint(point)
