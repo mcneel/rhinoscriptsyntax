@@ -833,7 +833,7 @@ def MeshMeshIntersection(mesh1, mesh2, tolerance=None):
     """Calculates the intersections of a mesh object with another mesh object
     Parameters:
       mesh1, mesh2 (guid): identifiers of meshes
-      tolerance (number, optional): the intersection tolerance. Defaults to Rhino.Geometry.Intersect.Intersection.MeshIntersectionsTolerancesCoefficient
+      tolerance (number, optional): the intersection tolerance. Defaults to ModelAbsoluteTolerance * MeshIntersectionsTolerancesCoefficient
     Returns:
       list(point, ...): of points that define the vertices of the intersection curves
     Example:
@@ -849,7 +849,8 @@ def MeshMeshIntersection(mesh1, mesh2, tolerance=None):
     """
     mesh1 = rhutil.coercemesh(mesh1, True)
     mesh2 = rhutil.coercemesh(mesh2, True)
-    if tolerance is None: tolerance = Rhino.Geometry.Intersect.Intersection.MeshIntersectionsTolerancesCoefficient
+    if tolerance is None:
+      tolerance = scriptcontext.doc.ModelAbsoluteTolerance * Rhino.Geometry.Intersect.Intersection.MeshIntersectionsTolerancesCoefficient
     polylines = Rhino.Geometry.Intersect.Intersection.MeshMeshAccurate(mesh1, mesh2, tolerance)
     if polylines: return list(polylines)
 
