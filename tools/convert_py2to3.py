@@ -128,7 +128,7 @@ from System.Windows.Forms import Screen
 """.strip(),
         )
         sf.replace(
-            "Rhino.PlugIns.PlugInType.None", "getattr(Rhino.PlugIns.PlugInType, 'None')"
+            "Rhino.PlugIns.PlugInType.None", "getattr(Rhino.PlugIns.PlugInType, 'NONE')"
         )
         sf.replace("filter =", "search_filter =")
         sf.replace("filter |=", "search_filter |=")
@@ -183,7 +183,7 @@ from System import Guid, Array, Enum
         )
         sf.replace(
             "Rhino.DocObjects.ObjectDecoration.None",
-            "getattr(Rhino.DocObjects.ObjectDecoration, 'None')",
+            "getattr(Rhino.DocObjects.ObjectDecoration, 'NONE')",
         )
         sf.replace("ValueException(", "ValueError(")
 
@@ -308,7 +308,7 @@ Layer = Rhino.DocObjects.Layer
 def light_fixes(item):
     """Fix misc items in rhinoscript/light.py"""
     with SourceFile(item) as sf:
-        sf.replace("Rhino.UnitSystem.None", "getattr(Rhino.UnitSystem, 'None')")
+        sf.replace("Rhino.UnitSystem.None", "getattr(Rhino.UnitSystem, 'NONE')")
 
 
 def line_fixes(item):
@@ -316,11 +316,11 @@ def line_fixes(item):
     with SourceFile(item) as sf:
         sf.replace(
             "Rhino.Geometry.Intersect.LineCylinderIntersection.None",
-            "getattr(Rhino.Geometry.Intersect.LineCylinderIntersection, 'None')",
+            "getattr(Rhino.Geometry.Intersect.LineCylinderIntersection, 'NONE')",
         )
         sf.replace(
             "Rhino.Geometry.Intersect.LineSphereIntersection.None",
-            "getattr(Rhino.Geometry.Intersect.LineSphereIntersection, 'None')",
+            "getattr(Rhino.Geometry.Intersect.LineSphereIntersection, 'NONE')",
         )
         sf.replace("Execption(", "Exception(")
 
@@ -381,7 +381,7 @@ def selection_fixes(item):
     with SourceFile(item) as sf:
         sf.replace(
             "Rhino.DocObjects.ObjectType.None",
-            "getattr(Rhino.DocObjects.ObjectType, 'None')",
+            "getattr(Rhino.DocObjects.ObjectType, 'NONE')",
         )
         sf.replace("def __FilterHelper(filter):", "def __FilterHelper(input_filter):")
         sf.replace("if filter &", "if input_filter &")
@@ -473,7 +473,7 @@ from System.Drawing import Color
         )
         sf.replace(
             "Rhino.UI.ShowMessageIcon.None",
-            "getattr(Rhino.UI.ShowMessageIcon, 'None')",
+            "getattr(Rhino.UI.ShowMessageIcon, 'NONE')",
         )
 
 

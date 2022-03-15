@@ -56,7 +56,7 @@ def LineCylinderIntersection(line, cylinder_plane, cylinder_height, cylinder_rad
     cyl = Rhino.Geometry.Cylinder( circle, cylinder_height )
     if not cyl.IsValid: raise ValueError("unable to create valid cylinder with given circle and height")
     rc, pt1, pt2 = Rhino.Geometry.Intersect.Intersection.LineCylinder(line, cyl)
-    if rc==getattr(Rhino.Geometry.Intersect.LineCylinderIntersection, 'None'):
+    if rc==getattr(Rhino.Geometry.Intersect.LineCylinderIntersection, 'NONE'):
         return []
     if rc==Rhino.Geometry.Intersect.LineCylinderIntersection.Single:
         return [pt1]
@@ -251,7 +251,7 @@ def LineSphereIntersection(line, sphere_center, sphere_radius):
     sphere_center = rhutil.coerce3dpoint(sphere_center, True)
     sphere = Rhino.Geometry.Sphere(sphere_center, sphere_radius)
     rc, pt1, pt2 = Rhino.Geometry.Intersect.Intersection.LineSphere(line, sphere)
-    if rc==getattr(Rhino.Geometry.Intersect.LineSphereIntersection, 'None'): return []
+    if rc==getattr(Rhino.Geometry.Intersect.LineSphereIntersection, 'NONE'): return []
     if rc==Rhino.Geometry.Intersect.LineSphereIntersection.Single: return [pt1]
     return [pt1, pt2]
 

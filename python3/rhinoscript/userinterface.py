@@ -1032,7 +1032,7 @@ def MessageBox(message, buttons=0, title=""):
     elif buttontype==5: btn = Rhino.UI.ShowMessageButton.RetryCancel
     
     icontype = buttons & 0x00000070
-    icon = getattr(Rhino.UI.ShowMessageIcon, 'None')
+    icon = getattr(Rhino.UI.ShowMessageIcon, 'NONE')
     if icontype==16: icon = Rhino.UI.ShowMessageIcon.Error
     elif icontype==32: icon = Rhino.UI.ShowMessageIcon.Question
     elif icontype==48: icon = Rhino.UI.ShowMessageIcon.Warning

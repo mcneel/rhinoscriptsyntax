@@ -1000,7 +1000,7 @@ def PlugIns(types=0, status=0):
     See Also:
 
     """
-    search_filter = getattr(Rhino.PlugIns.PlugInType, 'None')
+    search_filter = getattr(Rhino.PlugIns.PlugInType, 'NONE')
     if types&1: search_filter |= Rhino.PlugIns.PlugInType.Render
     if types&2: search_filter |= Rhino.PlugIns.PlugInType.FileExport
     if types&4: search_filter |= Rhino.PlugIns.PlugInType.FileImport

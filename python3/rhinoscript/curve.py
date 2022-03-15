@@ -1055,7 +1055,7 @@ def CurveArrows(curve_id, arrow_style=None):
     rc = attr.ObjectDecoration
     if arrow_style is not None:
         if arrow_style==0:
-            attr.ObjectDecoration = getattr(Rhino.DocObjects.ObjectDecoration, 'None')
+            attr.ObjectDecoration = getattr(Rhino.DocObjects.ObjectDecoration, 'NONE')
         elif arrow_style==1:
             attr.ObjectDecoration = Rhino.DocObjects.ObjectDecoration.StartArrowhead
         elif arrow_style==2:
@@ -1065,7 +1065,7 @@ def CurveArrows(curve_id, arrow_style=None):
         id = rhutil.coerceguid(curve_id, True)
         scriptcontext.doc.Objects.ModifyAttributes(id, attr, True)
         scriptcontext.doc.Views.Redraw()
-    if rc==getattr(Rhino.DocObjects.ObjectDecoration, 'None'): return 0
+    if rc==getattr(Rhino.DocObjects.ObjectDecoration, 'NONE'): return 0
     if rc==Rhino.DocObjects.ObjectDecoration.StartArrowhead: return 1
     if rc==Rhino.DocObjects.ObjectDecoration.EndArrowhead: return 2
     if rc==Rhino.DocObjects.ObjectDecoration.BothArrowhead: return 3
