@@ -920,7 +920,7 @@ def ObjectLayer(object_id, layer=None):
     return rc
 
 
-def ObjectLayout(object_id, layout=None, return_name=True):
+def ObjectLayout(object_id, layout="", return_name=True):
     """Returns or changes the layout or model space of an object
     Parameters:
       object_id (guid): identifier of the object
