@@ -262,7 +262,7 @@ def LineTransform(line, xform):
       line (guid): the line to transform
       xform (transform): the transformation to apply
     Returns:
-      guid: transformed line
+      Geometry.Line: The transformed line geometry. ( Just the geometry, not a drawn line Object) 
     Example:
       import rhinoscriptsyntax as rs
       line = (0,0,0), (10,10,0)
