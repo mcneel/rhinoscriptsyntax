@@ -1,10 +1,10 @@
 # scriptcontext module
-# import RhinoPython.Host as __host
+import Rhino
 
 '''The Active Rhino document (Rhino.RhinoDoc in RhinoCommon) while a script
 is executing. This variable is set by Rhino before the exection of every script.
 '''
-doc = __rhinodoc__
+doc = Rhino.RhinoDoc.ActiveDoc
 
 
 '''Identifies how the script is currently executing
