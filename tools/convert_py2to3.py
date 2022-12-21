@@ -386,6 +386,34 @@ def selection_fixes(item):
         sf.replace("def __FilterHelper(filter):", "def __FilterHelper(input_filter):")
         sf.replace("if filter &", "if input_filter &")
 
+        sf.replace(
+            """
+    class CustomGetObject(Rhino.Input.Custom.GetObject):
+        def __init__(self, filter_function):
+            self.m_filter_function = filter_function
+""".strip(),
+            """
+    class CustomGetObject(Rhino.Input.Custom.GetObject):
+        def __init__(self, filter_function):
+            super().__init__()
+            self.m_filter_function = filter_function
+""".strip(),
+        )
+
+        sf.replace(
+            """
+class __CustomGetObjectEx(Rhino.Input.Custom.GetObject):
+    def __init__(self, allowable_geometry):
+        self.m_allowable = allowable_geometry
+""".strip(),
+            """
+class __CustomGetObjectEx(Rhino.Input.Custom.GetObject):
+    def __init__(self, allowable_geometry):
+        super().__init__()
+        self.m_allowable = allowable_geometry
+""".strip(),
+        )
+
 
 def surface_fixes(item):
     """Fix misc items in rhinoscript/surface.py"""
