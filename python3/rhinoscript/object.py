@@ -1484,7 +1484,14 @@ def RotateObjects( object_ids, center_point, rotation_angle, axis=None, copy=Fal
     """
     center_point = rhutil.coerce3dpoint(center_point, True)
     if not axis:
-        axis = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane().Normal
+        viewTable = scriptcontext.doc.Views
+        activeView = None
+        if viewTable is not None:
+            activeView = viewTable.ActiveView
+        if activeView is not None:
+            axis = scriptcontext.doc.Views.ActiveView.ActiveViewport.ConstructionPlane().Normal
+        else:
+            axis = Rhino.Geometry.Vector3d(0,0,1)
     axis = rhutil.coerce3dvector(axis, True)
     rotation_angle = Rhino.RhinoMath.ToRadians(rotation_angle)
     xf = Rhino.Geometry.Transform.Rotation(rotation_angle, axis, center_point)

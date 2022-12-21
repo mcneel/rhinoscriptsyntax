@@ -2027,14 +2027,15 @@ def SurfaceSphere(surface_id):
     return rc
 
 
-def JoinSurfaces(object_ids, delete_input=False):
+def JoinSurfaces(object_ids, delete_input=False, return_all=False):
     """Joins two or more surface or polysurface objects together to form one
     polysurface object
     Parameters:
       object_ids ([guid, ...]) list of object identifiers
       delete_input (bool, optional): Delete the original surfaces
+      return_all (bool, optional): Return all surfaces in result
     Returns:
-      guid: identifier of newly created object on success
+      guid or guid list: identifier, or list of identifiers if return_all == True, of newly created object(s) on success
       None: on failure
     Example:
       import rhinoscriptsyntax as rs
@@ -2051,16 +2052,19 @@ def JoinSurfaces(object_ids, delete_input=False):
     if len(breps)<2: return scriptcontext.errorhandler()
     tol = scriptcontext.doc.ModelAbsoluteTolerance * 2.1
     joinedbreps = Rhino.Geometry.Brep.JoinBreps(breps, tol)
-    if joinedbreps is None or len(joinedbreps)!=1:
+    if joinedbreps is None or (len(joinedbreps)!=1 and return_all == False):
         return scriptcontext.errorhandler()
-    rc = scriptcontext.doc.Objects.AddBrep(joinedbreps[0])
-    if rc==System.Guid.Empty: return scriptcontext.errorhandler()
+    rc = []
+    for brep in joinedbreps:
+        id = scriptcontext.doc.Objects.AddBrep(brep)
+        if rc==System.Guid.Empty: return scriptcontext.errorhandler()
+        rc.append(id)
     if delete_input:
         for id in object_ids:
             id = rhutil.coerceguid(id)
             scriptcontext.doc.Objects.Delete(id, True)
     scriptcontext.doc.Views.Redraw()
-    return rc
+    return rc if return_all else rc[0]
 
 
 def MakeSurfacePeriodic(surface_id, direction, delete_input=False):
