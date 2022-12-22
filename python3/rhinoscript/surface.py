@@ -2057,7 +2057,7 @@ def JoinSurfaces(object_ids, delete_input=False, return_all=False):
     rc = []
     for brep in joinedbreps:
         id = scriptcontext.doc.Objects.AddBrep(brep)
-        if rc==System.Guid.Empty: return scriptcontext.errorhandler()
+        if id==System.Guid.Empty: return scriptcontext.errorhandler()
         rc.append(id)
     if delete_input:
         for id in object_ids:
