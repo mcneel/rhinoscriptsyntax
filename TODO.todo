@@ -1,0 +1,5 @@
+- [ ] Use same python source for py2 and 3
+- [ ] Remove `python3/`
+- [ ] Remove 2-3 conversion script under `tools/`
+- [ ] Fix use of reserved keywords e.g. `id`, `filter` as variable names
+- [ ] Update rhinocode plugins repo to use the shared python code
