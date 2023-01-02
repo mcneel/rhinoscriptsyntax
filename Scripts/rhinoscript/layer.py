@@ -58,7 +58,7 @@ def AddLayer(name=None, color=None, visible=True, locked=False, parent=None):
         if parent:
           last_parent = __getlayer(parent, True)
       else:
-        if last_parent_index <> -1:
+        if last_parent_index != -1:
           last_parent = scriptcontext.doc.Layers[last_parent_index]
 
       if last_parent:

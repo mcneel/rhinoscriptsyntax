@@ -1148,7 +1148,7 @@ def Snap(enable=None):
       Planar
     """
     rc = modelaid.GridSnap
-    if enable is not None and enable <> rc:
+    if enable is not None and enable != rc:
         modelaid.GridSnap = enable
     return rc
 
