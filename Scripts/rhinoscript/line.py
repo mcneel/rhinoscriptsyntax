@@ -281,5 +281,5 @@ def LineTransform(line, xform):
     line = rhutil.coerceline(line, True)
     xform = rhutil.coercexform(xform, True)
     success = line.Transform(xform)
-    if not success: raise Execption("unable to transform line")
+    if not success: raise Exception("unable to transform line")
     return line
