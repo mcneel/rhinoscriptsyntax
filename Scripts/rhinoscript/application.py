@@ -999,16 +999,16 @@ def PlugIns(types=0, status=0):
     See Also:
 
     """
-    filter = Rhino.PlugIns.PlugInType.None
-    if types&1: filter |= Rhino.PlugIns.PlugInType.Render
-    if types&2: filter |= Rhino.PlugIns.PlugInType.FileExport
-    if types&4: filter |= Rhino.PlugIns.PlugInType.FileImport
-    if types&8: filter |= Rhino.PlugIns.PlugInType.Digitiger
-    if types&16: filter |= Rhino.PlugIns.PlugInType.Utility
-    if types==0: filter = Rhino.PlugIns.PlugInType.Any
+    search_filter = Rhino.PlugIns.PlugInType.None
+    if types&1: search_filter |= Rhino.PlugIns.PlugInType.Render
+    if types&2: search_filter |= Rhino.PlugIns.PlugInType.FileExport
+    if types&4: search_filter |= Rhino.PlugIns.PlugInType.FileImport
+    if types&8: search_filter |= Rhino.PlugIns.PlugInType.Digitiger
+    if types&16: search_filter |= Rhino.PlugIns.PlugInType.Utility
+    if types==0: search_filter = Rhino.PlugIns.PlugInType.Any
     loaded = (status==0 or status==1)
     unloaded = (status==0 or status==2)
-    names = Rhino.PlugIns.PlugIn.GetInstalledPlugInNames(filter, loaded, unloaded)
+    names = Rhino.PlugIns.PlugIn.GetInstalledPlugInNames(search_filter, loaded, unloaded)
     return list(names)
 
 

@@ -95,47 +95,47 @@ def FirstObject(select=False, include_lights=False, include_grips=False):
         return object.Id
 
 
-def __FilterHelper(filter):
+def __FilterHelper(input_filter):
     geometry_filter = Rhino.DocObjects.ObjectType.None
-    if filter & 1:
+    if input_filter & 1:
         geometry_filter |= Rhino.DocObjects.ObjectType.Point
-    if filter & 16384:
+    if input_filter & 16384:
         geometry_filter |= Rhino.DocObjects.ObjectType.Grip
-    if filter & 2:
+    if input_filter & 2:
         geometry_filter |= Rhino.DocObjects.ObjectType.PointSet
-    if filter & 4:
+    if input_filter & 4:
         geometry_filter |= Rhino.DocObjects.ObjectType.Curve
-    if filter & 8:
+    if input_filter & 8:
         geometry_filter |= Rhino.DocObjects.ObjectType.Surface
-    if filter & 16:
+    if input_filter & 16:
         geometry_filter |= Rhino.DocObjects.ObjectType.Brep
-    if filter & 32:
+    if input_filter & 32:
         geometry_filter |= Rhino.DocObjects.ObjectType.Mesh
-    if filter & 512:
+    if input_filter & 512:
         geometry_filter |= Rhino.DocObjects.ObjectType.Annotation
-    if filter & 256:
+    if input_filter & 256:
         geometry_filter |= Rhino.DocObjects.ObjectType.Light
-    if filter & 4096:
+    if input_filter & 4096:
         geometry_filter |= Rhino.DocObjects.ObjectType.InstanceReference
-    if filter & 134217728:
+    if input_filter & 134217728:
         geometry_filter |= Rhino.DocObjects.ObjectType.Cage
-    if filter & 65536:
+    if input_filter & 65536:
         geometry_filter |= Rhino.DocObjects.ObjectType.Hatch
-    if filter & 131072:
+    if input_filter & 131072:
         geometry_filter |= Rhino.DocObjects.ObjectType.MorphControl
-    if filter & 262144:
+    if input_filter & 262144:
         geometry_filter |= Rhino.DocObjects.ObjectType.SubD
-    if filter & 2097152:
+    if input_filter & 2097152:
         geometry_filter |= Rhino.DocObjects.ObjectType.PolysrfFilter
-    if filter & 268435456:
+    if input_filter & 268435456:
         geometry_filter |= Rhino.DocObjects.ObjectType.Phantom
-    if filter & 8192:
+    if input_filter & 8192:
         geometry_filter |= Rhino.DocObjects.ObjectType.TextDot
-    if filter & 32768:
+    if input_filter & 32768:
         geometry_filter |= Rhino.DocObjects.ObjectType.Detail
-    if filter & 536870912:
+    if input_filter & 536870912:
         geometry_filter |= Rhino.DocObjects.ObjectType.ClipPlane
-    if filter & 1073741824:
+    if input_filter & 1073741824:
         geometry_filter |= Rhino.DocObjects.ObjectType.Extrusion
     return geometry_filter
 

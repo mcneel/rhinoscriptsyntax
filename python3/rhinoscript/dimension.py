@@ -292,7 +292,7 @@ def DimensionUserText(object_id, usertext=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a dimension")
       if rs.IsDimension(obj):
-          usertext = "<> " + chr(177) + str(rs.UnitAbsoluteTolerance())
+          usertext = "!= " + chr(177) + str(rs.UnitAbsoluteTolerance())
           rs.DimensionUserText( obj, usertext )
     See Also:
       DimensionText
