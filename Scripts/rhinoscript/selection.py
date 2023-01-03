@@ -1,3 +1,4 @@
+import compat
 import scriptcontext
 import Rhino
 import utility as rhutil
@@ -429,7 +430,7 @@ def GetObjects(message=None, filter=0, group=True, preselect=False, select=False
         scriptcontext.doc.Views.Redraw()
     rc = []
     count = go.ObjectCount
-    for i in xrange(count):
+    for i in compat.RANGE(count):
         objref = go.Object(i)
         rc.append(objref.ObjectId)
         obj = objref.Object()
@@ -503,7 +504,7 @@ def GetObjectsEx(message=None, filter=0, group=True, preselect=False, select=Fal
         scriptcontext.doc.Views.Redraw()
     rc = []
     count = go.ObjectCount
-    for i in xrange(count):
+    for i in compat.RANGE(count):
         objref = go.Object(i)
         id = objref.ObjectId
         presel = go.ObjectsWerePreselected

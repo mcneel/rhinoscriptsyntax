@@ -1,3 +1,4 @@
+import compat
 from . import utility as rhutil
 import scriptcontext
 import Rhino
@@ -349,7 +350,7 @@ def SelectedObjectGrips(object_id):
     grips = rhobj.GetGrips()
     rc = []
     if grips:
-        for i in range(grips.Length):
+        for i in compat.RANGE(grips.Length):
             if grips[i].IsSelected(False): rc.append(i)
     return rc
 

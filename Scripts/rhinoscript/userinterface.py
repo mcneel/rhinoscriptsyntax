@@ -1,3 +1,4 @@
+import compat
 import Rhino
 import Rhino.UI
 import utility as rhutil
@@ -187,7 +188,7 @@ def GetBoolean(message, items, defaults):
     count = len(items)
     if count<1 or count!=len(defaults): return scriptcontext.errorhandler()
     toggles = []
-    for i in range(count):
+    for i in compat.RANGE(count):
         initial = defaults[i]
         item = items[i]
         offVal = item[1]
@@ -227,7 +228,7 @@ def GetBox(mode=0, base_point=None, prompt1=None, prompt2=None, prompt3=None):
     base_point = rhutil.coerce3dpoint(base_point)
     if base_point is None: base_point = Rhino.Geometry.Point3d.Unset
     def intToEnum(m):
-      if m not in range(1,5):
+      if m not in compat.RANGE(1,5):
         m = 0
       return {
         0 : Rhino.Input.GetBoxMode.All,
@@ -372,7 +373,7 @@ def GetEdgeCurves(message=None, min_count=1, max_count=0, select=False):
     rc = go.GetMultiple(min_count, max_count)
     if rc!=Rhino.Input.GetResult.Object: return
     rc = []
-    for i in range(go.ObjectCount):
+    for i in compat.RANGE(go.ObjectCount):
         edge = go.Object(i).Edge()
         if not edge: continue
         edge = edge.Duplicate()
@@ -1078,7 +1079,7 @@ def PropertyListBox(items, values, message=None, title=None):
               names.append(name)
           results = rs.PropertyListBox(objs, names, "Modify object name(s)")
           if results:
-              for i in xrange(len(objs)):
+              for i in compat.RANGE(len(objs)):
                   rs.ObjectName( objs[i], results[i] )
     See Also:
       CheckListBox

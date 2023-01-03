@@ -1,3 +1,4 @@
+import compat
 import scriptcontext
 import utility as rhutil
 import Rhino
@@ -664,7 +665,7 @@ def MeshFaceNormals(mesh_id):
     if mesh.FaceNormals.Count != mesh.Faces.Count:
         mesh.FaceNormals.ComputeFaceNormals()
     rc = []
-    for i in xrange(mesh.FaceNormals.Count):
+    for i in compat.RANGE(mesh.FaceNormals.Count):
         normal = mesh.FaceNormals[i]
         rc.append(Rhino.Geometry.Vector3d(normal))
     return rc
@@ -702,7 +703,7 @@ def MeshFaces(object_id, face_type=True):
     """
     mesh = rhutil.coercemesh(object_id, True)
     rc = []
-    for i in xrange(mesh.Faces.Count):
+    for i in compat.RANGE(mesh.Faces.Count):
         getrc, p0, p1, p2, p3 = mesh.Faces.GetFaceVertices(i)
         p0 = Rhino.Geometry.Point3d(p0)
         p1 = Rhino.Geometry.Point3d(p1)
@@ -743,7 +744,7 @@ def MeshFaceVertices(object_id):
     """
     mesh = rhutil.coercemesh(object_id, True)
     rc = []
-    for i in xrange(mesh.Faces.Count):
+    for i in compat.RANGE(mesh.Faces.Count):
         face = mesh.Faces.GetFace(i)
         rc.append( (face.A, face.B, face.C, face.D) )
     return rc
@@ -1161,7 +1162,7 @@ def MeshVertexNormals(mesh_id):
     mesh = rhutil.coercemesh(mesh_id, True)
     count = mesh.Normals.Count
     if count<1: return []
-    return [Rhino.Geometry.Vector3d(mesh.Normals[i]) for i in xrange(count)]
+    return [Rhino.Geometry.Vector3d(mesh.Normals[i]) for i in compat.RANGE(count)]
 
 
 def MeshVertices(object_id):
@@ -1184,7 +1185,7 @@ def MeshVertices(object_id):
     mesh = rhutil.coercemesh(object_id, True)
     count = mesh.Vertices.Count
     rc = []
-    for i in xrange(count):
+    for i in compat.RANGE(count):
         vertex = mesh.Vertices.Point3dAt(i)
         rc.append(vertex)
     return rc
