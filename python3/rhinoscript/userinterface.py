@@ -75,7 +75,7 @@ def CheckListBox(items, message=None, title=None):
     itemstrs = [str(item[0]) for item in items]
     newcheckstates = Rhino.UI.Dialogs.ShowCheckListBox(title, message, itemstrs, checkstates)
     if newcheckstates:
-        rc = list(zip(itemstrs, newcheckstates))
+        rc = compat.ZIP_AS_LIST(zip(itemstrs, newcheckstates))
         return rc
     return scriptcontext.errorhandler()
 
@@ -229,7 +229,7 @@ def GetBox(mode=0, base_point=None, prompt1=None, prompt2=None, prompt3=None):
     base_point = rhutil.coerce3dpoint(base_point)
     if base_point is None: base_point = Rhino.Geometry.Point3d.Unset
     def intToEnum(m):
-      if m not in list(compat.RANGE(1,5)):
+      if m not in compat.RANGE(1,5):
         m = 0
       return {
         0 : Rhino.Input.GetBoxMode.All,

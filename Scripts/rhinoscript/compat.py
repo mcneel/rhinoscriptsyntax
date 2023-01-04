@@ -19,3 +19,6 @@ IRONPY2 = IRONPY273 or IRONPY277 or IRONPY278 or IRONPY279
 RANGE = range
 if IRONPY2:
     RANGE = xrange
+
+def ZIP_AS_LIST(z):
+    return list(z) if type(z) == zip else z

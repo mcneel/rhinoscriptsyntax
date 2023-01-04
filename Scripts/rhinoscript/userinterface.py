@@ -74,7 +74,7 @@ def CheckListBox(items, message=None, title=None):
     itemstrs = [str(item[0]) for item in items]
     newcheckstates = Rhino.UI.Dialogs.ShowCheckListBox(title, message, itemstrs, checkstates)
     if newcheckstates:
-        rc = zip(itemstrs, newcheckstates)
+        rc = compat.ZIP_AS_LIST(zip(itemstrs, newcheckstates))
         return rc
     return scriptcontext.errorhandler()
 
