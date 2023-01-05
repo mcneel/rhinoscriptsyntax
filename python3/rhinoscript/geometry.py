@@ -205,7 +205,7 @@ def AddText(text, point_or_plane, height=1.0, font=None, font_style=0, justifica
 
     f = Rhino.DocObjects.Font.FromQuartetProperties(qn, quartetBoldProp, quartetItalicProp)
     if f == None:
-        print(("font error: there is a problem with the font {} and cannot be used to create a text entity".format(font)))
+        print("font error: there is a problem with the font {} and cannot be used to create a text entity".format(font))
         return scriptcontext.errorhandler()
 
     te = Rhino.Geometry.TextEntity.Create(text, plane, ds, False, 0, 0)
@@ -216,12 +216,12 @@ def AddText(text, point_or_plane, height=1.0, font=None, font_style=0, justifica
 
     if bold != quartetBoldProp:
         if Rhino.DocObjects.Font.FromQuartetProperties(qn, bold, False) == None:
-          print(("'{}' does not have a 'bold' property so it will not be set.".format(qn)))
+          print("'{}' does not have a 'bold' property so it will not be set.".format(qn))
         else:
           te.SetBold(bold)
     if italic != quartetItalicProp:
         if Rhino.DocObjects.Font.FromQuartetProperties(qn, False, italic) == None:
-          print(("'{}' does not have an 'italic' property so it will not be set.".format(qn)))
+          print("'{}' does not have an 'italic' property so it will not be set.".format(qn))
         else:
           te.SetItalic(italic)
 

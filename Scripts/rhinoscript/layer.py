@@ -54,7 +54,7 @@ def AddLayer(name=None, color=None, visible=True, locked=False, parent=None):
     for idx, name in enumerate(names):
       layer = Rhino.DocObjects.Layer.GetDefaultLayerProperties()
 
-      if idx is 0:
+      if idx == 0:
         if parent:
           last_parent = __getlayer(parent, True)
       else:
