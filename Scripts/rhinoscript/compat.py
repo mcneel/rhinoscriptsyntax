@@ -25,3 +25,6 @@ def ITERATOR2LIST(iteratorOrList):
 
 def ENUM_NONE(e):
     return getattr(e, 'NONE') if PY3 else e.None
+
+def IS_STRING_INSTANCE(s):
+    return isinstance(s, (str if PY3 else basestring))
