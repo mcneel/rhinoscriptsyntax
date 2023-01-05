@@ -152,7 +152,7 @@ def CurveMeshIntersection(curve_id, mesh_id, return_faces=False):
     pts = list(pts)
     if return_faces:
         faceids = list(faceids)
-        return list(zip(pts, faceids))
+        return compat.ITERATOR2LIST(zip(pts, faceids))
     return pts
 
 

@@ -1,3 +1,4 @@
+import compat
 import scriptcontext
 import math
 import Rhino
@@ -387,8 +388,8 @@ def AddPipe(curve_id, parameters, radii, blend_type=0, cap=0, fit=False):
     ang_tol = scriptcontext.doc.ModelAngleToleranceRadians
     if type(parameters) is int or type(parameters) is float: parameters = [parameters]
     if type(radii) is int or type(radii) is float: radii = [radii]
-    parameters = map(float,parameters)
-    radii = map(float,radii)
+    parameters = compat.ITERATOR2LIST(map(float,parameters))
+    radii = compat.ITERATOR2LIST(map(float,radii))
     cap = System.Enum.ToObject(Rhino.Geometry.PipeCapMode, cap)
     breps = Rhino.Geometry.Brep.CreatePipe(rail, parameters, radii, blend_type==0, cap, fit, abs_tol, ang_tol)
     rc = [scriptcontext.doc.Objects.AddBrep(brep) for brep in breps]

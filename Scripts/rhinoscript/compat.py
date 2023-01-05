@@ -20,5 +20,8 @@ RANGE = range
 if IRONPY2:
     RANGE = xrange
 
-def ZIP_AS_LIST(z):
-    return list(z) if type(z) == zip else z
+def ITERATOR2LIST(iteratorOrList):
+    return iteratorOrList if type(iteratorOrList = list) else list(iteratorOrList)
+
+def ENUM_NONE(e):
+    return getattr(e, 'NONE') if PY3 else e.None

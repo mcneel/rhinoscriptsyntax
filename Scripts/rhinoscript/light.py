@@ -1,3 +1,4 @@
+import compat
 import scriptcontext
 import utility as rhutil
 import Rhino.Geometry
@@ -62,7 +63,7 @@ def AddLinearLight(start_point, end_point, width=None):
     if width is None:
         radius=0.5
         units = scriptcontext.doc.ModelUnitSystem
-        if units!=Rhino.UnitSystem.None:
+        if units!=compat.ENUM_NONE(Rhino.UnitSystem):
             scale = Rhino.RhinoMath.UnitScale(Rhino.UnitSystem.Inches, units)
             radius *= scale
         width = radius
