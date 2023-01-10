@@ -1,4 +1,4 @@
-import compat
+import ../compat
 import scriptcontext
 from . import utility as rhutil
 import Rhino.Geometry

@@ -1,7 +1,7 @@
-import compat
+import ../compat
 import Rhino
 import Rhino.UI
-import utility as rhutil
+from . import utility as rhutil
 import scriptcontext
 import System.Drawing.Color
 import System.Enum

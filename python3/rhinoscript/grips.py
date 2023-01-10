@@ -1,4 +1,4 @@
-import compat
+import ../compat
 from . import utility as rhutil
 import scriptcontext
 import Rhino

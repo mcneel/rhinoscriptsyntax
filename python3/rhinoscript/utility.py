@@ -1,4 +1,4 @@
-import compat
+import ../compat
 import time
 import math
 import string

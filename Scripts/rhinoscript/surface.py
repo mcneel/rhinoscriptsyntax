@@ -1,8 +1,8 @@
-import compat
+import ../compat
 import scriptcontext
 import math
 import Rhino
-import System.Guid
+from System import Guid
 import utility as rhutil
 import object as rhobject
 from System.Collections.Generic import List
