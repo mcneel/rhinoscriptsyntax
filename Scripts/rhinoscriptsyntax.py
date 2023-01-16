@@ -1,4 +1,4 @@
-import compat
+import rhinoscript.compat
 # this is not the best python scripting practice, but if you want everything in one big list
 from rhinoscript.application import *
 from rhinoscript.curve import *

@@ -1,4 +1,4 @@
-import ../compat
+import compat
 import Rhino
 import System.Drawing.Color, System.Array, System.Guid
 import time

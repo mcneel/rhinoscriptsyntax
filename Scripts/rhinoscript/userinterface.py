@@ -1,4 +1,4 @@
-import ../compat
+import compat
 import Rhino
 import Rhino.UI
 from . import utility as rhutil

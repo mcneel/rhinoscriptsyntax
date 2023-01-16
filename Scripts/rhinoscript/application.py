@@ -1,4 +1,4 @@
-import ../compat
+import compat
 import scriptcontext
 import Rhino
 import Rhino.ApplicationSettings.ModelAidSettings as modelaid

@@ -1,4 +1,4 @@
-import ../compat
+import compat
 import scriptcontext
 import math
 import Rhino
