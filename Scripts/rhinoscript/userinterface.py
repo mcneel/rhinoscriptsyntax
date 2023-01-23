@@ -1,15 +1,19 @@
-import compat
+import math
+
+import System
+import System.Drawing
+import System.Windows.Forms
+
+import Eto.Forms
+
 import Rhino
 import Rhino.UI
-from . import utility as rhutil
+
 import scriptcontext
-import System.Drawing.Color
-import System.Enum
-import System.Array
-import Eto.Forms
-import System.Windows.Forms
-import math
-from view import __viewhelper
+
+from rhinoscript import compat
+from rhinoscript import utility as rhutil
+from rhinoscript.view import __viewhelper
 
 
 def BrowseForFolder(folder=None, message=None, title=None):

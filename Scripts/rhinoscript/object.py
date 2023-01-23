@@ -1,10 +1,27 @@
-import scriptcontext
-import Rhino
-import utility as rhutil
-import System.Guid, System.Enum
-from layer import __getlayer
-from view import __viewhelper
 import math
+
+import System
+
+import Rhino
+
+import scriptcontext
+
+from rhinoscript import utility as rhutil
+from rhinoscript.layer import __getlayer
+from rhinoscript.view import __viewhelper
+
+
+__ALLOWED_TRANSFORM_TYPES = [
+    Rhino.Geometry.Point3d,
+    Rhino.Geometry.Line,
+    Rhino.Geometry.Rectangle3d,
+    Rhino.Geometry.Circle,
+    Rhino.Geometry.Ellipse,
+    Rhino.Geometry.Arc,
+    Rhino.Geometry.Polyline,
+    Rhino.Geometry.Box,
+    Rhino.Geometry.Sphere
+]
 
 
 def CopyObject(object_id, translation=None):
@@ -1759,12 +1776,6 @@ def TransformObject(object_id, matrix, copy=False):
     return scriptcontext.errorhandler()
 
 
-__allowed_transform_types = [
-    Rhino.Geometry.Point3d, Rhino.Geometry.Line, Rhino.Geometry.Rectangle3d,
-    Rhino.Geometry.Circle, Rhino.Geometry.Ellipse, Rhino.Geometry.Arc,
-    Rhino.Geometry.Polyline, Rhino.Geometry.Box, Rhino.Geometry.Sphere]
-
-
 # this is also called by Copy, Scale, Mirror, Move, and Rotate functions defined above
 def TransformObjects(object_ids, matrix, copy=False):
     """Moves, scales, or rotates a list of objects given a 4x4 transformation
@@ -1788,7 +1799,7 @@ def TransformObjects(object_ids, matrix, copy=False):
     id = rhutil.coerceguid(object_ids, False)
     if id: object_ids = [id]
     elif isinstance(object_ids, Rhino.Geometry.GeometryBase): object_ids = [object_ids]
-    elif type(object_ids) in __allowed_transform_types: object_ids = [object_ids]
+    elif type(object_ids) in __ALLOWED_TRANSFORM_TYPES: object_ids = [object_ids]
     rc = []
     for object_id in object_ids:
         id = System.Guid.Empty
@@ -1801,13 +1812,13 @@ def TransformObjects(object_ids, matrix, copy=False):
             id = scriptcontext.doc.Objects.Add(object_id)
         else:
             type_of_id = type(object_id)
-            if type_of_id in __allowed_transform_types:
+            if type_of_id in __ALLOWED_TRANSFORM_TYPES:
                 if copy: object_id = System.ICloneable.Clone(object_id)
                 if object_id.Transform(xform) == False: #some of the Transform methods return bools, others have no return
                     raise Exception("Cannot apply transform to geometry.")
                 ot = scriptcontext.doc.Objects
                 fs = [ot.AddPoint,ot.AddLine,ot.AddRectangle,ot.AddCircle,ot.AddEllipse,ot.AddArc,ot.AddPolyline,ot.AddBox,ot.AddSphere]
-                t_index = __allowed_transform_types.index(type_of_id)
+                t_index = __ALLOWED_TRANSFORM_TYPES.index(type_of_id)
                 id = fs[t_index](object_id)
             else:
                 raise Exception("The {0} cannot be tranformed. A Guid or geometry types are expected.".format(type_of_id))

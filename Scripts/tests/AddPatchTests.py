@@ -1,11 +1,15 @@
-import rhinoscriptsyntax as rs
-import scriptcontext as sc
 import unittest
 import uuid
+
 import Rhino.Geometry as g
+
+import rhinoscriptsyntax as rs
+import scriptcontext as sc
+
 
 def uniquestr():
     return str(uuid.uuid4())
+
 
 class AddPatchTests(unittest.TestCase):
   def setUp(self):
@@ -27,6 +31,7 @@ class AddPatchTests(unittest.TestCase):
     id = rs.AddPatch(pt_ids, (10,10))
     brep = rs.coercebrep(id, True)
     self.assertTrue(brep.IsSurface)
+
 
 suite = unittest.TestLoader().loadTestsFromTestCase(AddPatchTests)
 unittestresult = unittest.TextTestRunner(verbosity=2).run(suite)

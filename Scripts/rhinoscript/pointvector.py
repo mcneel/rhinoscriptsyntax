@@ -1,7 +1,11 @@
-import utility as rhutil
-import Rhino
-import scriptcontext
 import math
+
+import Rhino
+
+import scriptcontext
+
+from rhinoscript import utility as rhutil
+
 
 def IsVectorParallelTo(vector1, vector2):
     """Compares two vectors to see if they are parallel

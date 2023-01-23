@@ -1,9 +1,20 @@
-import scriptcontext
-import Rhino
-import System.Enum, System.Drawing.Size
-import System.IO
-import utility as rhutil
 import math
+
+import System
+import System.Drawing
+import System.IO
+
+import Rhino
+
+import scriptcontext
+
+from rhinoscript import utility as rhutil
+
+
+def _SetRenderMeshAndUpdateStyle(current):
+    scriptcontext.doc.SetCustomMeshingParameters(current)
+    scriptcontext.doc.MeshingParameterStyle = Rhino.Geometry.MeshingParameterStyle.Custom
+
 
 def CreatePreviewImage(filename, view=None, size=None, flags=0, wireframe=False):
     """Create a bitmap preview image of the current model
@@ -283,11 +294,6 @@ def RenderResolution(resolution=None):
         settings.ImageSize = System.Drawing.Size(resolution[0], resolution[1])
         scriptcontext.doc.RenderSettings = settings
     return rc.Width, rc.Height
-
-
-def _SetRenderMeshAndUpdateStyle(current):
-    scriptcontext.doc.SetCustomMeshingParameters(current)
-    scriptcontext.doc.MeshingParameterStyle = Rhino.Geometry.MeshingParameterStyle.Custom
 
 
 def RenderMeshDensity(density=None):

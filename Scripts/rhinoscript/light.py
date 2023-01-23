@@ -1,8 +1,11 @@
-import compat
-import scriptcontext
-import utility as rhutil
-import Rhino.Geometry
 import math
+
+import Rhino.Geometry
+
+import scriptcontext
+
+from rhinoscript import compat
+from rhinoscript import utility as rhutil
 
 
 def __coercelight(id, raise_if_missing=False):
@@ -212,6 +215,7 @@ def EnableLight(object_id, enable=None):
             return scriptcontext.errorhandler()
         scriptcontext.doc.Views.Redraw()
     return rc
+
 
 def IsDirectionalLight(object_id):
     """Verifies a light object is a directional light

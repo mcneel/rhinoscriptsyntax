@@ -1,8 +1,11 @@
-import Rhino.DocObjects.Layer
+import System
+
+from Rhino.DocObjects import Layer
+from Rhino import RhinoMath
+
 import scriptcontext
-import utility as rhutil
-import System.Guid
-from Rhino.RhinoMath import UnsetIntIndex
+
+from rhinoscript import utility as rhutil
 
 
 def __getlayer(name_or_id, raise_if_missing):
@@ -12,8 +15,8 @@ def __getlayer(name_or_id, raise_if_missing):
         layer = scriptcontext.doc.Layers.FindId(id)
     else:
         name = name_or_id
-        layer_index = scriptcontext.doc.Layers.FindByFullPath(name, UnsetIntIndex)
-        if layer_index != UnsetIntIndex: return scriptcontext.doc.Layers[layer_index]
+        layer_index = scriptcontext.doc.Layers.FindByFullPath(name, RhinoMath.UnsetIntIndex)
+        if layer_index != RhinoMath.UnsetIntIndex: return scriptcontext.doc.Layers[layer_index]
         layer = scriptcontext.doc.Layers.FindName(name)
     if layer: return layer
     if raise_if_missing: raise ValueError("%s does not exist in LayerTable" % name_or_id)
@@ -76,8 +79,9 @@ def AddLayer(name=None, color=None, visible=True, locked=False, parent=None):
         full_path = layer.Name
         if last_parent:
             full_path = last_parent.FullPath + "::" + full_path
-        last_parent_index = scriptcontext.doc.Layers.FindByFullPath(full_path, UnsetIntIndex)
+        last_parent_index = scriptcontext.doc.Layers.FindByFullPath(full_path, RhinoMath.UnsetIntIndex)
     return scriptcontext.doc.Layers[last_parent_index].FullPath
+
 
 def CurrentLayer(layer=None):
     """Returns or changes the current layer
@@ -656,8 +660,8 @@ def LayerId(layer):
     See Also:
       LayerName
     """
-    idx = scriptcontext.doc.Layers.FindByFullPath(layer, UnsetIntIndex)
-    return str(scriptcontext.doc.Layers[idx].Id) if idx != UnsetIntIndex else None
+    idx = scriptcontext.doc.Layers.FindByFullPath(layer, RhinoMath.UnsetIntIndex)
+    return str(scriptcontext.doc.Layers[idx].Id) if idx != RhinoMath.UnsetIntIndex else None
 
 
 def LayerName(layer_id, fullpath=True):
@@ -873,6 +877,7 @@ def PurgeLayer(layer):
     rc = scriptcontext.doc.Layers.Purge( layer.LayerIndex, True)
     scriptcontext.doc.Views.Redraw()
     return rc
+
 
 def RenameLayer(oldname, newname):
     """Renames an existing layer

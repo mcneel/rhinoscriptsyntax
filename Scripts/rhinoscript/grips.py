@@ -1,7 +1,25 @@
-import compat
-import utility as rhutil
-import scriptcontext
 import Rhino
+
+import scriptcontext
+
+from rhinoscript import compat
+from rhinoscript import utility as rhutil
+
+
+def __neighborgrip(i, object_id, index, direction, enable):
+    rhobj = rhutil.coercerhinoobject(object_id, True, True)
+    grips = rhobj.GetGrips()
+    if not grips or len(grips)<=index: return scriptcontext.errorhandler()
+    grip = grips[index]
+    next_grip=None
+    if direction==0:
+        next_grip = grip.NeighborGrip(i,0,0,False)
+    else:
+        next_grip = grip.NeighborGrip(0,i,0,False)
+    if next_grip and enable:
+        next_grip.Select(True)
+        scriptcontext.doc.Views.Redraw()
+    return next_grip
 
 
 def EnableObjectGrips(object_id, enable=True):
@@ -100,22 +118,6 @@ def GetObjectGrips(message=None, preselect=False, select=False):
         if select: grip.Select(True, True)
     if select: scriptcontext.doc.Views.Redraw()
     return rc
-
-
-def __neighborgrip(i, object_id, index, direction, enable):
-    rhobj = rhutil.coercerhinoobject(object_id, True, True)
-    grips = rhobj.GetGrips()
-    if not grips or len(grips)<=index: return scriptcontext.errorhandler()
-    grip = grips[index]
-    next_grip=None
-    if direction==0:
-        next_grip = grip.NeighborGrip(i,0,0,False)
-    else:
-        next_grip = grip.NeighborGrip(0,i,0,False)
-    if next_grip and enable:
-        next_grip.Select(True)
-        scriptcontext.doc.Views.Redraw()
-    return next_grip
 
 
 def NextObjectGrip(object_id, index, direction=0, enable=True):

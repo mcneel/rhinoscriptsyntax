@@ -1,5 +1,7 @@
 import scriptcontext
-import utility as rhutil
+
+from rhinoscript import utility as rhutil
+
 
 def AddGroup(group_name=None):
     """Adds a new empty group to the document
@@ -400,6 +402,7 @@ def UnlockGroup(group_name):
     index = scriptcontext.doc.Groups.Find(group_name)
     if index<0: return scriptcontext.errorhandler()
     return scriptcontext.doc.Groups.Unlock(index);
+
 
 def ObjectTopGroup(object_id):
     """Returns the top most group name that an object is assigned.  This function primarily applies to objects that are members of nested groups

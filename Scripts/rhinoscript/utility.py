@@ -1,13 +1,18 @@
-import compat
-import Rhino
-import System.Drawing.Color, System.Array, System.Guid
 import time
-import System.Windows.Forms.Clipboard
-import scriptcontext
 import math
 import string
 import numbers
-import RhinoPython.Host as __host
+
+import System
+import System.Drawing
+import System.Windows.Forms
+
+import Rhino
+from RhinoPython import Host as __host
+
+import scriptcontext
+
+from rhinoscript import compat
 
 
 def ContextIsRhino():

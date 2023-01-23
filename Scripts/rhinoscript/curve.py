@@ -1,9 +1,13 @@
-import compat
-import scriptcontext
-import utility as rhutil
-import Rhino
 import math
-import System.Guid, System.Array, System.Enum
+
+import System
+
+import Rhino
+
+import scriptcontext
+
+from rhinoscript import compat
+from rhinoscript import utility as rhutil
 
 
 def AddArc(plane, radius, angle_degrees):
@@ -821,6 +825,7 @@ def CircleCircumference(curve_id, segment_index=-1):
     if not rc: raise Exception("curve is not circle")
     return circle.Circumference
 
+
 def CircleRadius(curve_id, segment_index=-1):
     """Returns the radius of a circle curve object
     Parameters:
@@ -845,6 +850,7 @@ def CircleRadius(curve_id, segment_index=-1):
     rc, circle = curve.TryGetCircle( Rhino.RhinoMath.ZeroTolerance )
     if not rc: raise Exception("curve is not circle")
     return circle.Radius
+
 
 def CloseCurve(curve_id, tolerance=-1.0):
     """Closes an open curve object by making adjustments to the end points so
@@ -872,6 +878,7 @@ def CloseCurve(curve_id, tolerance=-1.0):
     if rc==System.Guid.Empty: raise Exception("Unable to add curve to document")
     scriptcontext.doc.Views.Redraw()
     return rc
+
 
 def ClosedCurveOrientation(curve_id, direction=(0,0,1)):
     """Determine the orientation (counter-clockwise or clockwise) of a closed,
@@ -1052,9 +1059,10 @@ def CurveArrows(curve_id, arrow_style=None):
     rhobj = rhutil.coercerhinoobject(curve_id, True, True)
     attr = rhobj.Attributes
     rc = attr.ObjectDecoration
+    none_obj_decor = compat.ENUM_NONE(Rhino.DocObjects.ObjectDecoration)
     if arrow_style is not None:
         if arrow_style==0:
-            attr.ObjectDecoration = Rhino.DocObjects.ObjectDecoration.None
+            attr.ObjectDecoration = none_obj_decor
         elif arrow_style==1:
             attr.ObjectDecoration = Rhino.DocObjects.ObjectDecoration.StartArrowhead
         elif arrow_style==2:
@@ -1064,7 +1072,7 @@ def CurveArrows(curve_id, arrow_style=None):
         id = rhutil.coerceguid(curve_id, True)
         scriptcontext.doc.Objects.ModifyAttributes(id, attr, True)
         scriptcontext.doc.Views.Redraw()
-    if rc==Rhino.DocObjects.ObjectDecoration.None: return 0
+    if rc==none_obj_decor: return 0
     if rc==Rhino.DocObjects.ObjectDecoration.StartArrowhead: return 1
     if rc==Rhino.DocObjects.ObjectDecoration.EndArrowhead: return 2
     if rc==Rhino.DocObjects.ObjectDecoration.BothArrowhead: return 3
@@ -3877,6 +3885,7 @@ def ChangeCurveDegree(object_id, degree):
     if curve.IncreaseDegree(degree):
         r = scriptcontext.doc.Objects.Replace(object_id, curve)
     return r
+
 
 def AddTweenCurves(from_curve_id, to_curve_id, number_of_curves = 1, method = 0, sample_number = 10):
     """Creates curves between two open or closed input curves.

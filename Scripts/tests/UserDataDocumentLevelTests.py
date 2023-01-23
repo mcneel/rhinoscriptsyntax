@@ -1,14 +1,20 @@
-import rhinoscriptsyntax as rs
-import scriptcontext as sc
 import unittest
 import uuid
+
 import Rhino.Geometry as g
+
+import rhinoscriptsyntax as rs
+import scriptcontext as sc
+
 
 def uniquestr():
     return str(uuid.uuid4())
+
+
 def sec_ent_val():
     return uniquestr(), uniquestr(), uniquestr()
-    
+
+
 class UserDataDocumentLevelTests(unittest.TestCase):
   def setUp(self):
     rs.DeleteDocumentData()
@@ -116,6 +122,7 @@ class UserDataDocumentLevelTests(unittest.TestCase):
       rs.SetDocumentUserText(k, v)
       rs.DeleteDocumentData()
       self.assertEqual(v, rs.GetDocumentUserText(k))
-      
+
+
 suite = unittest.TestLoader().loadTestsFromTestCase(UserDataDocumentLevelTests)
 unittestresult = unittest.TextTestRunner(verbosity=2).run(suite)

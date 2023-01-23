@@ -1,7 +1,10 @@
+import unittest
+
+import Rhino.Geometry as g
+
 import rhinoscriptsyntax as rs
 import scriptcontext as sc
-import unittest
-import Rhino.Geometry as g
+
 
 class PointArrayBoundingBoxTests(unittest.TestCase):
   def test_FirstParamNotPointsReturnsNone(self):
@@ -23,6 +26,7 @@ class PointArrayBoundingBoxTests(unittest.TestCase):
     corners = rs.PointArrayBoundingBox(points, plane)
     self.assertTrue(any(pt.EpsilonEquals(g.Point3d(7.5, 0.5, 4), 0.001) for pt in corners))
     self.assertTrue(any(pt.EpsilonEquals(g.Point3d(-6.5, 0.5, -3), 0.001) for pt in corners))
+
 
 suite = unittest.TestLoader().loadTestsFromTestCase(PointArrayBoundingBoxTests)
 unittestresult = unittest.TextTestRunner(verbosity=2).run(suite)

@@ -1,7 +1,21 @@
-import scriptcontext
-import utility as rhutil
+import System
+
 import Rhino
-import System.Guid, System.Array
+
+import scriptcontext
+
+from rhinoscript import utility as rhutil
+
+
+def __simplify_PointCloudKNeighbors(result, amount):
+    if amount == 1:
+        return [item[0] for item in result]
+    else:
+        return [list(item) for item in result]
+
+
+def __simplify_PointCloudClosestPoints(result):
+    return [list(item) for item in result]
 
 
 def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
@@ -52,6 +66,7 @@ def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
     scriptcontext.doc.Views.Redraw()
     return rc
 
+
 def AddPictureFrame(plane, filename, width=0.0, height=0.0, self_illumination=True, embed=False, use_alpha=False, make_mesh=False):
   """Creates a picture frame and adds it to the document.
   Parameters:
@@ -77,6 +92,7 @@ def AddPictureFrame(plane, filename, width=0.0, height=0.0, self_illumination=Tr
   if rc==System.Guid.Empty: raise Exception("unable to add picture frame to document")
   scriptcontext.doc.Views.Redraw()
   return rc
+
 
 def AddPoint(point, y=None, z=None):
     """Adds point object to the document.
@@ -668,13 +684,6 @@ def PointCloudPoints(object_id):
     if isinstance(pc, Rhino.Geometry.PointCloud): return pc.GetPoints()
 
 
-def __simplify_PointCloudKNeighbors(result, amount):
-    if amount == 1:
-        return [item[0] for item in result]
-    else:
-        return [list(item) for item in result]
-
-
 def PointCloudKNeighbors(pt_cloud, needle_points, amount=1):
     """Returns amount indices of points in a point cloud that are near needle_points.
     Parameters:
@@ -719,9 +728,6 @@ if id:
     pts = rhutil.coerce3dpointlist(pt_cloud, True)
     return __simplify_PointCloudKNeighbors(search(pts, needles, amount), amount)
 
-
-def __simplify_PointCloudClosestPoints(result):
-    return [list(item) for item in result]
 
 def PointCloudClosestPoints(pt_cloud, needle_points, distance):
     """Returns a list of lists of point indices in a point cloud that are

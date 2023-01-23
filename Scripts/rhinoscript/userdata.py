@@ -1,5 +1,7 @@
 import scriptcontext
-import utility as rhutil
+
+from rhinoscript import utility as rhutil
+
 
 def DeleteDocumentData(section=None, entry=None):
     """Removes user data strings from the current document

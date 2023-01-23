@@ -1,11 +1,16 @@
-import compat
-import scriptcontext
 import math
-import Rhino
-from System import Guid
-import utility as rhutil
-import object as rhobject
+
+import System
 from System.Collections.Generic import List
+
+import Rhino
+
+import scriptcontext
+
+from rhinoscript import compat
+from rhinoscript import utility as rhutil
+from rhinoscript import object as rhobject
+
 
 def AddBox(corners):
     """Adds a box shaped polysurface to the document
@@ -302,6 +307,7 @@ def AddNurbsSurface(point_count, points, knots_u, knots_v, degree, weights=None)
     if id==System.Guid.Empty: return scriptcontext.errorhandler()
     scriptcontext.doc.Views.Redraw()
     return id
+
 
 def AddPatch(object_ids, uv_spans_tuple_OR_surface_object_id, tolerance=None, trim=True, point_spacing=0.1, flexibility=1.0, surface_pull=1.0, fix_edges=False):
     """Fits a surface through curve, point, point cloud, and mesh objects.

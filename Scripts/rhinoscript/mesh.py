@@ -1,9 +1,14 @@
-import compat
-import scriptcontext
-import utility as rhutil
+import System
+import System.Drawing
+
 import Rhino
-import System.Guid, System.Array, System.Drawing.Color
-from view import __viewhelper
+
+import scriptcontext
+
+from rhinoscript import compat
+from rhinoscript import utility as rhutil
+from rhinoscript.view import __viewhelper
+
 
 def AddMesh(vertices, face_vertices, vertex_normals=None, texture_coordinates=None, vertex_colors=None):
     """Add a mesh object to the document

@@ -1,11 +1,14 @@
-import compat
-import scriptcontext
+import System.Drawing
+
 import Rhino
-import utility as rhutil
-import application as rhapp
-from layer import __getlayer
-from view import __viewhelper
-import System.Drawing as sd
+
+import scriptcontext
+
+from rhinoscript import compat
+from rhinoscript import utility as rhutil
+from rhinoscript import application as rhapp
+from rhinoscript.layer import __getlayer
+from rhinoscript.view import __viewhelper
 
 
 class filter:
@@ -97,7 +100,7 @@ def FirstObject(select=False, include_lights=False, include_grips=False):
 
 
 def __FilterHelper(input_filter):
-    geometry_filter = Rhino.DocObjects.ObjectType.None
+    geometry_filter = compat.ENUM_NONE(Rhino.DocObjects.ObjectType)
     if input_filter & 1:
         geometry_filter |= Rhino.DocObjects.ObjectType.Point
     if input_filter & 16384:
@@ -274,6 +277,7 @@ class __CustomGetObjectEx(Rhino.Input.Custom.GetObject):
         for id in self.m_allowable:
             if id==rhino_object.Id: return True
         return False
+
 
 def GetObjectEx(message=None, filter=0, preselect=False, select=False, objects=None):
     """Prompts user to pick, or select a single object
@@ -634,6 +638,7 @@ def LockedObjects(include_lights=False, include_grips=False, include_references=
     settings.ReferenceObjects = include_references
     return [i.Id for i in scriptcontext.doc.Objects.GetObjectList(settings)
         if i.IsLocked or (scriptcontext.doc.Layers[i.Attributes.LayerIndex]).IsLocked]
+
 
 def HiddenObjects(include_lights=False, include_grips=False, include_references=False):
     """Returns identifiers of all hidden objects in the document. Hidden objects
@@ -1147,7 +1152,7 @@ def WindowPick(corner1, corner2, view=None, select=False, in_window=True):
     topY = min(screen1.Y, screen2.Y)
     w = abs(screen1.X - screen2.X)
     h = abs(screen1.Y - screen2.Y)
-    rec = sd.Rectangle(leftX, topY, w, h)
+    rec = System.Drawing.Rectangle(leftX, topY, w, h)
  
     pc.SetPickTransform(viewport.GetPickTransform(rec))
     pc.UpdateClippingPlanes()

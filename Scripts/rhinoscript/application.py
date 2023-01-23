@@ -1,12 +1,20 @@
-import compat
-import scriptcontext
-import Rhino
-import Rhino.ApplicationSettings.ModelAidSettings as modelaid
-import Rhino.Commands.Command as rhcommand
-import System.TimeSpan, System.Enum, System.Environment
-import System.Windows.Forms.Screen
 import datetime
-import utility as rhutil
+
+import System
+import System.Windows.Forms
+
+import Rhino
+from Rhino.ApplicationSettings import ModelAidSettings as modelaid
+from Rhino.Commands import Command as rhcommand
+
+import scriptcontext
+
+from rhinoscript import compat
+from rhinoscript import utility as rhutil
+
+
+# global tuple as (start,end) of command serial numbers
+__command_serial_numbers = None
 
 
 def AddAlias(alias, macro):
@@ -269,8 +277,6 @@ def ClearCommandHistory():
     """
     Rhino.RhinoApp.ClearCommandHistoryWindow()
 
-
-__command_serial_numbers = None
 
 def Command(commandString, echo=True):
     """Runs a Rhino command script. All Rhino commands can be used in command

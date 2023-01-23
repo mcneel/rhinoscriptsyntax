@@ -1,7 +1,9 @@
-import compat
-import scriptcontext
-import utility as rhutil
 import Rhino
+
+import scriptcontext
+
+from rhinoscript import compat
+from rhinoscript import utility as rhutil
 
 
 def LineClosestPoint(line, testpoint):

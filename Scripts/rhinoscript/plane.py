@@ -1,7 +1,11 @@
-import utility as rhutil
-import Rhino.Geometry
-import scriptcontext
 import math
+
+import Rhino.Geometry
+
+import scriptcontext
+
+from rhinoscript import utility as rhutil
+
 
 def DistanceToPlane(plane, point):
     """Returns the distance from a 3D point to a plane
