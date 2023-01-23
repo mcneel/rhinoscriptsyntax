@@ -1,8 +1,10 @@
 """python engine compatibility module.
 
 Example:
+    >>> from rhinoscript import compat
     >>> from rhinoscript.compat import IRONPY277
     >>> from rhinoscript.compat import RANGE
+    >>> non_value = compat.ENUM_NONE(some_enum)
 """
 
 import sys
@@ -20,11 +22,22 @@ RANGE = range
 if IRONPY2:
     RANGE = xrange
 
+
+STRING_TYPE = str
+if IRONPY2:
+    STRING_TYPE = basestring
+
+
 def ITERATOR2LIST(iteratorOrList):
-    return iteratorOrList if type(iteratorOrList = list) else list(iteratorOrList)
+    """Corerce given iterator to a python list"""
+    return iteratorOrList if isinstance(iteratorOrList, list) else list(iteratorOrList)
+
 
 def ENUM_NONE(e):
-    return getattr(e, 'NONE') if PY3 else e.None
+    """Safely get None value for python2 or python3"""
+    return getattr(e, 'NONE' if PY3 else 'None')
+
 
 def IS_STRING_INSTANCE(s):
-    return isinstance(s, (str if PY3 else basestring))
+    """Safely check if given object is a string for python2 or python3"""
+    return isinstance(s, STRING_TYPE)
