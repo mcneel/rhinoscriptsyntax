@@ -1,13 +1,17 @@
-import rhinoscriptsyntax as rs
-from scriptcontext import doc
 import unittest
+
 import Rhino
+
+from scriptcontext import doc
+import rhinoscriptsyntax as rs
+
 
 def coerceannotation(object_id):
     annotation_object = rs.coercerhinoobject(object_id, True)
     if not isinstance(annotation_object, Rhino.DocObjects.AnnotationObjectBase):
         raise ValueError("object_id does not refer to an Annotation")
     return annotation_object
+
 
 class AddLinearDimensionsTests(unittest.TestCase):
   def test_CurrentCPlaneWithPointsOnPlane(self):
@@ -27,6 +31,7 @@ class AddLinearDimensionsTests(unittest.TestCase):
     ln2End = plane.PointAt(d.ExtensionLine2End.X, d.ExtensionLine2End.Y)
     self.assertTrue(rs.PointCompare(ln1End, (1,1,2), doc.ModelAbsoluteTolerance))
     self.assertTrue(rs.PointCompare(ln2End, (11,1,2), doc.ModelAbsoluteTolerance))
+
 
 suite = unittest.TestLoader().loadTestsFromTestCase(AddLinearDimensionsTests)
 unittestresult = unittest.TextTestRunner(verbosity=2).run(suite)

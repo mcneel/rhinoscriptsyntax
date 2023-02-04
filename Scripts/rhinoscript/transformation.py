@@ -1,9 +1,11 @@
-import scriptcontext
-import utility as rhutil
-import Rhino
-import System.Guid, System.Array
 import math
-import view as rhview
+
+import Rhino
+
+import scriptcontext
+
+from rhinoscript import utility as rhutil
+from rhinoscript.view import __viewhelper
 
 
 def IsXformIdentity(xform):
@@ -474,7 +476,7 @@ def XformScreenToWorld(point, view=None, screen_coordinates=False):
       XformWorldToScreen
     """
     point = rhutil.coerce2dpoint(point, True)
-    view = rhview.__viewhelper(view)
+    view = __viewhelper(view)
     viewport = view.MainViewport
     xform = viewport.GetTransform(Rhino.DocObjects.CoordinateSystem.Screen, Rhino.DocObjects.CoordinateSystem.World)
     point3d = Rhino.Geometry.Point3d(point.X, point.Y, 0)
@@ -586,7 +588,7 @@ def XformWorldToScreen(point, view=None, screen_coordinates=False):
       XformScreenToWorld
     """
     point = rhutil.coerce3dpoint(point, True)
-    view = rhview.__viewhelper(view)
+    view = __viewhelper(view)
     viewport = view.MainViewport
     xform = viewport.GetTransform(Rhino.DocObjects.CoordinateSystem.World, Rhino.DocObjects.CoordinateSystem.Screen)
     point = xform * point

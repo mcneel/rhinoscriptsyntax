@@ -1,5 +1,6 @@
 import Rhino
 
+
 def CloseToolbarCollection(name, prompt=False):
     """Closes a currently open toolbar collection
     Parameters:

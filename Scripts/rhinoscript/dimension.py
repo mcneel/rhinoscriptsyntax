@@ -1,8 +1,18 @@
-import scriptcontext
-import utility as rhutil
+import System
+
 import Rhino
-import System.Guid
-from view import __viewhelper, ViewCPlane
+
+import scriptcontext
+
+from rhinoscript import utility as rhutil
+from rhinoscript.view import __viewhelper, ViewCPlane
+
+
+def __coerceannotation(object_id):
+    annotation_object = rhutil.coercerhinoobject(object_id, True)
+    if not isinstance(annotation_object, Rhino.DocObjects.AnnotationObjectBase):
+        raise ValueError("object_id does not refer to an Annotation")
+    return annotation_object
 
 
 def AddAlignedDimension(start_point, end_point, point_on_dimension_line, style=None):
@@ -221,13 +231,6 @@ def DeleteDimStyle(dimstyle_name):
     return scriptcontext.errorhandler()
 
 
-def __coerceannotation(object_id):
-    annotation_object = rhutil.coercerhinoobject(object_id, True)
-    if not isinstance(annotation_object, Rhino.DocObjects.AnnotationObjectBase):
-        raise ValueError("object_id does not refer to an Annotation")
-    return annotation_object
-
-
 def DimensionStyle(object_id, dimstyle_name=None):
     """Returns or modifies the dimension style of a dimension object
     Parameters:
@@ -290,7 +293,7 @@ def DimensionUserText(object_id, usertext=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a dimension")
       if rs.IsDimension(obj):
-          usertext = "<> " + chr(177) + str(rs.UnitAbsoluteTolerance())
+          usertext = "!= " + chr(177) + str(rs.UnitAbsoluteTolerance())
           rs.DimensionUserText( obj, usertext )
     See Also:
       DimensionText
@@ -697,6 +700,7 @@ def DimStylePrefix(dimstyle, prefix=None):
         scriptcontext.doc.Views.Redraw()
     return rc
 
+
 def DimStyleScale(dimstyle, scale=None):
     """Returns or modifies the scale of a dimension style.
     Parameters:
@@ -724,6 +728,7 @@ def DimStyleScale(dimstyle, scale=None):
         scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False)
         scriptcontext.doc.Views.Redraw()
     return rc
+
 
 def DimStyleSuffix(dimstyle, suffix=None):
     """Returns or changes the suffix of a dimension style - the text to

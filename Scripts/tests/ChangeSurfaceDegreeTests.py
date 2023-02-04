@@ -1,13 +1,17 @@
-import rhinoscriptsyntax as rs
-import scriptcontext as sc
 import unittest
+import uuid
+
 import Rhino
 import Rhino.Geometry as g
-import uuid
+
+import rhinoscriptsyntax as rs
+import scriptcontext as sc
+
 
 def newGuidStr():
     return str(uuid.uuid4())
-    
+
+
 class ChangeSurfaceDegreeTests(unittest.TestCase):
   def setUp(self):
     points = Rhino.Collections.Point3dList(5)
@@ -40,6 +44,7 @@ class ChangeSurfaceDegreeTests(unittest.TestCase):
     d1 = rs.coercesurface(self.id).ToNurbsSurface().Degree(1)
     self.assertEqual(3, d0)
     self.assertEqual(3, d1)
+
 
 suite = unittest.TestLoader().loadTestsFromTestCase(ChangeSurfaceDegreeTests)
 unittestresult = unittest.TextTestRunner(verbosity=2).run(suite)

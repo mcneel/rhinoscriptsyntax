@@ -1,10 +1,16 @@
-import scriptcontext
 import math
-import Rhino
-import System.Guid
-import utility as rhutil
-import object as rhobject
+
+import System
 from System.Collections.Generic import List
+
+import Rhino
+
+import scriptcontext
+
+from rhinoscript import compat
+from rhinoscript import utility as rhutil
+from rhinoscript import object as rhobject
+
 
 def AddBox(corners):
     """Adds a box shaped polysurface to the document
@@ -302,6 +308,7 @@ def AddNurbsSurface(point_count, points, knots_u, knots_v, degree, weights=None)
     scriptcontext.doc.Views.Redraw()
     return id
 
+
 def AddPatch(object_ids, uv_spans_tuple_OR_surface_object_id, tolerance=None, trim=True, point_spacing=0.1, flexibility=1.0, surface_pull=1.0, fix_edges=False):
     """Fits a surface through curve, point, point cloud, and mesh objects.
     Parameters:
@@ -387,8 +394,8 @@ def AddPipe(curve_id, parameters, radii, blend_type=0, cap=0, fit=False):
     ang_tol = scriptcontext.doc.ModelAngleToleranceRadians
     if type(parameters) is int or type(parameters) is float: parameters = [parameters]
     if type(radii) is int or type(radii) is float: radii = [radii]
-    parameters = map(float,parameters)
-    radii = map(float,radii)
+    parameters = compat.ITERATOR2LIST(map(float,parameters))
+    radii = compat.ITERATOR2LIST(map(float,radii))
     cap = System.Enum.ToObject(Rhino.Geometry.PipeCapMode, cap)
     breps = Rhino.Geometry.Brep.CreatePipe(rail, parameters, radii, blend_type==0, cap, fit, abs_tol, ang_tol)
     rc = [scriptcontext.doc.Objects.AddBrep(brep) for brep in breps]

@@ -1,6 +1,6 @@
 # A Rhino GetPoint that performs some custom dynamic drawing
 import Rhino
-import System.Drawing.Color
+import System.Drawing
 import scriptcontext
 
 def CustomArc3Point():

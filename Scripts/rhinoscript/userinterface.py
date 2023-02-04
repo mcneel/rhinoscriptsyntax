@@ -1,14 +1,19 @@
+import math
+
+import System
+import System.Drawing
+import System.Windows.Forms
+
+import Eto.Forms
+
 import Rhino
 import Rhino.UI
-import utility as rhutil
+
 import scriptcontext
-import System.Drawing.Color
-import System.Enum
-import System.Array
-import Eto.Forms
-import System.Windows.Forms
-import math
-from view import __viewhelper
+
+from rhinoscript import compat
+from rhinoscript import utility as rhutil
+from rhinoscript.view import __viewhelper
 
 
 def BrowseForFolder(folder=None, message=None, title=None):
@@ -73,7 +78,7 @@ def CheckListBox(items, message=None, title=None):
     itemstrs = [str(item[0]) for item in items]
     newcheckstates = Rhino.UI.Dialogs.ShowCheckListBox(title, message, itemstrs, checkstates)
     if newcheckstates:
-        rc = zip(itemstrs, newcheckstates)
+        rc = compat.ITERATOR2LIST(zip(itemstrs, newcheckstates))
         return rc
     return scriptcontext.errorhandler()
 
@@ -187,7 +192,7 @@ def GetBoolean(message, items, defaults):
     count = len(items)
     if count<1 or count!=len(defaults): return scriptcontext.errorhandler()
     toggles = []
-    for i in range(count):
+    for i in compat.RANGE(count):
         initial = defaults[i]
         item = items[i]
         offVal = item[1]
@@ -227,7 +232,7 @@ def GetBox(mode=0, base_point=None, prompt1=None, prompt2=None, prompt3=None):
     base_point = rhutil.coerce3dpoint(base_point)
     if base_point is None: base_point = Rhino.Geometry.Point3d.Unset
     def intToEnum(m):
-      if m not in range(1,5):
+      if m not in compat.RANGE(1,5):
         m = 0
       return {
         0 : Rhino.Input.GetBoxMode.All,
@@ -372,7 +377,7 @@ def GetEdgeCurves(message=None, min_count=1, max_count=0, select=False):
     rc = go.GetMultiple(min_count, max_count)
     if rc!=Rhino.Input.GetResult.Object: return
     rc = []
-    for i in range(go.ObjectCount):
+    for i in compat.RANGE(go.ObjectCount):
         edge = go.Object(i).Edge()
         if not edge: continue
         edge = edge.Duplicate()
@@ -1031,7 +1036,7 @@ def MessageBox(message, buttons=0, title=""):
     elif buttontype==5: btn = Rhino.UI.ShowMessageButton.RetryCancel
     
     icontype = buttons & 0x00000070
-    icon = Rhino.UI.ShowMessageIcon.None
+    icon = compat.ENUM_NONE(Rhino.UI.ShowMessageIcon)
     if icontype==16: icon = Rhino.UI.ShowMessageIcon.Error
     elif icontype==32: icon = Rhino.UI.ShowMessageIcon.Question
     elif icontype==48: icon = Rhino.UI.ShowMessageIcon.Warning
@@ -1078,7 +1083,7 @@ def PropertyListBox(items, values, message=None, title=None):
               names.append(name)
           results = rs.PropertyListBox(objs, names, "Modify object name(s)")
           if results:
-              for i in xrange(len(objs)):
+              for i in compat.RANGE(len(objs)):
                   rs.ObjectName( objs[i], results[i] )
     See Also:
       CheckListBox

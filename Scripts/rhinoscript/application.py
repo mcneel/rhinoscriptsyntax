@@ -1,11 +1,20 @@
-import scriptcontext
-import Rhino
-import Rhino.ApplicationSettings.ModelAidSettings as modelaid
-import Rhino.Commands.Command as rhcommand
-import System.TimeSpan, System.Enum, System.Environment
-import System.Windows.Forms.Screen
 import datetime
-import utility as rhutil
+
+import System
+import System.Windows.Forms
+
+import Rhino
+from Rhino.ApplicationSettings import ModelAidSettings as modelaid
+from Rhino.Commands import Command as rhcommand
+
+import scriptcontext
+
+from rhinoscript import compat
+from rhinoscript import utility as rhutil
+
+
+# global tuple as (start,end) of command serial numbers
+__command_serial_numbers = None
 
 
 def AddAlias(alias, macro):
@@ -268,8 +277,6 @@ def ClearCommandHistory():
     """
     Rhino.RhinoApp.ClearCommandHistoryWindow()
 
-
-__command_serial_numbers = None
 
 def Command(commandString, echo=True):
     """Runs a Rhino command script. All Rhino commands can be used in command
@@ -999,16 +1006,16 @@ def PlugIns(types=0, status=0):
     See Also:
 
     """
-    filter = Rhino.PlugIns.PlugInType.None
-    if types&1: filter |= Rhino.PlugIns.PlugInType.Render
-    if types&2: filter |= Rhino.PlugIns.PlugInType.FileExport
-    if types&4: filter |= Rhino.PlugIns.PlugInType.FileImport
-    if types&8: filter |= Rhino.PlugIns.PlugInType.Digitiger
-    if types&16: filter |= Rhino.PlugIns.PlugInType.Utility
-    if types==0: filter = Rhino.PlugIns.PlugInType.Any
+    search_filter = compat.ENUM_NONE(Rhino.PlugIns.PlugInType)
+    if types&1: search_filter |= Rhino.PlugIns.PlugInType.Render
+    if types&2: search_filter |= Rhino.PlugIns.PlugInType.FileExport
+    if types&4: search_filter |= Rhino.PlugIns.PlugInType.FileImport
+    if types&8: search_filter |= Rhino.PlugIns.PlugInType.Digitiger
+    if types&16: search_filter |= Rhino.PlugIns.PlugInType.Utility
+    if types==0: search_filter = Rhino.PlugIns.PlugInType.Any
     loaded = (status==0 or status==1)
     unloaded = (status==0 or status==2)
-    names = Rhino.PlugIns.PlugIn.GetInstalledPlugInNames(filter, loaded, unloaded)
+    names = Rhino.PlugIns.PlugIn.GetInstalledPlugInNames(search_filter, loaded, unloaded)
     return list(names)
 
 
@@ -1148,7 +1155,7 @@ def Snap(enable=None):
       Planar
     """
     rc = modelaid.GridSnap
-    if enable is not None and enable <> rc:
+    if enable is not None and enable != rc:
         modelaid.GridSnap = enable
     return rc
 

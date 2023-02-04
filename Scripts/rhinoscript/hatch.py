@@ -1,7 +1,11 @@
-import scriptcontext
-import utility as rhutil
+import System
+
 import Rhino
-import System.Guid
+
+import scriptcontext
+
+from rhinoscript import utility as rhutil
+
 
 def __initHatchPatterns():
     if scriptcontext.doc.HatchPatterns.FindName(Rhino.DocObjects.HatchPattern.Defaults.Solid.Name) is None:
@@ -30,6 +34,7 @@ def __initHatchPatterns():
 
     if scriptcontext.doc.HatchPatterns.FindName(Rhino.DocObjects.HatchPattern.Defaults.Squares.Name) is None:
         scriptcontext.doc.HatchPatterns.Add(Rhino.DocObjects.HatchPattern.Defaults.Squares)
+
 
 def AddHatch(curve_id, hatch_pattern=None, scale=1.0, rotation=0.0):
     """Creates a new hatch object from a closed planar curve object
@@ -333,6 +338,7 @@ def HatchPatternNames():
         if hatchpattern.IsDeleted: continue
         rc.append(hatchpattern.Name)
     return rc
+
 
 def HatchRotation(hatch_id, rotation=None):
     """Returns or modifies the rotation applied to the hatch pattern when

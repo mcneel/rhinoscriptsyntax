@@ -1,8 +1,13 @@
-import scriptcontext
-import utility as rhutil
-import Rhino
-import System.Enum
 import math
+
+import System
+
+import Rhino
+
+import scriptcontext
+
+from rhinoscript import utility as rhutil
+
 
 def __viewhelper(view):
     if view is None: return scriptcontext.doc.Views.ActiveView
@@ -1093,6 +1098,7 @@ def ViewCPlane(view=None, plane=None):
         view.Redraw()
     return cplane
 
+
 def ViewDisplayMode(view=None, mode=None, return_name=True):
     """Return or set a view display mode
     Parameters:
@@ -1267,6 +1273,7 @@ def ViewProjection(view=None, mode=None):
     else: return
     view.Redraw()
     return rc
+
 
 def ViewRadius(view=None, radius=None, mode=False):
     """Returns or sets the radius of a parallel-projected view. Useful

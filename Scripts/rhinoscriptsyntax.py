@@ -1,3 +1,4 @@
+from rhinoscript import compat
 # this is not the best python scripting practice, but if you want everything in one big list
 from rhinoscript.application import *
 from rhinoscript.curve import *
@@ -28,8 +29,8 @@ from rhinoscript.toolbar import *
 
 def __reverse_module_search(func_name):
     if func_name is None: return None
-    if not isinstance(func_name, basestring): return None
-    g_lower = dict((k.lower(),(k,v)) for k,v in globals().items())
+    if not compat.IS_STRING_INSTANCE(func_name): return None
+    g_lower = dict((k.lower(),(k,v)) for k,v in compat.ITERATOR2LIST(globals().items()))
     f_lower = func_name.lower()
     if f_lower in g_lower:
         f_data = g_lower[f_lower]
