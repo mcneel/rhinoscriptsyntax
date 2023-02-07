@@ -1,4 +1,7 @@
 # scriptcontext module
+import clr
+clr.AddReference("RhinoPythonHost")
+
 from RhinoPython import Host as __host
 
 '''The Active Rhino document (Rhino.RhinoDoc in RhinoCommon) while a script
