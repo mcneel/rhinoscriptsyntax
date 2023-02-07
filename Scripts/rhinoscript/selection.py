@@ -241,6 +241,7 @@ def GetObject(message=None, filter=0, preselect=False, select=False, custom_filt
     
     class CustomGetObject(Rhino.Input.Custom.GetObject):
         def __init__(self, filter_function):
+            super(CustomGetObject, self).__init__()
             self.m_filter_function = filter_function
         def CustomGeometryFilter( self, rhino_object, geometry, component_index ):
             rc = True
@@ -272,6 +273,7 @@ def GetObject(message=None, filter=0, preselect=False, select=False, custom_filt
 
 class __CustomGetObjectEx(Rhino.Input.Custom.GetObject):
     def __init__(self, allowable_geometry):
+        super(__CustomGetObjectEx, self).__init__()
         self.m_allowable = allowable_geometry
     def CustomGeometryFilter(self, rhino_object, geometry, component_index):
         for id in self.m_allowable:
@@ -411,6 +413,7 @@ def GetObjects(message=None, filter=0, group=True, preselect=False, select=False
     objects = rhutil.coerceguidlist(objects)
     class CustomGetObject(Rhino.Input.Custom.GetObject):
         def __init__(self, filter_function):
+            super(CustomGetObject, self).__init__()
             self.m_filter_function = filter_function
         def CustomGeometryFilter( self, rhino_object, geometry, component_index ):
             if objects and not rhino_object.Id in objects: return False
