@@ -8,11 +8,9 @@ import System.Drawing
 import System.Windows.Forms
 
 import Rhino
-from RhinoPython import Host as __host
 
+import rhinocompat as compat
 import scriptcontext
-
-from rhinoscript import compat
 
 
 def ContextIsRhino():
@@ -638,7 +636,7 @@ def coerce3dpoint(point, raise_on_error=False):
     See Also:
     """
     if type(point) is Rhino.Geometry.Point3d: return point
-    enumerable =  __host.Coerce3dPointFromEnumerables(point)
+    enumerable = compat.GET_HOST().Coerce3dPointFromEnumerables(point)
     if enumerable is not None: return enumerable
     if type(point) is System.Guid:
         found, pt = scriptcontext.doc.Objects.TryFindPoint(point)

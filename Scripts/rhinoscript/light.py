@@ -4,7 +4,7 @@ import Rhino.Geometry
 
 import scriptcontext
 
-from rhinoscript import compat
+import rhinocompat as compat
 from rhinoscript import utility as rhutil
 
 

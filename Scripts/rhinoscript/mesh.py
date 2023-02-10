@@ -5,7 +5,7 @@ import Rhino
 
 import scriptcontext
 
-from rhinoscript import compat
+import rhinocompat as compat
 from rhinoscript import utility as rhutil
 from rhinoscript.view import __viewhelper
 

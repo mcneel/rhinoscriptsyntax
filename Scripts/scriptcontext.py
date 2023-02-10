@@ -1,8 +1,5 @@
 # scriptcontext module
-import clr
-clr.AddReference("RhinoPythonHost")
-
-from RhinoPython import Host as __host
+import rhinocompat as compat
 
 '''The Active Rhino document (Rhino.RhinoDoc in RhinoCommon) while a script
 is executing. This variable is set by Rhino before the exection of every script.
@@ -24,7 +21,7 @@ sticky = dict()
 
 def escape_test( throw_exception=True, reset=False ):
     "Tests to see if the user has pressed the escape key"
-    rc = __host.EscapePressed(reset)
+    rc = compat.GET_HOST().EscapePressed(reset)
     if rc and throw_exception:
         raise Exception('escape key pressed')
     return rc

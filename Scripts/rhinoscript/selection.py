@@ -4,7 +4,7 @@ import Rhino
 
 import scriptcontext
 
-from rhinoscript import compat
+import rhinocompat as compat
 from rhinoscript import utility as rhutil
 from rhinoscript import application as rhapp
 from rhinoscript.layer import __getlayer
