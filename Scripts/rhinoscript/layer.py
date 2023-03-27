@@ -1,5 +1,6 @@
 import System
 
+import Rhino
 from Rhino.DocObjects import Layer
 from Rhino import RhinoMath
 

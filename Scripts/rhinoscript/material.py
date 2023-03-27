@@ -1,3 +1,4 @@
+import Rhino
 import Rhino.DocObjects
 
 import scriptcontext
