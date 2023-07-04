@@ -33,7 +33,7 @@ if IRONPY2:
 if IRONPY2:
     from RhinoPython import Host as __host
 else:
-    from RhinoCPython import Host as __host
+    from RhinoCodePlatform.Rhino3D.Languages import McNeelPythonHost as __host
 
 
 def ITERATOR2LIST(iteratorOrList):
