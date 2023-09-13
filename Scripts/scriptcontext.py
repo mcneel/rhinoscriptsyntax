@@ -15,9 +15,46 @@ doc = None
 id = 1
 
 
+class __Py2StickyWrapper(dict):
+    '''A dictionary of values that can be reused between execution of scripts
+    '''
+    def items(self):
+        return list(super().items())
+
+    def keys(self):
+        return list(super().keys())
+
+    def values(self):
+        return list(super().values())
+
+    def has_key(self, key):
+        return key in super().keys()
+
+    def viewitems(self):
+        return super().items()
+
+    def viewkeys(self):
+        return super().keys()
+
+    def viewvalues(self):
+        return super().values()
+
+    def iteritems(self):
+        return super().items()
+
+    def iterkeys(self):
+        return super().keys()
+
+    def itervalues(self):
+        return super().values()
+
+
 '''A dictionary of values that can be reused between execution of scripts
 '''
 sticky = dict()
+if compat.PY3:
+    sticky = __Py2StickyWrapper()
+
 
 def escape_test( throw_exception=True, reset=False ):
     "Tests to see if the user has pressed the escape key"
