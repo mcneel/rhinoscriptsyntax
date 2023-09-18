@@ -842,7 +842,7 @@ def ParentLayer(layer, parent=None):
     parent_id = layer.ParentLayerId
     oldparent = None
     if parent_id!=System.Guid.Empty:
-        oldparentlayer = scriptcontext.doc.Layers.Find(parent_id, -1)
+        oldparentlayer = scriptcontext.doc.Layers.Find(parent_id, True, -1)
         if oldparentlayer is not None:
             oldparentlayer = scriptcontext.doc.Layers[oldparentlayer]
             oldparent = oldparentlayer.FullPath
