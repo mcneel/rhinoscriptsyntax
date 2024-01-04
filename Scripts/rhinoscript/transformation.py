@@ -17,7 +17,7 @@ def IsXformIdentity(xform):
     Example:
       import rhinoscriptsyntax as rs
       xform = rs.XformIdentity()
-      print rs.IsXformIdentity(xform)
+      print(rs.IsXformIdentity(xform))
     See Also:
       IsXformSimilarity
       IsXformZero
@@ -38,7 +38,7 @@ def IsXformSimilarity(xform):
     Example:
       import rhinoscriptsyntax as rs
       xform = rs.BlockInstanceXform(block)
-      print rs.IsXformSimilarity(xform)
+      print(rs.IsXformSimilarity(xform))
     See Also:
       IsXformIdentity
       IsXformZero
@@ -56,7 +56,7 @@ def IsXformZero(xform):
     Example:
       import rhinoscriptsyntax as rs
       xform = rs.XformZero()
-      print rs.IsXformZero(xform)
+      print(rs.IsXformZero(xform))
     See Also:
       IsXformIdentity
       IsXformSimilarity
@@ -136,7 +136,7 @@ def XformCompare(xform1, xform2):
       import rhinoscriptsyntax as rs
       xform0 = rs.XformZero()
       xform1 = rs.XformIdentity()
-      print rs.XformCompare(xform0, xform1)
+      print(rs.XformCompare(xform0, xform1))
     See Also:
       IsXformIdentity
       IsXformSimilarity
@@ -158,7 +158,7 @@ def XformCPlaneToWorld(point, plane):
       import rhinoscriptsyntax as rs
       plane = rs.ViewCPlane()
       point = rs.XFormCPlaneToWorld([0,0,0], plane)
-      if point: print "World point: ", point
+      if point: print("World point: {}".format(point))
     See Also:
       XformWorldToCPlane
     """
@@ -179,7 +179,7 @@ def XformDeterminant(xform):
     Example:
       import rhinoscriptsyntax as rs
       xform = rs.BlockInstanceXform(obj)
-      if xform: print rs.XformDeterminant(xform)
+      if xform: print(rs.XformDeterminant(xform))
     See Also:
       XformInverse
     """
@@ -199,7 +199,7 @@ def XformDiagonal(diagonal_value):
       import rhinoscriptsyntax as rs
       def printmatrix(xform):
           for i in range(4):
-              print "[", xform[i,0], ", ", xform[i,1], ", ", xform[i,2], ", ", xform[i,3], "]"
+              print("[{}, {}, {}, {}]".format(xform[i,0], xform[i,1], xform[i,2], xform[i,3]))
       printmatrix(rs.XformDiagonal(3))
     See Also:
       XformIdentity
@@ -216,7 +216,7 @@ def XformIdentity():
       import rhinoscriptsyntax as rs
       def printmatrix(xform):
           for i in range(4):
-              print "[", xform[i,0], ", ", xform[i,1], ", ", xform[i,2], ", ", xform[i,3], "]"
+              print("[{}, {}, {}, {}]".format(xform[i,0], xform[i,1], xform[i,2], xform[i,3]))
       printmatrix(rs.XformIdentity())
     See Also:
       XformDiagonal
@@ -471,7 +471,7 @@ def XformScreenToWorld(point, view=None, screen_coordinates=False):
       point2d = 200,100
       view = rs.CurrentView()
       point = rs.XformScreenToWorld(point2d, view)
-      print point
+      print(point)
     See Also:
       XformWorldToScreen
     """
@@ -556,7 +556,7 @@ def XformWorldToCPlane(point, plane):
       import rhinoscriptsyntax as rs
       plane = rs.ViewCPlane()
       point = rs.XformWorldToCPlane([0,0,0], plane)
-      if point: print "CPlane point:", point
+      if point: print("CPlane point:{}".format(point))
     See Also:
       XformCPlaneToWorld
     """
@@ -583,7 +583,7 @@ def XformWorldToScreen(point, view=None, screen_coordinates=False):
       point = (0.0, 0.0, 0.0)
       view = rs.CurrentView()
       point2d = rs.XformWorldToScreen(point, view)
-      print point2d
+      print(point2d)
     See Also:
       XformScreenToWorld
     """
@@ -608,7 +608,7 @@ def XformZero():
       import rhinoscriptsyntax as rs
       def printmatrix(xform):
           for i in range(4):
-              print "[", xform[i,0], ", ", xform[i,1], ", ", xform[i,2], ", ", xform[i,3], "]"
+              print("[{}, {}, {}, {}]".format(xform[i,0], xform[i,1], xform[i,2], xform[i,3]))
       printmatrix( rs.XformZero() )
     See Also:
       XformDiagonal

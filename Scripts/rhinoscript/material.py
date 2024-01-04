@@ -105,9 +105,9 @@ def IsMaterialDefault(material_index):
       if obj:
           index = rs.ObjectMaterialIndex(obj)
           if rs.IsMaterialDefault(index):
-              print "Object is assigned default material."
+              print("Object is assigned default material.")
           else:
-              print "Object is not assigned default material."
+              print("Object is not assigned default material.")
     See Also:
       LayerMaterialIndex
       ObjectMaterialIndex
@@ -128,9 +128,9 @@ def IsMaterialReference(material_index):
       if obj:
           index = rs.ObjectMaterialIndex(obj)
           if rs.IsMaterialReference(index):
-              print "The material is referenced from another file."
+              print("The material is referenced from another file.")
           else:
-              print "The material is not referenced from another file."
+              print("The material is not referenced from another file.")
     See Also:
       IsLayerReference
       IsLightReference

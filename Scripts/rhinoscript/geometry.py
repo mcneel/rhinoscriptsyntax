@@ -431,9 +431,9 @@ def IsClippingPlane(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a clipping plane")
       if rs.IsClippingPlane(id):
-          print "The object is a clipping plane."
+          print("The object is a clipping plane.")
       else:
-          print "The object is not a clipping plane."
+          print("The object is not a clipping plane.")
     See Also:
       AddClippingPlane
     """
@@ -451,9 +451,9 @@ def IsPoint(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a point")
       if rs.IsPoint(id):
-          print "The object is a point."
+          print("The object is a point.")
       else:
-          print "The object is not a point."
+          print("The object is not a point.")
     See Also:
       AddPoint
       PointCoordinates
@@ -472,9 +472,9 @@ def IsPointCloud(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a point cloud")
       if rs.IsPointCloud(id):
-          print "The object is a point cloud."
+          print("The object is a point cloud.")
       else:
-          print "The object is not a point cloud."
+          print("The object is not a point cloud.")
     See Also:
       AddPointCloud
       PointCloudCount
@@ -494,9 +494,9 @@ def IsText(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a text object")
       if rs.IsText(id):
-          print "The object is a text object."
+          print("The object is a text object.")
       else:
-          print "The object is not a text object."
+          print("The object is not a text object.")
     See Also:
       AddText
     """
@@ -514,9 +514,9 @@ def IsTextDot(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a text dot object")
       if rs.IsTextDot(id):
-          print "The object is a text dot object."
+          print("The object is a text dot object.")
       else:
-          print "The object is not a text dot object."
+          print("The object is not a text dot object.")
     See Also:
       AddTextDot
     """
@@ -533,7 +533,7 @@ def PointCloudCount(object_id):
     Example:
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select point cloud", rs.filter.pointcloud)
-      print "Point count:", rs.PointCloudCount(id)
+      print("Point count:{}".format(rs.PointCloudCount(id)))
     See Also:
       AddPointCloud
       IsPointCloud
@@ -553,9 +553,9 @@ def PointCloudHasHiddenPoints(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a point cloud", rs.filter.pointcloud)
       if rs.PointCloudHasHiddenPoints(obj):
-          print "The point cloud has hidden points."
+          print("The point cloud has hidden points.")
       else:
-          print "The point cloud has no hidden points."
+          print("The point cloud has no hidden points.")
     See Also:
       PointCloudHasPointColors
       PointCloudHidePoints
@@ -575,9 +575,9 @@ def PointCloudHasPointColors(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a point cloud", rs.filter.pointcloud)
       if rs.PointCloudHasPointColors(obj):
-          print "The point cloud has point colors."
+          print("The point cloud has point colors.")
       else:
-          print "The point cloud has no point colors."
+          print("The point cloud has no point colors.")
     See Also:
       PointCloudHasPointColors
       PointCloudHidePoints
@@ -674,7 +674,7 @@ def PointCloudPoints(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select point cloud", rs.filter.pointcloud)
       points = rs.PointCloudPoints(id)
-      if points: for point in points: print point
+      if points: for point in points: print(point)
     See Also:
       AddPointCloud
       IsPointCloud
@@ -776,7 +776,7 @@ def PointCoordinates(object_id, point=None):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select point", rs.filter.point)
       point = rs.PointCoordinates(id)
-      if point: print point
+      if point: print(point)
     See Also:
       AddPoint
       IsPoint

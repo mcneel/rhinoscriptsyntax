@@ -28,7 +28,7 @@ def BrowseForFolder(folder=None, message=None, title=None):
     Example:
       import rhinoscriptsyntax as rs
       folder = rs.BrowseForFolder("C:\\Program Files\\" )
-      if folder: print folder
+      if folder: print(folder)
     See Also:
       OpenFileName
       SaveFileName
@@ -120,7 +120,7 @@ def EditBox(default_string=None, message=None, title=None):
     Example:
       import rhinoscriptsyntax as rs
       text = rs.EditBox(message="Enter some text")
-      print text
+      print(text)
     See Also:
       GetString
       StringBox
@@ -146,7 +146,7 @@ def GetAngle(point=None, reference_point=None, default_angle_degrees=0, message=
           reference = rs.GetPoint("Reference point", point)
           if reference:
               angle = rs.GetAngle(point, reference)
-              if angle!=None: print "Angle:", angle
+              if angle!=None: print("Angle:{}".format(angle))
     See Also:
       GetDistance
     """
@@ -178,7 +178,7 @@ def GetBoolean(message, items, defaults):
       items = ("Lights", "Off", "On"), ("Cameras", "Disabled", "Enabled"), ("Action", "False", "True")
       results = rs.GetBoolean("Boolean options", items, (True, True, True) )
       if results:
-          for val in results: print val
+          for val in results: print(val)
     See Also:
       GetString
     """
@@ -306,7 +306,7 @@ def GetDistance(first_pt=None, distance=None, first_pt_msg='First distance point
       import rhinoscriptsyntax as  rs
       dist = rs.GetDistance()
       if dist:
-          print  dist
+          print( dist)
     See Also:
       GetAngle
     """
@@ -361,9 +361,9 @@ def GetEdgeCurves(message=None, min_count=1, max_count=0, select=False):
       edges = rs.GetEdgeCurves()
       if edges:
           for edgeinfo in edges:
-              print "Curve Id =", edgeinfo[0]
-              print "Parent Id =", edgeinfo[1]
-              print "Pick point =", edgeinfo[2]
+              print("Curve Id ={}".format(edgeinfo[0]))
+              print("Parent Id ={}".format(edgeinfo[1]))
+              print("Pick point ={}".format(edgeinfo[2]))
     See Also:
       DuplicateEdgeCurves
     """
@@ -470,7 +470,7 @@ def GetLayers(title="Select Layers", show_new_button=False):
       import rhinoscriptsyntax as rs
       layers = rs.GetLayers("Select Layers")
       if layers:
-          for layer in layers: print layer
+          for layer in layers: print(layer)
     See Also:
       GetLayer
     """
@@ -562,7 +562,7 @@ def GetMeshFaces(object_id, message="", min_count=1, max_count=0):
       if mesh:
           indices = rs.GetMeshFaces(mesh)
           if indices:
-              for index in indices: print index
+              for index in indices: print(index)
     See Also:
       GetMeshVertices
       MeshFaces
@@ -604,7 +604,7 @@ def GetMeshVertices(object_id, message="", min_count=1, max_count=0):
       if mesh:
           indices = rs.GetMeshVertices(mesh)
           if indices:
-              for index in indices: print index
+              for index in indices: print(index)
     See Also:
       GetMeshFaces
       MeshFaces
@@ -1177,7 +1177,7 @@ def OpenFileNames(title=None, filter=None, folder=None, filename=None, extension
     Example:
       import rhinoscriptsyntax as rs
       filenames = rs.OpenFileNames("Open", "Text Files (*.txt)|*.txt|All Files (*.*)|*.*||")
-      for filename in filenames: print filename
+      for filename in filenames: print(filename)
     See Also:
       BrowseForFolder
       OpenFileName

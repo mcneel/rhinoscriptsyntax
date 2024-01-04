@@ -19,7 +19,7 @@ def ContextIsRhino():
       bool: True if the script is being executed in the context of Rhino
     Example:
       import rhinoscriptsyntax as  rs
-      print rs.ContextIsRhino()
+      print(rs.ContextIsRhino())
     See Also:
       ContextIsGrasshopper
     """
@@ -32,7 +32,7 @@ def ContextIsGrasshopper():
       bool: True if the script is being executed in a grasshopper component
     Example:
       import rhinoscriptsyntax as  rs
-      print rs.ContextIsGrasshopper()
+      print(rs.ContextIsGrasshopper())
     See Also:
       ContextIsRhino
     """
@@ -62,7 +62,7 @@ def Angle(point1, point2, plane=True):
           point2  = rs.GetPoint("Second point")
           if point2:
               angle  = rs.Angle(point1, point2)
-              if  angle: print "Angle: ", angle[0]
+              if  angle: print("Angle: {}".format(angle[0]))
     See Also:
       Angle2
       Distance
@@ -116,7 +116,7 @@ def Angle2(line1, line2):
       point3 = rs.GetPoint("Start of second line")
       point4 = rs.GetPoint("End of second line", point3)
       angle = rs.Angle2( (point1, point2), (point3, point4))
-      if angle: print "Angle: ", angle
+      if angle: print("Angle: {}".format(angle))
     See Also:
       Angle
       Distance
@@ -173,9 +173,9 @@ def ColorAdjustLuma(rgb, luma, scale=False):
     Example:
       import rhinoscriptsyntax as rs
       rgb = rs.ColorAdjustLuma((128, 128, 128), 50)
-      print "Red = ", rs.ColorRedValue(rgb)
-      print "Green = ", rs.ColorGreenValue(rgb)
-      print "Blue = ", rs.ColorBlueValue(rgb)
+      print("Red = {}".format(rs.ColorRedValue(rgb)))
+      print("Green = {}".format(rs.ColorGreenValue(rgb)))
+      print("Blue = {}".format(rs.ColorBlueValue(rgb)))
     See Also:
       ColorHLSToRGB
       ColorRGBToHLS
@@ -197,9 +197,9 @@ def ColorBlueValue(rgb):
     Example:
       import rhinoscriptsyntax as rs
       rgb = rs.LayerColor("Default")
-      print "Red = ", rs.ColorRedValue(rgb)
-      print "Green = ", rs.ColorGreenValue(rgb)
-      print "Blue = ", rs.ColorBlueValue(rgb)
+      print("Red = {}".format(rs.ColorRedValue(rgb)))
+      print("Green = {}".format(rs.ColorGreenValue(rgb)))
+      print("Blue = {}".format(rs.ColorBlueValue(rgb)))
     See Also:
       ColorGreenValue
       ColorRedValue
@@ -216,9 +216,9 @@ def ColorGreenValue(rgb):
     Example:
       import rhinoscriptsyntax as rs
       rgb = rs.LayerColor("Default")
-      print "Red = ", rs.ColorRedValue(rgb)
-      print "Green = ", rs.ColorGreenValue(rgb)
-      print "Blue = ", rs.ColorBlueValue(rgb)
+      print("Red = {}".format(rs.ColorRedValue(rgb)))
+      print("Green = {}".format(rs.ColorGreenValue(rgb)))
+      print("Blue = {}".format(rs.ColorBlueValue(rgb)))
     See Also:
       ColorBlueValue
       ColorRedValue
@@ -235,9 +235,9 @@ def ColorHLSToRGB(hls):
     Example:
       import rhinoscriptsyntax as rs
       rgb = rs.ColorHLSToRGB( (160, 120, 0) )
-      print "Red = ", rs.ColorRedValue(rgb)
-      print "Green = ", rs.ColorGreenValue(rgb)
-      print "Blue = ", rs.ColorBlueValue(rgb)
+      print("Red = {}".format(rs.ColorRedValue(rgb)))
+      print("Green = {}".format(rs.ColorGreenValue(rgb)))
+      print("Blue = {}".format(rs.ColorBlueValue(rgb)))
     See Also:
       ColorAdjustLuma
       ColorRGBToHLS
@@ -258,9 +258,9 @@ def ColorRedValue(rgb):
     Example:
       import rhinoscriptsyntax as rs
       rgb = rs.LayerColor("Default")
-      print "Red = ", rs.ColorRedValue(rgb)
-      print "Green = ", rs.ColorGreenValue(rgb)
-      print "Blue = ", rs.ColorBlueValue(rgb)
+      print("Red = {}".format(rs.ColorRedValue(rgb)))
+      print("Green = {}".format(rs.ColorGreenValue(rgb)))
+      print("Blue = {}".format(rs.ColorBlueValue(rgb)))
     See Also:
       ColorBlueValue
       ColorGreenValue
@@ -277,9 +277,9 @@ def ColorRGBToHLS(rgb):
     Example:
       import rhinoscriptsyntax as rs
       hls = rs.ColorRGBToHLS((128, 128, 128))
-      print "Hue = ", hls[0]
-      print "Luminance = ", hls[1]
-      print "Saturation = ", hls[2]
+      print("Hue = {}".format(hls[0]))
+      print("Luminance = {}".format(hls[1]))
+      print("Saturation = {}".format(hls[2]))
     See Also:
       ColorAdjustLuma
       ColorHLSToRGB
@@ -300,7 +300,7 @@ def CullDuplicateNumbers(numbers, tolerance=None):
       import rhinoscriptsyntax as rs
       arr = [1,1,2,2,3,3,4,4,5,5]
       arr = rs.CullDuplicateNumbers(arr)
-      for n in arr: print n
+      for n in arr: print(n)
     See Also:
       CullDuplicatePoints
     """
@@ -335,7 +335,7 @@ def CullDuplicatePoints(points, tolerance=-1):
       points = rs.GetPoints(,,"First point", "Next point")
       if points:
           points= rs.CullDuplicatePoints(points)
-          for p in points: print p
+          for p in points: print(p)
     See Also:
       CullDuplicateNumbers
     """
@@ -361,7 +361,7 @@ def Distance(point1, point2):
       if point1:
           point2 = rs.GetPoint("Second point")
           if point2:
-              print "Distance: ", rs.Distance(point1, point2)
+              print("Distance: {}".format(rs.Distance(point1, point2)))
     See Also:
       Angle
       Angle2
@@ -430,7 +430,7 @@ def Polar(point, angle_degrees, distance, plane=None):
       import rhinoscriptsyntax as rs
       point = (1.0, 1.0, 0.0)
       result = rs.Polar(point, 45.0, 1.414214)
-      print result
+      print(result)
     See Also:
       PointAdd
       PointCompare
@@ -462,7 +462,7 @@ def SimplifyArray(points):
       points = rs.GetPoints()
       if points:
           numbers = rs.SimplifyArray(points)
-          for n in numbers: print n
+          for n in numbers: print(n)
     See Also:
       
     """
@@ -483,15 +483,15 @@ def Sleep(milliseconds):
       None
     Example:
       import rhinoscriptsyntax as rs
-      print "This"
+      print("This")
       rs.Sleep(2000)
-      print "is"
+      print("is")
       rs.Sleep(2000)
-      print "a"
+      print("a")
       rs.Sleep(2000)
-      print "slow"
+      print("slow")
       rs.Sleep(2000)
-      print "message!"
+      print("message!")
     See Also:
       
     """
@@ -542,7 +542,7 @@ def SortPoints(points, ascending=True, order=0):
       points = rs.GetPoints()
       if points:
           points = rs.SortPoints(points)
-          for p in points: print p
+          for p in points: print(p)
     See Also:
       
     """

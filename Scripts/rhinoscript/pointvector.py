@@ -20,7 +20,7 @@ def IsVectorParallelTo(vector1, vector2):
       import rhinoscriptsyntax as rs
       vector1 = (1,0,0)
       vector2 = (0,1,0)
-      print rs.IsVectorParallelTo( vector1, vector2 )
+      print(rs.IsVectorParallelTo( vector1, vector2 ))
     See Also:
       IsVectorPerpendicularTo
       IsVectorTiny
@@ -41,7 +41,7 @@ def IsVectorPerpendicularTo(vector1, vector2):
       import rhinoscriptsyntax as rs
       vector1 = (1,0,0)
       vector2 = (0,1,0)
-      print rs.IsVectorPerpendicularTo( vector1, vector2 )
+      print(rs.IsVectorPerpendicularTo( vector1, vector2 ))
     See Also:
       IsVectorParallelTo
       IsVectorTiny
@@ -64,9 +64,9 @@ def IsVectorTiny(vector):
       pt2 = rs.GetPoint("Next point")
       vector = pt2 - pt1
       if rs.IsVectorTiny(vector):
-          print "The vector is tiny."
+          print("The vector is tiny.")
       else:
-          print "The vector is not tiny."
+          print("The vector is not tiny.")
     See Also:
       IsVectorZero
       VectorCreate
@@ -87,9 +87,9 @@ def IsVectorZero(vector):
       pt2 = rs.GetPoint("Next point")
       vector = pt2 - pt1
       if rs.IsVectorZero(vector):
-          print "The vector is zero."
+          print("The vector is zero.")
       else:
-          print "The vector is not zero."
+          print("The vector is not zero.")
     See Also:
       IsVectorTiny
       VectorCreate
@@ -109,7 +109,7 @@ def PointAdd(point1, point2):
       point1 = (1,1,1)
       point2 = (2,2,2)
       point = rs.PointAdd(point1, point2)
-      print point
+      print(point)
     See Also:
       PointCompare
       PointDivide
@@ -188,7 +188,7 @@ def PointClosestObject(point, object_ids):
           if point:
               results = rs.PointClosestObject(point, objs)
               if results:
-                  print "Object id:", results[0]
+                  print("Object id:{}".format(results[0]))
                   rs.AddPoint( results[1] )
     See Also:
       CurveClosestObject
@@ -249,7 +249,7 @@ def PointCompare(point1, point2, tolerance=None):
       import rhinoscriptsyntax as rs
       point1 = (1,1,1)
       point2 = (2,2,2)
-      print rs.PointCompare(point1, point2)
+      print(rs.PointCompare(point1, point2))
     See Also:
       PointAdd
       PointDivide
@@ -274,7 +274,7 @@ def PointDivide(point, divide):
     Example:
       import rhinoscriptsyntax as rs
       point = rs.PointDivide([5,5,0], 5)
-      print point
+      print(point)
     See Also:
       PointAdd
       PointCompare
@@ -306,7 +306,7 @@ def PointsAreCoplanar(points, tolerance=1.0e-12):
        
       x = rs.GetObject( "First surface to test", rs.filter.surface)
       y = rs.GetObject( "Second surface to test", rs.filter.surface)
-      print SurfacesAreCoplanar(x, y)
+      print(SurfacesAreCoplanar(x, y))
     See Also:
       IsPoint
       IsPointCloud
@@ -326,7 +326,7 @@ def PointScale(point, scale):
     Example:
       import rhinoscriptsyntax as rs
       point = rs.PointScale([1,0,0], 5)
-      print point
+      print(point)
     See Also:
       PointAdd
       PointCompare
@@ -349,7 +349,7 @@ def PointSubtract(point1, point2):
       point1 = (1,1,1)
       point2 = (2,2,2)
       point = rs.PointSubtract(point1, point2)
-      print point
+      print(point)
     See Also:
       PointAdd
       PointCompare
@@ -376,7 +376,7 @@ def PointTransform(point, xform):
       point = 5,5,0
       matrix = rs.XformTranslation((10,10,0))
       result = rs.PointTransform(point, matrix)
-      print result
+      print(result)
     See Also:
       PointAdd
       PointCompare
@@ -497,7 +497,7 @@ def VectorAdd(vector1, vector2):
       vector1 = (1,0,0)
       vector2 = (0,1,0)
       vector = rs.VectorAdd(vector1, vector2)
-      print vector
+      print(vector)
     See Also:
       VectorCreate
       VectorScale
@@ -526,8 +526,8 @@ def VectorAngle(vector1, vector2):
       dv1 = rs.SurfaceDomain(s1, 1)
       n0 = rs.SurfaceNormal(s0, (du0[0], dv0[0]))
       n1 = rs.SurfaceNormal(s1, (du1[0], dv1[0]))
-      print rs.VectorAngle(n0, n1)
-      print rs.VectorAngle(n0, rs.VectorReverse(n1))
+      print(rs.VectorAngle(n0, n1))
+      print(rs.VectorAngle(n0, rs.VectorReverse(n1)))
     See Also:
       Angle
       Angle2
@@ -558,7 +558,7 @@ def VectorCompare(vector1, vector2):
       vector1 = (1,0,0)
       vector2 = (0,1,0)
       rc = rs.VectorCompare(vector1 , vector2)
-      print rc
+      print(rc)
     See Also:
       IsVectorTiny
       IsVectorZero
@@ -580,7 +580,7 @@ def VectorCreate(to_point, from_point):
       point1 = rs.GetPoint("First point")
       point2 = rs.GetPoint("Next point")
       vector = rs.VectorCreate(point2, point1)
-      print vector
+      print(vector)
     See Also:
       IsVectorTiny
       IsVectorZero
@@ -603,7 +603,7 @@ def VectorCrossProduct(vector1, vector2):
       vector1 = (1,0,0)
       vector2 = (0,1,0)
       vector = rs.VectorCrossProduct(vector1, vector2)
-      print vector
+      print(vector)
     See Also:
       VectorDotProduct
       VectorUnitize
@@ -623,7 +623,7 @@ def VectorDivide(vector, divide):
     Example:
       import rhinoscriptsyntax as rs
       vector = rs.VectorDivide((5,5,0), 5)
-      print vector
+      print(vector)
     See Also:
       VectorAdd
       VectorCreate
@@ -644,7 +644,7 @@ def VectorDotProduct(vector1, vector2):
       vector1 = [1,0,0]
       vector2 = [0,1,0]
       dblDotProduct = rs.VectorDotProduct(vector1, vector2)
-      print dblDotProduct
+      print(dblDotProduct)
     See Also:
       VectorCrossProduct
       VectorUnitize
@@ -665,7 +665,7 @@ def VectorLength(vector):
       point1 = rs.GetPoint("First point")
       point2 = rs.GetPoint("Next point")
       vector = rs.VectorCreate(point1, point2)
-      print rs.VectorLength(vector)
+      print(rs.VectorLength(vector))
     See Also:
       VectorAdd
       VectorCreate
@@ -685,7 +685,7 @@ def VectorMultiply(vector1, vector2):
     Example:
       import rhinoscriptsyntax as rs
       product = rs.VectorMultiply( [2,2,2], [3,3,3] )
-      print product
+      print(product)
     See Also:
       VectorAdd
       VectorCreate
@@ -703,7 +703,7 @@ def VectorReverse(vector):
     Example:
       import rhinoscriptsyntax as rs
       vector = rs.VectorReverse([1,0,0])
-      print vector
+      print(vector)
     See Also:
       VectorCreate
       VectorUnitize
@@ -725,7 +725,7 @@ def VectorRotate(vector, angle_degrees, axis):
     Example:
       import rhinoscriptsyntax as rs
       vector = rs.VectorRotate([1,0,0], 90.0, [0,0,1])
-      print vector
+      print(vector)
     See Also:
       VectorCreate
       VectorScale
@@ -747,7 +747,7 @@ def VectorScale(vector, scale):
     Example:
       import rhinoscriptsyntax as rs
       vector = rs.VectorScale([1,0,0], 5)
-      print vector
+      print(vector)
     See Also:
       VectorAdd
       VectorCreate
@@ -769,7 +769,7 @@ def VectorSubtract(vector1, vector2):
       vector1 = [1,0,0]
       vector2 = [0,1,0]
       vector = rs.VectorSubtract(vector1, vector2)
-      print vector
+      print(vector)
     See Also:
       VectorAdd
       VectorCreate
@@ -792,7 +792,7 @@ def VectorTransform(vector, xform):
       vector = (1,0,0) #world x-axis
       xform = rs.XformRotation2(90.0, (0,0,1), (0,0,0))
       vector = rs.VectorTransform(vector, xform)
-      print vector
+      print(vector)
     See Also:
       IsVectorZero
       VectorCreate
@@ -813,7 +813,7 @@ def VectorUnitize(vector):
     Example:
       import rhinoscriptsyntax as rs
       vector = rs.VectorUnitize( [1.5,-4.1,3.6] )
-      print vector
+      print(vector)
     See Also:
       IsVectorZero
       VectorCreate

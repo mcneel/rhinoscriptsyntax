@@ -21,8 +21,8 @@ def IsLinetype(name_or_id):
     Example:
       import rhinoscriptsyntax as rs
       name = rs.GetString("Linetype name")
-      if rs.IsLinetype(name): print "The linetype exists."
-      else: print "The linetype does not exist"
+      if rs.IsLinetype(name): print("The linetype exists.")
+      else: print("The linetype does not exist")
     See Also:
       IsLinetypeReference
     """
@@ -41,11 +41,11 @@ def IsLinetypeReference(name_or_id):
       name = rs.GetString("Linetype name")
       if rs.IsLinetype(name):
           if rs.IsLinetypeReference(name):
-              print "The linetype is a reference linetype."
+              print("The linetype is a reference linetype.")
           else:
-              print "The linetype is not a reference linetype."
+              print("The linetype is not a reference linetype.")
       else:
-          print "The linetype does not exist."
+          print("The linetype does not exist.")
     See Also:
       IsLinetype
     """
@@ -61,7 +61,7 @@ def LinetypeCount():
     Example:
       import rhinoscriptsyntax as rs
       count = rs.LinetypeCount()
-      print "There are", count, "linetypes."
+      print("There are {} linetypes".format(count))
     See Also:
       LinetypeNames
     """
@@ -78,7 +78,7 @@ def LinetypeNames(sort=False):
       import rhinoscriptsyntax as rs
       names = rs.LinetypeNames()
       if names:
-          for name in names: print name
+          for name in names: print(name)
     See Also:
       LinetypeCount
     """

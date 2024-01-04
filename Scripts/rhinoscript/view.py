@@ -194,9 +194,9 @@ def CurrentView(view=None, return_name=True):
     Example:
       import rhinoscriptsyntax as rs
       previous = rs.CurrentView("Perspective")
-      print "The previous current view was ", previous
+      print("The previous current view was {}".format(previous))
       viewId = rs.CurrentView( return_name=False )
-      print "The identifier of the current view is ", viewId
+      print("The identifier of the current view is {}".format(viewId))
     See Also:
       IsViewCurrent
       ViewNames
@@ -328,9 +328,9 @@ def IsDetail(layout, detail):
       if rs.IsLayout(view):
           isdetail = rs.IsDetail(view, "Top")
           if isdetail:
-              print "Top is a detail view."
+              print("Top is a detail view.")
           else:
-              print "Top is not a detail view."
+              print("Top is not a detail view.")
     See Also:
       IsLayout
       CurrentDetail
@@ -371,9 +371,9 @@ def IsLayout(layout):
       import rhinoscriptsyntax as rs
       view = rs.CurrentView()
       if rs.IsLayout(view):
-          print "The current view is a page layout view."
+          print("The current view is a page layout view.")
       else:
-          print "The current view is standard, model view."
+          print("The current view is standard, model view.")
     See Also:
       IsLayout
       CurrentDetail
@@ -403,9 +403,9 @@ def IsView(view):
       title = "Perspective"
       result = rs.IsView(title)
       if result:
-          print "The " + title + " view exists."
+          print("The {} view exists.".format(title))
       else:
-          print "The " + title + " view does not exist."
+          print("The {} view does not exist.".format(title))
     See Also:
       ViewNames
     """
@@ -430,9 +430,9 @@ def IsViewCurrent(view):
       title = "Perspective"
       result = rs.IsViewCurrent(title)
       if result:
-          print "The " + title + " view is current."
+          print("The {} view is current".format(title))
       else:
-          print "The " + title + " view is not current."
+          print("The {} view is not current".format(title))
     See Also:
       CurrentView
     """
@@ -455,9 +455,9 @@ def IsViewMaximized(view=None):
       title = rs.CurrentView()
       result = rs.IsViewMaximized(title)
       if result:
-          print "The " + title + " view is maximized."
+          print("The {} view is maximized".format(title))
       else:
-          print "The " + title + " view is not maximized."
+          print("The {} view is not maximized".format(title))
     See Also:
       MaximizeRestoreView
     """
@@ -476,9 +476,9 @@ def IsViewPerspective(view):
       title = rs.CurrentView()
       result = rs.IsViewPerspective(title)
       if result:
-          print "The " + title + " view is set to perspective projection."
+          print("The {} view is set to perspective projection".format(title))
       else:
-          print "The " + title + " view is set to parallel projection."
+          print("The {} view is set to parallel projection".format(title))
     See Also:
       ViewProjection
     """
@@ -498,9 +498,9 @@ def IsViewTitleVisible(view=None):
       title = rs.CurrentView()
       vis = rs.IsViewTitleVisible(title)
       if vis:
-          print "The ", title, " view's title is visible."
+          print("The {} view's title is visible".format(title))
       else:
-          print "The ", title, " view's title is not visible."
+          print("The {} view's title is not visible".format(title))
     See Also:
       ShowViewTitle
     """
@@ -559,11 +559,11 @@ def NamedCPlane(name):
       if names:
           for name in names:
               plane = rs.NamedCPlane(name)
-              print "CPlane name:" + name
-              print "CPlane origin:" + plane.Origin
-              print "CPlane x-axis:" + plane.Xaxis
-              print "CPlane y-axis:" + plane.Yaxis
-              print "CPlane z-axis:" + plane.Zaxis
+              print("CPlane name:" + name)
+              print("CPlane origin:" + plane.Origin)
+              print("CPlane x-axis:" + plane.Xaxis)
+              print("CPlane y-axis:" + plane.Yaxis)
+              print("CPlane z-axis:" + plane.Zaxis)
     See Also:
       AddNamedCPlane
       DeleteNamedCPlane
@@ -583,7 +583,7 @@ def NamedCPlanes():
       import rhinoscriptsyntax as rs
       cplanes = rs.NamedCPlanes()
       if cplanes:
-          for cplane in cplanes: print cplane
+          for cplane in cplanes: print(cplane)
     See Also:
       AddNamedCPlane
       DeleteNamedCPlane
@@ -603,7 +603,7 @@ def NamedViews():
       import rhinoscriptsyntax as rs
       views = rs.NamedViews()
       if views:
-          for view in views: print view
+          for view in views: print(view)
     See Also:
       AddNamedView
       DeleteNamedView
@@ -1055,7 +1055,7 @@ def ViewCameraUp(view=None, up_vector=None):
       import rhinoscriptsyntax as rs
       view = rs.CurrentView()
       upVector = rs.ViewCameraUp(view)
-      print up_vector
+      print(up_vector)
     See Also:
       ViewCamera
       ViewTarget
@@ -1141,7 +1141,7 @@ def ViewDisplayModeId(name):
     Example:
       import rhinoscriptsyntax as rs
       modes = rs.ViewDisplayModes(True)
-      for mode in modes: print mode,"=",rs.ViewDisplayModeId(mode)
+      for mode in modes: print("{} = {}".format(mode, rs.ViewDisplayModeId(mode)))
     See Also:
       ViewDisplayMode
       ViewDisplayModes
@@ -1159,7 +1159,7 @@ def ViewDisplayModeName(mode_id):
     Example:
       import rhinoscriptsyntax as rs
       modes = rs.ViewDisplayModes(False)
-      for mode in modes: print mode, "=", rs.ViewDisplayModeName(mode)
+      for mode in modes: print("{} = {}".format(mode, rs.ViewDisplayModeName(mode)))
     See Also:
       ViewDisplayMode
       ViewDisplayModes
@@ -1178,7 +1178,7 @@ def ViewDisplayModes(return_names=True):
     Example:
       import rhinoscriptsyntax as rs
       modes = rs.ViewDisplayModes(False)
-      for mode in modes: print mode, "=", rs.ViewDisplayModeName(mode)
+      for mode in modes: print("{} = {}".format(mode, rs.ViewDisplayModeName(mode)))
     See Also:
       ViewDisplayMode
       ViewDisplayModeName
@@ -1206,12 +1206,12 @@ def ViewNames(return_names=True, view_type=0):
       # Print view names
       views = rs.ViewNames()
       if views:
-          for view in views: print view
+          for view in views: print(view)
       # Print view identifiers
       view_ids = rs.ViewNames(False)
       if view_ids:
           for id in view_ids:
-              print id, " = ", rs.ViewTitle(id)
+              print("{} = {}".format(id, rs.ViewTitle(id)))
     See Also:
       IsView
       ViewTitle
@@ -1325,8 +1325,8 @@ def ViewSize(view=None):
       import rhinoscriptsyntax as rs
       size = rs.ViewSize()
       if size:
-          print "Width: ", size[0], " pixels."
-          print "Height: ", size[1], " pixels."
+          print("Width: {} pixels".format(size[0]))
+          print("Height: {} pixels".format(size[1]))
     See Also:
       ViewCameraLens
       ViewCameraTarget
@@ -1359,7 +1359,7 @@ def ViewSpeedTest(view=None, frames=100, freeze=True, direction=0, angle_degrees
       view = "Perspective"
       seconds = rs.ViewSpeedTest(view, 100)
       if seconds:
-          print "Time to regen viewport 100 times =", seconds, "seconds."
+          print("Time to regen viewport 100 times = {} secords".format(seconds))
     See Also:
       
     """
@@ -1409,7 +1409,7 @@ def ViewTitle(view_id):
       import rhinoscriptsyntax as rs
       view_ids = rs.ViewNames(False)
       for id in view_ids:
-          print id + " = " + rs.ViewTitle(id)
+          print(id + " = " + rs.ViewTitle(id))
     See Also:
       CurrentView
       ViewNames

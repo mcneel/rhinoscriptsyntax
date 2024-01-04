@@ -114,7 +114,7 @@ def GroupCount():
     Example:
       import rhinoscriptsyntax as rs
       numgroups = rs.GroupCount()
-      print "Group count:", numgroups
+      print("Group count:{}".format(numgroups))
     See Also:
       AddGroup
       DeleteGroup
@@ -134,7 +134,7 @@ def GroupNames():
       import rhinoscriptsyntax as rs
       groups = rs.GroupNames()
       if groups:
-          for group in groups: print group
+          for group in groups: print(group)
     See Also:
       AddGroup
       DeleteGroup
@@ -179,9 +179,9 @@ def IsGroup(group_name):
       import rhinoscriptsyntax as rs
       group = rs.GetString("Group name to verify")
       if rs.IsGroup(group):
-          print "The group exists."
+          print("The group exists.")
       else:
-          print "The group does not exist."
+          print("The group does not exist.")
     See Also:
       AddGroup
       DeleteGroup
