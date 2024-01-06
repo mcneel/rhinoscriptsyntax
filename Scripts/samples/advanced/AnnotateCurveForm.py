@@ -48,7 +48,7 @@ class AnnotateForm(Form):
 # prompt the user to select a curve
 curveId = rhinoscript.selection.GetObject("Select a curve",rhinoscript.selection.filter.curve)
 if( curveId==None ):
-  print "no curve selected"
+  print("no curve selected")
 else:
   location = rhinoscript.curve.CurveStartPoint(curveId)
   if( location!=None ):

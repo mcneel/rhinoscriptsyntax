@@ -21,10 +21,10 @@ import scriptcontext
 def GetCircleFromUser():
   get_result = Rhino.Input.RhinoGet.GetPoint("Circle center", False)
   if( get_result[0] != Rhino.Commands.Result.Success ):
-    print "error getting point"
+    print("error getting point")
     return None
   pt = get_result[1]
-  print "Got a point at ", pt
+  print("Got a point at {}".format(pt))
   # return a new Circle
   return Rhino.Geometry.Circle( pt, 1 )
 
@@ -33,7 +33,7 @@ def MakeCirclePoints( circle, count ):
   for i in xrange(count):
     #circles parameterized between 0 and 2Pi
     t = float(i) * 2 * math.pi / float(count)
-    print t
+    print(t)
     pt = circle.PointAt(t)
     scriptcontext.doc.Objects.AddPoint(pt)
 
@@ -45,16 +45,16 @@ def MakeCirclePoints( circle, count ):
 # script instead of being used as a module by some other python script
 # This allows us to use the module which ever way we want.
 if( __name__ == '__main__' ):
-  print "Python sample script to make a circle curve and plop some points on it"
+  print("Python sample script to make a circle curve and plop some points on it")
   circle = GetCircleFromUser()
 
   if circle == None:
-    print "circle is none"
+    print("circle is none")
   else:
-    print "got a circle"
+    print("got a circle")
     scriptcontext.doc.Objects.AddCircle(circle)
     MakeCirclePoints( circle, 10 )
     # redraw everything so we can see what we got
     scriptcontext.doc.Views.Redraw()
 
-  print "Script Complete"
+  print("Script Complete")
