@@ -30,7 +30,7 @@ def GetCircleFromUser():
 
 # Add some points to the document that are on a circle
 def MakeCirclePoints( circle, count ):
-  for i in xrange(count):
+  for i in range(count):
     #circles parameterized between 0 and 2Pi
     t = float(i) * 2 * math.pi / float(count)
     print(t)
