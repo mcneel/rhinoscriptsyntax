@@ -202,9 +202,9 @@ def IsLayoutObject(object_id):
       id = rs.GetObject("Select object")
       if id:
           if rs.IsLayoutObject(id):
-              print "The object is in page layout space."
+              print("The object is in page layout space.")
           else:
-              print "The object is in model space."
+              print("The object is in model space.")
     See Also:
       IsObject
       IsObjectReference
@@ -224,9 +224,9 @@ def IsObject(object_id):
       import rhinoscriptsyntax as rs
       #Do something here...
       if rs.IsObject(id):
-          print "The object exists."
+          print("The object exists.")
       else:
-          print "The object does not exist."
+          print("The object does not exist.")
     See Also:
       IsObjectHidden
       IsObjectInGroup
@@ -252,9 +252,9 @@ def IsObjectHidden(object_id):
       import rhinoscriptsyntax as rs
       # Do something here...
       if rs.IsObjectHidden(id):
-          print "The object is hidden."
+          print("The object is hidden.")
       else:
-          print "The object is not hidden."
+          print("The object is not hidden.")
     See Also:
       IsObject
       IsObjectInGroup
@@ -320,9 +320,9 @@ def IsObjectInGroup(object_id, group_name=None):
           if name:
               result = rs.IsObjectInGroup(id, name)
               if result:
-                  print "The object belongs to the group."
+                  print("The object belongs to the group.")
               else:
-                  print "The object does not belong to the group."
+                  print("The object does not belong to the group.")
     See Also:
       IsObject
       IsObjectHidden
@@ -357,9 +357,9 @@ def IsObjectLocked(object_id):
       import rhinoscriptsyntax as rs
       # Do something here...
       if rs.IsObjectLocked(object):
-          print "The object is locked."
+          print("The object is locked.")
       else:
-          print "The object is not locked."
+          print("The object is not locked.")
     See Also:
       IsObject
       IsObjectHidden
@@ -386,9 +386,9 @@ def IsObjectNormal(object_id):
       import rhinoscriptsyntax as rs
       #Do something here...
       if rs.IsObjectNormal(object):
-          print "The object is normal."
+          print("The object is normal.")
       else:
-          print "The object is not normal."
+          print("The object is not normal.")
     See Also:
       IsObject
       IsObjectHidden
@@ -415,9 +415,9 @@ def IsObjectReference(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select object")
       if rs.IsObjectReference(id):
-          print "The object is a reference object."
+          print("The object is a reference object.")
       else:
-          print "The object is not a reference object."
+          print("The object is not a reference object.")
     See Also:
       IsObject
       IsObjectHidden
@@ -470,9 +470,9 @@ def IsObjectSelected(object_id):
       import rhinoscriptsyntax as rs
       object = rs.GetObject()
       if rs.IsObjectSelected(object):
-          print "The object is selected."
+          print("The object is selected.")
       else:
-          print "The object is not selected."
+          print("The object is not selected.")
     See Also:
       IsObject
       IsObjectHidden
@@ -498,9 +498,9 @@ def IsObjectSolid(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select object")
       if rs.IsObjectSolid(id):
-          print "The object is solid."
+          print("The object is solid.")
       else:
-          print "The object is not solid."
+          print("The object is not solid.")
     See Also:
       IsObject
       IsObjectHidden
@@ -525,9 +525,9 @@ def IsObjectValid(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select object")
       if rs.IsObjectValid(id):
-          print "The object is valid."
+          print("The object is valid.")
       else:
-          print "The object is not valid."
+          print("The object is not valid.")
     See Also:
       IsObject
     """
@@ -548,9 +548,9 @@ def IsVisibleInView(object_id, view=None):
       if rs.IsObject(obj):
           view = rs.CurrentView()
           if rs.IsVisibleInView(obj, view):
-              print "The object is visible in", view, "."
+              print("The object is visible in {}.".format(view))
           else:
-              print "The object is not visible in", view, "."
+              print("The object is not visible in {}.".format(view))
     See Also:
       IsObject
       IsView
@@ -857,7 +857,7 @@ def ObjectDescription(object_id):
       obj = rs.GetObject("Select object")
       if obj:
           description = rs.ObjectDescription(obj)
-          print "Object description:" , description
+          print("Object description:"{} .format(description))
     See Also:
       ObjectType
     """
@@ -877,9 +877,9 @@ def ObjectGroups(object_id):
       if obj:
           groups = rs.ObjectGroups(obj)
           if groups:
-              for group in groups: print "Object group: ", group
+              for group in groups: print("Object group: {}".format(group))
           else:
-              print "No groups."
+              print("No groups.")
     See Also:
       ObjectsByGroup
     """
@@ -1075,12 +1075,12 @@ def ObjectMaterialIndex(object_id, material_index=None):
       if obj:
           source = rs.ObjectMaterialSource(obj)
           if source==0:
-              print "The material source is by layer"
+              print("The material source is by layer")
           else:
-              print "The material source is by object"
+              print("The material source is by object")
               index = rs.ObjectMaterialIndex(obj)
-              if index==-1: print "The material is default."
-              else: print "The material is custom."
+              if index==-1: print("The material is default.")
+              else: print("The material is custom.")
     See Also:
       ObjectMaterialSource
     """
@@ -1365,7 +1365,7 @@ def ObjectType(object_id):
       obj = rs.GetObject("Select object")
       if obj:
           objtype = rs.ObjectType(obj)
-          print "Object type:", objtype
+          print("Object type:{}".format(objtype))
     See Also:
       ObjectsByType
     """

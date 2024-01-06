@@ -139,7 +139,7 @@ def CurveMeshIntersection(curve_id, mesh_id, return_faces=False):
               cmx = rs.CurveMeshIntersection(curve, mesh, True)
               if cmx:
                   for element in cmx:
-                      print element[0], ", Face index = ", element[1]
+                      print("{}, Face index = {}".format(element[0], element[1]))
                       rs.AddPoint(element[0])
     See Also:
       MeshClosestPoint
@@ -248,9 +248,9 @@ def IsMesh(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh")
       if rs.IsMesh(obj):
-          print "The object is a mesh."
+          print("The object is a mesh.")
       else:
-          print "The object is not a mesh."
+          print("The object is not a mesh.")
     See Also:
       IsMeshClosed
       MeshFaceCount
@@ -272,9 +272,9 @@ def IsMeshClosed(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh", rs.filter.mesh)
       if rs.IsMeshClosed(obj):
-          print "The mesh is closed."
+          print("The mesh is closed.")
       else:
-          print "The mesh is not closed."
+          print("The mesh is not closed.")
     See Also:
       IsMesh
     """
@@ -294,9 +294,9 @@ def IsMeshManifold(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh", rs.filter.mesh)
       if rs.IsMeshClosed(obj):
-          print "The mesh is manifold."
+          print("The mesh is manifold.")
       else:
-          print "The mesh is non-manifold."
+          print("The mesh is non-manifold.")
     See Also:
       IsMesh
       IsMeshClosed
@@ -321,9 +321,9 @@ def IsPointOnMesh(object_id, point):
           point = rs.GetPointOnMesh(strObject, "Pick a test point")
           if point:
               if rs.IsPointOnMesh(obj, point):
-                  print "The point is on the mesh"
+                  print("The point is on the mesh")
               else:
-                  print "The point is not on the mesh"
+                  print("The point is not on the mesh")
     See Also:
       IsMesh
       MeshClosestPoint
@@ -377,7 +377,7 @@ def MeshArea(object_ids):
       obj = rs.GetObject("Select mesh", rs.filter.mesh )
       if obj:
           area_rc = rs.MeshArea(obj)
-          if area_rc: print "Mesh area:", area_rc[1]
+          if area_rc: print("Mesh area:{}".format(area_rc[1]))
     See Also:
       MeshVolume
     """
@@ -635,9 +635,9 @@ def MeshFaceCount(object_id):
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh )
-      print "Quad faces:", rs.MeshQuadCount(obj)
-      print "Triangle faces:", rs.MeshTriangleCount(obj)
-      print "Total faces:", rs.MeshFaceCount(obj)
+      print("Quad faces:{}".format(rs.MeshQuadCount(obj)))
+      print("Triangle faces:{}".format(rs.MeshTriangleCount(obj)))
+      print("Total faces:{}".format(rs.MeshFaceCount(obj)))
     See Also:
       IsMesh
       MeshFaces
@@ -660,7 +660,7 @@ def MeshFaceNormals(mesh_id):
       obj = rs.GetObject("Select mesh", rs.filter.mesh)
       normals = rs.MeshFaceNormals(obj)
       if normals:
-          for vector in normals: print vector
+          for vector in normals: print(vector)
     See Also:
       MeshHasFaceNormals
       MeshFaceCount
@@ -741,7 +741,7 @@ def MeshFaceVertices(object_id):
       faceVerts = rs.MeshFaceVertices( obj )
       if faceVerts:
           for count, face in enumerate(faceVerts):
-              print "face(", count, ") = (", face[0], ",", face[1], ",", face[2], ",", face[3], ")"
+              print("face({}) = ({}, {}, {}, {})".format(count, face[0], face[1], face[2], face[3]))
     See Also:
       IsMesh
       MeshFaceCount
@@ -765,9 +765,9 @@ def MeshHasFaceNormals(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh", rs.filter.mesh)
       if rs.MeshHasFaceNormals(obj):
-          print "The mesh has face normal."
+          print("The mesh has face normal.")
       else:
-          print "The mesh does not have face normals."
+          print("The mesh does not have face normals.")
     See Also:
       MeshFaceNormals
     """
@@ -785,9 +785,9 @@ def MeshHasTextureCoordinates(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh", rs.filter.mesh)
       if rs.MeshHasTextureCoordinates(obj):
-          print "The mesh has texture coordinates."
+          print("The mesh has texture coordinates.")
       else:
-          print "The mesh does not have texture coordinates."
+          print("The mesh does not have texture coordinates.")
     See Also:
       
     """
@@ -805,9 +805,9 @@ def MeshHasVertexColors(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh", rs.filter.mesh)
       if rs.mesh.MeshHasVertexColors(obj):
-          print "The mesh has vertex colors."
+          print("The mesh has vertex colors.")
       else:
-          print "The mesh does not have vertex colors."
+          print("The mesh does not have vertex colors.")
     See Also:
       MeshVertexColors
     """
@@ -825,9 +825,9 @@ def MeshHasVertexNormals(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a mesh", rs.filter.mesh)
       if rs.MeshHasVertexNormals(obj):
-          print "The mesh has vertex normals."
+          print("The mesh has vertex normals.")
       else:
-          print "The mesh does not have vertex normals."
+          print("The mesh does not have vertex normals.")
     See Also:
       MeshVertexNormals
     """
@@ -955,9 +955,9 @@ def MeshQuadCount(object_id):
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh )
-      print "Quad faces:", rs.MeshQuadCount(obj)
-      print "Triangle faces:", rs.MeshTriangleCount(obj)
-      print "Total faces:", rs.MeshFaceCount(obj)
+      print("Quad faces:{}".format(rs.MeshQuadCount(obj)))
+      print("Triangle faces:{}".format(rs.MeshTriangleCount(obj)))
+      print("Total faces:{}".format(rs.MeshFaceCount(obj)))
     See Also:
       MeshQuadCount
     """
@@ -1029,9 +1029,9 @@ def MeshTriangleCount(object_id):
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh )
-      print "Quad faces:", rs.MeshQuadCount(obj)
-      print "Triangle faces:", rs.MeshTriangleCount(obj)
-      print "Total faces:", rs.MeshFaceCount(obj)
+      print("Quad faces:{}".format(rs.MeshQuadCount(obj)))
+      print("Triangle faces:{}".format(rs.MeshTriangleCount(obj)))
+      print("Total faces:{}".format(rs.MeshFaceCount(obj)))
     See Also:
       IsMesh
     """
@@ -1096,7 +1096,7 @@ def MeshVertexCount(object_id):
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select mesh", rs.filter.mesh )
-      print "Vertex count: ", rs.MeshVertexCount(obj)
+      print("Vertex count: {}".format(rs.MeshVertexCount(obj)))
     See Also:
       IsMesh
       MeshFaceCount
@@ -1158,7 +1158,7 @@ def MeshVertexNormals(mesh_id):
       obj = rs.GetObject("Select mesh", rs.filter.mesh)
       normals = rs.MeshVertexNormals(obj)
       if normals:
-          for normal in normals: print normal
+          for normal in normals: print(normal)
     See Also:
       MeshHasVertexNormals
       MeshVertexCount
@@ -1211,7 +1211,7 @@ def MeshVolume(object_ids):
       obj = rs.GetObject("Select mesh", rs.filter.mesh )
       if obj and rs.IsMeshClosed(obj):
           volume = rs.MeshVolume(obj)
-          if volume: print "Mesh volume:", volume[1]
+          if volume: print("Mesh volume:{}".format(volume[1]))
     See Also:
       IsMeshClosed
       MeshArea

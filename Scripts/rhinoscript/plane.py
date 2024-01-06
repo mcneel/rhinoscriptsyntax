@@ -22,7 +22,7 @@ def DistanceToPlane(plane, point):
           if plane:
               distance = rs.DistanceToPlane(plane, point)
               if distance is not None:
-                  print "Distance to plane: ", distance
+                  print("Distance to plane: {}".format(distance))
     See Also:
       Distance
       PlaneClosestPoint
@@ -126,7 +126,7 @@ def PlaneClosestPoint(plane, point, return_point=True):
       if point:
           plane = rs.ViewCPlane()
           if plane:
-              print rs.PlaneClosestPoint(plane, point)
+              print(rs.PlaneClosestPoint(plane, point))
     See Also:
       DistanceToPlane
       EvaluatePlane
@@ -234,10 +234,10 @@ def PlaneEquation(plane):
       import rhinoscriptsyntax as rs
       plane = rs.ViewCPlane()
       equation = rs.PlaneEquation(plane)
-      print "A =", equation[0]
-      print "B =", equation[1]
-      print "C =", equation[2]
-      print "D =", equation[3]
+      print("A = {}".format(equation[0]))
+      print("B = {}".format(equation[1]))
+      print("C = {}".format(equation[2]))
+      print("D = {}".format(equation[3]))
     See Also:
       PlaneFromFrame
       PlaneFromNormal

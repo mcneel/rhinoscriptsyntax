@@ -1578,9 +1578,9 @@ def IsBrep(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a Brep")
       if rs.IsBrep(obj):
-          print "The object is a Brep."
+          print("The object is a Brep.")
       else:
-          print "The object is not a Brep."
+          print("The object is not a Brep.")
     See Also:
       IsPolysurface
       IsPolysurfaceClosed
@@ -1600,9 +1600,9 @@ def IsCone(object_id):
       surface = rs.GetObject("Select a surface", rs.filter.surface)
       if surface:
           if rs.IsCone(surface):
-              print "The surface is a portion of a cone."
+              print("The surface is a portion of a cone.")
           else:
-              print "The surface is not a portion of a cone."
+              print("The surface is not a portion of a cone.")
     See Also:
       IsCylinder
       IsSphere
@@ -1624,9 +1624,9 @@ def IsCylinder(object_id):
       surface = rs.GetObject("Select a surface", rs.filter.surface)
       if surface:
           if rs.IsCylinder(surface):
-              print "The surface is a portion of a cylinder."
+              print("The surface is a portion of a cylinder.")
           else:
-              print "The surface is not a portion of a cylinder."
+              print("The surface is not a portion of a cylinder.")
     See Also:
       IsCone
       IsSphere
@@ -1648,9 +1648,9 @@ def IsPlaneSurface(object_id):
       import rhinoscriptsyntax as rs
       surface = rs.GetObject("Select surface to trim", rs.filter.surface)
       if surface and rs.IsPlaneSurface(surface):
-          print "got a plane surface"
+          print("got a plane surface")
       else:
-          print "not a plane surface"
+          print("not a plane surface")
     See Also:
       IsBrep
       IsPolysurface
@@ -1679,9 +1679,9 @@ def IsPointInSurface(object_id, point, strictly_in=False, tolerance=None):
           point = rs.GetPoint("Pick a test point")
           if point:
               if rs.IsPointInSurface(obj, point):
-                  print "The point is inside the polysurface."
+                  print("The point is inside the polysurface.")
               else:
-                  print "The point is not inside the polysurface."
+                  print("The point is not inside the polysurface.")
     See Also:
       IsPointOnSurface
     """
@@ -1714,9 +1714,9 @@ def IsPointOnSurface(object_id, point):
           point = rs.GetPoint("Pick a test point")
           if point:
               if rs.IsPointOnSurface(surf, point):
-                  print "The point is on the surface."
+                  print("The point is on the surface.")
               else:
-                  print "The point is not on the surface."
+                  print("The point is not on the surface.")
     See Also:
       IsPointInSurface
     """
@@ -1744,9 +1744,9 @@ def IsPolysurface(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a polysurface")
       if rs.IsPolysurface(obj):
-          print "The object is a polysurface."
+          print("The object is a polysurface.")
       else:
-          print "The object is not a polysurface."
+          print("The object is not a polysurface.")
     See Also:
       IsBrep
       IsPolysurfaceClosed
@@ -1767,9 +1767,9 @@ def IsPolysurfaceClosed(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a polysurface", rs.filter.polysurface)
       if rs.IsPolysurfaceClosed(obj):
-          print "The polysurface is closed."
+          print("The polysurface is closed.")
       else:
-          print "The polysurface is not closed."
+          print("The polysurface is not closed.")
     See Also:
       IsBrep
       IsPolysurface
@@ -1789,9 +1789,9 @@ def IsSphere(object_id):
       surface = rs.GetObject("Select a surface", rs.filter.surface)
       if surface:
           if rs.IsSphere(surface):
-              print "The surface is a portion of a sphere."
+              print("The surface is a portion of a sphere.")
           else:
-              print "The surface is not a portion of a sphere."
+              print("The surface is not a portion of a sphere.")
     See Also:
       IsCone
       IsCylinder
@@ -1813,9 +1813,9 @@ def IsSurface(object_id):
       import rhinoscriptsyntax as rs
       objectId = rs.GetObject("Select a surface")
       if rs.IsSurface(objectId):
-          print "The object is a surface."
+          print("The object is a surface.")
       else:
-          print "The object is not a surface."
+          print("The object is not a surface.")
     See Also:
       IsPointOnSurface
       IsSurfaceClosed
@@ -1841,9 +1841,9 @@ def IsSurfaceClosed( surface_id, direction ):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.surface)
       if rs.IsSurfaceClosed(obj, 0):
-          print "The surface is closed in the U direction."
+          print("The surface is closed in the U direction.")
       else:
-          print "The surface is not closed in the U direction."
+          print("The surface is not closed in the U direction.")
     See Also:
       IsSurface
       IsSurfacePlanar
@@ -1865,9 +1865,9 @@ def IsSurfacePeriodic(surface_id, direction):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.surface)
       if rs.IsSurfacePeriodic(obj, 0):
-          print "The surface is periodic in the U direction."
+          print("The surface is periodic in the U direction.")
       else:
-          print "The surface is not periodic in the U direction."
+          print("The surface is not periodic in the U direction.")
     See Also:
       IsSurface
       IsSurfaceClosed
@@ -1891,9 +1891,9 @@ def IsSurfacePlanar(surface_id, tolerance=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.surface)
       if rs.IsSurfacePlanar(obj):
-          print "The surface is planar."
+          print("The surface is planar.")
       else:
-          print "The surface is not planar."
+          print("The surface is not planar.")
     See Also:
       IsSurface
       IsSurfaceClosed
@@ -1916,9 +1916,9 @@ def IsSurfaceRational(surface_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.surface)
       if rs.IsSurfaceRational(obj):
-          print "The surface is rational."
+          print("The surface is rational.")
       else:
-          print "The surface is not rational."
+          print("The surface is not rational.")
     See Also:
       IsSurface
       IsSurfaceClosed
@@ -1947,9 +1947,9 @@ def IsSurfaceSingular(surface_id, direction):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.surface)
       if rs.IsSurfaceSingular(obj, 0):
-          print "The surface is singular."
+          print("The surface is singular.")
       else:
-          print "The surface is not singular."
+          print("The surface is not singular.")
     See Also:
       IsSurface
       IsSurfaceClosed
@@ -1970,9 +1970,9 @@ def IsSurfaceTrimmed(surface_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.surface)
       if rs.IsSurfaceTrimmed(obj):
-          print "The surface is trimmed."
+          print("The surface is trimmed.")
       else:
-          print "The surface is not trimmed."
+          print("The surface is not trimmed.")
     See Also:
       IsSurface
       IsSurfaceClosed
@@ -1994,9 +1994,9 @@ def IsTorus(surface_id):
       surface = rs.GetObject("Select a surface", rs.filter.surface)
       if surface:
           if rs.IsTorus(surface):
-              print "The surface is a portion of a torus."
+              print("The surface is a portion of a torus.")
           else:
-              print "The surface is not a portion of a torus."
+              print("The surface is not a portion of a torus.")
     See Also:
       IsCone
       IsCylinder
@@ -2434,7 +2434,7 @@ def SurfaceArea(object_id):
       if obj:
           massprop = rs.SurfaceArea( obj )
           if massprop:
-              print "The surface area is: ", massprop[0]
+              print("The surface area is: {}".format(massprop[0]))
     See Also:
       SurfaceAreaCentroid
       SurfaceAreaMoments
@@ -2514,7 +2514,7 @@ def SurfaceAreaMoments(surface_id):
       if obj:
           massprop= rs.SurfaceAreaMoments(obj)
           if massprop:
-              print "Area Moments of Inertia about the World Coordinate Axes: ", massprop[6]
+              print("Area Moments of Inertia about the World Coordinate Axes: {}".format(massprop[6]))
     See Also:
       SurfaceArea
       SurfaceAreaCentroid
@@ -2538,8 +2538,8 @@ def SurfaceClosestPoint(surface_id, test_point):
           if point:
               param = rs.SurfaceClosestPoint(obj, point)
               if param:
-                  print "Surface U parameter: ", str(param[0])
-                  print "Surface V parameter: ", str(param[1])
+                  print("Surface U parameter: {}".format(str(param[0])))
+                  print("Surface V parameter: {}".format(str(param[1])))
     See Also:
       BrepClosestPoint
       EvaluateSurface
@@ -2605,13 +2605,13 @@ def SurfaceCurvature(surface_id, parameter):
               if param:
                   data = rs.SurfaceCurvature(srf, param)
                   if data:
-                      print "Surface curvature evaluation at parameter", param, ":"
-                      print " 3-D Point:", data[0]
-                      print " 3-D Normal:", data[1]
-                      print " Maximum principal curvature:", data[2], " ", data[3]
-                      print " Minimum principal curvature:", data[4], " ", data[5]
-                      print " Gaussian curvature:", data[6]
-                      print " Mean curvature:", data[7]
+                      print("Surface curvature evaluation at parameter {}:".format(param))
+                      print(" 3-D Point:{}".format(data[0]))
+                      print(" 3-D Normal:{}".format(data[1]))
+                      print(" Maximum principal curvature: {} {}".format(data[2], data[3]))
+                      print(" Minimum principal curvature: {} {}".format(data[4], data[5]))
+                      print(" Gaussian curvature:{}".format(data[6]))
+                      print(" Mean curvature:{}".format(data[7]))
     See Also:
       CurveCurvature
     """
@@ -2661,8 +2661,8 @@ def SurfaceDegree(surface_id, direction=2):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a surface", rs.filter.surface)
       if rs.IsSurface(obj):
-          print "Degree in U direction: ", rs.SurfaceDegree(obj, 0)
-          print "Degree in V direction: ", rs.SurfaceDegree(obj, 1)
+          print("Degree in U direction: {}".format(rs.SurfaceDegree(obj, 0)))
+          print("Degree in V direction: {}".format(rs.SurfaceDegree(obj, 1)))
     See Also:
       IsSurface
       SurfaceDomain
@@ -2687,8 +2687,8 @@ def SurfaceDomain(surface_id, direction):
       if rs.IsSurface(object):
           domainU = rs.SurfaceDomain(object, 0)
           domainV = rs.SurfaceDomain(object, 1)
-          print "Domain in U direction: ", domainU
-          print "Domain in V direction: ", domainV
+          print("Domain in U direction: {}".format(domainU))
+          print("Domain in V direction: {}".format(domainV))
     See Also:
       IsSurface
       SurfaceDegree
@@ -2781,10 +2781,10 @@ def SurfaceEvaluate(surface_id, parameter, derivative):
           uv = rs.SurfaceClosestPoint(srf, point)
           res = rs.SurfaceEvaluate(srf, uv, der)
           if res is None:
-              print "Failed to evaluate surface."
+              print("Failed to evaluate surface.")
               return
           for i,r in enumerate(res):
-              print i, " = ", r
+              print("{} = {}".format(i, r))
       TestSurfaceEvaluate()
     See Also:
       EvaluateSurface
@@ -2872,8 +2872,8 @@ def SurfaceKnotCount(surface_id):
       obj = rs.GetObject("Select a surface")
       if rs.IsSurface(obj):
           count = rs.SurfaceKnotCount(obj)
-          print "Knot count in U direction: ", count[0]
-          print "Knot count in V direction: ", count[1]
+          print("Knot count in U direction: {}".format(count[0]))
+          print("Knot count in V direction: {}".format(count[1]))
     See Also:
       IsSurface
       SurfaceKnots
@@ -2901,11 +2901,11 @@ def SurfaceKnots(surface_id):
           knots = rs.SurfaceKnots(obj)
           if knots:
               vector = knots[0]
-              print "Knot vector in U direction"
-              for item in vector: print "Surface knot value: ", item
+              print("Knot vector in U direction")
+              for item in vector: print("Surface knot value: {}".format(item))
               vector = knots[1]
-              print "Knot vector in V direction"
-              for item in vector: print "Surface knot value: ", item
+              print("Knot vector in V direction")
+              for item in vector: print("Surface knot value: {}".format(item))
     See Also:
       IsSurface
       SurfaceKnotCount
@@ -2959,9 +2959,9 @@ def SurfaceNormalizedParameter(surface_id, parameter):
           domain_u = rs.SurfaceDomain(obj, 0)
           domain_v = rs.SurfaceDomain(obj, 1)
           parameter = (domain_u[1] + domain_u[0]) / 2.0, (domain_v[1] + domain_v[0]) / 2.0
-          print "Surface parameter: ", parameter
+          print("Surface parameter: {}".format(parameter))
           normalized = rs.SurfaceNormalizedParameter(obj, parameter)
-          print "Normalized parameter: ", normalized
+          print("Normalized parameter: {}".format(normalized))
     See Also:
       SurfaceDomain
       SurfaceParameter
@@ -2991,9 +2991,9 @@ def SurfaceParameter(surface_id, parameter):
       obj = rs.GetObject("Select surface")
       if obj:
           normalized = (0.5, 0.5)
-          print "Normalized parameter: ", normalized
+          print("Normalized parameter: {}".format(normalized))
           parameter = rs.SurfaceParameter(obj, normalized)
-          print "Surface parameter: ", parameter
+          print("Surface parameter: {}".format(parameter))
     See Also:
       SurfaceDomain
       SurfaceNormalizedParameter
@@ -3016,8 +3016,8 @@ def SurfacePointCount(surface_id):
       obj = rs.GetObject("Select a surface")
       if rs.IsSurface(obj):
           count = rs.SurfacePointCount(obj)
-          print "Point count in U direction: ", count[0]
-          print "Point count in V direction: ", count[1]
+          print("Point count in U direction: {}".format(count[0]))
+          print("Point count in V direction: {}".format(count[1]))
     See Also:
       IsSurface
       SurfacePoints
@@ -3047,7 +3047,7 @@ def SurfacePoints(surface_id, return_all=True):
           i = 0
           for u in range(count[0]):
               for v in range(count[1]):
-                  print "CV[", u, ",", v, "] = ", points[i]
+                  print("CV[{}".format(u, ",", v, "] = ", points[i]))
                   i += 1
       PrintControlPoints()
     See Also:
@@ -3102,7 +3102,7 @@ def SurfaceVolume(object_id):
       if rs.IsPolysurfaceClosed(obj):
           massprop = rs.SurfaceVolume(obj)
           if massprop:
-              print "The polysurface volume is: ", massprop[0]
+              print("The polysurface volume is: {}".format(massprop[0]))
     See Also:
       SurfaceVolume
       SurfaceVolumeCentroid
@@ -3162,7 +3162,7 @@ def SurfaceVolumeMoments(surface_id):
       if rs.IsPolysurfaceClosed(obj):
           massprop = rs.SurfaceVolumeMoments(obj)
           if massprop:
-              print "Volume Moments of Inertia about the World Coordinate Axes: ", massprop[6]
+              print("Volume Moments of Inertia about the World Coordinate Axes: {}".format(massprop[6]))
     See Also:
       SurfaceVolume
       SurfaceVolumeCentroid
@@ -3186,7 +3186,7 @@ def SurfaceWeights(object_id):
           weights = rs.SurfaceWeights(surf)
           if weights:
               for w in weights:
-                  print "Surface control point weight value:", w
+                  print("Surface control point weight value:{}".format(w))
     See Also:
       IsSurface
       SurfacePointCount

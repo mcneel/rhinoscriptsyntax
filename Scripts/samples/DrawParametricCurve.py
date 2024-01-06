@@ -23,7 +23,7 @@ def DrawParametricCurve(parametric_equation):
     arrPoints.append(point)
 
     #Get the rest of the points
-    for x in xrange(1,count-2):
+    for x in range(1,count-2):
         t = (1.0-(x/count))*t0 + (x/count)*t1
         point = parametric_equation(t)
         arrPoints.append(point)

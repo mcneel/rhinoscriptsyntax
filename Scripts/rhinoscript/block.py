@@ -79,7 +79,7 @@ def BlockContainerCount(block_name):
       block = rs.GetString("Block name to query")
       if rs.IsBlock(block):
           count = rs.BlockContainerCount(block)
-          print "This block is nested in", count, "block(s)."
+          print("This block is nested in {} block(s).".format(count))
     See Also:
       BlockContainers
       IsBlock
@@ -99,7 +99,7 @@ def BlockContainers(block_name):
       blockname = rs.GetString("Block name to query")
       if rs.IsBlock(blockname):
           blocks = rs.BlockContainers(blockname)
-          for block in blocks: print block
+          for block in blocks: print(block)
     See Also:
       BlockContainerCount
       IsBlock
@@ -120,7 +120,7 @@ def BlockCount():
     Example:
       import rhinoscriptsyntax as rs
       count = rs.BlockCount()
-      print "There are", count, " blocks."
+      print("There are {} blocks".format(count)
     See Also:
       BlockNames
       IsBlock
@@ -141,8 +141,8 @@ def BlockDescription(block_name, description=None):
       blockname = rs.GetString("Block name to list description")
       if rs.IsBlock(blockname):
           desc = rs.BlockDescription(blockname)
-          if desc is None: print "No description"
-          else: print desc
+          if desc is None: print("No description")
+          else: print(desc)
     See Also:
       IsBlock
     """
@@ -169,7 +169,7 @@ def BlockInstanceCount(block_name,where_to_look=0):
       blockname = rs.GetString("Block to count")
       if rs.IsBlock(blockname):
           count = rs.BlockInstanceCount(blockname)
-          print count, "block(s) found."
+          print("{} block(s) found.".format(count))
     See Also:
       BlockInstanceInsertPoint
       BlockInstances
@@ -216,7 +216,7 @@ def BlockInstanceName(object_id):
       import rhinoscriptsyntax as rs
       strObject = rs.GetObject("Select block")
       if rs.IsBlockInstance(strObject):
-          print rs.BlockInstanceName(strObject)
+          print(rs.BlockInstanceName(strObject))
     See Also:
       BlockInstanceCount
       BlockInstances
@@ -294,7 +294,7 @@ def BlockNames( sort=False ):
       import rhinoscriptsyntax as rs
       names = rs.BlockNames(True)
       if names:
-          for name in names: print name
+          for name in names: print(name)
     See Also:
       BlockCount
       IsBlock
@@ -314,7 +314,7 @@ def BlockObjectCount(block_name):
     Example:
       import rhinoscriptsyntax as rs
       count = rs.BlockObjectCount()
-      print "There are", count, " blocks."
+      print("There are {} blocks".format(count))
     See Also:
       BlockNames
       BlockObjects
@@ -337,7 +337,7 @@ def BlockObjects(block_name):
       if rs.IsBlock(strBlock):
           objects = rs.BlockObjects(strBlock)
           if objects:
-              for item in objects: print item
+              for item in objects: print(item)
     See Also:
       BlockNames
       BlockObjectCount
@@ -361,7 +361,7 @@ def BlockPath(block_name):
       import rhinoscriptsyntax as rs
       strBlock = rs.GetString("Block name to list path")
       if rs.IsBlockEmbedded(strBlock):
-          print rs.BlockPath(strBlock)
+          print(rs.BlockPath(strBlock))
     See Also:
       IsBlock
       IsBlockEmbedded
@@ -390,7 +390,7 @@ def BlockStatus(block_name):
       block = rs.GetString("Block name to list description")
       if rs.IsBlock(block):
           status = rs.BlockStatus(block)
-          print "block status for", block, "is", status
+          print("block status for {} is {}".format(block, status))
     See Also:
       IsBlock
     """
@@ -499,9 +499,9 @@ def IsBlock(block_name):
       import rhinoscriptsyntax as rs
       strBlock = rs.GetString("Block name")
       if rs.IsBlock(strBlock):
-          print "The block definition exists."
+          print("The block definition exists.")
       else:
-          print "The block definition does not exist."
+          print("The block definition does not exist.")
     See Also:
       IsBlockEmbedded
       IsBlockInstance
@@ -523,11 +523,11 @@ def IsBlockEmbedded(block_name):
       strBlock = rs.GetString("Block name")
       if rs.IsBlock(strBlock):
           if rs.IsBlockEmbedded(strBlock):
-              print "The block definition is embedded."
+              print("The block definition is embedded.")
           else:
-              print "The block definition is not embedded."
+              print("The block definition is not embedded.")
       else:
-          print "The block definition does not exist."
+          print("The block definition does not exist.")
     See Also:
       IsBlock
       IsBlockInstance
@@ -550,9 +550,9 @@ def IsBlockInstance(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select block instance")
       if rs.IsBlockInstance(obj):
-          print "The object is a block instance."
+          print("The object is a block instance.")
       else:
-          print "The object is not a block instance."
+          print("The object is not a block instance.")
     See Also:
       IsBlock
       IsBlockEmbedded
@@ -577,11 +577,11 @@ def IsBlockInUse(block_name, where_to_look=0):
       strBlock = rs.GetString("Block name")
       if rs.IsBlock(strBlock):
           if rs.IsBlockInUse(strBlock):
-              print "The block definition is in use."
+              print("The block definition is in use.")
           else:
-              print "The block definition is not in use."
+              print("The block definition is not in use.")
       else:
-          print "The block definition does not exist."
+          print("The block definition does not exist.")
     See Also:
       IsBlock
       IsBlockInstance
@@ -604,11 +604,11 @@ def IsBlockReference(block_name):
       strBlock = rs.GetString("Block name")
       if rs.IsBlock(strBlock):
           if rs.IsBlockReference(strBlock):
-              print "The block definition is a reference definition."
+              print("The block definition is a reference definition.")
           else:
-              print "The block definition is not a reference definition."
+              print("The block definition is not a reference definition.")
       else:
-          print "The block definition does not exist."
+          print("The block definition does not exist.")
     See Also:
       IsBlock
       IsBlockEmbedded
