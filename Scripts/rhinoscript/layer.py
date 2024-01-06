@@ -38,11 +38,11 @@ def AddLayer(name=None, color=None, visible=True, locked=False, parent=None):
     Example:
       import rhinoscriptsyntax as rs
       from System.Drawing import Color
-      print "New layer:", rs.AddLayer()
-      print "New layer:", rs.AddLayer("MyLayer1")
-      print "New layer:", rs.AddLayer("MyLayer2", Color.DarkSeaGreen)
-      print "New layer:", rs.AddLayer("MyLayer3", Color.Cornsilk)
-      print "New layer:", rs.AddLayer("MyLayer4",parent="MyLayer3")
+      print("New layer:{}".format(rs.AddLayer()))
+      print("New layer:{}".format(rs.AddLayer("MyLayer1")))
+      print("New layer:{}".format(rs.AddLayer("MyLayer2", Color.DarkSeaGreen)))
+      print("New layer:{}".format(rs.AddLayer("MyLayer3", Color.Cornsilk)))
+      print("New layer:{}".format(rs.AddLayer("MyLayer4",parent="MyLayer3")))
     See Also:
       CurrentLayer
       DeleteLayer
@@ -161,9 +161,9 @@ def IsLayer(layer):
       import rhinoscriptsyntax as rs
       layer = rs.GetString("Layer name")
       if rs.IsLayer(layer):
-          print "The layer exists."
+          print("The layer exists.")
       else:
-          print "The layer does not exist."
+          print("The layer does not exist.")
     See Also:
       IsLayerChangeable
       IsLayerEmpty
@@ -187,10 +187,10 @@ def IsLayerChangeable(layer):
       import rhinoscriptsyntax as rs
       layer = rs.GetString("Layer name")
       if rs.IsLayer(layer):
-          if rs.IsLayerChangeable(layer): print "The layer is changeable."
-          else: print "The layer is not changeable."
+          if rs.IsLayerChangeable(layer): print("The layer is changeable.")
+          else: print("The layer is not changeable.")
       else:
-          print "The layer does not exist."
+          print("The layer does not exist.")
     See Also:
       IsLayer
       IsLayerEmpty
@@ -236,10 +236,10 @@ def IsLayerCurrent(layer):
       import rhinoscriptsyntax as rs
       layer = rs.GetString("Layer name")
       if rs.IsLayer(layer):
-          if rs.IsLayerCurrent(layer): print "The layer is current."
-          else: print "The layer is not current."
+          if rs.IsLayerCurrent(layer): print("The layer is current.")
+          else: print("The layer is not current.")
       else:
-          print "The layer does not exist."
+          print("The layer does not exist.")
     See Also:
       IsLayer
       IsLayerEmpty
@@ -263,10 +263,10 @@ def IsLayerEmpty(layer):
       import rhinoscriptsyntax as rs
       layer = rs.GetString("Layer name")
       if rs.IsLayer(layer):
-          if rs.IsLayerEmpty(layer): print "The layer is empty."
-          else: print "The layer is not empty."
+          if rs.IsLayerEmpty(layer): print("The layer is empty.")
+          else: print("The layer is not empty.")
       else:
-          print "The layer does not exist."
+          print("The layer does not exist.")
     See Also:
       IsLayerChangeable
       IsLayerLocked
@@ -309,10 +309,10 @@ def IsLayerLocked(layer):
       import rhinoscriptsyntax as rs
       layer = rs.GetString("Layer name")
       if rs.IsLayer(layer):
-          if rs.IsLayerLocked(layer): print "The layer is locked."
-          else: print "The layer is not locked."
+          if rs.IsLayerLocked(layer): print("The layer is locked.")
+          else: print("The layer is not locked.")
       else:
-          print "The layer does not exist."
+          print("The layer does not exist.")
     See Also:
       IsLayer
       IsLayerChangeable
@@ -336,10 +336,10 @@ def IsLayerOn(layer):
       import rhinoscriptsyntax as rs
       layer = rs.GetString("Layer name")
       if rs.IsLayer(layer):
-          if rs.IsLayerOn(layer): print "The layer is on."
-          else: print "The layer is not on."
+          if rs.IsLayerOn(layer): print("The layer is on.")
+          else: print("The layer is not on.")
       else:
-          print "The layer does not exist."
+          print("The layer does not exist.")
     See Also:
       IsLayer
       IsLayerChangeable
@@ -363,10 +363,10 @@ def IsLayerSelectable(layer):
       import rhinoscriptsyntax as rs
       layer = rs.GetString("Layer name")
       if rs.IsLayer(layer):
-          if rs.IsLayerSelectable(layer): print "The layer is selectable."
-          else: print "The layer is not selectable."
+          if rs.IsLayerSelectable(layer): print("The layer is selectable.")
+          else: print("The layer is not selectable.")
       else:
-          print "The layer does not exist."
+          print("The layer does not exist.")
     See Also:
       IsLayer
       IsLayerChangeable
@@ -411,10 +411,10 @@ def IsLayerReference(layer):
       import rhinoscriptsyntax as rs
       layer = rs.GetString("Layer name")
       if rs.IsLayer(layer):
-          if rs.IsLayerReference(layer): print "The layer is a reference layer."
-          else: print "The layer is not a reference layer."
+          if rs.IsLayerReference(layer): print("The layer is a reference layer.")
+          else: print("The layer is not a reference layer.")
       else:
-          print "The layer does not exist."
+          print("The layer does not exist.")
     See Also:
       IsLayer
       IsLayerChangeable
@@ -438,10 +438,10 @@ def IsLayerVisible(layer):
       import rhinoscriptsyntax as rs
       layer = rs.GetString("Layer name")
       if rs.IsLayer(layer):
-          if rs.IsLayerVisible(layer): print "The layer is visible"
-          else: print "The layer is not visible"
+          if rs.IsLayerVisible(layer): print("The layer is visible")
+          else: print("The layer is not visible")
       else:
-          print "The layer does not exist."
+          print("The layer does not exist.")
     See Also:
       IsLayer
       IsLayerChangeable
@@ -484,7 +484,7 @@ def LayerChildren(layer):
       import rhinoscriptsyntax as rs
       children = rs.LayerChildren("Default")
       if children:
-          for child in children: print child
+          for child in children: print(child)
     See Also:
       LayerChildCount
       ParentLayer
@@ -537,7 +537,7 @@ def LayerCount():
     Example:
       import rhinoscriptsyntax as rs
       count = rs.LayerCount()
-      print "There are", count, "layers."
+      print("There are {} layers".format(count))
     See Also:
       LayerNames
     """
@@ -551,7 +551,7 @@ def LayerIds():
     Example:
       import rhinoscriptsyntax as rs
       layers = rs.LayerIds()
-      for layer in layers: print layer
+      for layer in layers: print(layer)
     See Also:
       LayerCount
       LayerNames
@@ -634,9 +634,9 @@ def LayerMaterialIndex(layer,index=None):
       index = rs.LayerMaterialIndex("Default")
       if index is not None:
           if index==-1:
-              print "The default layer does not have a material assigned."
+              print("The default layer does not have a material assigned.")
           else:
-              print "The default layer has a material assigned."
+              print("The default layer has a material assigned.")
     See Also:
       
     """
@@ -677,7 +677,7 @@ def LayerName(layer_id, fullpath=True):
       import rhinoscriptsyntax as rs
       layers = rs.LayerIds()
       if layers:
-          for layer in layers: print rs.LayerName(layer)
+          for layer in layers: print(rs.LayerName(layer))
     See Also:
       LayerId
     """
@@ -696,7 +696,7 @@ def LayerNames(sort=False):
       import rhinoscriptsyntax as rs
       layers = rs.LayerNames()
       if layers:
-          for layer in layers: print layer
+          for layer in layers: print(layer)
     See Also:
       LayerCount
     """
@@ -719,8 +719,8 @@ def LayerOrder(layer):
       import rhinoscriptsyntax as rs
       index = rs.LayerOrder("Default")
       if index is not None:
-          if index==-1: print "The layer does not display in the Layer dialog."
-          else: print "The layer does display in the Layer dialog."
+          if index==-1: print("The layer does not display in the Layer dialog.")
+          else: print("The layer does display in the Layer dialog.")
     See Also:
       
     """
@@ -834,7 +834,7 @@ def ParentLayer(layer, parent=None):
       layers = rs.LayerNames()
       for layer in layers:
           parent = rs.ParentLayer(layer)
-          print "Layer:", layer, ", Parent:", parent
+          print("Layer: {}, Parent: {}".format(layer, parent))
     See Also:
       LayerChildren
     """

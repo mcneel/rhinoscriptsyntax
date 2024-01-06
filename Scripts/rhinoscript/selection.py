@@ -45,7 +45,7 @@ def AllObjects(select=False, include_lights=False, include_grips=False, include_
     Example:
       import rhinoscriptsyntax as rs
       objs = rs.AllObjects()
-      for obj in objs: print "Object identifier: ", obj
+      for obj in objs: print("Object identifier: {}".format(obj))
     See Also:
       HiddenObjects
       LockedObjects
@@ -82,7 +82,7 @@ def FirstObject(select=False, include_lights=False, include_grips=False):
       rs.AddLine( (0,0,0), (5,0,0) )
       rs.AddLine( (0,0,0), (0,5,0) )
       objectId = rs.FirstObject()
-      print "Object identifier: ", objectId
+      print("Object identifier: {}".format(objectId))
       rs.SelectObject(objectId)
     See Also:
       LastObject
@@ -168,7 +168,7 @@ def GetCurveObject(message=None, preselect=False, select=False):
       import rhinoscriptsyntax as rs
       select_result = rs.GetCurveObject("Select curve")
       if select_result:
-          print "Curve identifier: ", select_result[0]
+          print("Curve identifier: {}".format(select_result[0]))
     See Also:
       GetObject
       GetObjects
@@ -225,10 +225,10 @@ def GetObject(message=None, filter=0, preselect=False, select=False, custom_filt
       import rhinoscriptsyntax as rs
       objectId = rs.GetObject("Pick any object")
       if objectId:
-          print "Object identifier: ", objectId
+          print("Object identifier: {}".format(objectId))
       objectId = rs.GetObject("Pick a curve or surface", rs.filter.curve | rs.filter.surface)
       if objectId:
-          print "Object identifier: ", objectId
+          print("Object identifier: {}".format(objectId))
     See Also:
       GetCurveObject
       GetObjectEx
@@ -305,18 +305,18 @@ def GetObjectEx(message=None, filter=0, preselect=False, select=False, objects=N
       import rhinoscriptsyntax as rs
       obj = rs.GetObjectEx("Select object", 0, True)
       if obj:
-          print "Object id = ", obj[0]
-          print "Object was preselected = ", obj[1]
+          print("Object id = {}".format(obj[0]))
+          print("Object was preselected = {}".format(obj[1]))
           if obj[2]==0:
-              print "Selection method = 0 (non-mouse)"
+              print("Selection method = 0 (non-mouse)")
           elif obj[2]==1:
-              print "Selection method = 1 (mouse)"
-              print "Pick point = ", obj[3]
+              print("Selection method = 1 (mouse)")
+              print("Pick point = {}".format(obj[3]))
           elif obj[2]==2:
-              print "Selection method = 2 (window)"
+              print("Selection method = 2 (window)")
           elif obj[2]==3:
-              print "Selection method = 3 (crossing)"
-          print "Active view = ", obj[4]
+              print("Selection method = 3 (crossing)")
+          print("Active view = {}".format(obj[4]))
     See Also:
       GetCurveObject
       GetObject
@@ -400,7 +400,7 @@ def GetObjects(message=None, filter=0, group=True, preselect=False, select=False
     Example:
       import rhinoscriptsyntax as rs
       objectIds = rs.GetObjects("Pick some curves", rs.filter.curve)
-      for id in objectIds: print "Object identifier:", id
+      for id in objectIds: print("Object identifier:{}".format(id))
     See Also:
       GetCurveObject
       GetObject
@@ -472,18 +472,18 @@ def GetObjectsEx(message=None, filter=0, group=True, preselect=False, select=Fal
       import rhinoscriptsyntax as rs
       objects = rs.GetObjectsEx("Select objects", 0, True)
       for obj in objects:
-          print "Object id = ", obj[0]
-          print "Object was preselected = ", obj[1]
+          print("Object id = {}".format(obj[0]))
+          print("Object was preselected = {}".format(obj[1]))
           if obj[2]==0:
-              print "Selection method = 0 (non-mouse)"
+              print("Selection method = 0 (non-mouse)")
           elif obj[2]==1:
-              print "Selection method = 1 (mouse)"
-              print "Pick point = ", obj[3]
+              print("Selection method = 1 (mouse)")
+              print("Pick point = {}".format(obj[3]))
           elif obj[2]==2:
-              print "Selection method = 2 (window)"
+              print("Selection method = 2 (window)")
           elif obj[2]==3:
-              print "Selection method = 3 (crossing)"
-          print "Active view = ", obj[4]
+              print("Selection method = 3 (crossing)")
+          print("Active view = {}".format(obj[4]))
     See Also:
       GetCurveObject
       GetObject
@@ -539,7 +539,7 @@ def GetPointCoordinates(message="Select points", preselect=False):
     Example:
       import rhinoscriptsyntax as rs
       points = rs.GetPointCoordinates()
-      for point in points: print point
+      for point in points: print(point)
     See Also:
       GetObject
       GetObjects
@@ -574,7 +574,7 @@ def GetSurfaceObject(message="Select surface", preselect=False, select=False):
       import rhinoscriptsyntax as rs
       select = rs.GetSurfaceObject("Select surface")
       if select:
-          print "Surface identifier: ", select[0]
+          print("Surface identifier: {}".format(select[0]))
     See Also:
       GetCurveObject
       GetObject
@@ -625,7 +625,7 @@ def LockedObjects(include_lights=False, include_grips=False, include_references=
     Example:
       import rhinoscriptsyntax as  rs
       objs = rs.LockedObjects()
-      for obj in objs: print "Object  identifier:", obj
+      for obj in objs: print("Object  identifier:{}".format(obj))
     See Also:
       AllObjects
       HiddenObjects
@@ -654,7 +654,7 @@ def HiddenObjects(include_lights=False, include_grips=False, include_references=
     Example:
       import rhinoscriptsyntax as rs
       hidden = rs.HiddenObjects()
-      for obj in hidden: print "Object identifier", obj
+      for obj in hidden: print("Object identifier{}".format(obj))
     See Also:
       AllObjects
       LockedObjects
@@ -685,7 +685,7 @@ def InvertSelectedObjects(include_lights=False, include_grips=False, include_ref
       import rhinoscriptsyntax as rs
       rs.GetObjects("Select some objects", select=True)
       objs = rs.InvertSelectedObjects()
-      for id in objs: print "Object identifier:", id
+      for id in objs: print("Object identifier:{}".format(id))
     See Also:
       SelectedObjects
       UnselectAllObjects
@@ -756,7 +756,7 @@ def LastObject(select=False, include_lights=False, include_grips=False):
       import rhinoscriptsyntax as rs
       rs.AddLine((0,0,0), (5,5,0))
       rs.AddCircle((0,0,0), 5)
-      print "Object identifier: ", rs.LastObject()
+      print("Object identifier: {}".format(rs.LastObject()))
     See Also:
       FirstObject
       NextObject
@@ -789,7 +789,7 @@ def NextObject(object_id, select=False, include_lights=False, include_grips=Fals
       import rhinoscriptsyntax as rs
       obj = rs.FirstObject()
       while obj:
-          print "Object identifier:", obj
+          print("Object identifier:{}".format(obj))
           obj = rs.NextObject(obj)
     See Also:
       FirstObject
@@ -820,7 +820,7 @@ def NormalObjects(include_lights=False, include_grips=False):
     Example:
       import rhinoscriptsyntax as rs
       objs = rs.NormalObjects()
-      for obj in objs: print "Object identifier:", obj
+      for obj in objs: print("Object identifier:{}".format(obj))
     See Also:
       AllObjects
       HiddenObjects
@@ -1054,7 +1054,7 @@ def SelectedObjects(include_lights=False, include_grips=False):
     Example:
       import rhinoscriptsyntax as rs
       objects = rs.SelectedObjects()
-      for obj in objects: print "Object identifier: ", obj
+      for obj in objects: print("Object identifier: {}".format(obj))
     See Also:
       InvertSelectedObjects
       UnselectAllObjects
@@ -1070,7 +1070,7 @@ def UnselectAllObjects():
     Example:
       import rhinoscriptsyntax as rs
       count = rs.UnselectAllObjects()
-      print count, " objects were unselected"
+      print("{} objects were unselected".format(count))
     See Also:
       InvertSelectedObjects
       SelectedObjects
@@ -1093,7 +1093,7 @@ def VisibleObjects(view=None, select=False, include_lights=False, include_grips=
       import rhinoscriptsyntax as rs
       object_ids = rs.VisibleObjects("Top")
       if object_ids:
-          for id in object_ids: print "Object identifier:", id
+          for id in object_ids: print("Object identifier:{}".format(id))
     See Also:
       IsView
       IsVisibleInView

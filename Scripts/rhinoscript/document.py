@@ -34,9 +34,9 @@ def CreatePreviewImage(filename, view=None, size=None, flags=0, wireframe=False)
       import rhinoscriptsyntax as  rs
       result = rs.CreatePreviewImage("test.jpg")
       if result:
-          print  "test.jpg created successfully."
+          print( "test.jpg created successfully.")
       else:
-          print  "Unable to create preview image."
+          print( "Unable to create preview image.")
     See Also:
       ExtractPreviewImage
     """
@@ -85,7 +85,7 @@ def DocumentName():
     Example:
       import rhinoscriptsyntax as rs
       name = rs.DocumentName()
-      print name
+      print(name)
     See Also:
       DocumentPath
     """
@@ -99,7 +99,7 @@ def DocumentPath():
     Example:
       import rhinoscriptsyntax as rs
       path = rs.DocumentPath()
-      print path
+      print(path)
     See Also:
       DocumentName
     """
@@ -142,9 +142,9 @@ def ExtractPreviewImage(filename, modelname=None):
       import rhinoscriptsyntax as rs
       result = rs.ExtractPreviewImage("test.jpg")
       if result:
-          print "Test.jpg created successfully."
+          print("Test.jpg created successfully.")
       else:
-          print "Unable to extract preview image."
+          print("Unable to extract preview image.")
     See Also:
       CreatePreviewImage
     """
@@ -193,7 +193,7 @@ def ReadFileVersion():
       str: the file version of the current document
     Example:
       import rhinoscriptsyntax as rs
-      print "ReadFileVersion =", rs.ReadFileVersion()
+      print("ReadFileVersion = {}".format(rs.ReadFileVersion()))
     See Also:
       DocumentName
       DocumentPath
@@ -305,16 +305,16 @@ def RenderMeshDensity(density=None):
       number: if density is not specified, the current render mesh density if successful.
       number: if density is specified, the previous render mesh density if successful.
     Example:
-import rhinoscriptsyntax as  rs
-print("Quality: %s" % rs.RenderMeshQuality())
-print("Mesh density: %s" % rs.RenderMeshDensity())
-print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
-print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
-print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
-print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
-print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
-print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
-print("Other settings: %s" % rs.RenderMeshSettings())
+      import rhinoscriptsyntax as  rs
+      print("Quality: %s" % rs.RenderMeshQuality())
+      print("Mesh density: %s" % rs.RenderMeshDensity())
+      print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
+      print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
+      print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
+      print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
+      print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
+      print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
+      print("Other settings: %s" % rs.RenderMeshSettings())
     See Also:
       RenderMeshDensity
       RenderMeshMaxAngle
@@ -345,16 +345,16 @@ def RenderMeshMaxAngle(angle_degrees=None):
       number: if angle_degrees is specified, the previous maximum angle if successful.
       None: if not successful, or on error.
     Example:
-import rhinoscriptsyntax as  rs
-print("Quality: %s" % rs.RenderMeshQuality())
-print("Mesh density: %s" % rs.RenderMeshDensity())
-print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
-print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
-print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
-print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
-print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
-print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
-print("Other settings: %s" % rs.RenderMeshSettings())
+      import rhinoscriptsyntax as  rs
+      print("Quality: %s" % rs.RenderMeshQuality())
+      print("Mesh density: %s" % rs.RenderMeshDensity())
+      print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
+      print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
+      print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
+      print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
+      print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
+      print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
+      print("Other settings: %s" % rs.RenderMeshSettings())
     See Also:
       RenderMeshDensity
       RenderMeshMaxAngle
@@ -385,16 +385,16 @@ def RenderMeshMaxAspectRatio(ratio=None):
       number: if ratio is specified, the previous render mesh maximum aspect ratio if successful.
       None: if not successful, or on error.
     Example:
-import rhinoscriptsyntax as  rs
-print("Quality: %s" % rs.RenderMeshQuality())
-print("Mesh density: %s" % rs.RenderMeshDensity())
-print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
-print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
-print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
-print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
-print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
-print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
-print("Other settings: %s" % rs.RenderMeshSettings())
+      import rhinoscriptsyntax as  rs
+      print("Quality: %s" % rs.RenderMeshQuality())
+      print("Mesh density: %s" % rs.RenderMeshDensity())
+      print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
+      print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
+      print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
+      print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
+      print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
+      print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
+      print("Other settings: %s" % rs.RenderMeshSettings())
     See Also:
       RenderMeshDensity
       RenderMeshMaxAngle
@@ -424,16 +424,16 @@ def RenderMeshMaxDistEdgeToSrf(distance=None):
       number: if distance is specified, the previous render mesh maximum distance, edge to surface if successful.
       None: if not successful, or on error.
     Example:
-import rhinoscriptsyntax as  rs
-print("Quality: %s" % rs.RenderMeshQuality())
-print("Mesh density: %s" % rs.RenderMeshDensity())
-print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
-print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
-print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
-print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
-print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
-print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
-print("Other settings: %s" % rs.RenderMeshSettings())
+      import rhinoscriptsyntax as  rs
+      print("Quality: %s" % rs.RenderMeshQuality())
+      print("Mesh density: %s" % rs.RenderMeshDensity())
+      print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
+      print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
+      print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
+      print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
+      print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
+      print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
+      print("Other settings: %s" % rs.RenderMeshSettings())
     See Also:
       RenderMeshDensity
       RenderMeshMaxAngle
@@ -463,16 +463,16 @@ def RenderMeshMaxEdgeLength(distance=None):
       number: if distance is specified, the previous render mesh maximum edge length if successful.
       None: if not successful, or on error.
     Example:
-import rhinoscriptsyntax as  rs
-print("Quality: %s" % rs.RenderMeshQuality())
-print("Mesh density: %s" % rs.RenderMeshDensity())
-print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
-print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
-print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
-print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
-print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
-print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
-print("Other settings: %s" % rs.RenderMeshSettings())
+      import rhinoscriptsyntax as  rs
+      print("Quality: %s" % rs.RenderMeshQuality())
+      print("Mesh density: %s" % rs.RenderMeshDensity())
+      print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
+      print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
+      print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
+      print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
+      print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
+      print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
+      print("Other settings: %s" % rs.RenderMeshSettings())
     See Also:
       RenderMeshDensity
       RenderMeshMaxAngle
@@ -502,16 +502,16 @@ def RenderMeshMinEdgeLength(distance=None):
       number: if distance is specified, the previous render mesh minimum edge length if successful.
       None: if not successful, or on error.
     Example:
-import rhinoscriptsyntax as  rs
-print("Quality: %s" % rs.RenderMeshQuality())
-print("Mesh density: %s" % rs.RenderMeshDensity())
-print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
-print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
-print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
-print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
-print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
-print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
-print("Other settings: %s" % rs.RenderMeshSettings())
+      import rhinoscriptsyntax as  rs
+      print("Quality: %s" % rs.RenderMeshQuality())
+      print("Mesh density: %s" % rs.RenderMeshDensity())
+      print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
+      print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
+      print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
+      print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
+      print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
+      print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
+      print("Other settings: %s" % rs.RenderMeshSettings())
     See Also:
       RenderMeshDensity
       RenderMeshMaxAngle
@@ -541,16 +541,16 @@ def RenderMeshMinInitialGridQuads(quads=None):
       number: if quads is specified, the previous render mesh minimum initial grid quads if successful.
       None: if not successful, or on error.
     Example:
-import rhinoscriptsyntax as  rs
-print("Quality: %s" % rs.RenderMeshQuality())
-print("Mesh density: %s" % rs.RenderMeshDensity())
-print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
-print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
-print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
-print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
-print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
-print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
-print("Other settings: %s" % rs.RenderMeshSettings())
+      import rhinoscriptsyntax as  rs
+      print("Quality: %s" % rs.RenderMeshQuality())
+      print("Mesh density: %s" % rs.RenderMeshDensity())
+      print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
+      print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
+      print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
+      print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
+      print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
+      print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
+      print("Other settings: %s" % rs.RenderMeshSettings())
     See Also:
       RenderMeshDensity
       RenderMeshMaxAngle
@@ -583,16 +583,16 @@ def RenderMeshQuality(quality=None):
       number: if quality is specified, the previous render mesh quality if successful.
       None: if not successful, or on error.
     Example:
-import rhinoscriptsyntax as  rs
-print("Quality: %s" % rs.RenderMeshQuality())
-print("Mesh density: %s" % rs.RenderMeshDensity())
-print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
-print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
-print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
-print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
-print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
-print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
-print("Other settings: %s" % rs.RenderMeshSettings())
+      import rhinoscriptsyntax as  rs
+      print("Quality: %s" % rs.RenderMeshQuality())
+      print("Mesh density: %s" % rs.RenderMeshDensity())
+      print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
+      print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
+      print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
+      print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
+      print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
+      print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
+      print("Other settings: %s" % rs.RenderMeshSettings())
     See Also:
       RenderMeshDensity
       RenderMeshMaxAngle
@@ -642,16 +642,16 @@ def RenderMeshSettings(settings=None):
       number: if settings is specified, the previous render mesh settings if successful.
       None: if not successful, or on error.
     Example:
-import rhinoscriptsyntax as  rs
-print("Quality: %s" % rs.RenderMeshQuality())
-print("Mesh density: %s" % rs.RenderMeshDensity())
-print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
-print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
-print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
-print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
-print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
-print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
-print("Other settings: %s" % rs.RenderMeshSettings())
+      import rhinoscriptsyntax as  rs
+      print("Quality: %s" % rs.RenderMeshQuality())
+      print("Mesh density: %s" % rs.RenderMeshDensity())
+      print("Maximum angle: %s" % rs.RenderMeshMaxAngle())
+      print("Maximum aspect ratio: %s" % rs.RenderMeshMaxAspectRatio())
+      print("Minimun edge length: %s" % rs.RenderMeshMinEdgeLength())
+      print("Maximum edge length: %s" % rs.RenderMeshMaxEdgeLength())
+      print("Maximum distance, edge to surface: %s" % rs.RenderMeshMaxDistEdgeToSrf())
+      print("Minumum initial grid quads: %s" % rs.RenderMeshMinInitialGridQuads())
+      print("Other settings: %s" % rs.RenderMeshSettings())
     See Also:
       RenderMeshDensity
       RenderMeshMaxAngle
@@ -880,9 +880,9 @@ def UnitScale(to_system, from_system=None):
     number: scale factor for changing between unit systems
   Example:
       import rhinoscriptsyntax as rs
-      print rs.UnitScale(3, 4) # 100.0
-      print rs.UnitScale(3, 8) # 2.54
-      print rs.UnitScale(8, 9) # 12.0
+      print(rs.UnitScale(3, 4)) # 100.0
+      print(rs.UnitScale(3, 8)) # 2.54
+      print(rs.UnitScale(8, 9)) # 12.0
     See Also:
     UnitSystem
     UnitSystemName
@@ -975,7 +975,7 @@ def UnitSystemName(capitalize=False, singular=True, abbreviate=False, model_unit
     Example:
       import rhinoscriptsyntax as rs
       system = rs.UnitSystemName(False, False, False)
-      print "The units system is set to", system
+      print("The units system is set to{}".format(system))
     See Also:
       UnitSystem
     """

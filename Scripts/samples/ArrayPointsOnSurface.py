@@ -20,9 +20,9 @@ def ArrayPointsOnSurface():
     if U is None or V is None: return
 
     # Add the points
-    for i in xrange(0,rows):
+    for i in range(0,rows):
         param0 = U[0] + (((U[1] - U[0]) / (rows-1)) * i)
-        for j in xrange(0,columns):
+        for j in range(0,columns):
             param1 = V[0] + (((V[1] - V[0]) / (columns-1)) * j)
             point = rs.EvaluateSurface(surface_id, param0, param1)
             rs.AddPoint(point)

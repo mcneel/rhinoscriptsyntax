@@ -13,8 +13,8 @@ if scriptcontext.sticky.has_key("my_key"):
     stickyval = scriptcontext.sticky["my_key"]
 nonstickyval = 12
 
-print "sticky =", stickyval
-print "nonsticky =", nonstickyval
+print("sticky = {}".format(stickyval))
+print("nonsticky = {}".format(nonstickyval))
 
 val = rs.GetInteger("give me an integer")
 if val:

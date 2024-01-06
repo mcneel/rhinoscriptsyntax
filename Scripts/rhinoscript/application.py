@@ -67,7 +67,7 @@ def AliasCount():
       number: the number of command aliases in Rhino.
     Example:
       import rhinoscriptsyntax as rs
-      print "alias count = ", rs.AliasCount()
+      print("alias count = {}".format(rs.AliasCount()))
     See Also:
       AddAlias
       AliasMacro
@@ -91,7 +91,7 @@ def AliasMacro(alias, macro=None):
       import rhinoscriptsyntax as rs
       aliases = rs.AliasNames()
       for alias in aliases:
-          print alias, " -> ", rs.AliasMacro(alias)
+          print("{} -> {}".format(alias, rs.AliasMacro(alias)))
     See Also:
       AddAlias
       AliasCount
@@ -113,7 +113,7 @@ def AliasNames():
     Example:
       import rhinoscriptsyntax as rs
       aliases = rs.AliasNames()
-      for alias in aliases: print alias
+      for alias in aliases: print(alias)
     See Also:
       AddAlias
       AliasCount
@@ -216,7 +216,7 @@ def AutosaveFile(filename=None):
     Example:
       import rhinoscriptsyntax as rs
       file = rs.AutosaveFile()
-      print "The current autosave file is", file
+      print("The current autosave file is {}".format(file))
     See Also:
       AutosaveInterval
       EnableAutosave
@@ -256,7 +256,7 @@ def BuildDate():
     Example:
       import rhinoscriptsyntax as rs
       build = rs.BuildDate()
-      print "Rhino Build:", build
+      print("Rhino Build:{}".format(build)
     See Also:
 
     """
@@ -336,7 +336,7 @@ def CommandHistory():
       str: the contents of Rhino's command history window
     Example:
       import rhinoscriptsyntax as rs
-      print rs.CommandHistory()
+      print(rs.CommandHistory())
     See Also:
       ClearCommandHistory
     """
@@ -372,7 +372,7 @@ def DeleteAlias(alias):
       bool: True or False indicating success
     Example:
       import rhinoscriptsyntax as rs
-      print rs.DeleteAlias("Hello")
+      print(rs.DeleteAlias("Hello"))
     See Also:
       AddAlias
       AliasCount
@@ -491,8 +491,8 @@ def EnablePlugIn(plugin, enable=None):
       Returns:
         bool: True if set to load silently otherwise False
       Example:
-      import rhinoscriptsyntax as rs
-      print rs.EnablePlugIn("RhinoCrasher", False)
+        import rhinoscriptsyntax as rs
+        print(rs.EnablePlugIn("RhinoCrasher", False))
     See Also:
         IsPlugIn
         PlugInId
@@ -513,7 +513,7 @@ def ExeFolder():
     Example:
       import rhinoscriptsyntax as rs
       folder = rs.ExeFolder()
-      print folder
+      print(folder)
     See Also:
       InstallFolder
     """
@@ -527,9 +527,9 @@ def ExePlatform():
     Example:
       import rhinoscriptsyntax as rs
       if rs.ExePlatform() == 1:
-          print "You are using a 64-bit version of Rhino."
+          print("You are using a 64-bit version of Rhino.")
       else:
-          print "You are using a 32-bit version of Rhino."
+          print("You are using a 32-bit version of Rhino.")
     See Also:
       BuildDate
       ExeVersion
@@ -545,14 +545,14 @@ def ExeServiceRelease():
       str: the service release number of the Rhino executable
     Example:
       import rhinoscriptsyntax as rs
-      print "Build date:", rs.BuildDate()
-      print "SDK Version:", rs.SdkVersion()
-      print "SDK Service Release:", rs.SdkServiceRelease()
-      print "Executable Version:", rs.ExeVersion()
-      print "Executable Service Release:", rs.ExeServiceRelease()
-      print "Serial Number:", rs.SerialNumber()
-      print "Node Type:", rs.NodeType()
-      print "Install Type:", rs.InstallType()
+      print("Build date:{}".format(rs.BuildDate())
+      print("SDK Version:{}".format(rs.SdkVersion())
+      print("SDK Service Release:{}".format(rs.SdkServiceRelease())
+      print("Executable Version:{}".format(rs.ExeVersion())
+      print("Executable Service Release:{}".format(rs.ExeServiceRelease())
+      print("Serial Number:{}".format(rs.SerialNumber())
+      print("Node Type:{}".format(rs.NodeType())
+      print("Install Type:{}".format(rs.InstallType())
     See Also:
       BuildDate
       ExeVersion
@@ -567,14 +567,14 @@ def ExeVersion():
       str: the major version number of the Rhino executable
     Example:
       import rhinoscriptsyntax as rs
-      print "Build date:", rs.BuildDate()
-      print "SDK Version:", rs.SdkVersion()
-      print "SDK Service Release:", rs.SdkServiceRelease()
-      print "Executable Version:", rs.ExeVersion()
-      print "Executable Service Release:", rs.ExeServiceRelease()
-      print "Serial Number:", rs.SerialNumber()
-      print "Node Type:", rs.NodeType()
-      print "Install Type:", rs.InstallType()
+      print("Build date:{}".format(rs.BuildDate()))
+      print("SDK Version:{}".format(rs.SdkVersion()))
+      print("SDK Service Release:{}".format(rs.SdkServiceRelease()))
+      print("Executable Version:{}".format(rs.ExeVersion()))
+      print("Executable Service Release:{}".format(rs.ExeServiceRelease()))
+      print("Serial Number:{}".format(rs.SerialNumber()))
+      print("Node Type:{}".format(rs.NodeType()))
+      print("Install Type:{}".format(rs.InstallType()))
     See Also:
       BuildDate
       ExeServiceRelease
@@ -609,7 +609,7 @@ def FindFile(filename):
     Example:
       import rhinoscriptsyntax as rs
       path = rs.FindFile("Rhino.exe")
-      print path
+      print(path)
     See Also:
 
     """
@@ -630,7 +630,7 @@ def GetPlugInObject(plug_in):
       import rhinoscriptsyntax as rs
       objPlugIn = rs.GetPlugInObject("SomePlugIn")
       if objPlugIn is not None:
-          print objPlugIn.About()
+          print(objPlugIn.About())
     See Also:
 
     """
@@ -651,9 +651,9 @@ def InCommand(ignore_runners=True):
       import rhinoscriptsyntax as rs
       commands = rs.InCommand()
       if commands > 0:
-          print "Rhino is running", commands, "command(s)."
+          print("Rhino is running", commands, "command(s).")
       else:
-          print "Rhino is not running any command(s)."
+          print("Rhino is not running any command(s).")
     See Also:
       Command
       IsCommand
@@ -668,7 +668,7 @@ def InstallFolder():
       str: the full path to Rhino's installation folder
     Example:
       import rhinoscriptsyntax as rs
-      print rs.InstallFolder()
+      print(rs.InstallFolder())
     See Also:
       ExeFolder
     """
@@ -683,7 +683,7 @@ def IsAlias(alias):
       bool: True if exists or False if the alias does not exist.
     Example:
       import rhinoscriptsyntax as rs
-      print rs.IsAlias("Hello")
+      print(rs.IsAlias("Hello"))
     See Also:
       AddAlias
       AliasCount
@@ -707,9 +707,9 @@ def IsCommand(command_name):
       if cmdname is not None:
           iscmd = rs.IsCommand(cmdname)
           if iscmd:
-              print "The", cmdname, "command exists."
+              print("The", cmdname, "command exists.")
           else:
-              print "The", cmdname, "command does not exist."
+              print("The", cmdname, "command does not exist.")
     See Also:
       Command
       InCommand
@@ -726,8 +726,8 @@ def IsPlugIn(plugin):
     Example:
       import rhinoscriptsyntax as rs
       plugin = rs.GetString("Plug-in name")
-      if rs.IsPlugIn(plugin): print "The  plug-in is registered."
-      else: print "The  plug-in is not registered."
+      if rs.IsPlugIn(plugin): print("The  plug-in is registered.")
+      else: print("The  plug-in is not registered.")
     See Also:
       EnablePlugIn
       PlugInId
@@ -747,9 +747,9 @@ def IsRunningOnWindows():
     Example:
       import rhinoscriptsyntax as rs
       if rs.IsRunngingOnWindows():
-          print "Running on Windows"
+          print("Running on Windows")
       else:
-          print "Running on Mac"
+          print("Running on Mac")
     See Also:
 
     """
@@ -763,7 +763,7 @@ def LastCommandName():
     Example:
       import rhinoscriptsyntax as rs
       rs.Command( "Line" )
-      print "The last command was the", rs.LastCommandName(), "command."
+      print("The last command was the {} {}".format(rs.LastCommandName(), "command."))
     See Also:
       Command
       IsCommand
@@ -787,9 +787,9 @@ def LastCommandResult():
       rs.Command( "Line" )
       result = rs.LastCommandResult()
       if result==0:
-          print "The command completed."
+          print("The command completed.")
       else:
-          print "The command did not complete."
+          print("The command did not complete.")
     See Also:
       Command
       IsCommand
@@ -816,21 +816,21 @@ def LocaleID():
       import rhinoscriptsyntax as rs
       lcid = rs.LocaleID()
       if lcid==1029:
-          print "message in Czech"
+          print("message in Czech")
       elif lcid==1031:
-          print "message in German"
+          print("message in German")
       elif lcid==1033:
-          print "message in English"
+          print("message in English")
       elif lcid==1034:
-          print "message in Spanish"
+          print("message in Spanish")
       elif lcid==1036:
-          print "message in Italian"
+          print("message in Italian")
       elif lcid==1040:
-          print "message in Japanese"
+          print("message in Japanese")
       elif lcid==1042:
-          print "message in Korean"
+          print("message in Korean")
       elif lcid==1045:
-          print "message in Polish"
+          print("message in Polish")
     See Also:
 
     """
@@ -975,7 +975,7 @@ def PlugInId(plugin):
       import rhinoscriptsyntax as rs
       plugins = rs.PlugIns(0, 1)
       if plugins:
-          for plugin in plugins: print rs.PlugInId(plugin)
+          for plugin in plugins: print(rs.PlugInId(plugin))
     See Also:
       EnablePlugIn
       IsPlugIn
@@ -1002,7 +1002,7 @@ def PlugIns(types=0, status=0):
     Example:
       import rhinoscriptsyntax as rs
       plugins = rs.PlugIns(0, 1)
-      for plugin in plugins: print plugin
+      for plugin in plugins: print(plugin)
     See Also:
 
     """
@@ -1063,8 +1063,8 @@ def ScreenSize():
     Example:
       import rhinoscriptsyntax as rs
       size = rs.ScreenSize()
-      print "Screen Width:", size[0], "pixels"
-      print "Screen Height:", size[1], "pixels"
+      print("Screen Width: {} pixels".format(size[0]))
+      print("Screen Height: {} pixels".format(size[1]))
     See Also:
 
     """
@@ -1078,7 +1078,7 @@ def SdkVersion():
       str: the version of the Rhino SDK supported by the executing Rhino. Rhino SDK versions are 9 digit numbers in the form of YYYYMMDDn.
     Example:
       import rhinoscriptsyntax as rs
-      print "Required SDK Version:", rs.SdkVersion()
+      print("Required SDK Version: {}".format(rs.SdkVersion()))
     See Also:
 
     """
@@ -1095,7 +1095,7 @@ def SearchPathCount():
       count = rs.SearchPathCount()
       if count>0:
           paths = rs.SearchPathList()
-          for path in paths: print path
+          for path in paths: print(path)
     See Also:
       AddSearchPath
       DeleteSearchPath
@@ -1114,7 +1114,7 @@ def SearchPathList():
       count = rs.SearchPathCount()
       if count>0:
           paths = rs.SearchPathList()
-          for path in paths: print path
+          for path in paths: print(path)
     See Also:
       AddSearchPath
       DeleteSearchPath
@@ -1301,7 +1301,7 @@ def WindowHandle():
     Example:
       import rhinoscriptsyntax as rs
       handle = rs.WindowHandle()
-      print handle
+      print(handle)
     See Also:
 
     """

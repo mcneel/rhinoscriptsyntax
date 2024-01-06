@@ -136,7 +136,7 @@ def AddHatchPatterns(filename, replace=False):
       if filename:
           patterns = rs.AddHatchPatterns(filename)
           if patterns:
-              for pattern in patterns: print pattern
+              for pattern in patterns: print(pattern)
     See Also:
       HatchPatternCount
       HatchPatternNames
@@ -259,7 +259,7 @@ def HatchPatternCount():
       number: the number of hatch patterns in the document
     Example:
       import rhinoscriptsyntax as rs
-      print "There are", rs.HatchPatternCount(), "hatch patterns."
+      print("There are {} hatch patterns.".format(rs.HatchPatternCount()))
     See Also:
       HatchPatternNames
     """
@@ -279,8 +279,8 @@ def HatchPatternDescription(hatch_pattern):
       patterns = rs.HatchPatternNames()
       for pattern in patterns:
           description = rs.HatchPatternDescription(pattern)
-          if description: print pattern, "-", description
-          else: print pattern
+          if description: print("{} - {}".format(pattern, description))
+          else: print(pattern)
     See Also:
       HatchPatternCount
       HatchPatternNames
@@ -306,7 +306,7 @@ def HatchPatternFillType(hatch_pattern):
       patterns = rs.HatchPatternNames()
       for pattern in patterns:
           fill = rs.HatchPatternFillType(pattern)
-          print pattern, "-", fill
+          print("{} - {}".format(pattern, fill))
     See Also:
       HatchPatternCount
       HatchPatternNames
@@ -326,8 +326,8 @@ def HatchPatternNames():
       patterns = rs.HatchPatternNames()
       for pattern in patterns:
           description = rs.HatchPatternDescription(pattern)
-          if description: print pattern, "-", description
-          else: print pattern
+          if description: print("{} - {}".format(pattern, description))
+          else: print(pattern)
     See Also:
       HatchPatternCount
     """
@@ -419,8 +419,8 @@ def IsHatch(object_id):
     Example:
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
-      if rs.IsHatch(obj): print "Object is a hatch"
-      else: print "Object is not a hatch"
+      if rs.IsHatch(obj): print("Object is a hatch")
+      else: print("Object is not a hatch")
     See Also:
       HatchPattern
       HatchRotation
@@ -439,8 +439,8 @@ def IsHatchPattern(name):
     Example:
       import rhinoscriptsyntax as rs
       hatch = rs.GetString("Hatch pattern name")
-      if rs.IsHatchPattern(hatch): print "The hatch pattern exists."
-      else: print "The hatch pattern does not exist."
+      if rs.IsHatchPattern(hatch): print("The hatch pattern exists.")
+      else: print("The hatch pattern does not exist.")
     See Also:
       IsHatchPatternCurrent
       IsHatchPatternReference
@@ -461,10 +461,10 @@ def IsHatchPatternCurrent(hatch_pattern):
       hatch = rs.GetString("Hatch pattern name")
       if rs.IsHatchPattern(hatch):
           if rs.IsHatchPatternCurrent(hatch):
-              print "The hatch pattern is current."
+              print("The hatch pattern is current.")
           else:
-              print "The hatch pattern is not current."
-      else: print "The hatch pattern does not exist."
+              print("The hatch pattern is not current.")
+      else: print("The hatch pattern does not exist.")
     See Also:
       IsHatchPattern
       IsHatchPatternReference
@@ -487,11 +487,11 @@ def IsHatchPatternReference(hatch_pattern):
       hatch = rs.GetString("Hatch pattern name")
       if rs.IsHatchPattern(hatch):
           if rs.IsHatchPatternReference(hatch):
-              print "The hatch pattern is reference."
+              print("The hatch pattern is reference.")
           else:
-              print "The hatch pattern is not reference."
+              print("The hatch pattern is not reference.")
       else:
-          print "The hatch pattern does not exist."
+          print("The hatch pattern does not exist.")
     See Also:
       IsHatchPattern
       IsHatchPatternCurrent

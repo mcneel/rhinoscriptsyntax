@@ -679,7 +679,7 @@ def ArcAngle(curve_id, segment_index=-1):
       id = rs.GetObject("Select arc")
       if rs.IsArc(id):
           angle = rs.ArcAngle(id)
-          print "Arc angle:", angle
+          print("Arc angle: {}".format(angle))
     See Also:
       AddArc3Pt
       ArcCenterPoint
@@ -757,7 +757,7 @@ def ArcRadius(curve_id, segment_index=-1):
       id = rs.GetObject("Select arc")
       if rs.IsArc(id):
           radius = rs.ArcRadius(id)
-          print "Arc radius:", radius
+          print("Arc radius: {}".format(radius))
     See Also:
       AddArc3Pt
       ArcAngle
@@ -812,7 +812,7 @@ def CircleCircumference(curve_id, segment_index=-1):
       id = rs.GetObject("Select circle")
       if rs.IsCircle(id):
           circumference = rs.CircleCircumference(id)
-          print "Circle circumference:", circumference
+          print("Circle circumference: {}".format(circumference))
     See Also:
       AddCircle
       AddCircle3Pt
@@ -838,7 +838,7 @@ def CircleRadius(curve_id, segment_index=-1):
       id = rs.GetObject("Select circle")
       if rs.IsCircle(id):
           radius = rs.CircleRadius(id)
-          print "Circle radius:", radius
+          print("Circle radius: {}".format(radius))
     See Also:
       AddCircle
       AddCircle3Pt
@@ -992,7 +992,7 @@ def CurveArea(curve_id):
       if id:
           props = rs.CurveArea(id)
           if props:
-              print "The curve area is:", props[0]
+              print("The curve area is: {}".format(props[0]))
     See Also:
       IsCurve
       IsCurveClosed
@@ -1023,7 +1023,7 @@ def CurveAreaCentroid(curve_id):
       if id:
           props = rs.CurveAreaCentroid(id)
           if props:
-              print "The curve area centroid is:", props[0]
+              print("The curve area centroid is: {}".format(props[0]))
     See Also:
       IsCurve
       IsCurveClosed
@@ -1256,7 +1256,7 @@ def CurveClosestObject(curve_id, object_ids):
           if curve:
               results = rs.CurveClosestObject(curve, objects)
               if results:
-                  print "Curve id:", results[0]
+                  print("Curve id: {}".format(results[0]))
                   rs.AddPoint( results[1] )
                   rs.AddPoint( results[2] )
     See Also:
@@ -1291,7 +1291,7 @@ def CurveClosestPoint(curve_id, test_point, segment_index=-1 ):
           point = rs.GetPointOnCurve(id, "Pick a test point")
           if point:
               param = rs.CurveClosestPoint(id, point)
-              print "Curve parameter:", param
+              print("Curve parameter: {}".format(param))
     See Also:
       EvaluateCurve
       IsCurve
@@ -1361,12 +1361,12 @@ def CurveCurvature(curve_id, parameter):
               if param:
                   data = rs.CurveCurvature(obj, param)
                   if data:
-                      print "Curve curvature evaluation at parameter", param, ":"
-                      print " 3-D Point:", data[0]
-                      print " 3-D Tangent:", data[1]
-                      print " Center of radius of curvature:", data[2]
-                      print " Radius of curvature:", data[3]
-                      print " 3-D Curvature:", data[4]
+                      print("Curve curvature evaluation at parameter {}".format(param, ":"))
+                      print(" 3-D Point: {}".format(data[0]))
+                      print(" 3-D Tangent: {}".format(data[1]))
+                      print(" Center of radius of curvature: {}".format(data[2]))
+                      print(" Radius of curvature: {}".format(data[3]))
+                      print(" 3-D Curvature: {}".format(data[4]))
     See Also:
       SurfaceCurvature
     """
@@ -1430,23 +1430,23 @@ def CurveCurveIntersection(curveA, curveB=None, tolerance=-1):
           if curve2 is None: return
           intersection_list = rs.CurveCurveIntersection(curve1, curve2)
           if intersection_list is None:
-              print "Selected curves do not intersect."
+              print("Selected curves do not intersect.")
               return
           for intersection in intersection_list:
               if intersection[0] == 1:
-                  print "Point"
-                  print "Intersection point on first curve: ", intersection[1]
-                  print "Intersection point on second curve: ", intersection[3]
-                  print "First curve parameter: ", intersection[5]
-                  print "Second curve parameter: ", intersection[7]
+                  print("Point")
+                  print("Intersection point on first curve:  {}".format(intersection[1]))
+                  print("Intersection point on second curve:  {}".format(intersection[3]))
+                  print("First curve parameter:  {}".format(intersection[5]))
+                  print("Second curve parameter:  {}".format(intersection[7]))
               else:
-                  print "Overlap"
-                  print "Intersection start point on first curve: ", intersection[1]
-                  print "Intersection end point on first curve: ", intersection[2]
-                  print "Intersection start point on second curve: ", intersection[3]
-                  print "Intersection end point on second curve: ", intersection[4]
-                  print "First curve parameter range: ", intersection[5], " to ", intersection[6]
-                  print "Second curve parameter range: ", intersection[7], " to ", intersection[8]
+                  print("Overlap")
+                  print("Intersection start point on first curve: {}".format(intersection[1]))
+                  print("Intersection end point on first curve: {}".format(intersection[2]))
+                  print("Intersection start point on second curve: {}".format(intersection[3]))
+                  print("Intersection end point on second curve: {}".format(intersection[4]))
+                  print("First curve parameter range: {} to {}".format(intersection[5], intersection[6]))
+                  print("Second curve parameter range: {} to {}".format(intersection[7], intersection[8]))
       ccx()
     See Also:
       CurveSurfaceIntersection
@@ -1484,7 +1484,7 @@ def CurveDegree(curve_id, segment_index=-1):
       obj = rs.GetObject("Select a curve")
       if rs.IsCurve(obj):
           degree = rs.CurveDegree(obj)
-          print "Curve degree:", degree
+          print("Curve degree:{}".format(degree))
     See Also:
       CurveDomain
       IsCurve
@@ -1512,8 +1512,8 @@ def CurveDeviation(curve_a, curve_b):
       curveB = rs.GetObject("Select second curve to test", rs.filter.curve)
       deviation = rs.CurveDeviation(curveA, curveB)
       if deviation:
-          print "Minimum deviation =", deviation[5]
-          print "Maximum deviation =", deviation[2]
+          print("Minimum deviation = {}".format(deviation[5]))
+          print("Maximum deviation = {}".format(deviation[2]))
     See Also:
       CurveArea
       CurveAreaCentroid
@@ -1543,7 +1543,7 @@ def CurveDim(curve_id, segment_index=-1):
       import rhinoscriptsyntax as rs
       curve = rs.GetObject("Select a curve")
       if rs.IsCurve(curve):
-          print "Curve dimension =", rs.CurveDim(curve)
+          print("Curve dimension = {}".format(rs.CurveDim(curve)))
     See Also:
       CurveDegree
       CurveDomain
@@ -1567,9 +1567,9 @@ def CurveDirectionsMatch(curve_id_0, curve_id_1):
       curve1 = rs.GetObject("Select first curve to compare", rs.filter.curve)
       curve2 = rs.GetObject("Select second curve to compare", rs.filter.curve)
       if rs.CurveDirectionsMatch(curve1, curve2):
-          print "Curves are in the same direction"
+          print("Curves are in the same direction")
       else:
-          print "Curve are not in the same direction"
+          print("Curve are not in the same direction")
     See Also:
       ReverseCurve
     """
@@ -1633,7 +1633,7 @@ def CurveDomain(curve_id, segment_index=-1):
       obj = rs.GetObject("Select a curve")
       if rs.IsCurve(obj):
           domain = rs.CurveDomain(obj)
-          print "Curve domain:", domain[0], "to", domain[1]
+          print("Curve domain: {} to {}".format(domain[0], domain[1]))
     See Also:
       CurveDegree
       IsCurve
@@ -1809,7 +1809,7 @@ def CurveKnotCount(curve_id, segment_index=-1):
       obj = rs.GetObject("Select a curve")
       if rs.IsCurve(obj):
           count = rs.CurveKnotCount(obj)
-          print "Curve knot count:", count
+          print("Curve knot count:{}".format(count))
     See Also:
       DivideCurve
       IsCurve
@@ -1834,7 +1834,7 @@ def CurveKnots(curve_id, segment_index=-1):
       if rs.IsCurve(obj):
           knots = rs.CurveKnots(obj)
           if knots:
-              for knot in knots: print "Curve knot value:", knot
+              for knot in knots: print("Curve knot value:{}".format(knot))
     See Also:
       CurveKnotCount
       IsCurve
@@ -1863,7 +1863,7 @@ def CurveLength(curve_id, segment_index=-1, sub_domain=None):
       object = rs.GetObject("Select a curve")
       if rs.IsCurve(object):
           length = rs.CurveLength(object)
-          print "Curve length:", length
+          print("Curve length:{}".format(length))
     See Also:
       CurveDomain
       IsCurve
@@ -1915,7 +1915,7 @@ def CurveNormal(curve_id, segment_index=-1):
       object = rs.GetObject("Select a planar curve")
       if rs.IsCurve(object) and rs.IsCurvePlanar(object):
           normal = rs.CurveNormal(object)
-          if normal: print "Curve Normal:", normal
+          if normal: print("Curve Normal:{}".format(normal))
     See Also:
       IsCurve
       IsCurvePlanar
@@ -1941,9 +1941,9 @@ def CurveNormalizedParameter(curve_id, parameter):
       if rs.IsCurve(obj):
           domain = rs.CurveDomain(obj)
           parameter = (domain[0]+domain[1])/2.0
-          print "Curve parameter:", parameter
+          print("Curve parameter:{}".format(parameter))
           normalized = rs.CurveNormalizedParameter(obj, parameter)
-          print "Normalized parameter:", normalized
+          print("Normalized parameter:{}".format(normalized))
     See Also:
       CurveDomain
       CurveParameter
@@ -1965,9 +1965,9 @@ def CurveParameter(curve_id, parameter):
       obj = rs.GetObject("Select curve")
       if rs.IsCurve(obj):
           normalized = 0.5
-          print "Normalized parameter:", normalized
+          print("Normalized parameter:{}".format(normalized))
           parameter = rs.CurveParameter(obj, normalized)
-          print "Curve parameter:", parameter
+          print("Curve parameter:{}".format(parameter))
     See Also:
       CurveDomain
       CurveNormalizedParameter
@@ -2039,7 +2039,7 @@ def CurvePointCount(curve_id, segment_index=-1):
       obj = rs.GetObject("Select a curve")
       if rs.IsCurve(obj):
           count = rs.CurvePointCount(obj)
-          print "Curve point count:", count
+          print("Curve point count:{}".format(count))
     See Also:
       DivideCurve
       IsCurve
@@ -2092,7 +2092,7 @@ def CurveRadius(curve_id, test_point, segment_index=-1):
           point = rs.GetPointOnCurve(obj, "Pick a test point")
           if point:
               radius = rs.CurveRadius(obj, point)
-              print "Radius of curvature:", radius
+              print("Radius of curvature:{}".format(radius))
     See Also:
       IsCurve
     """
@@ -2224,23 +2224,23 @@ def CurveSurfaceIntersection(curve_id, surface_id, tolerance=-1, angle_tolerance
           if surface is None: return
           intersection_list = rs.CurveSurfaceIntersection(curve, surface)
           if intersection_list is None:
-              print "Curve and surface do not intersect."
+              print("Curve and surface do not intersect.")
               return
           for intersection in intersection_list:
               if intersection[0]==1:
-                  print "Point"
-                  print "Intersection point on curve:", intersection[1]
-                  print "Intersection point on surface:", intersection[3]
-                  print "Curve parameter:", intersection[5]
-                  print "Surface parameter:", intersection[7], ",", intersection[8]
+                  print("Point")
+                  print("Intersection point on curve:{}".format(intersection[1]))
+                  print("Intersection point on surface:{}".format(intersection[3]))
+                  print("Curve parameter:{}".format(intersection[5]))
+                  print("Surface parameter: {}, {}".format(intersection[7], intersection[8]))
               else:
-                  print "Overlap"
-                  print "Intersection start point on curve:", intersection[1]
-                  print "Intersection end point on curve:", intersection[2]
-                  print "Intersection start point on surface:", intersection[3]
-                  print "Intersection end point on surface:", intersection[4]
-                  print "Curve parameter range:", intersection[5], "to", intersection[6]
-                  print "Surface parameter range:", intersection[7], ",", intersection[8], "to", intersection[9], ",", intersection[10]
+                  print("Overlap")
+                  print("Intersection start point on curve:{}".format(intersection[1]))
+                  print("Intersection end point on curve:{}".format(intersection[2]))
+                  print("Intersection start point on surface:{}".format(intersection[3]))
+                  print("Intersection end point on surface:{}".format(intersection[4]))
+                  print("Curve parameter range: {} to {}".format(intersection[5], intersection[6]))
+                  print("Surface parameter range: {}, {} to {}, {}".format(intersection[7] intersection[8], intersection[9], intersection[10]))
       csx()
     See Also:
       CurveCurveIntersection
@@ -2284,7 +2284,7 @@ def CurveTangent(curve_id, parameter, segment_index=-1):
           if point:
               param = rs.CurveClosestPoint(obj, point)
               normal = rs.CurveTangent(obj, param)
-              print normal
+              print(normal)
     See Also:
       CurveClosestPoint
       CurveDomain
@@ -2311,7 +2311,7 @@ def CurveWeights(curve_id, segment_index=-1):
           weights = rs.CurveWeights(obj)
           if weights:
               for weight in weights:
-                  print "Curve control point weight value:", weight
+                  print("Curve control point weight value:{}".format(weight))
     See Also:
       CurveKnots
       IsCurve
@@ -2812,9 +2812,9 @@ def IsArc(curve_id, segment_index=-1):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select an arc")
       if rs.IsArc(obj):
-          print "The object is an arc."
+          print("The object is an arc.")
       else:
-          print "The object is not an arc."
+          print("The object is not an arc.")
     See Also:
       AddArc3Pt
       ArcAngle
@@ -2839,9 +2839,9 @@ def IsCircle(curve_id, tolerance=None):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a circle")
       if rs.IsCircle(obj):
-          print "The object is a circle."
+          print("The object is a circle.")
       else:
-          print "The object is not a circle."
+          print("The object is not a circle.")
     See Also:
       AddCircle
       AddCircle3Pt
@@ -2865,9 +2865,9 @@ def IsCurve(object_id):
       import rhinoscriptsyntax as rs
       object = rs.GetObject("Select a curve")
       if rs.IsCurve(object):
-          print "The object is a curve."
+          print("The object is a curve.")
       else:
-          print "The object is not a curve."
+          print("The object is not a curve.")
     See Also:
       IsCurveClosed
       IsCurveLinear
@@ -2913,11 +2913,11 @@ def IsCurveClosed(object_id):
       object = rs.GetObject("Select a curve")
       if rs.IsCurve(object):
           if rs.IsCurveClosed(oObject):
-              print "The object is a closed curve."
+              print("The object is a closed curve.")
           else:
-              print "The object is not a closed curve."
+              print("The object is not a closed curve.")
       else:
-          print "The object is not a curve."
+          print("The object is not a curve.")
     See Also:
       IsCurve
       IsCurveLinear
@@ -2940,11 +2940,11 @@ def IsCurveInPlane(object_id, plane=None):
       obj = rs.GetObject("Select a curve")
       if rs.IsCurve(obj) and rs.IsCurvePlanar(obj):
           if rs.IsCurveInPlane(obj):
-              print "The curve lies in the current cplane."
+              print("The curve lies in the current cplane.")
           else:
-              print "The curve does not lie in the current cplane."
+              print("The curve does not lie in the current cplane.")
       else:
-          print "The object is not a planar curve."
+          print("The object is not a planar curve.")
     See Also:
       IsCurve
       IsCurvePlanar
@@ -2969,11 +2969,11 @@ def IsCurveLinear(object_id, segment_index=-1):
       id = rs.GetObject("Select a curve")
       if rs.IsCurve(id):
           if rs.IsCurveLinear(id):
-              print "The object is a linear curve."
+              print("The object is a linear curve.")
           else:
-              print "The object is not a linear curve."
+              print("The object is not a linear curve.")
       else:
-          print "The object is not a curve."
+          print("The object is not a curve.")
     See Also:
       IsCurve
       IsCurveClosed
@@ -2996,11 +2996,11 @@ def IsCurvePeriodic(curve_id, segment_index=-1):
       obj = rs.GetObject("Select a curve")
       if rs.IsCurve(obj):
           if rs.IsCurvePeriodic(obj):
-              print "The object is a periodic curve."
+              print("The object is a periodic curve.")
           else:
-              print "The object is not a periodic curve."
+              print("The object is not a periodic curve.")
       else:
-          print "The object is not a curve."
+          print("The object is not a curve.")
     See Also:
       IsCurve
       IsCurveClosed
@@ -3023,11 +3023,11 @@ def IsCurvePlanar(curve_id, segment_index=-1):
       obj = rs.GetObject("Select a curve")
       if rs.IsCurve(obj):
           if rs.IsCurvePlanar(obj):
-              print "The object is a planar curve."
+              print("The object is a planar curve.")
           else:
-              print "The object is not a planar curve."
+              print("The object is not a planar curve.")
       else:
-          print "The object is not a curve."
+          print("The object is not a curve.")
     See Also:
       IsCurve
       IsCurveClosed
@@ -3051,11 +3051,11 @@ def IsCurveRational(curve_id, segment_index=-1):
       obj = rs.GetObject("Select a curve")
       if rs.IsCurve(obj):
           if rs.IsCurveRational(obj):
-              print "The object is a rational NURBS curve."
+              print("The object is a rational NURBS curve.")
           else:
-              print "The object is not a rational NURBS curve."
+              print("The object is not a rational NURBS curve.")
       else:
-          print "The object is not a curve."
+          print("The object is not a curve.")
     See Also:
       IsCurve
       IsCurveClosed
@@ -3078,9 +3078,9 @@ def IsEllipse(object_id, segment_index=-1):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select an ellipse")
       if rs.IsEllipse(obj):
-          print "The object is an ellipse."
+          print("The object is an ellipse.")
       else:
-          print "The object is not an ellipse."
+          print("The object is not an ellipse.")
     See Also:
       EllipseCenterPoint
       EllipseQuadPoints
@@ -3100,9 +3100,9 @@ def IsLine(object_id, segment_index=-1):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a line")
       if rs.IsLine(obj):
-          print "The object is a line."
+          print("The object is a line.")
       else:
-          print "The object is not a line."
+          print("The object is not a line.")
     See Also:
       AddLine
     """
@@ -3128,9 +3128,9 @@ def IsPointOnCurve(object_id, point, segment_index=-1):
           point = rs.GetPoint("Pick a test point")
           if point:
               if rs.IsPointOnCurve(obj, point):
-                  print "The point is on the curve"
+                  print("The point is on the curve")
               else:
-                  print "The point is not on the curve"
+                  print("The point is not on the curve")
     See Also:
       IsCurve
     """
@@ -3151,9 +3151,9 @@ def IsPolyCurve(object_id, segment_index=-1):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a polycurve")
       if rs.IsPolyCurve(obj):
-          print "The object is a polycurve."
+          print("The object is a polycurve.")
       else:
-          print "The object is not a polycurve."
+          print("The object is not a polycurve.")
     See Also:
       PolyCurveCount
     """
@@ -3172,9 +3172,9 @@ def IsPolyline( object_id, segment_index=-1 ):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select a polyline")
       if rs.IsPolyline(obj):
-          print "The object is a polyline."
+          print("The object is a polyline.")
       else:
-          print "The object is not a polyline."
+          print("The object is not a polyline.")
     See Also:
       IsPolyline
       PolylineVertices
@@ -3445,10 +3445,10 @@ def PlanarClosedCurveContainment(curve_a, curve_b, plane=None, tolerance=None):
           if rs.IsCurveClosed(curve1) and rs.IsCurveClosed(curve2):
               if rs.IsCurveInPlane(curve1) and rs.IsCurveInPlane(curve2):
                   result = rs.PlanarClosedCurveContainment(curve1, curve2)
-                  if result==0: print "The regions bounded by the curves are disjoint."
-                  elif result==1: print "The two curves intersect.."
-                  elif result==2: print "The region bounded by Curve1 is inside of Curve2."
-                  else: print "The region bounded by Curve2 is inside of Curve1."
+                  if result==0: print("The regions bounded by the curves are disjoint.")
+                  elif result==1: print("The two curves intersect..")
+                  elif result==2: print("The region bounded by Curve1 is inside of Curve2.")
+                  else: print("The region bounded by Curve2 is inside of Curve1.")
     See Also:
       PlanarCurveCollision
       PointInPlanarClosedCurve
@@ -3480,9 +3480,9 @@ def PlanarCurveCollision(curve_a, curve_b, plane=None, tolerance=None):
       curve2 = rs.GetObject("Select second curve")
       if( rs.IsCurvePlanar(curve1) and rs.IsCurvePlanar(curve2) and rs.IsCurveInPlane(curve1) and rs.IsCurveInPlane(curve2) ):
           if rs.PlanarCurveCollision(curve1, curve2):
-              print "The coplanar curves intersect."
+              print("The coplanar curves intersect.")
           else:
-              print "The coplanar curves do not intersect."
+              print("The coplanar curves do not intersect.")
     See Also:
       CurveCurveIntersection
       PlanarClosedCurveContainment
@@ -3520,9 +3520,9 @@ def PointInPlanarClosedCurve(point, curve, plane=None, tolerance=None):
           point = rs.GetPoint("Pick a point")
           if point:
               result = rs.PointInPlanarClosedCurve(point, curve)
-              if result==0: print "The point is outside of the closed curve."
-              elif result==1: print "The point is inside of the closed curve."
-              else: print "The point is on the closed curve."
+              if result==0: print("The point is outside of the closed curve.")
+              elif result==1: print("The point is inside of the closed curve.")
+              else: print("The point is on the closed curve.")
     See Also:
       PlanarClosedCurveContainment
       PlanarCurveCollision
@@ -3555,7 +3555,7 @@ def PolyCurveCount(curve_id, segment_index=-1):
       obj = rs.GetObject("Select a polycurve")
       if rs.IsPolyCurve(obj):
           count = rs.PolyCurveCount(obj)
-          if count: print "The polycurve contains", count, " curves."
+          if count: print("The polycurve contains {} curves".format(count))
     See Also:
       IsPolyCurve
     """

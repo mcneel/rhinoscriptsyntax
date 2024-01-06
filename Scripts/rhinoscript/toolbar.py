@@ -68,9 +68,9 @@ def IsToolbar(name, toolbar, group=False):
       name = rs.IsToolbarCollection(file)
       if name:
           if rs.IsToolbar(name, "Layer"):
-              print "The collection contains the Layer toolbar."
+              print("The collection contains the Layer toolbar.")
           else:
-              print "The collection does not contain the Layer toolbar."
+              print("The collection does not contain the Layer toolbar.")
     See Also:
       HideToolbar
       IsToolbarVisible
@@ -96,8 +96,8 @@ def IsToolbarCollection(file):
       import rhinoscriptsyntax as rs
       file = "C:\\SteveBaer\\AppData\\Roaming\\McNeel\\Rhinoceros\\5.0\\UI\\default.rui"
       name = rs.IsToolbarCollection(file)
-      if name: print "The default toolbar collection is loaded."
-      else: print "The default toolbar collection is not loaded."
+      if name: print("The default toolbar collection is loaded.")
+      else: print("The default toolbar collection is not loaded.")
     See Also:
       CloseToolbarCollection
       OpenToolbarCollection
@@ -121,11 +121,11 @@ def IsToolbarDocked(name, toolbar_group):
       import rhinoscriptsyntax as rs
       rc = rs.IsToolbarDocked("Default", "Main1")
       if rc==True:
-          print "The Main1 toolbar is docked."
+          print("The Main1 toolbar is docked.")
       elif rc==False:
-          print "The Main1 toolbar is not docked."
+          print("The Main1 toolbar is not docked.")
       else:
-          print "The Main1 toolbar is not visible."
+          print("The Main1 toolbar is not visible.")
     See Also:
       IsToolbar
       IsToolbarVisible
@@ -149,8 +149,8 @@ def IsToolbarVisible(name, toolbar_group):
       file = "C:\\SteveBaer\\AppData\\Roaming\\McNeel\\Rhinoceros\\5.0\\UI\\default.rui"
       name = rs.IsToolbarCollection(file)
       if name:
-          if rs.IsToolbarVisible(name, "Layer"): print "The Layer toolbar is visible."
-          else: print "The Layer toolbar is not visible."
+          if rs.IsToolbarVisible(name, "Layer"): print("The Layer toolbar is visible.")
+          else: print("The Layer toolbar is not visible.")
     See Also:
       HideToolbar
       IsToolbar
@@ -260,7 +260,7 @@ def ToolbarCollectionCount():
     Example:
       import rhinoscriptsyntax as rs
       count = rs.ToolbarCollectionCount()
-      print "There are", count, " toolbar(s) collections loaded."
+      print("There are {} toolbar(s) collections loaded".format(count))
     See Also:
       CloseToolbarCollection
       IsToolbarCollection
@@ -279,7 +279,7 @@ def ToolbarCollectionNames():
       import rhinoscriptsyntax as rs
       names = rs.ToolbarCollectionNames()
       if names:
-          for name in names: print name
+          for name in names: print(name)
     See Also:
       CloseToolbarCollection
       IsToolbarCollection
@@ -301,7 +301,7 @@ def ToolbarCollectionPath(name):
       import rhinoscriptsyntax as rs
       names = rs.ToolbarCollectionNames()
       if names:
-          for name in names: print rs.ToolbarCollectionPath(name)
+          for name in names: print(rs.ToolbarCollectionPath(name))
     See Also:
       CloseToolbarCollection
       IsToolbarCollection
@@ -326,7 +326,7 @@ def ToolbarCount(name, groups=False):
       names = rs.ToolbarCollectionNames()
       if names:
           count = rs.ToolbarCount(names[0])
-          print "The", names[0], " collection contains", count, " toolbars."
+          print("The {} collection contains {} toolbars.".format(names[0], count))
     See Also:
       HideToolbar
       IsToolbar
@@ -355,7 +355,7 @@ def ToolbarNames(name, groups=False):
       if names:
           toolbars = rs.ToolbarNames(names[0])
           if toolbars:
-              for toolbar in toolbars: print toolbar
+              for toolbar in toolbars: print(toolbar)
     See Also:
       HideToolbar
       IsToolbar

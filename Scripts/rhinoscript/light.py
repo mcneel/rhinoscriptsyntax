@@ -227,9 +227,9 @@ def IsDirectionalLight(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a light", rs.filter.light)
       if rs.IsDirectionalLight(id):
-          print "The object is a directional light."
+          print("The object is a directional light.")
       else:
-          print "The object is not a directional light."
+          print("The object is not a directional light.")
     See Also:
       AddDirectionalLight
     """
@@ -247,9 +247,9 @@ def IsLight(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a light")
       if rs.IsLight(id):
-          print "The object is a light."
+          print("The object is a light.")
       else:
-          print "The object is not a light."
+          print("The object is not a light.")
     See Also:
       EnableLight
       IsLightEnabled
@@ -272,9 +272,9 @@ def IsLightEnabled(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a light", rs.filter.light)
       if rs.IsLightEnabled(id):
-          print "The light is enabled (on)."
+          print("The light is enabled (on).")
       else:
-          print "The light is disabled (off)."
+          print("The light is disabled (off).")
     See Also:
       EnableLight
       IsLight
@@ -297,9 +297,9 @@ def IsLightReference(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a light", rs.filter.light)
       if rs.IsLightReference(id):
-          print "The light is a reference object."
+          print("The light is a reference object.")
       else:
-          print "The light is not a reference object."
+          print("The light is not a reference object.")
     See Also:
       IsObjectReference
     """
@@ -317,9 +317,9 @@ def IsLinearLight(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a light", rs.filter.light)
       if rs.IsLinearLight(id):
-          print "The object is a linear light."
+          print("The object is a linear light.")
       else:
-          print "The object is not a linear light."
+          print("The object is not a linear light.")
     See Also:
       AddLinearLight
     """
@@ -337,9 +337,9 @@ def IsPointLight(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a light", rs.filter.light)
       if rs.IsPointLight(id):
-          print "The object is a point light."
+          print("The object is a point light.")
       else:
-          print "The object is not a point light."
+          print("The object is not a point light.")
     See Also:
       AddPointLight
     """
@@ -357,9 +357,9 @@ def IsRectangularLight(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a light", rs.filter.light)
       if rs.IsRectangularLight(id):
-          print "The object is a rectangular light."
+          print("The object is a rectangular light.")
       else:
-          print "The object is not a rectangular light."
+          print("The object is not a rectangular light.")
     See Also:
       AddRectangularLight
     """
@@ -377,9 +377,9 @@ def IsSpotLight(object_id):
       import rhinoscriptsyntax as rs
       id = rs.GetObject("Select a light", rs.filter.light)
       if rs.IsSpotLight(id):
-          print "The object is a spot light."
+          print("The object is a spot light.")
       else:
-          print "The object is not a spot light."
+          print("The object is not a spot light.")
     See Also:
       AddSpotLight
       SpotLightHardness
@@ -428,7 +428,7 @@ def LightCount():
       number: the number of light objects in the document
     Example:
       import rhinoscriptsyntax as rs
-      print "There are", rs.LightCount(), " lights."
+      print("There are {} lights".format(rs.LightCount()))
     See Also:
       EnableLight
       IsLight

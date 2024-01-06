@@ -44,7 +44,7 @@ def AliasMacro(alias, macro=None):
       import rhinoscriptsyntax as rs
       aliases = rs.AliasNames()
       for alias in aliases:
-      print alias, " -> ", rs.AliasMacro(alias)
+      print("{} -> {}".format(alias, rs.AliasMacro(alias)))
     See Also:
       AddAlias
       AliasCount

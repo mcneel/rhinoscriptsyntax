@@ -32,7 +32,7 @@ def DocumentDataCount():
     Example:
       import rhinoscriptsyntax as rs
       count = rs.DocumentDataCount()
-      print "RhinoScript document user data count: ", count
+      print("RhinoScript document user data count: {}".format(count))
     See Also:
       DeleteDocumentData
       GetDocumentData
@@ -69,11 +69,11 @@ def GetDocumentData(section=None, entry=None):
     Example:
       import rhinoscriptsyntax as rs
       value = rs.GetDocumentData("MySection1", "MyEntry1")
-      print value
+      print(value)
       value = rs.GetDocumentData("MySection1", "MyEntry2")
-      print value
+      print(value)
       value = rs.GetDocumentData("MySection2", "MyEntry1")
-      print value
+      print(value)
     See Also:
       DeleteDocumentData
       DocumentDataCount
@@ -100,8 +100,8 @@ def GetDocumentUserText(key=None):
       None: If not successful, or on error.
     Example:
       import rhinoscriptsyntax as rs
-      print rs.GetDocumentUserText("Designer")
-      print rs.GetDocumentUserText("Notes")
+      print(rs.GetDocumentUserText("Designer"))
+      print(rs.GetDocumentUserText("Notes"))
     See Also:
       SetDocumentUserText
     """
@@ -126,8 +126,8 @@ def GetUserText(object_id, key=None, attached_to_geometry=False):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if obj:
-          print rs.GetUserText(obj, "PartNo")
-          print rs.GetUserText(obj, "Price")
+          print(rs.GetUserText(obj, "PartNo"))
+          print(rs.GetUserText(obj, "Price"))
     See Also:
       IsUserText
       SetUserText
@@ -150,9 +150,9 @@ def IsDocumentData():
       import rhinoscriptsyntax as rs
       result = rs.IsDocumentData()
       if result:
-          print "This document contains Script document user data"
+          print("This document contains Script document user data")
       else:
-          print "This document contains no Script document user data"
+          print("This document contains no Script document user data")
     See Also:
       DeleteDocumentData
       DocumentDataCount
@@ -190,11 +190,11 @@ def IsUserText(object_id):
       obj = rs.GetObject("Select object")  
       if obj:
           usertext_type = rs.IsUserText(obj)
-          if usertext_type==0: print "Object has no user text"
-          elif usertext_type==1: print "Object has attribute user text"
-          elif usertext_type==2: print "Object has geometry user text"
-          elif usertext_type==3: print "Object has attribute and geometry user text"
-          else: print "Object does not exist"
+          if usertext_type==0: print("Object has no user text")
+          elif usertext_type==1: print("Object has attribute user text")
+          elif usertext_type==2: print("Object has geometry user text")
+          elif usertext_type==3: print("Object has attribute and geometry user text")
+          else: print("Object does not exist")
     See Also:
       GetUserText
       SetUserText

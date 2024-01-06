@@ -81,7 +81,7 @@ def LineIsFartherThan(line, distance, point_or_line):
       import rhinoscriptsyntax as rs
       line = (0,0,0), (10,10,0)
       testPoint = (10,5,0)
-      print rs.LineIsFartherThan(line, 3, testPoint)
+      print(rs.LineIsFartherThan(line, 3, testPoint))
     See Also:
       LineClosestPoint
       LineMaxDistanceTo
@@ -136,7 +136,7 @@ def LineMaxDistanceTo(line, point_or_line):
     Example:
       import rhinoscriptsyntax as rs
       line = (0,0,0), (10,10,0)
-      print rs.LineMaxDistanceTo( line, (10,5,0) )
+      print(rs.LineMaxDistanceTo( line, (10,5,0) ))
     See Also:
       LineClosestPoint
       LineIsFartherThan
@@ -162,7 +162,7 @@ def LineMinDistanceTo(line, point_or_line):
     Example:
       import rhinoscriptsyntax as rs
       line = (0,0,0), (10,10,0)
-      print rs.LineMinDistanceTo(line, (10,5,0))
+      print(rs.LineMinDistanceTo(line, (10,5,0)))
     See Also:
       LineClosestPoint
       LineIsFartherThan

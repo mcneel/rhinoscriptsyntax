@@ -66,7 +66,7 @@ def GetObjectGrip(message=None, preselect=False, select=False):
       if curve:
           rs.EnableObjectGrips( curve )
           grip = rs.GetObjectGrip("Select a curve grip")
-          if grip: print grip[2]
+          if grip: print(grip[2])
     See Also:
       GetObjectGrips
     """
@@ -99,7 +99,7 @@ def GetObjectGrips(message=None, preselect=False, select=False):
       if curves:
           for curve in curves: rs.EnableObjectGrips(curve)
           grips = rs.GetObjectGrips("Select curve grips")
-          if grips: for grip in grips: print grip[0]
+          if grips: for grip in grips: print(grip[0])
     See Also:
       GetObjectGrip
     """
@@ -156,7 +156,7 @@ def ObjectGripCount(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if rs.ObjectGripsOn(obj):
-          print "Grip count =", rs.ObjectGripCount(obj)
+          print("Grip count ={}".format(rs.ObjectGripCount(obj)))
     See Also:
       EnableObjectGrips
       ObjectGripsOn
@@ -228,7 +228,7 @@ def ObjectGripLocations(object_id, points=None):
       if obj:
           rs.EnableObjectGrips( obj )
           points = rs.ObjectGripLocations(obj)
-          for point in points:  print point
+          for point in points:  print(point)
     See Also:
       EnableObjectGrips
       ObjectGripCount
@@ -260,7 +260,7 @@ def ObjectGripsOn(object_id):
       import rhinoscriptsyntax as rs
       obj = rs.GetObject("Select object")
       if rs.ObjectGripsOn(obj):
-          print "Grip count =", rs.ObjectGripCount(obj)
+          print("Grip count = {}".format(rs.ObjectGripCount(obj)))
     See Also:
       EnableObjectGrips
       ObjectGripCount
@@ -338,10 +338,10 @@ def SelectedObjectGrips(object_id):
       if obj:
           rs.EnableObjectGrips( obj )
           count = rs.ObjectGripCount( obj )
-          for i in xrange(0,count,2):
+          for i in range(0,count,2):
               rs.SelectObjectGrip( obj, i )
           grips = rs.SelectedObjectGrips(obj)
-          if grips: print len(grips), "grips selected"
+          if grips: print(len(grips{}).format("grips selected"))
     See Also:
       EnableObjectGrips
       SelectObjectGrip
@@ -371,7 +371,7 @@ def SelectObjectGrip(object_id, index):
       if obj:
           rs.EnableObjectGrips( obj )
           count = rs.ObjectGripCount( obj )
-          for i in xrange(0,count,2): rs.SelectObjectGrip(obj,i)
+          for i in range(0,count,2): rs.SelectObjectGrip(obj,i)
     See Also:
       EnableObjectGrips
       ObjectGripCount
@@ -434,7 +434,7 @@ def UnselectObjectGrip(object_id, index):
       if obj:
           rs.EnableObjectGrips( obj )
           count = rs.ObjectGripCount(obj)
-          for i in xrange(0,count,2):
+          for i in range(0,count,2):
               rs.UnselectObjectGrip( obj, i )
     See Also:
       EnableObjectGrips
