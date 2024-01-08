@@ -16,7 +16,7 @@ def CurveLength():
             count += 1
     
     if (count>0):
-        print "Curves selected:", count, " Total Length:", length
+        print("Curves selected:", count, " Total Length:", length)
     
 # Check to see if this file is being executed as the "main" python
 # script instead of being used as a module by some other python script
