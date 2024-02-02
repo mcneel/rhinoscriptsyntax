@@ -24,10 +24,10 @@ def __PrintFileInformation( fullpath ):
     info  = "Full Path:  " + fullpath +"\n"
     info += "File Name:  " + Path.GetFileName(fullpath) + "\n"
     info += "File Attributes:  " + __FileAttributes(fullpath) + "\n"
-    info += "Date Created:  " + File.GetCreationTime(fullpath).ToString() + "\n"
-    info += "Last Date Accessed:  " + File.GetLastAccessTime(fullpath).ToString() + "\n"
-    info += "Last Date Modified:  " + File.GetLastWriteTime(fullpath).ToString() + "\n"
-    info += "File Size (Bytes):  " + fi.Length.ToString() + "\n"
+    info += "Date Created:  " + str(File.GetCreationTime(fullpath)) + "\n"
+    info += "Last Date Accessed:  " + str(File.GetLastAccessTime(fullpath)) + "\n"
+    info += "Last Date Modified:  " + str(File.GetLastWriteTime(fullpath)) + "\n"
+    info += "File Size (Bytes):  " + str(fi.Length) + "\n"
     rs.MessageBox( info, 0, "Current Model Information" )
 
 

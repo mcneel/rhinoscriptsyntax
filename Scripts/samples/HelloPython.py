@@ -20,7 +20,7 @@ for i in range(1,10):
 
 #conditionals
 x = 8
-for i in xrange(1,x+1):
+for i in range(1,x+1):
     if i%2==0:
         print("{} is even".format(i))
     else:
