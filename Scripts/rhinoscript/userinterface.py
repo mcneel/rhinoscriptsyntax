@@ -540,7 +540,7 @@ def GetLinetype(default_linetype=None, show_by_layer=False):
         lt_new = scriptcontext.doc.Linetypes.FindName(default_linetype)
         if lt_new is not None: lt_instance = lt_new
     id = Rhino.UI.Dialogs.ShowLineTypes("Select Linetype", "", scriptcontext.doc)
-    if id == "": return None
+    if id == System.Guid.Empty: return None
     linetype = scriptcontext.doc.Linetypes.FindId(id)
     return linetype.Name
 
