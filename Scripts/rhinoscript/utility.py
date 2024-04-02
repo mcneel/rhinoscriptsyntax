@@ -2,6 +2,7 @@ import time
 import math
 import string
 import numbers
+from operator import attrgetter
 
 import System
 import System.Drawing
@@ -546,38 +547,14 @@ def SortPoints(points, ascending=True, order=0):
     See Also:
       
     """
-    def __cmpXYZ( a, b ):
-        rc = cmp(a.X, b.X)
-        if rc==0: rc = cmp(a.Y, b.Y)
-        if rc==0: rc = cmp(a.Z, b.Z)
-        return rc
-    def __cmpXZY( a, b ):
-        rc = cmp(a.X, b.X)
-        if rc==0: rc = cmp(a.Z, b.Z)
-        if rc==0: rc = cmp(a.Y, b.Y)
-        return rc
-    def __cmpYXZ( a, b ):
-        rc = cmp(a.Y, b.Y)
-        if rc==0: rc = cmp(a.X, b.X)
-        if rc==0: rc = cmp(a.Z, b.Z)
-        return rc
-    def __cmpYZX( a, b ):
-        rc = cmp(a.Y, b.Y)
-        if rc==0: rc = cmp(a.Z, b.Z)
-        if rc==0: rc = cmp(a.X, b.X)
-        return rc
-    def __cmpZXY( a, b ):
-        rc = cmp(a.Z, b.Z)
-        if rc==0: rc = cmp(a.X, b.X)
-        if rc==0: rc = cmp(a.Y, b.Y)
-        return rc
-    def __cmpZYX( a, b ):
-        rc = cmp(a.Z, b.Z)
-        if rc==0: rc = cmp(a.Y, b.Y)
-        if rc==0: rc = cmp(a.X, b.X)
-        return rc
-    sortfunc = (__cmpXYZ, __cmpXZY, __cmpYXZ, __cmpYZX, __cmpZXY, __cmpZYX)[order]
-    return sorted(points, sortfunc, None, not ascending)
+    __attrXYZ = attrgetter('X', 'Y', 'Z')
+    __attrXZY = attrgetter('X', 'Z', 'Y')
+    __attrYXZ = attrgetter('Y', 'X', 'Z')
+    __attrYZX = attrgetter('Y', 'Z', 'X')
+    __attrZXY = attrgetter('Z', 'X', 'Y')
+    __attrZYX = attrgetter('Z', 'Y', 'X')
+    __attrgetter = (__attrXYZ, __attrXZY, __attrYXZ, __attrYZX, __attrZXY, __attrZYX)[order]
+    return sorted(points, key=__attrgetter, reverse=not ascending)
 
 
 def Str2Pt(point):
