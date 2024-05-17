@@ -1227,7 +1227,10 @@ def StatusBarProgressMeterShow(label, lower, upper, embed_label=True, show_perce
     See Also:
     """
     rc = Rhino.UI.StatusBar.ShowProgressMeter(lower, upper, label, embed_label, show_percent)
-    return rc==1
+    if rc==1:
+        Rhino.RhinoApp.Wait()
+        return True
+    return False
 
 
 def StatusBarProgressMeterUpdate(position, absolute=True):
@@ -1240,7 +1243,9 @@ def StatusBarProgressMeterUpdate(position, absolute=True):
     Example:
     See Also:
     """
-    return Rhino.UI.StatusBar.UpdateProgressMeter(position, absolute)
+    res = Rhino.UI.StatusBar.UpdateProgressMeter(position, absolute)
+    Rhino.RhinoApp.Wait()
+    return res
 
 
 def StatusBarProgressMeterHide():
@@ -1251,6 +1256,7 @@ def StatusBarProgressMeterHide():
     See Also:
     """
     Rhino.UI.StatusBar.HideProgressMeter()
+    Rhino.RhinoApp.Wait()
 
 
 def TemplateFile(filename=None):
