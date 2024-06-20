@@ -29,7 +29,7 @@ def IsXformIdentity(xform):
 
 def IsXformSimilarity(xform):
     """Verifies a matrix is a similarity transformation. A similarity
-    transformation can be broken into a sequence of dialations, translations,
+    transformation can be broken into a sequence of dilations, translations,
     rotations, and reflections
     Parameters:
       xform (transform): List or Rhino.Geometry.Transform.  A 4x4 transformation matrix.
