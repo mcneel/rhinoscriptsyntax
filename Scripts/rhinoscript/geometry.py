@@ -87,7 +87,7 @@ def AddPictureFrame(plane, filename, width=0.0, height=0.0, self_illumination=Tr
     
   """
   plane = rhutil.coerceplane(plane, True)
-  if type(filename) is not System.String or not System.IO.File.Exists(filename): raise Exception('\"{0}\" does not exist or is not a file name'.format(filename))
+  if not isinstance(filename, (str, System.String)) or not System.IO.File.Exists(filename): raise Exception('\"{0}\" does not exist or is not a file name'.format(filename))
   rc = scriptcontext.doc.Objects.AddPictureFrame(plane, filename, make_mesh, width, height, self_illumination, embed) 
   if rc==System.Guid.Empty: raise Exception("unable to add picture frame to document")
   scriptcontext.doc.Views.Redraw()
