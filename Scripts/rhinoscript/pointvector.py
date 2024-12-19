@@ -369,7 +369,7 @@ def PointTransform(point, xform):
       point (point): the point to transform
       xform (transform): a valid 4x4 transformation matrix
     Returns:
-      vector: transformed vector on success
+      point: transformed point on success
     Example:
       # Translate (move) objects by (10,10,0)
       import rhinoscriptsyntax as rs

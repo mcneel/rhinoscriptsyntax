@@ -888,8 +888,8 @@ def ClosedCurveOrientation(curve_id, direction=(0,0,1)):
       direction (vector, optional): 3d vector that identifies up, or Z axs, direction of
                                     the plane to test against
     Returns:
-      number: 1 if the curve's orientation is clockwise
-             -1 if the curve's orientation is counter-clockwise
+      number: 1 if the curve's orientation is counter-clockwise
+             -1 if the curve's orientation is clockwise
               0 if unable to compute the curve's orientation
     Example:
     See Also:
