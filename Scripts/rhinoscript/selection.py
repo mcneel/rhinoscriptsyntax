@@ -271,9 +271,9 @@ def GetObject(message=None, filter=0, preselect=False, select=False, custom_filt
     return obj.Id
 
 
-class __CustomGetObjectEx(Rhino.Input.Custom.GetObject):
+class CustomGetObjectEx(Rhino.Input.Custom.GetObject):
     def __init__(self, allowable_geometry):
-        super(__CustomGetObjectEx, self).__init__()
+        super(CustomGetObjectEx, self).__init__()
         self.m_allowable = allowable_geometry
     def CustomGeometryFilter(self, rhino_object, geometry, component_index):
         for id in self.m_allowable:
@@ -330,7 +330,7 @@ def GetObjectEx(message=None, filter=0, preselect=False, select=False, objects=N
     go = None
     if objects:
         ids = [rhutil.coerceguid(id, True) for id in objects]
-        if ids: go = __CustomGetObjectEx(ids)
+        if ids: go = CustomGetObjectEx(ids)
     if not go: go = Rhino.Input.Custom.GetObject()
     if message: go.SetCommandPrompt(message)
     geometry_filter = __FilterHelper(filter)
@@ -497,7 +497,7 @@ def GetObjectsEx(message=None, filter=0, group=True, preselect=False, select=Fal
     go = None
     if objects:
         ids = [rhutil.coerceguid(id) for id in objects]
-        if ids: go = __CustomGetObjectEx(ids)
+        if ids: go = CustomGetObjectEx(ids)
     if not go: go = Rhino.Input.Custom.GetObject()
     go.SetCommandPrompt(message or "Select objects")
     geometry_filter = __FilterHelper(filter)
