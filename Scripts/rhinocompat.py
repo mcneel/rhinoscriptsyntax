@@ -53,3 +53,13 @@ def IS_STRING_INSTANCE(s):
 
 def GET_HOST():
     return __host
+
+
+def GET_IMPORT_CONFIG_PARSER():
+    # RH-85967
+    if PY3:
+      import configparser
+      return configparser
+    else:
+      import ConfigParser
+      return ConfigParser

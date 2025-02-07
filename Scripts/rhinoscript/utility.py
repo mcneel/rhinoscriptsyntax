@@ -404,9 +404,9 @@ def GetSettings(filename, section=None, entry=None):
     See Also:
       
     """
-    import ConfigParser
+    CP = compat.GET_IMPORT_CONFIG_PARSER()
     try:
-        cp = ConfigParser.ConfigParser()
+        cp = CP.ConfigParser()
         cp.read(filename)
         if not section: return cp.sections()
         section = string.lower(section)
