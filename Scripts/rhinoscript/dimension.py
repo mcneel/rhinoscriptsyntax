@@ -788,12 +788,20 @@ def DimStyleTextAlignment(dimstyle, alignment=None):
     """
     ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
     if ds is None: return scriptcontext.errorhandler()
-    rc = int(ds.TextAlignment)
+    # NOTE:
+    # this function is about text alignment so return alignment value
+    rc = int(ds.DimTextLocation)
     if alignment is not None:
-        if alignment==0: ds.TextAlignment = Rhino.DocObjects.TextDisplayAlignment.Normal
-        if alignment==1: ds.TextAlignment = Rhino.DocObjects.TextDisplayAlignment.Horizontal
-        if alignment==2: ds.TextAlignment = Rhino.DocObjects.TextDisplayAlignment.AboveLine
-        if alignment==3: ds.TextAlignment = Rhino.DocObjects.TextDisplayAlignment.InLine
+        # NOTE:
+        # for backward compatibility, lets set the "horizontal to view" if
+        # alignment value is '1' - eirannejad 2025-03-17 (RH-86539)
+        if alignment==1: ds.DimTextOrientation = Rhino.DocObjects.TextOrientation.InView
+
+        # set dim text location
+        if alignment==3: ds.DimTextLocation = Rhino.DocObjects.DimensionStyle.TextLocation.InDimLine
+        if alignment==0 or alignment==2:
+          ds.DimTextLocation = Rhino.DocObjects.DimensionStyle.TextLocation.AboveDimLine  # default
+
         scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False)
         scriptcontext.doc.Views.Redraw()
     return rc
