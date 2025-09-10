@@ -1221,7 +1221,10 @@ def PopupMenu(items, modes=None, point=None, view=None):
     See Also:
       
     """
-    screen_point = System.Windows.Forms.Cursor.Position
+    # (RH-86577, eirannejad 2025-09-10)
+    # screen_point = System.Windows.Forms.Cursor.Position
+    screen_point = Eto.Forms.Mouse.Position
+    screen_point = System.Drawing.Point(screen_point.X, screen_point.Y)
     if point:
         point = rhutil.coerce3dpoint(point)
         view = __viewhelper(view)
