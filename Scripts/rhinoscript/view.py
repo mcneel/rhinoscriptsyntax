@@ -3,15 +3,37 @@ import math
 import System
 
 import Rhino
+from Rhino.Display import ViewTypeFilter
 
 import scriptcontext
+from rhinocompat import ENUM_NONE
 
 from rhinoscript import utility as rhutil
 
 
+def __getViewListHelper(includeStandardViews, includePageViews):
+    # GetViewList(True, True) was deperecated in Rhino 8
+    # this function copies the logic from:
+    # https://github.com/mcneel/rhino/blob/17ceb40e3d7ef69e5065251822cfe4dd63534063/src4/DotNetSDK/rhinocommon/dotnet/rhino/rhinosdkdoc.cs#L5780
+    # eirannejad 2025-09-24 (RH-89611)
+
+    view_filter = ViewTypeFilter.All;
+
+    if not includeStandardViews and includePageViews:
+      view_filter = ViewTypeFilter.Page
+
+    if includeStandardViews and not includePageViews:
+      view_filter = ViewTypeFilter.ModelStyleViews;
+
+    if not includeStandardViews and  not includePageViews:
+      view_filter = ENUM_NONE(ViewTypeFilter)
+
+    return scriptcontext.doc.Views.GetViewList(view_filter);
+
+
 def __viewhelper(view):
     if view is None: return scriptcontext.doc.Views.ActiveView
-    allviews = scriptcontext.doc.Views.GetViewList(True, True)
+    allviews = __getViewListHelper(True, True)
     view_id = rhutil.coerceguid(view, False)
     for item in allviews:
         if view_id:
@@ -336,7 +358,7 @@ def IsDetail(layout, detail):
       CurrentDetail
     """
     layout_id = rhutil.coerceguid(layout)
-    views = scriptcontext.doc.Views.GetViewList(False, True)
+    views = __getViewListHelper(False, True)
     found_layout = None
     for view in views:
         if layout_id:
@@ -379,12 +401,12 @@ def IsLayout(layout):
       CurrentDetail
     """
     layout_id = rhutil.coerceguid(layout)
-    alllayouts = scriptcontext.doc.Views.GetViewList(False, True)
+    alllayouts = __getViewListHelper(False, True)
     for layoutview in alllayouts:
         if layout_id:
             if layoutview.MainViewport.Id==layout_id: return True
         elif layoutview.MainViewport.Name==layout: return True
-    allmodelviews = scriptcontext.doc.Views.GetViewList(True, False)
+    allmodelviews = __getViewListHelper(True, False)
     for modelview in allmodelviews:
         if layout_id:
           if modelview.MainViewport.Id==layout_id: return False
@@ -411,7 +433,7 @@ def IsView(view):
     """
     view_id = rhutil.coerceguid(view)
     if view_id is None and view is None: return False
-    allviews = scriptcontext.doc.Views.GetViewList(True, True)
+    allviews = __getViewListHelper(True, True)
     for item in allviews:
         if view_id:
             if item.MainViewport.Id==view_id: return True
@@ -631,7 +653,7 @@ def RenameView(old_title, new_title):
     if not old_title or not new_title: return scriptcontext.errorhandler()
     old_id = rhutil.coerceguid(old_title)
     foundview = None
-    allviews = scriptcontext.doc.Views.GetViewList(True, True)
+    allviews = __getViewListHelper(True, True)
     for view in allviews:
         if old_id:
             if view.MainViewport.Id==old_id:
@@ -1216,7 +1238,7 @@ def ViewNames(return_names=True, view_type=0):
       IsView
       ViewTitle
     """
-    views = scriptcontext.doc.Views.GetViewList(view_type!=1, view_type>0)
+    views = __getViewListHelper(view_type!=1, view_type>0)
     if views is None: return scriptcontext.errorhandler()
     if return_names: return [view.MainViewport.Name for view in views]
     return [view.MainViewport.Id for view in views]
@@ -1526,7 +1548,7 @@ def ZoomBoundingBox(bounding_box, view=None, all=False):
     bbox = rhutil.coerceboundingbox(bounding_box)
     if bbox:
       if all:
-          views = scriptcontext.doc.Views.GetViewList(True, True)
+          views = __getViewListHelper(True, True)
           for view in views: view.ActiveViewport.ZoomBoundingBox(bbox)
       else:
           view = __viewhelper(view)
@@ -1549,7 +1571,7 @@ def ZoomExtents(view=None, all=False):
       ZoomSelected
     """
     if all:
-        views = scriptcontext.doc.Views.GetViewList(True, True)
+        views = __getViewListHelper(True, True)
         for view in views: view.ActiveViewport.ZoomExtents()
     else:
         view = __viewhelper(view)
@@ -1573,7 +1595,7 @@ def ZoomSelected(view=None, all=False):
       ZoomExtents
     """
     if all:
-        views = scriptcontext.doc.Views.GetViewList(True, True)
+        views = __getViewListHelper(True, True)
         for view in views: view.ActiveViewport.ZoomExtentsSelected()
     else:
         view = __viewhelper(view)

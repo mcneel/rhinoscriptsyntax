@@ -5,6 +5,7 @@ import Rhino
 import scriptcontext
 
 from rhinoscript import utility as rhutil
+from rhinoscript.view import __getViewListHelper
 
 
 def __simplify_PointCloudKNeighbors(result, amount):
@@ -40,7 +41,7 @@ def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
         if type(views) is System.Guid:
             viewlist.append(views)
         elif type(views) is str:
-            modelviews = scriptcontext.doc.Views.GetViewList(True, False)
+            modelviews = __getViewListHelper(True, False)
             rc = None
             for item in modelviews:
                 if item.ActiveViewport.Name == views:
@@ -52,7 +53,7 @@ def AddClippingPlane(plane, u_magnitude, v_magnitude, views=None):
             if type(views[0]) is System.Guid:
                 viewlist = views
             elif( type(views[0]) is str ):
-                modelviews = scriptcontext.doc.Views.GetViewList(True,False)
+                modelviews = __getViewListHelper(True,False)
                 for viewname in views:
                     for item in modelviews:
                         if item.ActiveViewport.Name==viewname:
