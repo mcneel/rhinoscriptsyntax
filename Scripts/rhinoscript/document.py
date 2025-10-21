@@ -786,7 +786,7 @@ def UnitAngleTolerance(angle_tolerance_degrees=None, in_model_units=True):
 def UnitDistanceDisplayPrecision(precision=None, model_units=True):
     """Return or set the document's distance display precision
     Parameters:
-      precision (number, optional): The distance display precision.  If the current distance display mode is Decimal, then precision is the number of decimal places.
+      precision (number, optional): The distance display precision. Valid values are >= 0 and <= 20. If the current distance display mode is Decimal, then precision is the number of decimal places.
                                     If the current distance display mode is Fractional (including Feet and Inches), then the denominator = (1/2)^precision.
                                     Use UnitDistanceDisplayMode to get the current distance display mode.
       model_units (bool, optional): Return or modify the document's model units (True) or the document's page units (False). The default is True.
