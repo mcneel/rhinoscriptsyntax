@@ -658,7 +658,7 @@ def CreatePoint(point, y=None, z=None):
 
 
 def coerce2dpoint(point, raise_on_error=False):
-    """Convert input into a Rhino.Geometry.Point2d if possible.
+    """Converts input into a Rhino.Geometry.Point2d if possible.
     Parameters:
       point = Point2d, list, tuple, Vector3d, Point3d, str
       raise_on_error [opt] = True or False
@@ -681,7 +681,7 @@ def coerce2dpoint(point, raise_on_error=False):
 
 
 def coerce3dvector(vector, raise_on_error=False):
-    """Convert input into a Rhino.Geometry.Vector3d if possible.
+    """Converts input into a Rhino.Geometry.Vector3d if possible.
     Parameters:
       vector = Vector3d, Point3d, list, Point3f, Vector3f, str, uuid
       raise_on_error [opt] = True or False
@@ -717,6 +717,15 @@ def CreateVector(vector, y=None, z=None):
 
 
 def coerce3dpointlist(points, raise_on_error=False):
+    """Converts input points iterable or Rhino.Collections.Point3dList to list of Rhino.Geometry.Point3d if possible.
+    Parameters:
+      points = Any iterable of points or Rhino.Collections.Point3dList
+      raise_on_error [opt] = True or False
+    Returns:
+      a list of Rhino.Geometry.Point3d
+    Example:
+    See Also:
+    """
     if isinstance(points, System.Array[Rhino.Geometry.Point3d]):
         return list(points)
     if isinstance(points, Rhino.Collections.Point3dList): return list(points)
@@ -738,6 +747,14 @@ def coerce3dpointlist(points, raise_on_error=False):
 
 
 def coerce2dpointlist(points):
+    """Converts input points iterable to list of Rhino.Geometry.Point2d if possible.
+    Parameters:
+      points = Any iterable of points
+    Returns:
+      a list of Rhino.Geometry.Point2d
+    Example:
+    See Also:
+    """
     if points is None or isinstance(points, System.Array[Rhino.Geometry.Point2d]):
         return points
     if type(points) is list or type(points) is tuple:
@@ -764,7 +781,7 @@ def coerce2dpointlist(points):
 
 
 def coerceplane(plane, raise_on_bad_input=False):
-    """Convert input into a Rhino.Geometry.Plane if possible.
+    """Converts input into a Rhino.Geometry.Plane if possible.
     Parameters:
       plane = Plane, list, tuple
     Returns:
@@ -822,10 +839,12 @@ def CreatePlane(plane_or_origin, x_axis=None, y_axis=None, ignored=None):
 
 
 def coercexform(xform, raise_on_bad_input=False):
-    """Convert input into a Rhino.Transform if possible.
+    """Converts input into a Rhino.Transform if possible.
     Parameters:
       xform = the xform
       raise_on_bad_input [opt] = True or False
+    Returns:
+      a Rhino.Transform
     Example:
     See Also:
     """
@@ -857,6 +876,15 @@ def CreateXform(xform):
 
 
 def coerceguid(id, raise_exception=False):
+    """Converts input into a System.Guid if possible.
+    Parameters:
+      id = Guid, string, Rhino.DocObjects.ObjRef, or Rhino.DocObjects.RhinoObject
+      raise_exception [opt] = True or False
+    Returns:
+      a System.Guid
+    Example:
+    See Also:
+    """
     if type(id) is System.Guid: return id
     if type(id) is str and len(id)>30:
         try:
@@ -872,6 +900,14 @@ def coerceguid(id, raise_exception=False):
 
 
 def coerceguidlist(ids):
+    """Converts input into a list of System.Guid if possible.
+    Parameters:
+      ids = Iterable of Guid, string, Rhino.DocObjects.ObjRef, or Rhino.DocObjects.RhinoObject
+    Returns:
+      a list of System.Guid
+    Example:
+    See Also:
+    """
     if ids is None: return None
     rc = []
     if( type(ids) is list or type(ids) is tuple ): pass
@@ -883,6 +919,15 @@ def coerceguidlist(ids):
 
 
 def coerceboundingbox(bbox, raise_on_bad_input=False):
+    """Converts input into a Rhino.Geometry.BoundingBox if possible.
+    Parameters:
+      bbox = Rhino.Geometry.BoundingBox or iterable of points forming a bounding box
+      raise_on_bad_input [opt] = True or False
+    Returns:
+      a Rhino.Geometry.BoundingBox
+    Example:
+    See Also:
+    """
     if type(bbox) is Rhino.Geometry.BoundingBox: return bbox
     points = coerce3dpointlist(bbox)
     if points: return Rhino.Geometry.BoundingBox(points)
@@ -890,6 +935,15 @@ def coerceboundingbox(bbox, raise_on_bad_input=False):
 
 
 def coercecolor(c, raise_if_bad_input=False):
+    """Converts input into a System.Drawing.Color if possible.
+    Parameters:
+      c = System.Drawing.Color, single ARGB integer value, or iterable of A,R,G,B, or R,G,B values
+      raise_if_bad_input [opt] = True or False
+    Returns:
+      a System.Drawing.Color
+    Example:
+    See Also:
+    """
     if type(c) is System.Drawing.Color: return c
     if type(c) is list or type(c) is tuple:
         if len(c)==3: return System.Drawing.Color.FromArgb(c[0], c[1], c[2])
@@ -918,6 +972,15 @@ def CreateColor(color, g=None, b=None, a=None):
 
 
 def coerceline(line, raise_if_bad_input=False):
+    """Converts input to Rhino.Geometry.Line class if possible.
+    Parameters:
+      line = Guid, Rhino.Geometry.Curve, or list of two points
+      raise_if_bad_input [opt] = True or False
+    Returns:
+      a Rhino.Geometry.Line
+    Example:
+    See Also:
+    """
     if type(line) is Rhino.Geometry.Line: return line
     guid = coerceguid(line, False)
     if guid: line = scriptcontext.doc.Objects.Find(guid).Geometry
@@ -929,10 +992,12 @@ def coerceline(line, raise_if_bad_input=False):
 
 
 def coercegeometry(id, raise_if_missing=False):
-    """attempt to get GeometryBase class from given input
+    """Converts input to Rhino.Geometry.GeometryBase class if possible
     Parameters:
-      id = geometry identifier
+      id = Guid, Rhino.DocObjects.ObjRef, or Rhino.DocObjects.RhinoObject
       raise_if_missing [opt] = True or False
+    Returns:
+      a Rhino.Geometry.GeometryBase
     Example:
     See Also:
     """
@@ -947,9 +1012,9 @@ def coercegeometry(id, raise_if_missing=False):
 
 
 def coercebrep(id, raise_if_missing=False):
-    """attempt to get polysurface geometry from the document with a given id
+    """Converts input to polysurface geometry if possible.
     Parameters:
-      id = id to be coerced into a brep
+      id = Guid, Rhino.DocObjects.ObjRef, Rhino.DocObjects.RhinoObject, Rhino.Geometry.Brep, or Rhino.Geometry.Extrusion
       raise_if_missing [opt] = True or False
     Returns:
       a Rhino.Geometry.Brep
@@ -963,11 +1028,13 @@ def coercebrep(id, raise_if_missing=False):
 
 
 def coercecurve(id, segment_index=-1, raise_if_missing=False):
-    """attempt to get curve geometry from the document with a given id
+    """Converts input to curve geometry if possible.
     Parameters:
-      id = id to be coerced into a curve
+      id = Guid, Rhino.DocObjects.ObjRef, or Rhino.Geometry.Curve, 
       segment_index [opt] = index of segment to retrieve
       raise_if_missing [opt] = True or False
+    Returns:
+      a Rhino.Geometry.Curve
     Example:
     See Also:
     """
@@ -984,9 +1051,9 @@ def coercecurve(id, segment_index=-1, raise_if_missing=False):
 
 
 def coercesurface(object_id, raise_if_missing=False):
-    """attempt to get surface geometry from the document with a given id
+    """Converts input to surface geometry if possible.
     Parameters:
-      object_id = the object's identifier
+      object_id = Guid, Rhino.DocObjects.ObjRef, Rhino.Geometry.Brep, or Rhino.Geometry.Surface
       raise_if_missing [opt] = True or False
     Returns:
       a Rhino.Geometry.Surface
@@ -1008,9 +1075,9 @@ def coercesurface(object_id, raise_if_missing=False):
 
 
 def coercemesh(object_id, raise_if_missing=False):
-    """attempt to get mesh geometry from the document with a given id
+    """Converts input to mesh geometry if possible.
     Parameters:
-      object_id = object identifier
+      object_id = Guid, Rhino.DocObjects.ObjRef, or Rhino.Geometry.Mesh
       raise_if_missing [opt] = True or False
     Returns:
       a Rhino.Geometry.Mesh
@@ -1029,11 +1096,11 @@ def coercemesh(object_id, raise_if_missing=False):
 
 
 def coercerhinoobject(object_id, raise_if_bad_input=False, raise_if_missing=False):
-    """attempt to get RhinoObject from the document with a given id
+    """Converts input to RhinoObject if possible.
     Parameters:
-        object_id = object's identifier
-        raise_if_bad_input [opt] = True or False
-        raise_if_missing [opt] = True or False
+      object_id = Guid, or Rhino.DocObjects.RhinoObject
+      raise_if_bad_input [opt] = True or False
+      raise_if_missing [opt] = True or False
     Returns:
       a RhinoObject
     Example:
