@@ -981,6 +981,10 @@ def ListBox(items, message=None, title=None, default=None):
       MultiListBox
       PropertyListBox
     """
+    # 2026-01-28 eirannejad (RH-79693)
+    # coerce input tuple into a list otherwise pythonnet can not
+    # convert from a tuple to an IList
+    items = list(items) if isinstance(items, tuple) else items
     return Rhino.UI.Dialogs.ShowListBox(title, message, items, default)
 
 
