@@ -52,10 +52,12 @@ def IS_STRING_INSTANCE(s):
 
 
 def GET_HOST():
+    """Get python host instance for python2 or python3"""
     return __host
 
 
 def GET_IMPORT_CONFIG_PARSER():
+    """Safely import and return correct configparser for python2 or python3"""
     # RH-85967
     if PY3:
       import configparser
