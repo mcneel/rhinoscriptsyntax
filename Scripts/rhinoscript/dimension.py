@@ -897,9 +897,10 @@ def IsAlignedDimension(object_id):
       IsOrdinateDimension
       IsRadialDimension
     """
-    annotation_object = __coerceannotation(object_id)
-    id = rhutil.coerceguid(object_id, True)
+    id = rhutil.coerceguid(object_id)
+    if not id: return False
     annotation_object = scriptcontext.doc.Objects.Find(id)
+    if not annotation_object: return False
     geom = annotation_object.Geometry
     if isinstance(geom, Rhino.Geometry.LinearDimension): return geom.Aligned
     return False
@@ -927,8 +928,10 @@ def IsAngularDimension(object_id):
       IsOrdinateDimension
       IsRadialDimension
     """
-    id = rhutil.coerceguid(object_id, True)
+    id = rhutil.coerceguid(object_id)
+    if not id: return False
     annotation_object = scriptcontext.doc.Objects.Find(id)
+    if not annotation_object: return False
     geom = annotation_object.Geometry
     return isinstance(geom, Rhino.Geometry.AngularDimension)
 
@@ -955,8 +958,10 @@ def IsDiameterDimension(object_id):
       IsOrdinateDimension
       IsRadialDimension
     """
-    id = rhutil.coerceguid(object_id, True)
+    id = rhutil.coerceguid(object_id)
+    if not id: return False
     annotation_object = scriptcontext.doc.Objects.Find(id)
+    if not annotation_object: return False
     geom = annotation_object.Geometry
     if isinstance(geom, Rhino.Geometry.RadialDimension):
         return geom.IsDiameterDimension
@@ -985,8 +990,10 @@ def IsDimension(object_id):
       IsOrdinateDimension
       IsRadialDimension
     """
-    id = rhutil.coerceguid(object_id, True)
+    id = rhutil.coerceguid(object_id)
+    if not id: return False
     annotation_object = scriptcontext.doc.Objects.Find(id)
+    if not annotation_object: return False
     geom = annotation_object.Geometry
     return isinstance(geom, Rhino.Geometry.AnnotationBase)
 
@@ -1058,8 +1065,10 @@ def IsLeader(object_id):
       AddLeader
       LeaderText
     """
-    id = rhutil.coerceguid(object_id, True)
+    id = rhutil.coerceguid(object_id)
+    if not id: return False
     annotation_object = scriptcontext.doc.Objects.Find(id)
+    if not annotation_object: return False
     geom = annotation_object.Geometry
     return isinstance(geom, Rhino.Geometry.Leader)
 
@@ -1086,8 +1095,10 @@ def IsLinearDimension(object_id):
       IsOrdinateDimension
       IsRadialDimension
     """
-    id = rhutil.coerceguid(object_id, True)
+    id = rhutil.coerceguid(object_id)
+    if not id: return False
     annotation_object = scriptcontext.doc.Objects.Find(id)
+    if not annotation_object: return False
     geom = annotation_object.Geometry
     return isinstance(geom, Rhino.Geometry.LinearDimension)
 
@@ -1114,8 +1125,10 @@ def IsOrdinateDimension(object_id):
       IsLinearDimension
       IsRadialDimension
     """
-    id = rhutil.coerceguid(object_id, True)
+    id = rhutil.coerceguid(object_id)
+    if not id: return False
     annotation_object = scriptcontext.doc.Objects.Find(id)
+    if not annotation_object: return False
     geom = annotation_object.Geometry
     return isinstance(geom, Rhino.Geometry.OrdinateDimension)
 
@@ -1142,8 +1155,10 @@ def IsRadialDimension(object_id):
       IsLinearDimension
       IsOrdinateDimension
     """
-    id = rhutil.coerceguid(object_id, True)
+    id = rhutil.coerceguid(object_id)
+    if not id: return False
     annotation_object = scriptcontext.doc.Objects.Find(id)
+    if not annotation_object: return False
     geom = annotation_object.Geometry
     return isinstance(geom, Rhino.Geometry.RadialDimension)
 

@@ -2822,7 +2822,8 @@ def IsArc(curve_id, segment_index=-1):
       ArcMidPoint
       ArcRadius
     """
-    curve = rhutil.coercecurve(curve_id, segment_index, True)
+    curve = rhutil.coercecurve(curve_id, segment_index)
+    if curve is None: return False
     return curve.IsArc() and not curve.IsClosed
 
 
@@ -2849,7 +2850,8 @@ def IsCircle(curve_id, tolerance=None):
       CircleCircumference
       CircleRadius
     """
-    curve = rhutil.coercecurve(curve_id, -1, True)
+    curve = rhutil.coercecurve(curve_id)
+    if curve is None: return False
     if tolerance is None or tolerance < 0:
         tolerance = Rhino.RhinoMath.ZeroTolerance
     return curve.IsCircle(tolerance)
@@ -3085,7 +3087,8 @@ def IsEllipse(object_id, segment_index=-1):
       EllipseCenterPoint
       EllipseQuadPoints
     """
-    curve = rhutil.coercecurve(object_id, segment_index, True)
+    curve = rhutil.coercecurve(object_id, segment_index)
+    if curve is None: return False
     return curve.IsEllipse()
 
 
@@ -3106,7 +3109,8 @@ def IsLine(object_id, segment_index=-1):
     See Also:
       AddLine
     """
-    curve = rhutil.coercecurve(object_id, segment_index, True)
+    curve = rhutil.coercecurve(object_id, segment_index)
+    if curve is None: return False
     if isinstance(curve, Rhino.Geometry.LineCurve): return True
     rc, polyline = curve.TryGetPolyline()
     if rc and polyline.Count==2: return True
@@ -3157,7 +3161,7 @@ def IsPolyCurve(object_id, segment_index=-1):
     See Also:
       PolyCurveCount
     """
-    curve = rhutil.coercecurve(object_id, segment_index, True)
+    curve = rhutil.coercecurve(object_id, segment_index)
     return isinstance(curve, Rhino.Geometry.PolyCurve)
 
 
@@ -3179,7 +3183,7 @@ def IsPolyline( object_id, segment_index=-1 ):
       IsPolyline
       PolylineVertices
     """
-    curve = rhutil.coercecurve(object_id, segment_index, True)
+    curve = rhutil.coercecurve(object_id, segment_index)
     return isinstance(curve, Rhino.Geometry.PolylineCurve)
 
 

@@ -233,7 +233,8 @@ def IsDirectionalLight(object_id):
     See Also:
       AddDirectionalLight
     """
-    light = __coercelight(object_id, True)
+    light = __coercelight(object_id)
+    if light is None: return False
     return light.IsDirectionalLight
 
 
@@ -323,7 +324,8 @@ def IsLinearLight(object_id):
     See Also:
       AddLinearLight
     """
-    light = __coercelight(object_id, True)
+    light = __coercelight(object_id)
+    if light is None: return False
     return light.IsLinearLight
 
 
@@ -343,7 +345,8 @@ def IsPointLight(object_id):
     See Also:
       AddPointLight
     """
-    light = __coercelight(object_id, True)
+    light = __coercelight(object_id)
+    if light is None: return False
     return light.IsPointLight
 
 
@@ -363,7 +366,8 @@ def IsRectangularLight(object_id):
     See Also:
       AddRectangularLight
     """
-    light = __coercelight(object_id, True)
+    light = __coercelight(object_id)
+    if light is None: return False
     return light.IsRectangularLight
 
 
@@ -385,7 +389,8 @@ def IsSpotLight(object_id):
       SpotLightHardness
       SpotLightShadowIntensity
     """
-    light = __coercelight(object_id, True)
+    light = __coercelight(object_id)
+    if light is None: return False
     return light.IsSpotLight
 
 

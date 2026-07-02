@@ -1609,7 +1609,8 @@ def IsCone(object_id):
       IsSurface
       IsTorus
     """
-    surface = rhutil.coercesurface(object_id, True)
+    surface = rhutil.coercesurface(object_id)
+    if surface is None: return False
     return surface.IsCone()
 
 
@@ -1633,7 +1634,8 @@ def IsCylinder(object_id):
       IsSurface
       IsTorus
     """
-    surface = rhutil.coercesurface(object_id, True)
+    surface = rhutil.coercesurface(object_id)
+    if surface is None: return False
     return surface.IsCylinder()
 
 
@@ -1656,7 +1658,7 @@ def IsPlaneSurface(object_id):
       IsPolysurface
       IsSurface
     """
-    face = rhutil.coercesurface(object_id, True)
+    face = rhutil.coercesurface(object_id)
     if type(face) is Rhino.Geometry.BrepFace and face.IsSurface:
         return type(face.UnderlyingSurface()) is Rhino.Geometry.PlaneSurface
     return False
@@ -1798,7 +1800,8 @@ def IsSphere(object_id):
       IsSurface
       IsTorus
     """
-    surface = rhutil.coercesurface(object_id, True)
+    surface = rhutil.coercesurface(object_id)
+    if surface is None: return False
     return surface.IsSphere()
 
 
@@ -2003,7 +2006,8 @@ def IsTorus(surface_id):
       IsSphere
       IsSurface
     """
-    surface = rhutil.coercesurface(surface_id, True)
+    surface = rhutil.coercesurface(surface_id)
+    if surface is None: return False
     return surface.IsTorus()
 
 
