@@ -990,6 +990,33 @@ def MeshQuadsToTriangles(object_id):
     return rc
 
 
+def MeshTextureCoordinates(object_id):
+    """Returns the texture coordinates of a mesh
+    Parameters:
+      object_id (guid): identifier of a mesh object
+    Returns:
+      list((number, number), ...): (u,v) texture coordinates, one per mesh vertex
+      None: if the mesh has no texture coordinates
+    Example:
+      import rhinoscriptsyntax as rs
+      obj = rs.GetObject("Select mesh", rs.filter.mesh)
+      tcs = rs.MeshTextureCoordinates(obj)
+      if tcs:
+          for tc in tcs: print(tc)
+    See Also:
+      MeshHasTextureCoordinates
+      MeshVertices
+    """
+    mesh = rhutil.coercemesh(object_id, True)
+    tcs = mesh.TextureCoordinates
+    if tcs.Count == 0: return scriptcontext.errorhandler()
+    rc = []
+    for i in compat.RANGE(tcs.Count):
+        tc = tcs[i]
+        rc.append((tc.X, tc.Y))
+    return rc
+
+
 def MeshToNurb(object_id, trimmed_triangles=True, delete_input=False):
     """Duplicates each polygon in a mesh with a NURBS surface. The resulting
     surfaces are then joined into a polysurface and added to the document
