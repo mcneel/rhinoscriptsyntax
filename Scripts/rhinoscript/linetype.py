@@ -9,7 +9,17 @@ from rhinoscript import utility as rhutil
 def __getlinetype(name_or_id):
     id = rhutil.coerceguid(name_or_id)
     if id: return scriptcontext.doc.Linetypes.FindId(id)
-    return scriptcontext.doc.Linetypes.FindName(name_or_id)
+    # don't use LinetypeTable.FindName here: Find returns -1 both for
+    # "not found" and as the index of the default "Continuous" linetype,
+    # so FindName maps any unknown name to the Continuous linetype.
+    # Disambiguate a -1 result by comparing names (Find ignores case).
+    index = scriptcontext.doc.Linetypes.Find(name_or_id)
+    linetype = scriptcontext.doc.Linetypes.FindIndex(index)
+    if index >= 0: return linetype
+    if (linetype and compat.IS_STRING_INSTANCE(name_or_id) and
+            name_or_id.lower() == linetype.Name.lower()):
+        return linetype
+    return None
 
 
 def IsLinetype(name_or_id):
