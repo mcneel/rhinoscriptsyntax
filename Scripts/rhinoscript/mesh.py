@@ -13,16 +13,16 @@ from rhinoscript.view import __viewhelper
 def AddMesh(vertices, face_vertices, vertex_normals=None, texture_coordinates=None, vertex_colors=None):
     """Add a mesh object to the document
     Parameters:
-      vertices ([point, ...]) list of 3D points defining the vertices of the mesh
-      face_vertices ([[number, number, number], [number, number, number, number], ...]) list containing lists of 3 or 4 numbers that define the
-                    vertex indices for each face of the mesh. If the third a fourth vertex
-                     indices of a face are identical, a triangular face will be created.
-      vertex_normals ([vector, ...], optional) list of 3D vectors defining the vertex normals of
+      vertices ([point, ...]): list of 3D points defining the vertices of the mesh
+      face_vertices ([[number, number, number], [number, number, number, number], ...]): list containing lists of 3 or 4 numbers that define the
+        vertex indices for each face of the mesh. If the third and fourth vertex
+        indices of a face are identical, a triangular face will be created.
+      vertex_normals ([vector, ...], optional): list of 3D vectors defining the vertex normals of
         the mesh. Note, for every vertex, there must be a corresponding vertex
         normal
-      texture_coordinates ([[number, number], [number, number], [number, number]], ...], optional): list of 2D texture coordinates. For every
+      texture_coordinates ([[number, number], ...], optional): list of 2D texture coordinates. For every
         vertex, there must be a corresponding texture coordinate
-      vertex_colors ([color, ...]) a list of color values. For every vertex,
+      vertex_colors ([color, ...], optional): a list of color values. For every vertex,
         there must be a corresponding vertex color
     Returns:
       guid: Identifier of the new object if successful
@@ -66,7 +66,13 @@ def AddMesh(vertices, face_vertices, vertex_normals=None, texture_coordinates=No
         count = len(vertex_normals)
         normals = System.Array.CreateInstance(Rhino.Geometry.Vector3f, count)
         for i, normal in enumerate(vertex_normals):
-            normals[i] = Rhino.Geometry.Vector3f(normal[0], normal[1], normal[2])
+            if isinstance(normal, Rhino.Geometry.Vector3f):
+                # Vector3f has no indexer, so it can't take the coercion
+                # path below; Mesh.Normals holds Vector3f (RH-50466)
+                normals[i] = normal
+            else:
+                v = rhutil.coerce3dvector(normal, True)
+                normals[i] = Rhino.Geometry.Vector3f(v.X, v.Y, v.Z)
         mesh.Normals.SetNormals(normals)
     if texture_coordinates:
         count = len(texture_coordinates)
