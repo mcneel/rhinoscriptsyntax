@@ -927,8 +927,12 @@ def ObjectLayer(object_id, layer=None):
         scriptcontext.doc.Views.Redraw()
     return rc
 
+# C Sykes 4th Jul 2026
+# RH-96724 rs.ObjectLayout(obj) moves objects
+# Do not move the object to model space when no override is given
+__unset = object()
 
-def ObjectLayout(object_id, layout=None, return_name=True):
+def ObjectLayout(object_id, layout=__unset, return_name=True):
     """Returns or changes the layout or model space of an object
     Parameters:
       object_id (guid): identifier of the object
@@ -964,7 +968,7 @@ def ObjectLayout(object_id, layout=None, return_name=True):
             rhobj.CommitChanges()
             scriptcontext.doc.Views.Redraw()
     else:
-        if layout:
+        if layout and layout is not __unset:
             layout = scriptcontext.doc.Views.Find(layout, False)
             if layout is not None and isinstance(layout, Rhino.Display.RhinoPageView):
                 rhobj.Attributes.ViewportId = layout.MainViewport.Id
