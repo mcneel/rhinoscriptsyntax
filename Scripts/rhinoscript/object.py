@@ -1824,7 +1824,16 @@ def TransformObjects(object_ids, matrix, copy=False):
             else:
                 raise Exception("The {0} cannot be tranformed. A Guid or geometry types are expected.".format(type_of_id))
         if id!=System.Guid.Empty: rc.append(id)
-    if rc: scriptcontext.doc.Views.Redraw()
+    if rc:
+        if copy and isinstance(scriptcontext.doc, Rhino.RhinoDoc):
+            # put copies of grouped objects into new groups, like the native
+            # Copy command, instead of adding them to the source groups.
+            # Grasshopper's duck-typed document has no group table, hence
+            # the isinstance check.
+            copies = [scriptcontext.doc.Objects.FindId(id) for id in rc]
+            copies = [obj for obj in copies if obj]
+            if copies: scriptcontext.doc.Groups.RemapObjects(copies)
+        scriptcontext.doc.Views.Redraw()
     return rc
 
 
