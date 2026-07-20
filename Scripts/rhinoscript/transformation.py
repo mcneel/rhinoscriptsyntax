@@ -422,7 +422,9 @@ def XformScale(scale, point=None):
     """Creates a scale transformation
     Parameters:
       scale (number|point|vector|[number, number, number]): single number, list of 3 numbers, Point3d, or Vector3d
-      point (point, optional): center of scale. If omitted, world origin is used
+      point (point|plane, optional): center of scale. If a plane is specified, the
+        scale is applied about the plane's origin and along the plane's axes. If
+        omitted, world origin is used
     Returns:
       transform: The 4x4 transformation matrix on success
       None: on error
@@ -447,9 +449,11 @@ def XformScale(scale, point=None):
         if type(scale) is int or type(scale) is float:
             factor = (scale,scale,scale)
         if factor is None: return scriptcontext.errorhandler()
-    if point: point = rhutil.coerce3dpoint(point, True)
-    else: point = Rhino.Geometry.Point3d.Origin
-    plane = Rhino.Geometry.Plane(point, Rhino.Geometry.Vector3d.ZAxis);
+    if type(point) is Rhino.Geometry.Plane:
+        plane = point
+    else:
+        plane = Rhino.Geometry.Plane.WorldXY
+        if point: plane.Origin = rhutil.coerce3dpoint(point, True)
     xf = Rhino.Geometry.Transform.Scale(plane, factor[0], factor[1], factor[2])
     return xf
 
