@@ -1232,6 +1232,7 @@ def ObjectPrintColorSource(object_ids, source=None):
       source (number, optional): new print color source
         0 = print color by layer
         1 = print color by object
+        2 = print color by display
         3 = print color by parent
     Returns:
       number: If source is not specified, the object's current print color source
