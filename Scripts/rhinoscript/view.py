@@ -31,6 +31,26 @@ def __getViewListHelper(includeStandardViews, includePageViews):
     return scriptcontext.doc.Views.GetViewList(view_filter);
 
 
+def __griddisplaymodehelper(viewport):
+    # A display mode whose grid settings are "Custom" rather than "Use document
+    # setting" hides and shows the grid, the grid axes and the world axes itself,
+    # and the document (ON_3dmView) settings that RhinoViewport reports are then
+    # ignored. Returns the display mode overriding the document settings, or None
+    # when the document settings are the ones in effect. See the Grid command and
+    # CRhinoDisplayPipeline for the same test on the C++ side. (RH-82449)
+    mode = viewport.DisplayMode
+    if mode is None: return None
+    if mode.DisplayAttributes.ViewSpecificAttributes.UseDocumentGrid: return None
+    return mode
+
+
+def __updategriddisplaymodehelper(mode):
+    # Display modes are shared by every viewport using them, so pushing the
+    # change back into the mode affects more than the view that was passed in.
+    Rhino.Display.DisplayModeDescription.UpdateDisplayMode(mode)
+    scriptcontext.doc.Views.Redraw()
+
+
 def __viewhelper(view):
     if view is None: return scriptcontext.doc.Views.ActiveView
     allviews = __getViewListHelper(True, True)
@@ -815,6 +835,8 @@ def RotateView(view=None, direction=0, angle=None):
 
 def ShowGrid(view=None, show=None):
     """Shows or hides a view's construction plane grid
+    When the view's display mode overrides the document's grid settings, the state
+    reported and set is the display mode's, which is shared by every view using it.
     Parameters:
       view (str|guid, optional): title or id of the view. If omitted, the current active view is used
       show (bool, optional): The grid state to set. If omitted, the current grid display state is returned
@@ -832,15 +854,25 @@ def ShowGrid(view=None, show=None):
     """
     view = __viewhelper(view)
     viewport = view.ActiveViewport
-    rc = viewport.ConstructionGridVisible
+    mode = __griddisplaymodehelper(viewport)
+    if mode is None:
+        rc = viewport.ConstructionGridVisible
+        if show is not None and rc!=show:
+            viewport.ConstructionGridVisible = show
+            view.Redraw()
+        return rc
+    attrs = mode.DisplayAttributes.ViewSpecificAttributes
+    rc = attrs.DrawGrid
     if show is not None and rc!=show:
-        viewport.ConstructionGridVisible = show
-        view.Redraw()
+        attrs.DrawGrid = show
+        __updategriddisplaymodehelper(mode)
     return rc
 
 
 def ShowGridAxes(view=None, show=None):
     """Shows or hides a view's construction plane grid axes.
+    When the view's display mode overrides the document's grid settings, the state
+    reported and set is the display mode's, which is shared by every view using it.
     Parameters:
       view (str|guid, optional): title or id of the view. If omitted, the current active view is used
       show (bool, optional): The state to set. If omitted, the current grid axes display state is returned
@@ -858,10 +890,18 @@ def ShowGridAxes(view=None, show=None):
     """
     view = __viewhelper(view)
     viewport = view.ActiveViewport
-    rc = viewport.ConstructionAxesVisible
+    mode = __griddisplaymodehelper(viewport)
+    if mode is None:
+        rc = viewport.ConstructionAxesVisible
+        if show is not None and rc!=show:
+            viewport.ConstructionAxesVisible = show
+            view.Redraw()
+        return rc
+    attrs = mode.DisplayAttributes.ViewSpecificAttributes
+    rc = attrs.DrawGridAxes
     if show is not None and rc!=show:
-        viewport.ConstructionAxesVisible = show
-        view.Redraw()
+        attrs.DrawGridAxes = show
+        __updategriddisplaymodehelper(mode)
     return rc
 
 
@@ -887,6 +927,8 @@ def ShowViewTitle(view=None, show=True):
 
 def ShowWorldAxes(view=None, show=None):
     """Shows or hides a view's world axis icon
+    When the view's display mode overrides the document's grid settings, the state
+    reported and set is the display mode's, which is shared by every view using it.
     Parameters:
       view (str|guid, optional):  title or id of the view. If omitted, the current active view is used
       show: (bool, optional): The state to set.
@@ -904,10 +946,18 @@ def ShowWorldAxes(view=None, show=None):
     """
     view = __viewhelper(view)
     viewport = view.ActiveViewport
-    rc = viewport.WorldAxesVisible
+    mode = __griddisplaymodehelper(viewport)
+    if mode is None:
+        rc = viewport.WorldAxesVisible
+        if show is not None and rc!=show:
+            viewport.WorldAxesVisible = show
+            view.Redraw()
+        return rc
+    attrs = mode.DisplayAttributes.ViewSpecificAttributes
+    rc = attrs.DrawWorldAxes
     if show is not None and rc!=show:
-        viewport.WorldAxesVisible = show
-        view.Redraw()
+        attrs.DrawWorldAxes = show
+        __updategriddisplaymodehelper(mode)
     return rc
 
 
