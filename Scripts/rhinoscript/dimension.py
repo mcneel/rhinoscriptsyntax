@@ -758,6 +758,14 @@ def DimStyleSuffix(dimstyle, suffix=None):
     return rc
 
 
+def __dimstyletextalignment(ds):
+    """Maps a dimension style's text orientation and location onto the Rhino 5
+    text alignment values documented in DimStyleTextAlignment"""
+    if ds.DimTextOrientation == Rhino.DocObjects.TextOrientation.InView: return 1
+    if ds.DimTextLocation == Rhino.DocObjects.DimensionStyle.TextLocation.InDimLine: return 3
+    return 2
+
+
 def DimStyleTextAlignment(dimstyle, alignment=None):
     """Returns or changes the text alignment mode of a dimension style
     Parameters:
@@ -771,6 +779,19 @@ def DimStyleTextAlignment(dimstyle, alignment=None):
       number: if alignment is not specified, the current text alignment
       number: if alignment is specified, the previous text alignment
       None: on error
+    Notes:
+      Rhino 6 replaced the single Rhino 5 text alignment setting with a text
+      location (above, in, or below the dimension line) and a text orientation
+      (in the dimension plane, or horizontal to the view), stored separately
+      for linear/angular dimensions and for radial dimensions. This function
+      writes all four properties:
+          1 = orientation horizontal to view, location left unchanged
+          2 = orientation in plane, location above the dimension line
+          3 = orientation in plane, location in the dimension line
+          0 = same as 2
+      The value read back is 1 when the text is horizontal to the view, 3 when
+      it is in the dimension line, and 2 in every other case. 0 is accepted as
+      input but is never returned.
     Example:
       import rhinoscriptsyntax as rs
       dimstyle = rs.CurrentDimStyle()
@@ -788,20 +809,25 @@ def DimStyleTextAlignment(dimstyle, alignment=None):
     """
     ds = scriptcontext.doc.DimStyles.FindName(dimstyle)
     if ds is None: return scriptcontext.errorhandler()
-    # NOTE:
-    # this function is about text alignment so return alignment value
-    rc = int(ds.DimTextLocation)
+    rc = __dimstyletextalignment(ds)
     if alignment is not None:
-        # NOTE:
-        # for backward compatibility, lets set the "horizontal to view" if
-        # alignment value is '1' - eirannejad 2025-03-17 (RH-86539)
-        if alignment==1: ds.DimTextOrientation = Rhino.DocObjects.TextOrientation.InView
-
-        # set dim text location
-        if alignment==3: ds.DimTextLocation = Rhino.DocObjects.DimensionStyle.TextLocation.InDimLine
-        if alignment==0 or alignment==2:
-          ds.DimTextLocation = Rhino.DocObjects.DimensionStyle.TextLocation.AboveDimLine  # default
-
+        if alignment not in (0, 1, 2, 3):
+            raise ValueError("alignment must be 0, 1, 2, or 3")
+        TextLocation = Rhino.DocObjects.DimensionStyle.TextLocation
+        TextOrientation = Rhino.DocObjects.TextOrientation
+        if alignment == 1:
+            orientation = TextOrientation.InView
+            location = None
+        else:
+            orientation = TextOrientation.InPlane
+            location = TextLocation.InDimLine if alignment == 3 else TextLocation.AboveDimLine
+        # Rhino 5 had one text alignment for every dimension type. Rhino 6 keeps
+        # the linear/angular and the radial settings apart, so write both pairs.
+        ds.DimTextOrientation = orientation
+        ds.DimRadialTextOrientation = orientation
+        if location is not None:
+            ds.DimTextLocation = location
+            ds.DimRadialTextLocation = location
         scriptcontext.doc.DimStyles.Modify(ds, ds.Id, False)
         scriptcontext.doc.Views.Redraw()
     return rc
