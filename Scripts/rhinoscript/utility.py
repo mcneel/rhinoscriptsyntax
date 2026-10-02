@@ -703,7 +703,7 @@ def CreateVector(vector, y=None, z=None):
     Alternatively, you can also pass two coordinates singularly for a
     vector on the XY plane, or three for a 3D vector.
     Parameters:
-      vector (Vector3d|Point3d|Point3f|Vector3f\str|guid|[number, number, number])
+      vector (Vector3d|Point3d|Point3f|Vector3f|str|guid|[number, number, number])
       raise_on_error (bool, optionals): True or False
     Returns:
       a Rhino.Geometry.Vector3d. This can be seen as an object with three indices:
